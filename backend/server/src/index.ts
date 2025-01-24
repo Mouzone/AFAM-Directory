@@ -24,17 +24,20 @@ app.get("/students", async (c) => {
 app.post("/students", async (c) => {
     const student: Student = await c.req.json() as Student
     console.log(student)
-    await createStudent(student)
+    const result = await createStudent(student)
+    return c.json(result)
 })
 
 app.put("/students", async (c) => {
     const student: Student = await c.req.json()
-    await editStudent(student["id"], student)
+    const result = await editStudent(student["id"], student)
+    return c.json(result)
 })
 
 app.delete("/students", async (c) => {
     const id: number = await c.req.json()
-    await deleteStudent(id)
+    const result = await deleteStudent(id)
+    return c.json(result)
 })
 
 export default app
