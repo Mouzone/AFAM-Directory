@@ -18,6 +18,7 @@ function Form({ onSubmit, onCancel }) {
     primaryContact: "",
     primaryContactPhone: "",
     primaryContactEmail: "",
+    afamTeacherId: ""
   });
   const {data, error, isLoading} = useSWR("http://localhost:3000/teachers", fetcher)
 
@@ -43,12 +44,19 @@ function Form({ onSubmit, onCancel }) {
       !formData.email ||
       !formData.primaryContact ||
       !formData.primaryContactPhone ||
-      !formData.primaryContactEmail
+      !formData.primaryContactEmail ||
+      !formData.afamTeacherId
     ) {
       alert("Please fill out all required fields.");
       return;
     }
-    onSubmit(formData);
+    const processedData = {
+        ...formData,
+        schoolYear: parseInt(formData.schoolYear, 10),
+        dob: new Date(formData.dob),
+        afamTeacherId: parseInt(formData.afamTeacherId, 10)
+    }
+    onSubmit(processedData);
   };
 
   return (
@@ -238,8 +246,8 @@ function Form({ onSubmit, onCancel }) {
         <div className="flex flex-col">
         <label className="font-bold">Teacher</label>
         <select
-          name="teacher"
-          value={formData.teacher}
+          name="afamTeacherId"
+          value={formData.afamTeacherId}
           onChange={handleChange}
           className="border border-gray-300 rounded p-2"
           required
