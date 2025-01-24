@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 import Form from "./Form";
 import Table from "./Table"
+import Profile from "./Profile"
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -14,6 +15,7 @@ const labels = {
 
 function App() {
   const [add, setAdd] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const [searchValues, setSearchValues] = useState({
 	firstName: "",
 	lastName: "",
@@ -25,14 +27,6 @@ function App() {
 	"http://localhost:3000/students",
 	fetcher
   );
-
-  const onSubmit = (formData) => {
-	fetch("http://localhost:3000/students", {
-		method: "POST",
-		body: JSON.stringify(formData)
-	})
-	setAdd(false); // Hide the form after submission
-  };
 
   if (error) {
 	return <div className="text-red-500">Failed to load data.</div>;
@@ -90,22 +84,21 @@ function App() {
 
 	  {/* Form Modal */}
 	  {
-	  	add && (
+	  	(add || showProfile) && (
 			<div
 				className="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex justify-center items-center"
-				onClick={() => setAdd(false)} // Close modal on outside click
+				onClick={() => setShowProfile(false)} // Close modal on outside click
 			>
 				<div
 					className="bg-white p-6 rounded-lg w-fit"
 					onClick={(e) => e.stopPropagation()} // Prevent clicks inside modal from closing it
 				>
-					<Form onSubmit={onSubmit} onCancel={() => setAdd(false)} />
+					<Form type={add ? "add" : "view"} onCancel={add ? () => setAdd(false) : () => setShowProfile(false)} />
 				</div>
 			</div>
 		)
 	  }
-
-	  <Table filtered={filtered}/>	  
+	  <Table filtered={filtered} setShowProfile={setShowProfile}/>	  
 	</div>
   );
 }

@@ -1,4 +1,4 @@
-export default function Table({filtered}) {
+export default function Table({filtered, setShowProfile}) {
     return (
     <table className="w-full border-collapse">
 		<thead>
@@ -12,7 +12,7 @@ export default function Table({filtered}) {
 		<tbody>
 		    {
                 filtered.map((student) => (
-                    <tr key={student.id} className="hover:bg-gray-100">
+                    <tr key={student.id} onClick={() => setShowProfile(true)} className="hover:bg-gray-100"> 
                         <td className="border border-gray-300 p-2 w-1/4">{student.firstName}</td>
                         <td className="border border-gray-300 p-2 w-1/4">{student.lastName}</td>
                         <td className="border border-gray-300 p-2 w-1/4">{student.schoolYear}</td>

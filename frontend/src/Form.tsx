@@ -3,7 +3,7 @@ import useSWR from "swr";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-function Form({ onSubmit, onCancel }) {
+export default function Form({ type, onCancel }) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -21,6 +21,14 @@ function Form({ onSubmit, onCancel }) {
     afamTeacherId: ""
   });
   const {data, error, isLoading} = useSWR("http://localhost:3000/teachers", fetcher)
+
+  const onSubmit = (formData) => {
+	fetch("http://localhost:3000/students", {
+		method: "POST",
+		body: JSON.stringify(formData)
+	})
+	setAdd(false); // Hide the form after submission
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -291,4 +299,3 @@ function Buttons({onCancel}) {
       </div>
     )
 }
-export default Form;
