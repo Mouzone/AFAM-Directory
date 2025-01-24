@@ -42,7 +42,7 @@ function App() {
 	return <div className="text-blue-500">Loading...</div>;
   }
 
-  const filtered = useMemo(() => data.filter((entry) => {
+  const filtered = data.filter((entry) => {
 	return (
 		entry["firstName"]
 			.toLowerCase()
@@ -59,7 +59,7 @@ function App() {
 			.toLowerCase()
 			.includes(searchValues["teacher"].toLowerCase()))
 	);
-  }), [searchValues])
+  })
 
   return (
 	<div className="p-5 font-sans">
