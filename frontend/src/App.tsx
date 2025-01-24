@@ -5,6 +5,22 @@ import Table from "./Table"
 import Profile from "./Profile"
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
+const addState = {
+    firstName: "",
+    lastName: "",
+    schoolYear: "",
+    dob: "",
+    gender: "",
+    highSchool: "",
+    homeAddress: "",
+    phoneNumber: "",
+    email: "",
+    allergies: "",
+    primaryContact: "",
+    primaryContactPhone: "",
+    primaryContactEmail: "",
+    afamTeacherId: ""
+}
 
 const labels = {
   firstName: "First Name",
@@ -15,7 +31,7 @@ const labels = {
 
 function App() {
   const [add, setAdd] = useState(false);
-  const [showProfile, setShowProfile] = useState(false);
+  const [profile, setProfile] = useState({});
   const [searchValues, setSearchValues] = useState({
 	firstName: "",
 	lastName: "",
@@ -84,21 +100,24 @@ function App() {
 
 	  {/* Form Modal */}
 	  {
-	  	(add || showProfile) && (
+	  	(add || profile) && (
 			<div
 				className="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex justify-center items-center"
-				onClick={() => setShowProfile(false)} // Close modal on outside click
+				onClick={() => setProfile(false)} // Close modal on outside click
 			>
 				<div
 					className="bg-white p-6 rounded-lg w-fit"
 					onClick={(e) => e.stopPropagation()} // Prevent clicks inside modal from closing it
 				>
-					<Form type={add ? "add" : "view"} onCancel={add ? () => setAdd(false) : () => setShowProfile(false)} />
+					<Form 
+						type={add ? "add" : "view"} 
+						state={add ? addState : profile}
+						onCancel={add ? () => setAdd(false) : () => setProfile(false)} />
 				</div>
 			</div>
 		)
 	  }
-	  <Table filtered={filtered} setShowProfile={setShowProfile}/>	  
+	  <Table filtered={filtered} setProfile={setProfile}/>	  
 	</div>
   );
 }
