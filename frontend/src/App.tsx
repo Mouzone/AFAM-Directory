@@ -1,34 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import useSWR from 'swr';
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 function App() {
-  const [count, setCount] = useState(0)
+    const { data, error, isLoading } = useSWR('http://localhost:3000/students', fetcher)
 
-  return (
-    <>
-      <div className='text-green-400'>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    if (error) {
+        return <div>Failed to load data.</div>
+    }
+
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
+
+    return (
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>School Year</th>
+            </tr>
+        </thead>
+        <tbody>
+            {
+                data.map((student) => (
+                    <tr key={student.id}>
+                        <td>{student.id}</td>
+                        <td>{student.firstName}</td>
+                        <td>{student.lastName}</td>
+                        <td>{student.schoolYear}</td>
+                    </tr>
+                ))
+            }
+        </tbody>
+    </table>
+    )
 }
 
-export default App
+export default App;
