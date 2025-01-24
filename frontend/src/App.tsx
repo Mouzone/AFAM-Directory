@@ -39,17 +39,20 @@ function App() {
 
   const filtered = data.filter((entry) => {
 	return (
-	  entry["firstName"]
-		.toLowerCase()
-		.includes(searchValues["firstName"].toLowerCase()) &&
-	  entry["lastName"]
-		.toLowerCase()
-		.includes(searchValues["lastName"].toLowerCase()) &&
-	  (!parseInt(searchValues["schoolYear"]) ||
-		entry["schoolYear"] === parseInt(searchValues["schoolYear"])) &&
-	  entry["afamTeacher"]["firstName"]
-		.toLowerCase()
-		.includes(searchValues["teacher"].toLowerCase())
+		entry["firstName"]
+			.toLowerCase()
+			.includes(searchValues["firstName"].toLowerCase()) &&
+		entry["lastName"]
+			.toLowerCase()
+			.includes(searchValues["lastName"].toLowerCase()) &&
+		(!parseInt(searchValues["schoolYear"]) ||
+			entry["schoolYear"] === parseInt(searchValues["schoolYear"])) &&
+		entry["afamTeacher"]["firstName"]
+			.toLowerCase()
+			.includes(searchValues["teacher"].toLowerCase()) ||
+		entry["afamTeacher"]["lastName"]
+			.toLowerCase()
+			.includes(searchValues["teacher"].toLowerCase())
 	);
   });
 
