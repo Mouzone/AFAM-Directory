@@ -3,130 +3,284 @@ import useSWR from "swr";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-export default function Form({ onSubmit, onCancel }) {
-    const { data, isError, isLoading } = useSWR("http://localhost:3000/teachers", fetcher) 
-    
-    const [formData, setFormData] = useState({
-      firstName: "",
-      lastName: "",
-      schoolYear: "",
-      dob: "",
-      gender: "",
-      highSchool: "",
-      homeAddress: "",
-      phoneNumber: "",
-      email: "",
-      allergies: "",
-      primaryContact: "",
-      primaryContactPhone: "",
-      primaryContactEmail: "",
+function Form({ onSubmit, onCancel }) {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    schoolYear: "",
+    dob: "",
+    gender: "",
+    highSchool: "",
+    homeAddress: "",
+    phoneNumber: "",
+    email: "",
+    allergies: "",
+    primaryContact: "",
+    primaryContactPhone: "",
+    primaryContactEmail: "",
+  });
+  const {data, error, isLoading} = useSWR("http://localhost:3000/teachers", fetcher)
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
     });
-  
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    };
-  
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      if (
-        !formData.firstName ||
-        !formData.lastName ||
-        !formData.schoolYear ||
-        !formData.dob ||
-        !formData.gender ||
-        !formData.highSchool ||
-        !formData.homeAddress ||
-        !formData.phoneNumber ||
-        !formData.email ||
-        !formData.primaryContact ||
-        !formData.primaryContactPhone ||
-        !formData.primaryContactEmail
-      ) {
-        alert("Please fill out all required fields.");
-        return;
-      }
-      onSubmit(formData);
-    };
-  
-    return (
-      <form
-    onSubmit={handleSubmit}
-    className="space-y-10 max-h-[80vh] overflow-y-auto p-4"
-  >
-    <h2 className="text-xl font-bold mb-4">Student Form</h2>
-  
-    {/* Form Fields in Grid */}
-    <div className="grid grid-cols-2 gap-4">
-      {Object.entries(formData).map(([key, value]) => (
-        <div key={key} className="flex flex-col">
-          <label className="font-bold">
-            {key.charAt(0).toUpperCase() + key.slice(1)}:
-          </label>
-          {key === "schoolYear" || key === "gender" ? (
-            <select
-              className="border border-gray-300 rounded p-2"
-              name={key}
-              value={value}
-              onChange={handleChange}
-              required={key !== "allergies"}
-            >
-              <option value="">Select</option>
-              {key === "schoolYear" &&
-                [9, 10, 11, 12].map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              {key === "gender" &&
-                ["M", "F"].map((gender) => (
-                  <option key={gender} value={gender}>
-                    {gender}
-                  </option>
-                ))}
-            </select>
-          ) : key === "dob" ? (
-            <input
-              type="date"
-              className="border border-gray-300 rounded p-2"
-              name={key}
-              value={value}
-              onChange={handleChange}
-              required={key !== "allergies"}
-            />
-          ) : (
-            <input
-              type="text"
-              className="border border-gray-300 rounded p-2"
-              name={key}
-              value={value}
-              onChange={handleChange}
-              required={key !== "allergies"}
-            />
-          )}
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.schoolYear ||
+      !formData.dob ||
+      !formData.gender ||
+      !formData.highSchool ||
+      !formData.homeAddress ||
+      !formData.phoneNumber ||
+      !formData.email ||
+      !formData.primaryContact ||
+      !formData.primaryContactPhone ||
+      !formData.primaryContactEmail
+    ) {
+      alert("Please fill out all required fields.");
+      return;
+    }
+    onSubmit(formData);
+  };
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 max-h-[80vh] overflow-y-auto p-4"
+    >
+      <h2 className="text-xl font-bold mb-4">Student Form</h2>
+
+      {/* Grid Layout for Form Fields */}
+      <div className="grid grid-cols-2 gap-4">
+        {/* First Name */}
+        <div className="flex flex-col">
+          <label className="font-bold">First Name:</label>
+          <input
+            type="text"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+            className="border border-gray-300 rounded p-2"
+            required
+          />
         </div>
-      ))}
-    </div>
-  
-    {/* Buttons */}
-    <div className="flex gap-4 sticky bottom-0 bg-white py-4">
-      <button
-        type="submit"
-        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-      >
-        Submit
-      </button>
-      <button
-        type="button"
-        onClick={onCancel}
-        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-      >
-        Cancel
-      </button>
-    </div>
-  </form>
-    );
-  }
+
+        {/* Last Name */}
+        <div className="flex flex-col">
+          <label className="font-bold">Last Name:</label>
+          <input
+            type="text"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+            className="border border-gray-300 rounded p-2"
+            required
+          />
+        </div>
+
+        {/* School Year */}
+        <div className="flex flex-col">
+          <label className="font-bold">School Year:</label>
+          <select
+            name="schoolYear"
+            value={formData.schoolYear}
+            onChange={handleChange}
+            className="border border-gray-300 rounded p-2"
+            required
+          >
+            <option value="">Select</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+        </div>
+
+        {/* Date of Birth */}
+        <div className="flex flex-col">
+          <label className="font-bold">Date of Birth:</label>
+          <input
+            type="date"
+            name="dob"
+            value={formData.dob}
+            onChange={handleChange}
+            className="border border-gray-300 rounded p-2"
+            required
+          />
+        </div>
+
+        {/* Gender */}
+        <div className="flex flex-col">
+          <label className="font-bold">Gender:</label>
+          <select
+            name="gender"
+            value={formData.gender}
+            onChange={handleChange}
+            className="border border-gray-300 rounded p-2"
+            required
+          >
+            <option value="">Select</option>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+          </select>
+        </div>
+
+        {/* High School */}
+        <div className="flex flex-col">
+          <label className="font-bold">High School:</label>
+          <input
+            type="text"
+            name="highSchool"
+            value={formData.highSchool}
+            onChange={handleChange}
+            className="border border-gray-300 rounded p-2"
+            required
+          />
+        </div>
+
+        {/* Home Address */}
+        <div className="flex flex-col">
+          <label className="font-bold">Home Address:</label>
+          <input
+            type="text"
+            name="homeAddress"
+            value={formData.homeAddress}
+            onChange={handleChange}
+            className="border border-gray-300 rounded p-2"
+            required
+          />
+        </div>
+
+        {/* Phone Number */}
+        <div className="flex flex-col">
+          <label className="font-bold">Phone Number:</label>
+          <input
+            type="tel"
+            name="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            className="border border-gray-300 rounded p-2"
+            required
+          />
+        </div>
+
+        {/* Email */}
+        <div className="flex flex-col">
+          <label className="font-bold">Email:</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="border border-gray-300 rounded p-2"
+            required
+          />
+        </div>
+
+        {/* Allergies */}
+        <div className="flex flex-col">
+          <label className="font-bold">Allergies (optional):</label>
+          <input
+            type="text"
+            name="allergies"
+            value={formData.allergies}
+            onChange={handleChange}
+            className="border border-gray-300 rounded p-2"
+          />
+        </div>
+
+        {/* Primary Contact */}
+        <div className="flex flex-col">
+          <label className="font-bold">Primary Contact:</label>
+          <input
+            type="text"
+            name="primaryContact"
+            value={formData.primaryContact}
+            onChange={handleChange}
+            className="border border-gray-300 rounded p-2"
+            required
+          />
+        </div>
+
+        {/* Primary Contact Phone */}
+        <div className="flex flex-col">
+          <label className="font-bold">Primary Contact Phone:</label>
+          <input
+            type="tel"
+            name="primaryContactPhone"
+            value={formData.primaryContactPhone}
+            onChange={handleChange}
+            className="border border-gray-300 rounded p-2"
+            required
+          />
+        </div>
+
+        {/* Primary Contact Email */}
+        <div className="flex flex-col">
+          <label className="font-bold">Primary Contact Email:</label>
+          <input
+            type="email"
+            name="primaryContactEmail"
+            value={formData.primaryContactEmail}
+            onChange={handleChange}
+            className="border border-gray-300 rounded p-2"
+            required
+          />
+        </div>
+        <div className="flex flex-col">
+        <label className="font-bold">Teacher</label>
+        <select
+          name="teacher"
+          value={formData.teacher}
+          onChange={handleChange}
+          className="border border-gray-300 rounded p-2"
+          required
+        >
+          <option value="">Select</option>
+          {
+            !error && !isLoading && data.map(entry => {
+                return <option value={entry["id"]}>
+                    {entry["firstName"]} {entry["lastName"]}
+                </option>
+            })
+          }
+        </select>
+      </div>
+      </div>
+
+      
+          <Buttons onCancel={onCancel}/>
+    </form>
+  );
+}
+
+function Buttons({onCancel}) {
+    return (
+        <div className="sticky bottom-0 bg-white py-4">
+            <div className="flex gap-4">
+            <button
+                type="submit"
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
+                Submit
+            </button>
+            <button
+                type="button"
+                onClick={onCancel}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            >
+                Cancel
+            </button>
+            </div>
+      </div>
+    )
+}
+export default Form;
