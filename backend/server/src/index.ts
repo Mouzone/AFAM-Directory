@@ -1,7 +1,11 @@
 import { Hono } from 'hono'
+import { cors } from 'hono/cors'
 import { createStudent, deleteStudent, editStudent, getAllStudents } from "../../prisma/student"
 import { Student } from '@prisma/client'
+
 const app = new Hono()
+
+app.use('/*', cors())
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
