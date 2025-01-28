@@ -3,11 +3,7 @@ import { Student } from "@prisma/client"
 const prisma = new PrismaClient()
 
 export function getAllStudents() {
-    return prisma.student.findMany({
-        include: {
-            afamTeacher: true
-        }
-    })
+    return prisma.student.findMany()
 }
 
 export function createStudent(student: Student) {
