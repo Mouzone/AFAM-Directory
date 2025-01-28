@@ -7,6 +7,7 @@ const fetcher = (...args) => fetch(...args).then((res) => res.json());
 export default function Form({ type, state, onCancel }) {
   const [formData, setFormData] = useState(state);
   const {data, error, isLoading} = useSWR("http://localhost:3000/teachers", fetcher)
+  const [isEdit, setIsEdit] = useState(false)
 
   const onSubmit = (formData) => {
 	fetch("http://localhost:3000/students", {
@@ -53,6 +54,7 @@ export default function Form({ type, state, onCancel }) {
     onSubmit(processedData);
   };
   
+  const disabled = type==="view" && !isEdit
   return (
     <form
       onSubmit={handleSubmit}
@@ -72,7 +74,7 @@ export default function Form({ type, state, onCancel }) {
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
             required
-            disabled={type==="view"}
+            disabled={disabled}
           />
         </div>
 
@@ -86,7 +88,7 @@ export default function Form({ type, state, onCancel }) {
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
             required
-            disabled={type==="view"}
+            disabled={disabled}
           />
         </div>
 
@@ -99,7 +101,7 @@ export default function Form({ type, state, onCancel }) {
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
             required
-            disabled={type==="view"}
+            disabled={disabled}
           >
             <option value="">Select</option>
             <option value="9">9</option>
@@ -119,7 +121,7 @@ export default function Form({ type, state, onCancel }) {
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
             required
-            disabled={type==="view"}
+            disabled={disabled}
           />
         </div>
 
@@ -132,7 +134,7 @@ export default function Form({ type, state, onCancel }) {
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
             required
-            disabled={type==="view"}
+            disabled={disabled}
           >
             <option value="">Select</option>
             <option value="M">Male</option>
@@ -150,7 +152,7 @@ export default function Form({ type, state, onCancel }) {
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
             required
-            disabled={type==="view"}
+            disabled={disabled}
           />
         </div>
 
@@ -164,7 +166,7 @@ export default function Form({ type, state, onCancel }) {
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
             required
-            disabled={type==="view"}
+            disabled={disabled}
           />
         </div>
 
@@ -178,7 +180,7 @@ export default function Form({ type, state, onCancel }) {
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
             required
-            disabled={type==="view"}
+            disabled={disabled}
           />
         </div>
 
@@ -192,7 +194,7 @@ export default function Form({ type, state, onCancel }) {
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
             required
-            disabled={type==="view"}
+            disabled={disabled}
           />
         </div>
 
@@ -205,7 +207,7 @@ export default function Form({ type, state, onCancel }) {
             value={formData.allergies}
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
-            disabled={type==="view"}
+            disabled={disabled}
           />
         </div>
 
@@ -219,7 +221,7 @@ export default function Form({ type, state, onCancel }) {
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
             required
-            disabled={type==="view"}
+            disabled={disabled}
           />
         </div>
 
@@ -233,7 +235,7 @@ export default function Form({ type, state, onCancel }) {
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
             required
-            disabled={type==="view"}
+            disabled={disabled}
           />
         </div>
 
@@ -247,7 +249,7 @@ export default function Form({ type, state, onCancel }) {
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
             required
-            disabled={type==="view"}
+            disabled={disabled}
           />
         </div>
         <div className="flex flex-col">
@@ -258,7 +260,7 @@ export default function Form({ type, state, onCancel }) {
           onChange={handleChange}
           className="border border-gray-300 rounded p-2"
           required
-          disabled={type==="view"}
+          disabled={disabled}
         >
           <option value="">Select</option>
           {
@@ -273,28 +275,39 @@ export default function Form({ type, state, onCancel }) {
       </div>
 
       
-          <Buttons onCancel={onCancel}/>
+          <Buttons type={type} setIsEdit={setIsEdit} onCancel={onCancel}/>
     </form>
   );
 }
 
-function Buttons({onCancel}) {
+function Buttons({type, setIsEdit, onCancel}) {
     return (
         <div className="sticky bottom-0 bg-white py-4">
             <div className="flex gap-4">
-            <button
-                type="submit"
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            >
-                Submit
-            </button>
-            <button
-                type="button"
-                onClick={onCancel}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            >
-                Cancel
-            </button>
+                { 
+                    type === "add" 
+                    ?  <button
+                        type="submit"
+                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                    >
+                        Submit
+                    </button> 
+                    : <button
+                        type="button"
+                        onClick={() => setIsEdit(true)}
+                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                    >
+                        Edit
+                    </button> 
+                }
+               
+                <button
+                    type="button"
+                    onClick={onCancel}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                >
+                    Cancel
+                </button>
             </div>
       </div>
     )
