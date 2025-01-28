@@ -300,14 +300,14 @@ function Buttons({type, isEdit, setIsEdit, onCancel}) {
 				(type === "add" || isEdit)
 				?  (<button
 					type="submit"
-					className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+					className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
 				>
 					Submit
 				</button> )
 				: (<button
 					type="button"
 					onClick={onClick}
-					className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+					className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
 				>
 					Edit
 				</button> )
@@ -316,7 +316,7 @@ function Buttons({type, isEdit, setIsEdit, onCancel}) {
 			<button
 				type="button"
 				onClick={onCancel}
-				className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+				className="bg-white border-2 px-3 py-2 rounded hover:bg-gray-300"
 			>
 				Cancel
 			</button>
