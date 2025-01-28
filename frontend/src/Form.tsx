@@ -293,6 +293,11 @@ export default function Form({ type, state, onCancel }) {
 }
 
 function Buttons({type, isEdit, setIsEdit, onCancel}) {
+    const onClick = (e) => {
+        e.preventDefault(); 
+        setIsEdit(true)
+    }
+    
 	return (
 		<div className="sticky bottom-0 bg-white py-4 flex gap-4">
 			{ 
@@ -305,7 +310,7 @@ function Buttons({type, isEdit, setIsEdit, onCancel}) {
 				</button> )
 				: (<button
 					type="button"
-					onClick={() => setIsEdit(true)}
+					onClick={onClick}
 					className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
 				>
 					Edit
