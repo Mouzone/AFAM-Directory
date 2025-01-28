@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useSWR from "swr";
+import isoDateToInputDate from "./utility/isoDateToInputDate";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -51,7 +52,7 @@ export default function Form({ type, state, onCancel }) {
     }
     onSubmit(processedData);
   };
-
+  
   return (
     <form
       onSubmit={handleSubmit}
@@ -114,7 +115,7 @@ export default function Form({ type, state, onCancel }) {
           <input
             type="date"
             name="dob"
-            value={formData.dob}
+            value={isoDateToInputDate(formData.dob)}
             onChange={handleChange}
             className="border border-gray-300 rounded p-2"
             required
