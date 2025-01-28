@@ -38,20 +38,37 @@ function App() {
 	teacher: "",
   });
 
-  const { data, error, isLoading } = useSWR(
+  const { data: students, error: studentsError, isLoading: studentsIsLoading } = useSWR(
 	"http://localhost:3000/students",
 	fetcher
   );
 
-  if (error) {
+  const { data: teachers, error: teachersError, isLoading: teachersIsLoading } = useSWR(
+	"http://localhost:3000/teachers",
+	fetcher
+  );
+
+  if (studentsError || teachersError) {
 	return <div className="text-red-500">Failed to load data.</div>;
   }
 
-  if (isLoading) {
+  if (studentsIsLoading || teachersIsLoading) {
 	return <div className="text-blue-500">Loading...</div>;
   }
 
-  const filtered = data.filter((entry) => {
+  const teachersMap = {}
+  teachers.forEach(teacher => {
+    teachersMap[teacher["id"]] = {
+        firstName: teacher["firstName"], 
+        lastName: teacher["lastName"]
+    }
+  })
+
+  students.forEach(student => {
+    student["afamTeacher"] = teachersMap[student["afamTeacherId"]]
+  })
+
+  const filtered = students.filter((entry) => {
 	return (
 		entry["firstName"]
 			.toLowerCase()
