@@ -10,10 +10,18 @@ export default function Form({ type, state, onCancel }) {
   const [isEdit, setIsEdit] = useState(false)
 
   const onSubmit = (formData) => {
-	fetch("http://localhost:3000/students", {
-		method: "POST",
-		body: JSON.stringify(formData)
-	})
+    if (type === "add") {
+        fetch("http://localhost:3000/students", {
+            method: "POST",
+            body: JSON.stringify(formData)
+        })
+    } else {
+        fetch("http://localhost:3000/students", {
+            method: "PUT",
+            body: JSON.stringify(formData)
+        })
+    }
+	
 	onCancel(); // Hide the form after submission
   };
 
@@ -275,17 +283,17 @@ export default function Form({ type, state, onCancel }) {
       </div>
 
       
-          <Buttons type={type} setIsEdit={setIsEdit} onCancel={onCancel}/>
+          <Buttons type={type} isEdit={isEdit} setIsEdit={setIsEdit} onCancel={onCancel}/>
     </form>
   );
 }
 
-function Buttons({type, setIsEdit, onCancel}) {
+function Buttons({type, isEdit, setIsEdit, onCancel}) {
     return (
         <div className="sticky bottom-0 bg-white py-4">
             <div className="flex gap-4">
                 { 
-                    type === "add" 
+                    (type === "add" || isEdit)
                     ?  <button
                         type="submit"
                         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
