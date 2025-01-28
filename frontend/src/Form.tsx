@@ -9,6 +9,7 @@ export default function Form({ type, state, onCancel }) {
   const {data, error, isLoading} = useSWR("http://localhost:3000/teachers", fetcher)
   const [isEdit, setIsEdit] = useState(false)
 
+    formData.allergies = ""
   const onSubmit = (formData) => {
     if (type === "add") {
         fetch("http://localhost:3000/students", {
@@ -67,6 +68,7 @@ export default function Form({ type, state, onCancel }) {
     <form
       onSubmit={handleSubmit}
       className="space-y-4 max-h-[80vh] overflow-y-auto p-4"
+      noValidate
     >
       <h2 className="text-xl font-bold mb-4">Student Form</h2>
 
@@ -273,7 +275,7 @@ export default function Form({ type, state, onCancel }) {
           <option value="">Select</option>
           {
             !error && !isLoading && data.map(entry => {
-                return <option value={entry["id"]}>
+                return <option key={entry["id"]} value={entry["id"]}>
                     {entry["firstName"]} {entry["lastName"]}
                 </option>
             })
@@ -290,33 +292,31 @@ export default function Form({ type, state, onCancel }) {
 
 function Buttons({type, isEdit, setIsEdit, onCancel}) {
     return (
-        <div className="sticky bottom-0 bg-white py-4">
-            <div className="flex gap-4">
-                { 
-                    (type === "add" || isEdit)
-                    ?  <button
-                        type="submit"
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                    >
-                        Submit
-                    </button> 
-                    : <button
-                        type="button"
-                        onClick={() => setIsEdit(true)}
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                    >
-                        Edit
-                    </button> 
-                }
-               
-                <button
-                    type="button"
-                    onClick={onCancel}
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+        <div className="sticky bottom-0 bg-white py-4 flex gap-4">
+            { 
+                (type === "add" || isEdit)
+                ?  <button
+                    type="submit"
+                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                 >
-                    Cancel
-                </button>
-            </div>
+                    Submit
+                </button> 
+                : <button
+                    type="button"
+                    onClick={() => setIsEdit(true)}
+                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                >
+                    Edit
+                </button> 
+            }
+            
+            <button
+                type="button"
+                onClick={onCancel}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            >
+                Cancel
+            </button>
       </div>
     )
 }
