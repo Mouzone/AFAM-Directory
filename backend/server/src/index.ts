@@ -30,7 +30,9 @@ app.post("/students", async (c) => {
 
 app.put("/students", async (c) => {
     const student: Student = await c.req.json()
-    const result = await editStudent(student["id"], student)
+    console.log(student)
+    const { id, ...studentWithoutId } = student;
+    const result = await editStudent(id, student)
     return c.json(result)
 })
 
