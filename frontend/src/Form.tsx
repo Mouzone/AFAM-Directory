@@ -6,7 +6,6 @@ export default function Form({ type, state, onCancel, teachers }) {
 	const [isEdit, setIsEdit] = useState(false)
 
 	formData.allergies = formData.allergies === null ? "" : formData.allergies
-	console.log(teachers)
 	const onSubmit = (formData) => {
 		if (type === "add") {
 			fetch("http://localhost:3000/students", {
@@ -51,7 +50,7 @@ export default function Form({ type, state, onCancel, teachers }) {
 		alert("Please fill out all required fields.");
 		return;
 	}
-    
+
 	const processedData = {
 		...formData,
 		schoolYear: parseInt(formData.schoolYear, 10),
