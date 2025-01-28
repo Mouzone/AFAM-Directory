@@ -9,7 +9,7 @@ export default function Form({ type, state, onCancel }) {
   const {data, error, isLoading} = useSWR("http://localhost:3000/teachers", fetcher)
   const [isEdit, setIsEdit] = useState(false)
 
-    formData.allergies = ""
+    formData.allergies = formData.allergies === null ? "" : formData.allergies
   const onSubmit = (formData) => {
     if (type === "add") {
         fetch("http://localhost:3000/students", {
