@@ -64,9 +64,6 @@ function App() {
     }
   })
 
-  students.forEach(student => {
-    student["afamTeacher"] = teachersMap[student["afamTeacherId"]]
-  })
 
   const filtered = students.filter((entry) => {
 	return (
@@ -78,10 +75,10 @@ function App() {
 			.includes(searchValues["lastName"].toLowerCase()) &&
 		(!parseInt(searchValues["schoolYear"]) ||
 			entry["schoolYear"] === parseInt(searchValues["schoolYear"])) &&
-		(entry["afamTeacher"]["firstName"]
+		(teachersMap[entry["afamTeacherId"]]["firstName"]
 			.toLowerCase()
 			.includes(searchValues["teacher"].toLowerCase()) ||
-		entry["afamTeacher"]["lastName"]
+		teachersMap[entry["afamTeacherId"]]["lastName"]
 			.toLowerCase()
 			.includes(searchValues["teacher"].toLowerCase()))
 	);
@@ -119,7 +116,7 @@ function App() {
 	  	(add || profile) && (
 			<div
 				className="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex justify-center items-center"
-				onClick={() => setProfile(false)} // Close modal on outside click
+				onClick={() => setProfile(null)} // Close modal on outside click
 			>
 				<div
 					className="bg-white p-6 rounded-lg w-fit"
@@ -128,12 +125,14 @@ function App() {
 					<Form 
 						type={add ? "add" : "view"} 
 						state={add ? addState : profile}
-						onCancel={add ? () => setAdd(false) : () => setProfile(null)} />
+						onCancel={add ? () => setAdd(false) : () => setProfile(null)} 
+                        teachers={teachersMap}
+                    />
 				</div>
 			</div>
 		)
 	  }
-	  <Table filtered={filtered} setProfile={setProfile}/>	  
+	  <Table filtered={filtered} teachers={teachersMap} setProfile={setProfile}/>	  
 	</div>
   );
 }

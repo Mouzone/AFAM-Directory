@@ -1,16 +1,12 @@
 import { useState } from "react";
-import useSWR from "swr";
 import isoDateToInputDate from "./utility/isoDateToInputDate";
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
-
-export default function Form({ type, state, onCancel }) {
+export default function Form({ type, state, onCancel, teachers }) {
 	const [formData, setFormData] = useState(state);
-	const {data, error, isLoading} = useSWR("http://localhost:3000/teachers", fetcher)
 	const [isEdit, setIsEdit] = useState(false)
 
 	formData.allergies = formData.allergies === null ? "" : formData.allergies
-	
+	console.log(teachers)
 	const onSubmit = (formData) => {
 		if (type === "add") {
 			fetch("http://localhost:3000/students", {
@@ -55,6 +51,7 @@ export default function Form({ type, state, onCancel }) {
 		alert("Please fill out all required fields.");
 		return;
 	}
+    
 	const processedData = {
 		...formData,
 		schoolYear: parseInt(formData.schoolYear, 10),
@@ -277,9 +274,9 @@ export default function Form({ type, state, onCancel }) {
 				>
 					<option value="">Select</option>
 					{
-						!error && !isLoading && data.map(entry => {
-							return <option key={entry["id"]} value={entry["id"]}>
-								{entry["firstName"]} {entry["lastName"]}
+						Object.entries(teachers).map(([key, value]) => {
+							return <option key={key} value={key}>
+								{value["firstName"]} {value["lastName"]}
 							</option>
 						})
 					}
