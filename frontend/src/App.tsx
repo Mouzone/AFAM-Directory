@@ -2,7 +2,6 @@ import { useState } from "react";
 import useSWR from "swr";
 import Form from "./Form";
 import Table from "./Table"
-import Profile from "./Profile"
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 const addState = {
@@ -31,7 +30,7 @@ const labels = {
 
 function App() {
   const [add, setAdd] = useState(false);
-  const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState<object | null>(null);
   const [searchValues, setSearchValues] = useState({
 	firstName: "",
 	lastName: "",
