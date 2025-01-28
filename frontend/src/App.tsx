@@ -111,7 +111,7 @@ function App() {
 					<Form 
 						type={add ? "add" : "view"} 
 						state={add ? addState : profile}
-						onCancel={add ? () => setAdd(false) : () => setProfile(false)} />
+						onCancel={add ? () => setAdd(false) : () => setProfile(null)} />
 				</div>
 			</div>
 		)
