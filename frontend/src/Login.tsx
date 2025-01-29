@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "./utility/firebase"; // Adjust the path to your Firebase initialization file
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
 	const [credentials, setCredentials] = useState({ email: "", password: "" });
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
+	const navigate = useNavigate()
 
   	const onChange = (key: "email" | "password", e) => {
 		setCredentials({ ...credentials, [key]: e.target.value });
@@ -22,16 +24,15 @@ export default function Login() {
 	  		const userCredential = await signInWithEmailAndPassword(
 				auth,
 				credentials.email,
-			credentials.password
-	  	);
-	  	const user = userCredential.user;
-	  	console.log("User logged in:", user);
-	  	// Redirect or update UI (e.g., navigate to dashboard)
+				credentials.password
+	  		);
+			const user = userCredential.user;
+			navigate("/students", { replace: true})
 		} catch (error) {
 	  		setError(error.message);
 	  		console.error("Error during login:", error);
 		} finally {
-	  	setLoading(false);
+	  		setLoading(false);
 		}
   	};
 
