@@ -2,8 +2,10 @@ import { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "./utility/firebase"; // Adjust the path to your Firebase initialization file
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthProvider";
 
 export default function Login() {
+    const { setUser, setToken } = useAuth();
 	const [credentials, setCredentials] = useState({ email: "", password: "" });
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
@@ -27,6 +29,10 @@ export default function Login() {
 				credentials.password
 	  		);
 			const user = userCredential.user;
+            const idToken = await user.getIdToken()
+
+            setUser(user)
+            setToken(idToken)
 			navigate("/students", { replace: true})
 		} catch (error) {
 	  		setError(error.message);
