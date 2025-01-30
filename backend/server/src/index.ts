@@ -19,7 +19,6 @@ app.use(async (c, next) => {
     const idToken = authHeader.split("Bearer ")[1]
     try {
         const decodedToken = await admin.auth().verifyIdToken(idToken);
-        console.log(decodedToken)
         await next()
     } catch (error) {
         return c.json({ error: "Unauthorized"}, 401)
