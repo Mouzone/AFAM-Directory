@@ -3,6 +3,7 @@ import useSWR from "swr";
 import Form from "./Form";
 import Table from "./Table"
 import { useAuth } from "./AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const fetcher = ([url, token]) => fetch(url, { headers: { Authorization: `Bearer ${token}` } }).then((res) => res.json());
 const addState = {
@@ -31,6 +32,10 @@ const labels = {
 
 function App() {
     const { user, token} = useAuth()
+    const navigate = useNavigate()
+    if (!token) {
+        navigate("/", { replace: true})
+    }
     const [add, setAdd] = useState(false);
     const [profile, setProfile] = useState<object | null>(null);
     const [searchValues, setSearchValues] = useState({
