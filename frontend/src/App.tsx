@@ -4,7 +4,7 @@ import Form from "./Form";
 import Table from "./Table"
 import { useAuth } from "./AuthProvider";
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+const fetcher = ([url, token]) => fetch(url, { headers: { Authorization: `Bearer ${token}` } }).then((res) => res.json());
 const addState = {
     firstName: "",
     lastName: "",
@@ -41,12 +41,12 @@ function App() {
     });
 
     const { data: students, error: studentsError, isLoading: studentsIsLoading } = useSWR(
-        "http://localhost:3000/students",
+        ["http://localhost:3000/students", token],
         fetcher
     );
 
     const { data: teachers, error: teachersError, isLoading: teachersIsLoading } = useSWR(
-        "http://localhost:3000/teachers",
+        ["http://localhost:3000/teachers", token],
         fetcher
     );
 

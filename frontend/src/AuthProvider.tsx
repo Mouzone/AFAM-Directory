@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth"
+import { getAuth, onAuthStateChanged, onIdTokenChanged } from "firebase/auth"
 import { app } from "./utility/firebase"
 
 const AuthContext = createContext()
@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
     const auth = getAuth(app)
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 setUser(user)
                 const idToken = await user.getIdToken()
@@ -20,8 +20,17 @@ export const AuthProvider = ({ children }) => {
                 setToken(null)
             }
         })
-
-        return () => unsubscribe()
+        
+        const unsubscribeToken = onIdTokenChanged(auth, async (user) => {
+            if (user) {
+                const idToken = await user.getIdToken()
+                setToken(idToken)
+            }
+        })
+        return () => {
+            unsubscribeAuth()
+            unsubscribeToken()
+        }
     }, [auth])
 
     return (
