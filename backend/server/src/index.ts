@@ -3,10 +3,26 @@ import { cors } from 'hono/cors'
 import { createStudent, deleteStudent, editStudent, getAllStudents } from "../../prisma/student"
 import { getAllTeachers } from "../../prisma/teacher"
 import { Student, Teacher } from '@prisma/client'
-
+import admin from './fireside'
 const app = new Hono()
 
 app.use('/*', cors())
+
+app.use(async (c, next) => {
+    const authHeader = c.req.header('Authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return c.json({error: 'Unauthorized'}, 401)
+    }
+
+    const idToken = authHeader.split("Bearer")[1]
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        console.log(decodedToken)
+        await next()
+    } catch (error) {
+        return c.json({ error: "Unauthroized"}, 401)
+    }
+})
 
 app.get('/', (c) => {
   return c.text('Hello Hono!')
