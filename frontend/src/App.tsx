@@ -35,7 +35,6 @@ function App() {
     const { user, token} = useAuth()
     const navigate = useNavigate()
 
-    console.log(token)
     useEffect(() => {
         if (!token) {
             navigate("/", { replace: true})
