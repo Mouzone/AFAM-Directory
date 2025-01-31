@@ -1,7 +1,3 @@
-# Welcome to Cloud Functions for Firebase for Python!
-# To get started, simply uncomment the below code or create your own.
-# Deploy with `firebase deploy`
-
 from firebase_functions import https_fn, options
 from firebase_admin import initialize_app, firestore
 from flask import jsonify
@@ -10,7 +6,7 @@ import google.cloud.firestore
 app = initialize_app()
 fireStore_client: google.cloud.firestore.Client = firestore.client()
 
-@https_fn.on_request(cors=options.CorsOpions(cors_methods=["GET"]))
+@https_fn.on_request(cors=options.CorsOptions(cors_methods=["GET"]))
 def getCollection(req: https_fn.Request) -> https_fn.Response:
     try:
         collection_type = req.args.get("type")
@@ -60,7 +56,7 @@ def createStudent(req: https_fn.Request) -> https_fn.Response:
         print(f"Error processing request: {e}")
         return https_fn.Response(jsonify({"error": "Internal Server Error"}), status=500)
 
-@https_fn.on_request(cors=https_fn.CorsOptions(cors_methods=["PUT"]))
+@https_fn.on_request(cors=options.CorsOptions(cors_methods=["PUT"]))
 def editStudent(req: https_fn.Request) -> https_fn.Response:
     try:
         if not req.data:
@@ -88,9 +84,6 @@ def editStudent(req: https_fn.Request) -> https_fn.Response:
     except Exception as e:
         print(f"Error processing request: {e}")
         return https_fn.Response(jsonify({"error": "Internal Server Error"}), status=500)
-# Routes:
-## Create Student / Edit Student
-### can combine since both send the same payload, of a ton of data
- 
+
 # Middleware:
 ## Check auth (maybe header?)
