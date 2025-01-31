@@ -4,9 +4,11 @@
 
 from firebase_functions import https_fn, options
 from firebase_admin import initialize_app, firestore
+from flask import jsonify
 import google.cloud.firestore
 
 app = initialize_app()
+fireStore_client: google.cloud.firestore.Client = firestore.client()
 
 @https_fn.on_request(cors=options.CorsOpions(cors_methods=["GET"]))
 def getCollection(req: https_fn.Request) -> https_fn.Response:
@@ -15,24 +17,49 @@ def getCollection(req: https_fn.Request) -> https_fn.Response:
         if  not collection_type:
             return https_fn.Response("Missing 'type' parameter", status=400)
         
-        fireStore_client: google.cloud.firestore.Client = firestore.client()
 
-        values = fireStore_client.collections(f"{type}").stream()
+        documents = fireStore_client.collections(f"{type}").stream()
         entries = []
-        for value in values:
-            entry = value.to_dict()
-            entry["id"] = value.id
+        for document in documents:
+            entry = document.to_dict()
+            entry["id"] = document.id
             entries.append(entry)
 
-        return https_fn.Response(values, status=200, content_type="application/json")
+        return https_fn.Response(jsonify(entries), status=200, content_type="application/json")
     
     except Exception as e:
         print(f"Error fetching documents: {e}")
-        return https_fn.Response("Internal Server Error", status=500)
+        return https_fn.Response(jsonify({"error": "Internal Server Error"}), status=500)
 
 @https_fn.on_request(cors=options.CorsOptions(cors_methods=["POST", "PUT"]))
 def createStudent(req: https_fn.Request) -> https_fn.Response:
-    
+    try:
+        if not req.data:
+            return https_fn.Reponse(jsonify({"error": "Request body is empty"}), status=400)
+        
+        request_data = req.get_json()
+        
+        if not request_data:
+            return https_fn.Response(jsonify({"error": "Invalid JSON"}), status=400)
+        
+        name = request_data.get("name")
+        age = request_data.data.get("age")
+
+        if not name or not age:
+            return https_fn.Response(jsonify({"error": "Missing required fields"}), status=400)
+
+        doc_ref = fireStore_client.collection("students").document()
+        doc_ref.set({
+            "name": name,
+            "age": age
+        })
+
+        return  https_fn.Response(jsonify({"message": "Data processed successfully", "id": doc_ref.id}), status=200)
+
+    except Exception as e:
+        print(f"Error processing request: {e}")
+        return https_fn.Response(jsonify({"error": "Internal Server Error"}), status=500)
+        
 # Routes:
 ## Create Student / Edit Student
 ### can combine since both send the same payload, of a ton of data
