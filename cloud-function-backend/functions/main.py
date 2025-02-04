@@ -25,7 +25,7 @@ def check_token(req: https_fn.Request) -> https_fn.Response | None:
     except Exception as e:
         return https_fn.Response(jsonify({"error": "Unauthorized: Invalid or expired token", "details": str(e)}), status=401)
 
-@https_fn.on_request(cors=options.CorsOptions(cors_origins="*", cors_methods=["get"]))
+@https_fn.on_request(cors=options.CorsOptions(cors_origins="*", cors_methods=["GET"]))
 def getCollection(req: https_fn.Request) -> https_fn.Response:
     try:
         # Get the 'type' query parameter
@@ -48,7 +48,7 @@ def getCollection(req: https_fn.Request) -> https_fn.Response:
         print(f"Error fetching documents: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
 
-@https_fn.on_request(cors=options.CorsOptions(cors_origins="*", cors_methods=["post"]))
+@https_fn.on_request(cors=options.CorsOptions(cors_origins="*", cors_methods=["POST"]))
 def createStudent(req: https_fn.Request) -> https_fn.Response:
     middleware_response = check_token(req)
     if middleware_response:
@@ -81,7 +81,7 @@ def createStudent(req: https_fn.Request) -> https_fn.Response:
         print(f"Error processing request: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
 
-@https_fn.on_request(cors=options.CorsOptions(cors_origins="*", cors_methods=["put"]))
+@https_fn.on_request(cors=options.CorsOptions(cors_origins="*", cors_methods=["PUT"]))
 def editStudent(req: https_fn.Request) -> https_fn.Response:
 
     middleware_response = check_token(req)
