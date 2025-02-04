@@ -27,15 +27,13 @@ def check_token(req: https_fn.Request) -> https_fn.Response | None:
 
 @https_fn.on_request()
 def getCollection(req: https_fn.Request) -> https_fn.Response:
-    middleware_response = check_token(req)
-    if middleware_response:
-        return middleware_response
-
     try:
+        # Get the 'type' query parameter
         collection_type = req.args.get("type")
         if not collection_type:
-            return https_fn.Response("Missing 'type' parameter", status=400)
+            return jsonify({"error": "Missing 'type' parameter"}), 400
 
+        # Fetch documents from Firestore
         documents = fireStore_client.collection(collection_type).stream()
         entries = []
         for document in documents:
@@ -43,11 +41,12 @@ def getCollection(req: https_fn.Request) -> https_fn.Response:
             entry["id"] = document.id
             entries.append(entry)
 
-        return https_fn.Response(jsonify(entries), status=200, content_type="application/json")
+        # Return the response as JSON
+        return jsonify(entries), 200
 
     except Exception as e:
         print(f"Error fetching documents: {e}")
-        return https_fn.Response(jsonify({"error": "Internal Server Error"}), status=500)
+        return jsonify({"error": "Internal Server Error"}), 500
 
 @https_fn.on_request()
 def createStudent(req: https_fn.Request) -> https_fn.Response:
