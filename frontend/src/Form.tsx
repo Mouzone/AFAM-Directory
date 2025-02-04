@@ -4,7 +4,7 @@ import isoDateToInputDate from "./utility/isoDateToInputDate";
 export default function Form({ type, state, onCancel, teachers }) {
 	const [formData, setFormData] = useState(state);
 	const [isEdit, setIsEdit] = useState(false)
-
+    
 	formData.allergies = formData.allergies === null ? "" : formData.allergies
 	const onSubmit = (formData) => {
 		if (type === "add") {
@@ -29,6 +29,20 @@ export default function Form({ type, state, onCancel, teachers }) {
 	  		[name]: value,
 		});
   	};
+
+    const handleTeacherChange = (e) => {
+        const teacherName = e.target.value
+        const teacherNameList = teacherName.split(" ")
+        const firstName = teacherNameList[0]
+        const lastName = teacherNameList[1]
+        setFormData({
+            ...formData,
+            teacher: {
+                firstName,
+                lastName
+            }
+        })
+    }
 
   const handleSubmit = (e) => {
 	e.preventDefault();
@@ -312,7 +326,7 @@ export default function Form({ type, state, onCancel, teachers }) {
 				<select
 					name="teacher"
 					value={`${formData["teacher"]["firstName"]} ${formData["teacher"]["lastName"]}`}
-					onChange={handleChange}
+					onChange={handleTeacherChange}
 					className="border border-gray-300 rounded p-2"
 					required
 					disabled={disabled}

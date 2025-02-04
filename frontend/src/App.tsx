@@ -63,8 +63,6 @@ function App() {
         fetcher
     );
 
-    console.log(students)
-    console.log(teachers)
     if (studentsError || teachersError) {
         return <div className="text-red-500">Failed to load data.</div>;
     }
@@ -75,7 +73,6 @@ function App() {
 
 
     const filtered = students.filter((entry) => {
-        console.log(entry)
         return (
             entry["firstName"]
                 .toLowerCase()
