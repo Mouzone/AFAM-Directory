@@ -18,9 +18,12 @@ const addState = {
     phoneNumber: "",
     email: "",
     allergies: "",
-    primaryContact: "",
-    primaryContactPhone: "",
-    primaryContactEmail: "",
+    primaryContact: {
+        firstName: "",
+        lastName: "",
+        phoneNumer: "",
+        email: "",
+    },
     teacher: {
         firstName: "",
         lastName: ""

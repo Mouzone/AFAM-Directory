@@ -2,7 +2,7 @@ import { useState } from "react";
 import isoDateToInputDate from "./utility/isoDateToInputDate";
 
 export default function Form({ type, state, onCancel, teachers }) {
-	const [formData, setFormData] = useState(state);
+    const [formData, setFormData] = useState(state);
 	const [isEdit, setIsEdit] = useState(false)
     
 	formData.allergies = formData.allergies === null ? "" : formData.allergies
@@ -44,40 +44,45 @@ export default function Form({ type, state, onCancel, teachers }) {
         })
     }
 
-  const handleSubmit = (e) => {
-	e.preventDefault();
-	if (
-		!formData.firstName ||
-		!formData.lastName ||
-		!formData.schoolYear ||
-		!formData.dob ||
-		!formData.gender ||
-		!formData.highSchool ||
-		!formData.streetAddress ||
-        !formData.city ||
-        !formData.zipCode ||
-		!formData.phoneNumber ||
-		!formData.email ||
-		!formData.primaryContact ||
-		!formData.primaryContactPhone ||
-		!formData.primaryContactEmail ||
-		!formData.teacher
-	) {
-		alert("Please fill out all required fields.");
-		return;
-	}
+    const handlePrimaryContactChange = (field) => {
+        return (e) => {
+            setFormData({
+                ...formData,
+                primaryContact: {
+                    ...formData["primaryContact"],
+                    [field]: e.target.value
+                }
+            })
+        }
+    }
+
+    const handleSubmit = (e) => {
+	    e.preventDefault();
+        if (
+            !formData.firstName ||
+            !formData.lastName ||
+            !formData.schoolYear ||
+            !formData.dob ||
+            !formData.gender ||
+            !formData.highSchool ||
+            !formData.streetAddress ||
+            !formData.city ||
+            !formData.zipCode ||
+            !formData.phoneNumber ||
+            !formData.email 
+    // add validation for primaryContact and Teacher
+        ) {
+            alert("Please fill out all required fields.");
+            return;
+        }
 
 	const processedData = {
 		...formData,
 		schoolYear: parseInt(formData.schoolYear, 10),
 		dob: new Date(formData.dob),
-		teacher: {
-            firstName: formData.teacher.firstName,
-            lastName: formData.teacher.lastName
-        }
 	}
-	onSubmit(processedData);
-  };
+	    onSubmit(processedData);
+    };
   
   const disabled = type==="view" && !isEdit
   return (
@@ -271,8 +276,8 @@ export default function Form({ type, state, onCancel, teachers }) {
 				<input
 					type="text"
 					name="primaryContactFirstName"
-					value={formData.primaryContactFirstName}
-					onChange={handleChange}
+					value={formData.primaryContact.firstName}
+					onChange={handlePrimaryContactChange("firstName")}
 					className="border border-gray-300 rounded p-2"
 					required
 					disabled={disabled}
@@ -284,8 +289,8 @@ export default function Form({ type, state, onCancel, teachers }) {
 				<input
 					type="text"
 					name="primaryContactLastName"
-					value={formData.primaryContactLastName}
-					onChange={handleChange}
+					value={formData.primaryContact.lastName}
+					onChange={handlePrimaryContactChange("lastName")}
 					className="border border-gray-300 rounded p-2"
 					required
 					disabled={disabled}
@@ -298,8 +303,8 @@ export default function Form({ type, state, onCancel, teachers }) {
 				<input
 					type="tel"
 					name="primaryContactPhone"
-					value={formData.primaryContactPhone}
-					onChange={handleChange}
+					value={formData.primaryContact.phoneNumber}
+					onChange={handlePrimaryContactChange("phoneNumber")}
 					className="border border-gray-300 rounded p-2"
 					required
 					disabled={disabled}
@@ -312,8 +317,8 @@ export default function Form({ type, state, onCancel, teachers }) {
 				<input
 					type="email"
 					name="primaryContactEmail"
-					value={formData.primaryContactEmail}
-					onChange={handleChange}
+					value={formData.primaryContact.email}
+					onChange={handlePrimaryContactChange("email")}
 					className="border border-gray-300 rounded p-2"
 					required
 					disabled={disabled}
