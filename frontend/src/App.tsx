@@ -51,12 +51,12 @@ function App() {
     });
 
     const { data: students, error: studentsError, isLoading: studentsIsLoading } = useSWR(
-        ["http://localhost:3000/students", token],
+        ["http://127.0.0.1:5001/afam-directory/us-central1/getCollection?type=students", token],
         fetcher
     );
 
     const { data: teachers, error: teachersError, isLoading: teachersIsLoading } = useSWR(
-        ["http://localhost:3000/teachers", token],
+        ["http://127.0.0.1:5001/afam-directory/us-central1/getCollection?type=teachers", token],
         fetcher
     );
 
