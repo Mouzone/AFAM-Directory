@@ -25,7 +25,7 @@ def check_token(req: https_fn.Request) -> https_fn.Response | None:
     except Exception as e:
         return https_fn.Response(jsonify({"error": "Unauthorized: Invalid or expired token", "details": str(e)}), status=401)
 
-@https_fn.on_request(cors=options.CorsOptions(cors_methods=["GET"]))
+@https_fn.on_request()
 def getCollection(req: https_fn.Request) -> https_fn.Response:
     middleware_response = check_token(req)
     if middleware_response:
@@ -49,7 +49,7 @@ def getCollection(req: https_fn.Request) -> https_fn.Response:
         print(f"Error fetching documents: {e}")
         return https_fn.Response(jsonify({"error": "Internal Server Error"}), status=500)
 
-@https_fn.on_request(cors=options.CorsOptions(cors_methods=["POST"]))
+@https_fn.on_request()
 def createStudent(req: https_fn.Request) -> https_fn.Response:
     middleware_response = check_token(req)
     if middleware_response:
@@ -82,7 +82,7 @@ def createStudent(req: https_fn.Request) -> https_fn.Response:
         print(f"Error processing request: {e}")
         return https_fn.Response(jsonify({"error": "Internal Server Error"}), status=500)
 
-@https_fn.on_request(cors=options.CorsOptions(cors_methods=["PUT"]))
+@https_fn.on_request()
 def editStudent(req: https_fn.Request) -> https_fn.Response:
 
     middleware_response = check_token(req)
