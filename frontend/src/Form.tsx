@@ -307,8 +307,8 @@ export default function Form({ type, state, onCancel, teachers }) {
 			<div className="flex flex-col">
 				<label className="font-bold">Teacher</label>
 				<select
-					name="afamTeacherId"
-					value={formData.afamTeacherId}
+					name="teacher"
+					value={`${formData["teacher"]["firstName"]} ${formData["teacher"]["lastName"]}`}
 					onChange={handleChange}
 					className="border border-gray-300 rounded p-2"
 					required
@@ -316,9 +316,9 @@ export default function Form({ type, state, onCancel, teachers }) {
 				>
 					<option value="">Select</option>
 					{
-						Object.entries(teachers).map(([key, value]) => {
-							return <option key={key} value={key}>
-								{value["firstName"]} {value["lastName"]}
+						teachers.map(teacher => {
+							return <option key={teacher["id"]} value={`${teacher["firstName"]} ${teacher["lastName"]}`}>
+								{teacher["firstName"]} {teacher["lastName"]}
 							</option>
 						})
 					}
