@@ -39,7 +39,9 @@ export default function Form({ type, state, onCancel, teachers }) {
 		!formData.dob ||
 		!formData.gender ||
 		!formData.highSchool ||
-		!formData.homeAddress ||
+		!formData.streetAddress ||
+        !formData.city ||
+        !formData.zipCode ||
 		!formData.phoneNumber ||
 		!formData.email ||
 		!formData.primaryContact ||
@@ -163,13 +165,41 @@ export default function Form({ type, state, onCancel, teachers }) {
 				/>
 			</div>
 
-			{/* Home Address */}
+			{/* Street Address */}
 			<div className="flex flex-col">
-				<label className="font-bold">Home Address:</label>
+				<label className="font-bold">Street Address:</label>
 				<input
 					type="text"
-					name="homeAddress"
-					value={formData.homeAddress}
+					name="streetAddress"
+					value={formData.streetAddress}
+					onChange={handleChange}
+					className="border border-gray-300 rounded p-2"
+					required
+					disabled={disabled}
+				/>
+			</div>
+
+            {/* City */}
+            <div className="flex flex-col">
+				<label className="font-bold">City:</label>
+				<input
+					type="text"
+					name="city"
+					value={formData.city}
+					onChange={handleChange}
+					className="border border-gray-300 rounded p-2"
+					required
+					disabled={disabled}
+				/>
+			</div>
+
+            {/* Zip Code */}
+            <div className="flex flex-col">
+				<label className="font-bold">Zip Code:</label>
+				<input
+					type="text"
+					name="zipCode"
+					value={formData.zipCode}
 					onChange={handleChange}
 					className="border border-gray-300 rounded p-2"
 					required
