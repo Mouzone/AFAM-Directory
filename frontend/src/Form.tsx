@@ -148,7 +148,7 @@ export default function Form({ type, state, onCancel, teachers }) {
 					<option value="">Select</option>
 					<option value="Male">Male</option>
 					<option value="Female">Female</option>
-			</select>
+			    </select>
 			</div>
 
 			{/* High School */}
@@ -250,11 +250,24 @@ export default function Form({ type, state, onCancel, teachers }) {
 
 			{/* Primary Contact */}
 			<div className="flex flex-col">
-				<label className="font-bold">Primary Contact:</label>
+				<label className="font-bold">Primary Contact First Name:</label>
 				<input
 					type="text"
-					name="primaryContact"
-					value={formData.primaryContact}
+					name="primaryContactFirstName"
+					value={formData.primaryContactFirstName}
+					onChange={handleChange}
+					className="border border-gray-300 rounded p-2"
+					required
+					disabled={disabled}
+				/>
+			</div>
+
+            <div className="flex flex-col">
+				<label className="font-bold">Primary Contact Last Name:</label>
+				<input
+					type="text"
+					name="primaryContactLastName"
+					value={formData.primaryContactLastName}
 					onChange={handleChange}
 					className="border border-gray-300 rounded p-2"
 					required
