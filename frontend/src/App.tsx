@@ -72,6 +72,7 @@ function App() {
 
 
     const filtered = students.filter((entry) => {
+        console.log(entry)
         return (
             entry["firstName"]
                 .toLowerCase()
@@ -83,8 +84,8 @@ function App() {
                 entry["schoolYear"] === parseInt(searchValues["schoolYear"])) &&
             (entry["teacher"]["firstName"]
                 .toLowerCase()
-                .includes(searchValues["teacher"].toLowerCase())) ||
-            (entry["teacher"]["lastName"]
+                .includes(searchValues["teacher"].toLowerCase()) ||
+            entry["teacher"]["lastName"]
                 .toLowerCase()
                 .includes(searchValues["teacher"].toLowerCase()))
         )
