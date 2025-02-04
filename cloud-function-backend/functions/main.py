@@ -56,18 +56,18 @@ def createStudent(req: https_fn.Request) -> https_fn.Response:
 
     try:
         if not req.data:
-            return https_fn.Response(jsonify({"error": "Request body is empty"}), status=400)
+            return jsonify({"error": "Request body is empty"}), 400
 
         request_data = req.get_json()
 
         if not request_data:
-            return https_fn.Response(jsonify({"error": "Invalid JSON"}), status=400)
+            return jsonify({"error": "Invalid JSON"}), 400
 
         name = request_data.get("name")
         age = request_data.get("age")
 
         if not name or not age:
-            return https_fn.Response(jsonify({"error": "Missing required fields"}), status=400)
+            return jsonify({"error": "Missing required fields"}), 400
 
         doc_ref = fireStore_client.collection("students").document()
         doc_ref.set({
@@ -75,11 +75,11 @@ def createStudent(req: https_fn.Request) -> https_fn.Response:
             "age": age
         })
 
-        return https_fn.Response(jsonify({"message": "Data processed successfully", "id": doc_ref.id}), status=200)
+        return jsonify({"message": "Data processed successfully", "id": doc_ref.id}), 200
 
     except Exception as e:
         print(f"Error processing request: {e}")
-        return https_fn.Response(jsonify({"error": "Internal Server Error"}), status=500)
+        return jsonify({"error": "Internal Server Error"}), 500
 
 @https_fn.on_request()
 def editStudent(req: https_fn.Request) -> https_fn.Response:
@@ -90,27 +90,27 @@ def editStudent(req: https_fn.Request) -> https_fn.Response:
 
     try:
         if not req.data:
-            return https_fn.Response(jsonify({"error": "Request body is empty"}), status=400)
+            return jsonify({"error": "Request body is empty"}), 400
 
         request_data = req.get_json()
 
         if not request_data:
-            return https_fn.Response(jsonify({"error": "Invalid JSON"}), status=400)
+            return jsonify({"error": "Invalid JSON"}), 400
 
         document_id = request_data.get("document_id")
         if not document_id:
-            return https_fn.Response(jsonify({"error": "Missing 'document_id' field"}), status=400)
+            return jsonify({"error": "Missing 'document_id' field"}), 400
 
         doc_ref = fireStore_client.collection("students").document(document_id)
 
         if not doc_ref.get().exists:
-            return https_fn.Response(jsonify({"error": "Document does not exist"}), status=404)
+            return jsonify({"error": "Document does not exist"}), 404
 
         update_data = {k: v for k, v in request_data.items() if k != "document_id"}
         doc_ref.update(update_data)
 
-        return https_fn.Response(jsonify({"message": "Document updated successfully", "id": document_id}), status=200)
+        return jsonify({"message": "Document updated successfully", "id": document_id}), 200
 
     except Exception as e:
         print(f"Error processing request: {e}")
-        return https_fn.Response(jsonify({"error": "Internal Server Error"}), status=500)
+        return jsonify({"error": "Internal Server Error"}), 500
