@@ -17,7 +17,7 @@ export default function Table({filtered, teachers, setProfile}) {
                             <td className="border border-gray-300 p-2 w-1/4">{student.lastName}</td>
                             <td className="border border-gray-300 p-2 w-1/4">{student.schoolYear}</td>
                             <td className="border border-gray-300 p-2 w-1/4">
-                                {teachers[student["afamTeacherId"]]["firstName"]}, {teachers[student["afamTeacherId"]]["lastName"]}
+                                {student["teacher"]["firstName"]}, {student["teacher"]["lastName"]}
                             </td>
                         </tr>
                     ))

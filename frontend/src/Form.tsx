@@ -144,8 +144,8 @@ export default function Form({ type, state, onCancel, teachers }) {
 					disabled={disabled}
 				>
 					<option value="">Select</option>
-					<option value="M">Male</option>
-					<option value="F">Female</option>
+					<option value="Male">Male</option>
+					<option value="Female">Female</option>
 			</select>
 			</div>
 

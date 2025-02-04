@@ -60,6 +60,8 @@ function App() {
         fetcher
     );
 
+    console.log(students)
+    console.log(teachers)
     if (studentsError || teachersError) {
         return <div className="text-red-500">Failed to load data.</div>;
     }
@@ -67,14 +69,6 @@ function App() {
     if (studentsIsLoading || teachersIsLoading) {
         return <div className="text-blue-500">Loading...</div>;
     }
-
-    const teachersMap = {}
-    teachers.forEach(teacher => {
-        teachersMap[teacher["id"]] = {
-            firstName: teacher["firstName"], 
-            lastName: teacher["lastName"]
-        }
-    })
 
 
     const filtered = students.filter((entry) => {
@@ -87,13 +81,13 @@ function App() {
                 .includes(searchValues["lastName"].toLowerCase()) &&
             (!parseInt(searchValues["schoolYear"]) ||
                 entry["schoolYear"] === parseInt(searchValues["schoolYear"])) &&
-            (teachersMap[entry["afamTeacherId"]]["firstName"]
+            (entry["teacher"]["firstName"]
                 .toLowerCase()
-                .includes(searchValues["teacher"].toLowerCase()) ||
-            teachersMap[entry["afamTeacherId"]]["lastName"]
+                .includes(searchValues["teacher"].toLowerCase())) ||
+            (entry["teacher"]["lastName"]
                 .toLowerCase()
                 .includes(searchValues["teacher"].toLowerCase()))
-        );
+        )
     })
 
     return (
@@ -138,13 +132,13 @@ function App() {
                                 type={add ? "add" : "view"} 
                                 state={add ? addState : profile}
                                 onCancel={add ? () => setAdd(false) : () => setProfile(null)} 
-                                teachers={teachersMap}
+                                teachers={teachers}
                             />
                         </div>
                     </div>
                 )
             }
-	        <Table filtered={filtered} teachers={teachersMap} setProfile={setProfile}/>	  
+	        <Table filtered={filtered} teachers={teachers} setProfile={setProfile}/>	  
 	    </div>
     );
 }
