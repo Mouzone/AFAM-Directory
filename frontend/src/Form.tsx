@@ -8,12 +8,12 @@ export default function Form({ type, state, onCancel, teachers }) {
 	formData.allergies = formData.allergies === null ? "" : formData.allergies
 	const onSubmit = (formData) => {
 		if (type === "add") {
-			fetch("http://localhost:3000/students", {
+			fetch("https://us-central1-afam-directory.cloudfunctions.net/createStudent", {
 				method: "POST",
 				body: JSON.stringify(formData)
 			})
 		} else {
-			fetch("http://localhost:3000/students", {
+			fetch("https://us-central1-afam-directory.cloudfunctions.net/editStudent", {
 				method: "PUT",
 				body: JSON.stringify(formData)
 			})
