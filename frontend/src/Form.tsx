@@ -47,7 +47,7 @@ export default function Form({ type, state, onCancel, teachers }) {
 		!formData.primaryContact ||
 		!formData.primaryContactPhone ||
 		!formData.primaryContactEmail ||
-		!formData.afamTeacherId
+		!formData.teacher
 	) {
 		alert("Please fill out all required fields.");
 		return;
@@ -57,7 +57,10 @@ export default function Form({ type, state, onCancel, teachers }) {
 		...formData,
 		schoolYear: parseInt(formData.schoolYear, 10),
 		dob: new Date(formData.dob),
-		afamTeacherId: parseInt(formData.afamTeacherId, 10)
+		teacher: {
+            firstName: formData.teacher.firstName,
+            lastName: formData.teacher.lastName
+        }
 	}
 	onSubmit(processedData);
   };

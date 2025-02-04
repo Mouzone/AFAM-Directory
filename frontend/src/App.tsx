@@ -21,7 +21,10 @@ const addState = {
     primaryContact: "",
     primaryContactPhone: "",
     primaryContactEmail: "",
-    afamTeacherId: ""
+    teacher: {
+        firstName: "",
+        lastName: ""
+    }
 }
 
 const labels = {
