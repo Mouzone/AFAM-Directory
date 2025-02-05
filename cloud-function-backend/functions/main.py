@@ -9,24 +9,29 @@ fireStore_client: google.cloud.firestore.Client = firestore.client()
 
 # Middleware to check Bearer Token
 def check_token(req: https_fn.Request) -> https_fn.Response | None:
-    # Check for Authorization header
     auth_header = req.headers.get("Authorization")
     if not auth_header or not auth_header.startswith("Bearer "):
-        return https_fn.Response(jsonify({"error": "Unauthorized: Missing or invalid Authorization header"}), status=401)
+        return jsonify({"error": "Unauthorized: Missing or invalid Authorization header"}), 401
 
-    # Extract the token
     id_token = auth_header.split("Bearer ")[1]
 
     try:
-        # Verify the token
         decoded_token = auth.verify_id_token(id_token)
-        req.user = decoded_token  # Attach user info to the request object
-        return None  # Proceed to the route
+        req.user = decoded_token
+        return None
+    except auth.InvalidIdTokenError:
+        return jsonify({"error": "Unauthorized: Invalid token"}), 401
+    except auth.ExpiredIdTokenError:
+        return jsonify({"error": "Unauthorized: Token expired"}), 401
     except Exception as e:
-        return https_fn.Response(jsonify({"error": "Unauthorized: Invalid or expired token", "details": str(e)}), status=401)
+        return jsonify({"error": "Unauthorized: Token verification failed", "details": str(e)}), 401
 
 @https_fn.on_request(cors=options.CorsOptions(cors_origins="*", cors_methods=["GET"]))
 def getCollection(req: https_fn.Request) -> https_fn.Response:
+    middleware_response = check_token(req)
+    if middleware_response:
+        return middleware_response
+
     try:
         # Get the 'type' query parameter
         collection_type = req.args.get("type")
@@ -50,9 +55,9 @@ def getCollection(req: https_fn.Request) -> https_fn.Response:
 
 @https_fn.on_request(cors=options.CorsOptions(cors_origins="*", cors_methods=["POST"]))
 def createStudent(req: https_fn.Request) -> https_fn.Response:
-    # middleware_response = check_token(req)
-    # if middleware_response:
-    #     return middleware_response
+    middleware_response = check_token(req)
+    if middleware_response:
+        return middleware_response
 
     try:
         if not req.data:
@@ -74,10 +79,9 @@ def createStudent(req: https_fn.Request) -> https_fn.Response:
 
 @https_fn.on_request(cors=options.CorsOptions(cors_origins="*", cors_methods=["PUT"]))
 def editStudent(req: https_fn.Request) -> https_fn.Response:
-
-    # middleware_response = check_token(req)
-    # if middleware_response:
-    #     return middleware_response
+    middleware_response = check_token(req)
+    if middleware_response:
+        return middleware_response
 
     try:
         if not req.data:
