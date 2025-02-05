@@ -16,6 +16,9 @@ export default function Form({ type, state, onCancel, teachers }) {
 			})
 		} else {
 			fetch("https://us-central1-afam-directory.cloudfunctions.net/editStudent", {
+                headers: {
+                    "Content-Type": "application/json"
+                },
 				method: "PUT",
 				body: JSON.stringify(formData)
 			})
