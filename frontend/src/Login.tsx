@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "./utility/firebase"; // Adjust the path to your Firebase initialization file
 import { useNavigate } from "react-router-dom";
@@ -7,15 +7,15 @@ import { useAuth } from "./AuthProvider";
 export default function Login() {
     const { setUser, setToken } = useAuth();
 	const [credentials, setCredentials] = useState({ email: "", password: "" });
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState("");
+	const [loading, setLoading] = useState<boolean>(false);
+	const [error, setError] = useState<string>("");
 	const navigate = useNavigate()
 
-  	const onChange = (key: "email" | "password", e) => {
+  	const onChange = (key: "email" | "password", e: React.ChangeEvent<HTMLInputElement>) => {
 		setCredentials({ ...credentials, [key]: e.target.value });
   	};
 
-  	const handleLogin = async (e) => {
+  	const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault(); // Prevent form submission refresh
 		setLoading(true);
 		setError("");
@@ -35,8 +35,12 @@ export default function Login() {
             setToken(idToken)
 			navigate("/students", { replace: true})
 		} catch (error) {
-	  		setError(error.message);
-	  		console.error("Error during login:", error);
+            if (error instanceof Error) {
+                setError(error.message); // Set the error message if it's an Error object
+            } else {
+                setError("An unknown error occurred."); // Handle non-Error objects
+            }
+            console.error("Error during login:", error); // Log the error for debugging
 		} finally {
 	  		setLoading(false);
 		}
