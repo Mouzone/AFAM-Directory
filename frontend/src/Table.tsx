@@ -1,4 +1,6 @@
-export default function Table({filtered, setProfile}) {
+import { student } from "./types"
+
+export default function Table({filtered, setProfile}: {filtered: student[]}) {
     return (
         <table className="w-full border-collapse">
             <thead>

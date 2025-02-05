@@ -5,7 +5,7 @@ import isoDateToInputDate from "./utility/isoDateToInputDate";
 export default function Form({ type, state, onCancel, teachers }) {
     const [formData, setFormData] = useState(state);
 	const [isEdit, setIsEdit] = useState(false)
-    const { user, token} = useAuth()
+    const {token} = useAuth()
     
     console.log(formData)
 	const onSubmit = (formData) => {
@@ -97,7 +97,6 @@ export default function Form({ type, state, onCancel, teachers }) {
 
 	const processedData = {
 		...formData,
-		schoolYear: parseInt(formData.schoolYear, 10),
 		dob: new Date(formData.dob),
 	}
 	    onSubmit(processedData);

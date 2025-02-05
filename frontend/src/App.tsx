@@ -5,8 +5,9 @@ import Table from "./Table"
 import { useAuth } from "./AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { fetcher } from "./utility/fetcher";
+import { student } from "./types";
 
-const fetcher = ([url, token]) => fetch(url, { headers: { Authorization: `Bearer ${token}` } }).then((res) => res.json());
 const addState = {
     firstName: "",
     lastName: "",
@@ -42,7 +43,7 @@ const labels = {
 };
 
 function App() {
-    const { user, token} = useAuth()
+    const { token } = useAuth()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -79,7 +80,7 @@ function App() {
     }
 
 
-    const filtered = students.filter((entry) => {
+    const filtered = students.filter((entry: student) => {
         return (
             entry["firstName"]
                 .toLowerCase()
@@ -87,8 +88,8 @@ function App() {
             entry["lastName"]
                 .toLowerCase()
                 .includes(searchValues["lastName"].toLowerCase()) &&
-            (!parseInt(searchValues["schoolYear"]) ||
-                entry["schoolYear"] === parseInt(searchValues["schoolYear"])) &&
+            entry["schoolYear"]
+                .includes(searchValues["schoolYear"]) &&
             (entry["teacher"]["firstName"]
                 .toLowerCase()
                 .includes(searchValues["teacher"].toLowerCase()) ||

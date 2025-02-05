@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "./utility/firebase"; // Adjust the path to your Firebase initialization file
 import { useNavigate } from "react-router-dom";
