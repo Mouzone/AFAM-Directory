@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { useAuth } from "./AuthProvider";
+import { student, Teacher } from "./types";
 import isoDateToInputDate from "./utility/isoDateToInputDate";
 
-export default function Form({ type, state, onCancel, teachers }) {
+export default function Form({ type, state, onCancel, teachers }: {type: "add" | "view", state: student, onCancel: React.Dispatch<SetStateAction<false>> | React.Dispatch<SetStateAction<null>>, teachers: Teacher[] | undefined}) {
     const [formData, setFormData] = useState(state);
 	const [isEdit, setIsEdit] = useState(false)
     const {token} = useAuth()

@@ -6,7 +6,7 @@ import { useAuth } from "./AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { fetcher } from "./utility/fetcher";
-import { student, LabelsKey } from "./types";
+import { student, LabelsKey, Teacher } from "./types";
 import { addState, labels} from "./utility/consts"
 
 function App() {
@@ -33,7 +33,7 @@ function App() {
         fetcher,
     );
 
-    const { data: teachers } = useSWRImmutable(
+    const { data: teachers } = useSWRImmutable<Teacher[]>(
         ["https://us-central1-afam-directory.cloudfunctions.net/getCollection?type=teachers", token],
         fetcher,
     );

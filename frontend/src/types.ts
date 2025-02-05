@@ -28,6 +28,12 @@ export type student = {
     }
 }
 
+export type Teacher = {
+    firstName: string,
+    lastName: string,
+    grade: "9" | "10" | "11" | "12"
+}
+
 export type AuthContextType = {
     user: User | null;
     setUser: (user: User | null) => void;
