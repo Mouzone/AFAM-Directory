@@ -17,7 +17,7 @@ const addState = {
     homeAddress: "",
     phoneNumber: "",
     email: "",
-    allergies: "",
+    allergies: [],
     primaryContact: {
         firstName: "",
         lastName: "",
@@ -58,12 +58,14 @@ function App() {
 
     const { data: students, error: studentsError, isLoading: studentsIsLoading } = useSWR(
         ["https://us-central1-afam-directory.cloudfunctions.net/getCollection?type=students", token],
-        fetcher
+        fetcher,
+        {revalidateOnFocus: false}
     );
 
     const { data: teachers, error: teachersError, isLoading: teachersIsLoading } = useSWR(
         ["https://us-central1-afam-directory.cloudfunctions.net/getCollection?type=teachers", token],
-        fetcher
+        fetcher,
+        {revalidateOnFocus: false}
     );
 
     if (studentsError || teachersError) {

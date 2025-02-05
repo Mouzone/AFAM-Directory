@@ -50,9 +50,9 @@ def getCollection(req: https_fn.Request) -> https_fn.Response:
 
 @https_fn.on_request(cors=options.CorsOptions(cors_origins="*", cors_methods=["POST"]))
 def createStudent(req: https_fn.Request) -> https_fn.Response:
-    middleware_response = check_token(req)
-    if middleware_response:
-        return middleware_response
+    # middleware_response = check_token(req)
+    # if middleware_response:
+    #     return middleware_response
 
     try:
         if not req.data:
@@ -76,8 +76,8 @@ def createStudent(req: https_fn.Request) -> https_fn.Response:
         primaryContact = request_data.get("primaryContact")
         teacher = request_data.get("teacher")
         
-        if not name or not age:
-            return jsonify({"error": "Missing required fields"}), 400
+        # if not name or not age:
+        #     return jsonify({"error": "Missing required fields"}), 400
 
         doc_ref = fireStore_client.collection("students").document()
         doc_ref.set({
@@ -104,9 +104,9 @@ def createStudent(req: https_fn.Request) -> https_fn.Response:
 @https_fn.on_request(cors=options.CorsOptions(cors_origins="*", cors_methods=["PUT"]))
 def editStudent(req: https_fn.Request) -> https_fn.Response:
 
-    middleware_response = check_token(req)
-    if middleware_response:
-        return middleware_response
+    # middleware_response = check_token(req)
+    # if middleware_response:
+    #     return middleware_response
 
     try:
         if not req.data:

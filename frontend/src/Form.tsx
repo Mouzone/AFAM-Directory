@@ -9,6 +9,9 @@ export default function Form({ type, state, onCancel, teachers }) {
 	const onSubmit = (formData) => {
 		if (type === "add") {
 			fetch("https://us-central1-afam-directory.cloudfunctions.net/createStudent", {
+                headers: {
+                    "Content-Type": "application/json"
+                },
 				method: "POST",
 				body: JSON.stringify(formData)
 			})
