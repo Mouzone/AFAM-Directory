@@ -14,10 +14,14 @@ const addState = {
     dob: "",
     gender: "",
     highSchool: "",
-    homeAddress: "",
     phoneNumber: "",
     email: "",
     allergies: [],
+    home: {
+        streetAddress: "",
+        city: "",
+        zipCode: ""
+    },
     primaryContact: {
         firstName: "",
         lastName: "",

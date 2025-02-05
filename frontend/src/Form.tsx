@@ -4,7 +4,7 @@ import isoDateToInputDate from "./utility/isoDateToInputDate";
 export default function Form({ type, state, onCancel, teachers }) {
     const [formData, setFormData] = useState(state);
 	const [isEdit, setIsEdit] = useState(false)
-
+    console.log(formData)
 	const onSubmit = (formData) => {
 		if (type === "add") {
 			fetch("https://us-central1-afam-directory.cloudfunctions.net/createStudent", {
@@ -58,6 +58,18 @@ export default function Form({ type, state, onCancel, teachers }) {
         }
     }
 
+    const handleHomeChange = (field) => {
+        return (e) => {
+            setFormData({
+                ...formData,
+                home: {
+                    ...formData["home"],
+                    [field]: e.target.value
+                }
+            })
+        }
+    }
+
     const handleSubmit = (e) => {
 	    e.preventDefault();
         if (
@@ -67,9 +79,6 @@ export default function Form({ type, state, onCancel, teachers }) {
             !formData.dob ||
             !formData.gender ||
             !formData.highSchool ||
-            !formData.streetAddress ||
-            !formData.city ||
-            !formData.zipCode ||
             !formData.phoneNumber ||
             !formData.email 
     // add validation for primaryContact and Teacher
@@ -195,8 +204,8 @@ export default function Form({ type, state, onCancel, teachers }) {
 				<input
 					type="text"
 					name="streetAddress"
-					value={formData.streetAddress}
-					onChange={handleChange}
+					value={formData.home.streetAddress}
+					onChange={handleHomeChange("streetAddress")}
 					className="border border-gray-300 rounded p-2"
 					required
 					disabled={disabled}
@@ -209,8 +218,8 @@ export default function Form({ type, state, onCancel, teachers }) {
 				<input
 					type="text"
 					name="city"
-					value={formData.city}
-					onChange={handleChange}
+					value={formData.home.city}
+					onChange={handleHomeChange("city")}
 					className="border border-gray-300 rounded p-2"
 					required
 					disabled={disabled}
@@ -223,8 +232,8 @@ export default function Form({ type, state, onCancel, teachers }) {
 				<input
 					type="text"
 					name="zipCode"
-					value={formData.zipCode}
-					onChange={handleChange}
+					value={formData.home.zipCode}
+					onChange={handleHomeChange("zipCode")}
 					className="border border-gray-300 rounded p-2"
 					required
 					disabled={disabled}

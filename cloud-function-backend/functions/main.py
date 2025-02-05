@@ -117,16 +117,16 @@ def editStudent(req: https_fn.Request) -> https_fn.Response:
         if not request_data:
             return jsonify({"error": "Invalid JSON"}), 400
 
-        document_id = request_data.get("document_id")
+        document_id = request_data.get("id")
         if not document_id:
-            return jsonify({"error": "Missing 'document_id' field"}), 400
+            return jsonify({"error": "Missing 'id' field"}), 400
 
         doc_ref = fireStore_client.collection("students").document(document_id)
 
         if not doc_ref.get().exists:
             return jsonify({"error": "Document does not exist"}), 404
 
-        update_data = {k: v for k, v in request_data.items() if k != "document_id"}
+        update_data = {k: v for k, v in request_data.items() if k != "id"}
         doc_ref.update(update_data)
 
         return jsonify({"message": "Document updated successfully", "id": document_id}), 200
