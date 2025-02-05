@@ -4,7 +4,7 @@ import isoDateToInputDate from "./utility/isoDateToInputDate";
 export default function Form({ type, state, onCancel, teachers }) {
     const [formData, setFormData] = useState(state);
 	const [isEdit, setIsEdit] = useState(false)
-    
+    console.log(formData)
 	formData.allergies = formData.allergies === null ? "" : formData.allergies
 	const onSubmit = (formData) => {
 		if (type === "add") {

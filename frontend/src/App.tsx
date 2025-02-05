@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useSWR from "swr";
+import useSWRImmutable from "swr";
 import Form from "./Form";
 import Table from "./Table"
 import { useAuth } from "./AuthProvider";
@@ -56,16 +56,14 @@ function App() {
         teacher: "",
     });
 
-    const { data: students, error: studentsError, isLoading: studentsIsLoading } = useSWR(
+    const { data: students, error: studentsError, isLoading: studentsIsLoading } = useSWRImmutable(
         ["https://us-central1-afam-directory.cloudfunctions.net/getCollection?type=students", token],
         fetcher,
-        {revalidateOnFocus: false}
     );
 
-    const { data: teachers, error: teachersError, isLoading: teachersIsLoading } = useSWR(
+    const { data: teachers, error: teachersError, isLoading: teachersIsLoading } = useSWRImmutable(
         ["https://us-central1-afam-directory.cloudfunctions.net/getCollection?type=teachers", token],
         fetcher,
-        {revalidateOnFocus: false}
     );
 
     if (studentsError || teachersError) {
