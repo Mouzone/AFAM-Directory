@@ -6,41 +6,8 @@ import { useAuth } from "./AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { fetcher } from "./utility/fetcher";
-import { student } from "./types";
-
-const addState = {
-    firstName: "",
-    lastName: "",
-    schoolYear: "",
-    dob: "",
-    gender: "",
-    highSchool: "",
-    phoneNumber: "",
-    email: "",
-    allergies: [],
-    home: {
-        streetAddress: "",
-        city: "",
-        zipCode: ""
-    },
-    primaryContact: {
-        firstName: "",
-        lastName: "",
-        phoneNumer: "",
-        email: "",
-    },
-    teacher: {
-        firstName: "",
-        lastName: ""
-    }
-}
-
-const labels = {
-    firstName: "First Name",
-    lastName: "Last Name",
-    schoolYear: "Grade",
-    teacher: "Teacher",
-};
+import { student, LabelsKey } from "./types";
+import { addState, labels} from "./utility/consts"
 
 function App() {
     const { token } = useAuth()
@@ -52,8 +19,8 @@ function App() {
         }
     }, [token, navigate])
 
-    const [add, setAdd] = useState(false);
-    const [profile, setProfile] = useState<object | null>(null);
+    const [add, setAdd] = useState<boolean>(false);
+    const [profile, setProfile] = useState<student | null>(null);
     const [searchValues, setSearchValues] = useState({
         firstName: "",
         lastName: "",
@@ -66,16 +33,16 @@ function App() {
         fetcher,
     );
 
-    const { data: teachers, error: teachersError, isLoading: teachersIsLoading } = useSWRImmutable(
+    const { data: teachers } = useSWRImmutable(
         ["https://us-central1-afam-directory.cloudfunctions.net/getCollection?type=teachers", token],
         fetcher,
     );
 
-    if (studentsError || teachersError) {
+    if (studentsError) {
         return <div className="text-red-500">Failed to load data.</div>;
     }
 
-    if (studentsIsLoading || teachersIsLoading) {
+    if (studentsIsLoading) {
         return <div className="text-blue-500">Loading...</div>;
     }
 
@@ -106,7 +73,7 @@ function App() {
 			    {
                     Object.entries(searchValues).map(([key, value]) => (
                         <div key={key} className="flex flex-col">
-                            <label className="font-bold">{labels[key]}</label>
+                            <label className="font-bold">{labels[key as LabelsKey]}</label>
                             <input
                                 className="border border-gray-300 rounded p-2"
                                 value={value}

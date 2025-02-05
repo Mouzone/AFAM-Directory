@@ -1,3 +1,4 @@
+import { labels } from "./utility/consts"
 export type student = {
     id?: string,
     firstName: string,
@@ -25,3 +26,5 @@ export type student = {
         lastName: string
     }
 }
+
+export type LabelsKey = keyof typeof labels
