@@ -1,4 +1,4 @@
-export default function Table({filtered, teachers, setProfile}) {
+export default function Table({filtered, setProfile}) {
     return (
         <table className="w-full border-collapse">
             <thead>

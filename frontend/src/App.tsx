@@ -146,7 +146,7 @@ function App() {
                     </div>
                 )
             }
-	        <Table filtered={filtered} teachers={teachers} setProfile={setProfile}/>	  
+	        <Table filtered={filtered} setProfile={setProfile}/>	  
 	    </div>
     );
 }
