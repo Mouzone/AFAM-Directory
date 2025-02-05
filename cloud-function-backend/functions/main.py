@@ -69,16 +69,13 @@ def createStudent(req: https_fn.Request) -> https_fn.Response:
         dob = request_data.get("dob")
         gender = request_data.get("gender")
         highSchool = request_data.get("highSchool")
-        homeAddress = request_data.get("homeAddress")
+        home = request_data.get("home")
         phoneNumber = request_data.get("phoneNumber")
         email = request_data.get("email")
         allergies = request_data.get("allergies")
         primaryContact = request_data.get("primaryContact")
         teacher = request_data.get("teacher")
         
-        # if not name or not age:
-        #     return jsonify({"error": "Missing required fields"}), 400
-
         doc_ref = fireStore_client.collection("students").document()
         doc_ref.set({
             "firstName": firstName,
@@ -87,10 +84,10 @@ def createStudent(req: https_fn.Request) -> https_fn.Response:
             "dob": dob,
             "gender": gender,
             "highSchool": highSchool,
-            "homeAddress": homeAddress,
             "phoneNumber": phoneNumber,
             "email": email,
             "allergies": allergies,
+            "home": home,
             "primaryContact": primaryContact,
             "teacher": teacher
         })
