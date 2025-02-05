@@ -1,4 +1,5 @@
 import { labels } from "./utility/consts"
+import { User } from "firebase/auth"
 export type student = {
     id?: string,
     firstName: string,
@@ -26,5 +27,12 @@ export type student = {
         lastName: string
     }
 }
+
+export type AuthContextType = {
+    user: User | null;
+    setUser: (user: User | null) => void;
+    token: string | null;
+    setToken: (token: string | null) => void;
+};
 
 export type LabelsKey = keyof typeof labels

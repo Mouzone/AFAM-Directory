@@ -1,12 +1,18 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged, onIdTokenChanged } from "firebase/auth"
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { getAuth, onAuthStateChanged, onIdTokenChanged, User} from "firebase/auth"
 import { app } from "./utility/firebase"
+import { AuthContextType } from "./types";
 
-const AuthContext = createContext()
+const AuthContext = createContext<AuthContextType>({
+    user: null,
+    setUser: () => {},
+    token: null,
+    setToken: () => {},
+})
 
-export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null)
-    const [token, setToken] = useState(null)
+export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
+    const [user, setUser] = useState<User| null>(null)
+    const [token, setToken] = useState<string | null>(null)
     const auth = getAuth(app)
 
     useEffect(() => {
