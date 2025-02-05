@@ -1,15 +1,19 @@
 import { useState } from "react";
+import { useAuth } from "./AuthProvider";
 import isoDateToInputDate from "./utility/isoDateToInputDate";
 
 export default function Form({ type, state, onCancel, teachers }) {
     const [formData, setFormData] = useState(state);
 	const [isEdit, setIsEdit] = useState(false)
+    const { user, token} = useAuth()
+    
     console.log(formData)
 	const onSubmit = (formData) => {
 		if (type === "add") {
 			fetch("https://us-central1-afam-directory.cloudfunctions.net/createStudent", {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
                 },
 				method: "POST",
 				body: JSON.stringify(formData)
@@ -17,7 +21,8 @@ export default function Form({ type, state, onCancel, teachers }) {
 		} else {
 			fetch("https://us-central1-afam-directory.cloudfunctions.net/editStudent", {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
                 },
 				method: "PUT",
 				body: JSON.stringify(formData)
