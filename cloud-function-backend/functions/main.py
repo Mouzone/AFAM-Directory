@@ -63,34 +63,8 @@ def createStudent(req: https_fn.Request) -> https_fn.Response:
         if not request_data:
             return jsonify({"error": "Invalid JSON"}), 400
 
-        firstName = request_data.get("firstName")
-        lastName = request_data.get("lastName")
-        schoolYear = request_data.get("schoolYear")
-        dob = request_data.get("dob")
-        gender = request_data.get("gender")
-        highSchool = request_data.get("highSchool")
-        home = request_data.get("home")
-        phoneNumber = request_data.get("phoneNumber")
-        email = request_data.get("email")
-        allergies = request_data.get("allergies")
-        primaryContact = request_data.get("primaryContact")
-        teacher = request_data.get("teacher")
-        
         doc_ref = fireStore_client.collection("students").document()
-        doc_ref.set({
-            "firstName": firstName,
-            "lastName": lastName,
-            "schoolYear": schoolYear,
-            "dob": dob,
-            "gender": gender,
-            "highSchool": highSchool,
-            "phoneNumber": phoneNumber,
-            "email": email,
-            "allergies": allergies,
-            "home": home,
-            "primaryContact": primaryContact,
-            "teacher": teacher
-        })
+        doc_ref.set(request_data)
 
         return jsonify({"message": "Data processed successfully", "id": doc_ref.id}), 200
 
