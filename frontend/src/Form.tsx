@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import { useAuth } from "./AuthProvider";
 import { Student, Teacher, HomeKeys, PrimaryContactKeys, BackendStudent } from "./types";
 import isoDateToInputDate from "./utility/isoDateToInputDate";
@@ -41,7 +41,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 		});
   	};
 
-    const handleTeacherChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleTeacherChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const teacherName = e.target.value
         const teacherNameList = teacherName.split(" ")
         const firstName = teacherNameList[0]
@@ -356,8 +356,8 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 				>
 					<option value="">Select</option>
 					{
-						teachers.map(teacher => {
-							return <option key={teacher["id"]} value={`${teacher["firstName"]} ${teacher["lastName"]}`}>
+						teachers && teachers.map((teacher, index) => {
+							return <option key={index} value={`${teacher["firstName"]} ${teacher["lastName"]}`}>
 								{teacher["firstName"]} {teacher["lastName"]}
 							</option>
 						})
@@ -366,13 +366,13 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 			</div>
 		</div>
 
-		<Buttons type={type} isEdit={isEdit} setIsEdit={setIsEdit} onCancel={onCancel}/>
+		<Buttons type={formData.id === "" ? "add" : "view"} isEdit={isEdit} setIsEdit={setIsEdit} closeForm={closeForm}/>
 	</form>
   );
 }
 
-function Buttons({type, isEdit, setIsEdit, onCancel}) {
-    const onClick = (e) => {
+function Buttons({type, isEdit, setIsEdit, closeForm}: {type: "add" | "view", isEdit: boolean, setIsEdit: React.Dispatch<SetStateAction<boolean>>, closeForm: () => void}) {
+    const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault(); 
         setIsEdit(true)
     }
@@ -398,7 +398,7 @@ function Buttons({type, isEdit, setIsEdit, onCancel}) {
 			
 			<button
 				type="button"
-				onClick={onCancel}
+				onClick={closeForm}
 				className="bg-white border-2 px-3 py-2 rounded hover:bg-gray-300"
 			>
 				Cancel
