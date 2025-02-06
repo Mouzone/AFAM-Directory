@@ -8,7 +8,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
     const [formData, setFormData] = useState<Student>(state);
 	const [isEdit, setIsEdit] = useState(false)
     const {token} = useAuth()
-    const disabled = formData.id !== "" && !isEdit
+    const disabled = "id" in formData && !isEdit
 
 	const onSubmit = (formData: BackendStudent) => {
 		if (!formData.id) {
@@ -366,7 +366,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 			</div>
 		</div>
 
-		<Buttons type={formData.id === "" ? "add" : "view"} isEdit={isEdit} setIsEdit={setIsEdit} closeForm={closeForm}/>
+		<Buttons type={!("id" in formData)  ? "add" : "view"} isEdit={isEdit} setIsEdit={setIsEdit} closeForm={closeForm}/>
 	</form>
   );
 }
