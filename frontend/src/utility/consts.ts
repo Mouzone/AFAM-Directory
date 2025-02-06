@@ -18,7 +18,7 @@ export const addState = {
     primaryContact: {
         firstName: "",
         lastName: "",
-        phoneNumer: "",
+        phoneNumber: "",
         email: "",
     },
     teacher: {

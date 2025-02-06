@@ -2,14 +2,15 @@ import { SetStateAction, useState } from "react";
 import { useAuth } from "./AuthProvider";
 import { Student, Teacher } from "./types";
 import isoDateToInputDate from "./utility/isoDateToInputDate";
+import { addState } from "./utility/consts";
 
-export default function Form({ type, state, onCancel, teachers }: {type: "add" | "view", state: Student, onCancel: React.Dispatch<SetStateAction<false>> | React.Dispatch<SetStateAction<null>>, teachers: Teacher[] | undefined}) {
-    const [formData, setFormData] = useState(state);
+export default function Form({ state, setProfile, setShowForm, teachers }: {state: Student, setProfile: React.Dispatch<SetStateAction<Student>>,setShowForm: React.Dispatch<SetStateAction<boolean>>, teachers: Teacher[] | undefined}) {
+    const [formData, setFormData] = useState<Student>(state);
 	const [isEdit, setIsEdit] = useState(false)
     const {token} = useAuth()
     
 	const onSubmit = (formData) => {
-		if (type === "add") {
+		if (!formData.id) {
 			fetch("https://us-central1-afam-directory.cloudfunctions.net/createStudent", {
                 headers: {
                     "Content-Type": "application/json",
@@ -28,8 +29,8 @@ export default function Form({ type, state, onCancel, teachers }: {type: "add" |
 				body: JSON.stringify(formData)
 			})
 	}
-	
-		onCancel(); // Hide the form after submission
+        setProfile(addState)
+		setShowForm(false); // Hide the form after submission
 	}
 
 	const handleChange = (e) => {
@@ -89,7 +90,6 @@ export default function Form({ type, state, onCancel, teachers }: {type: "add" |
             !formData.highSchool ||
             !formData.phoneNumber ||
             !formData.email 
-    // add validation for primaryContact and Teacher
         ) {
             alert("Please fill out all required fields.");
             return;

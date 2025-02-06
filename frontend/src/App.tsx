@@ -20,7 +20,8 @@ function App() {
     }, [token, navigate])
 
     const [add, setAdd] = useState<boolean>(false);
-    const [profile, setProfile] = useState<Student | null>(null);
+    const [profile, setProfile] = useState<Student>(addState);
+    const [showForm, setShowForm] = useState<boolean>(false)
     const [searchValues, setSearchValues] = useState({
         firstName: "",
         lastName: "",
@@ -95,26 +96,26 @@ function App() {
 
             {/* Form Modal */}
             {
-                (add || profile) && (
+                (showForm) && (
                     <div
                         className="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex justify-center items-center"
-                        onClick={() => setProfile(null)} // Close modal on outside click
+                        onClick={() => {setShowForm(false); setProfile(addState)}} // Close modal on outside click
                     >
                         <div
                             className="bg-white p-6 rounded-lg w-fit"
                             onClick={(e) => e.stopPropagation()} // Prevent clicks inside modal from closing it
                         >
                             <Form 
-                                type={add ? "add" : "view"} 
-                                state={add ? addState : profile}
-                                onCancel={add ? () => setAdd(false) : () => setProfile(null)} 
+                                state={profile}
+                                setProfile={setProfile}
+                                setShowForm={setShowForm} 
                                 teachers={teachers}
                             />
                         </div>
                     </div>
                 )
             }
-	        <Table filtered={filtered} setProfile={setProfile}/>	  
+	        <Table filtered={filtered} setProfile={setProfile} setShowForm={setShowForm}/>	  
 	    </div>
     );
 }

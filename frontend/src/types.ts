@@ -19,7 +19,7 @@ export type Student = {
     primaryContact: {
         firstName: string,
         lastName: string,
-        phoneNumer: string,
+        phoneNumber: string,
         email: string,
     },
     teacher: {
