@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useAuth } from "./AuthProvider";
-import { Student, Teacher, HomeKeys, PrimaryContactKeys } from "./types";
+import { Student, Teacher, HomeKeys, PrimaryContactKeys, BackendStudent } from "./types";
 import isoDateToInputDate from "./utility/isoDateToInputDate";
+import { Timestamp } from "firebase/firestore";
 
 export default function Form({ state, closeForm, teachers }: {state: Student, closeForm: () => void, teachers: Teacher[] | undefined}) {
     const [formData, setFormData] = useState<Student>(state);
@@ -9,7 +10,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
     const {token} = useAuth()
     const disabled = formData.id !== "" && !isEdit
 
-	const onSubmit = (formData: Student) => {
+	const onSubmit = (formData: BackendStudent) => {
 		if (!formData.id) {
 			fetch("https://us-central1-afam-directory.cloudfunctions.net/createStudent", {
                 headers: {
@@ -96,7 +97,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 
         const processedData = {
             ...formData,
-            dob: new Date(formData.dob),
+            dob: Timestamp.fromDate(new Date(formData.dob)),
         }
 	    
         onSubmit(processedData);
