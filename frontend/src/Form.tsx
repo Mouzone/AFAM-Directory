@@ -1,15 +1,15 @@
-import { SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import { useAuth } from "./AuthProvider";
-import { Student, Teacher } from "./types";
+import { Student, Teacher, HomeKeys, PrimaryContactKeys } from "./types";
 import isoDateToInputDate from "./utility/isoDateToInputDate";
-import { addState } from "./utility/consts";
 
 export default function Form({ state, closeForm, teachers }: {state: Student, closeForm: () => void, teachers: Teacher[] | undefined}) {
     const [formData, setFormData] = useState<Student>(state);
 	const [isEdit, setIsEdit] = useState(false)
     const {token} = useAuth()
-    
-	const onSubmit = (formData) => {
+    const disabled = formData.id !== "" && !isEdit
+
+	const onSubmit = (formData: Student) => {
 		if (!formData.id) {
 			fetch("https://us-central1-afam-directory.cloudfunctions.net/createStudent", {
                 headers: {
@@ -32,7 +32,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
         closeForm()
 	}
 
-	const handleChange = (e) => {
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 		const { name, value } = e.target;
 		setFormData({
 	  		...formData,
@@ -40,7 +40,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 		});
   	};
 
-    const handleTeacherChange = (e) => {
+    const handleTeacherChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const teacherName = e.target.value
         const teacherNameList = teacherName.split(" ")
         const firstName = teacherNameList[0]
@@ -54,8 +54,8 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
         })
     }
 
-    const handlePrimaryContactChange = (field) => {
-        return (e) => {
+    const handlePrimaryContactChange = (field: PrimaryContactKeys) => {
+        return (e: React.ChangeEvent<HTMLInputElement>) => {
             setFormData({
                 ...formData,
                 primaryContact: {
@@ -66,8 +66,8 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
         }
     }
 
-    const handleHomeChange = (field) => {
-        return (e) => {
+    const handleHomeChange = (field: HomeKeys) => {
+        return (e: React.ChangeEvent<HTMLInputElement>) => {
             setFormData({
                 ...formData,
                 home: {
@@ -78,7 +78,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
         }
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 	    e.preventDefault();
         if (
             !formData.firstName ||
@@ -94,14 +94,14 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             return;
         }
 
-	const processedData = {
-		...formData,
-		dob: new Date(formData.dob),
-	}
-	    onSubmit(processedData);
+        const processedData = {
+            ...formData,
+            dob: new Date(formData.dob),
+        }
+	    
+        onSubmit(processedData);
     };
   
-  const disabled = type==="view" && !isEdit
   return (
 	<form
 		onSubmit={handleSubmit}

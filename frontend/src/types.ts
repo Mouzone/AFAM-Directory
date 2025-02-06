@@ -28,6 +28,9 @@ export type Student = {
     }
 }
 
+export type HomeKeys = keyof Student["home"]
+export type PrimaryContactKeys = keyof Student["primaryContact"]
+
 export type Teacher = {
     firstName: string,
     lastName: string,
