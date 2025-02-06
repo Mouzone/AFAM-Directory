@@ -30,21 +30,37 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
 
                 # Convert all values to appropriate types.  Critical for Firestore!
                 converted_row = {}
-                for key, value in row.items():
-                    try:
-                        # Attempt conversion to various types. Adjust as needed.
-                        if value.lower() == "true":
-                            converted_row[key] = True
-                        elif value.lower() == "false":
-                            converted_row[key] = False
-                        elif value.isdigit():  # Check for integer
-                           converted_row[key] = int(value)
-                        elif "." in value and value.replace('.', '', 1).isdigit(): # Check for float
-                            converted_row[key] = float(value)
-                        else:
-                            converted_row[key] = value # Keep as string if no conversion
-                    except (ValueError, TypeError):  # Handle conversion errors
-                        converted_row[key] = value # Keep as string on error
+                try:
+                    converted_row["firstName"] = row["First Name"]
+                    converted_row["lastName"] = row["Last Name"]
+                    converted_row["schoolYear"] = row["Grade"]
+                    # figure out how to go from 1/17/2009 to 2025-02-28
+                    converted_row["dob"] = row["Date of Birth (DOB)"]
+                    converted_row["allergies"] = row["Allergies"].split(",")
+                    converted_row["email"] = row["Personal Email Address"]
+                    converted_row["phoneNumber"] = row["Personal Phone Number"]
+                    converted_row["gender"] = row["Gender"]
+                    converted_row["highSchool"] = row["High School"]
+                    converted_row["home"] = {
+                        "city": row["City"],
+                        "streetAddress": row["Street Address"],
+                        "zipCode": row["Postal Code"]
+                    }
+                    # figure out if we need both parents, or just one guardian
+                    converted_row["primaryContact"] = {
+                        "email": row["email"],
+                        "firstName": row["firstName"],
+                        "lastName": row["lastName"],
+                        "phoneNumber": row["phoneNumber"]
+                    }
+                    # for teacher split row["Small Group Class"]
+                    converted_row["teacher"] = {
+                        "firstName": row["firstName"],
+                        "lastName": row["lastName"]
+                    }
+
+                except (ValueError, TypeError):  # Handle conversion errors
+                    converted_row[key] = value # Keep as string on error
 
                 batch.set(doc_ref, converted_row)
 
