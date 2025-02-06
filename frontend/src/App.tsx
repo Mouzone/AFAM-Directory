@@ -19,7 +19,6 @@ function App() {
         }
     }, [token, navigate])
 
-    const [add, setAdd] = useState<boolean>(false);
     const [profile, setProfile] = useState<Student>(addState);
     const [showForm, setShowForm] = useState<boolean>(false)
     const [searchValues, setSearchValues] = useState({
@@ -28,6 +27,16 @@ function App() {
         schoolYear: "",
         teacher: "",
     });
+
+    const closeForm = () => {
+        setProfile(addState)
+		setShowForm(false); 
+    }
+
+    const editForm = (student: Student) => {
+        setProfile(student)
+        setShowForm(true)
+    }
 
     const { data: students, error: studentsError, isLoading: studentsIsLoading } = useSWRImmutable(
         ["https://us-central1-afam-directory.cloudfunctions.net/getCollection?type=students", token],
@@ -88,7 +97,7 @@ function App() {
                 {/* Add Button */}
                 <button
                     className=" bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    onClick={() => setAdd(true)}
+                    onClick={() => setShowForm(true)}
                 >
                     Add Student
                 </button>
@@ -107,15 +116,14 @@ function App() {
                         >
                             <Form 
                                 state={profile}
-                                setProfile={setProfile}
-                                setShowForm={setShowForm} 
+                                closeForm={closeForm}
                                 teachers={teachers}
                             />
                         </div>
                     </div>
                 )
             }
-	        <Table filtered={filtered} setProfile={setProfile} setShowForm={setShowForm}/>	  
+	        <Table filtered={filtered} editForm={editForm}/>	  
 	    </div>
     );
 }

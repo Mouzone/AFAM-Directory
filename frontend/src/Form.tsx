@@ -4,7 +4,7 @@ import { Student, Teacher } from "./types";
 import isoDateToInputDate from "./utility/isoDateToInputDate";
 import { addState } from "./utility/consts";
 
-export default function Form({ state, setProfile, setShowForm, teachers }: {state: Student, setProfile: React.Dispatch<SetStateAction<Student>>,setShowForm: React.Dispatch<SetStateAction<boolean>>, teachers: Teacher[] | undefined}) {
+export default function Form({ state, closeForm, teachers }: {state: Student, closeForm: () => void, teachers: Teacher[] | undefined}) {
     const [formData, setFormData] = useState<Student>(state);
 	const [isEdit, setIsEdit] = useState(false)
     const {token} = useAuth()
@@ -29,8 +29,7 @@ export default function Form({ state, setProfile, setShowForm, teachers }: {stat
 				body: JSON.stringify(formData)
 			})
 	}
-        setProfile(addState)
-		setShowForm(false); // Hide the form after submission
+        closeForm()
 	}
 
 	const handleChange = (e) => {
