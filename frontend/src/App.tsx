@@ -6,7 +6,7 @@ import { useAuth } from "./AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { fetcher } from "./utility/fetcher";
-import { student, LabelsKey, Teacher } from "./types";
+import { Student, LabelsKey, Teacher } from "./types";
 import { addState, labels} from "./utility/consts"
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
     }, [token, navigate])
 
     const [add, setAdd] = useState<boolean>(false);
-    const [profile, setProfile] = useState<student | null>(null);
+    const [profile, setProfile] = useState<Student | null>(null);
     const [searchValues, setSearchValues] = useState({
         firstName: "",
         lastName: "",
@@ -47,7 +47,7 @@ function App() {
     }
 
 
-    const filtered = students.filter((entry: student) => {
+    const filtered = students.filter((entry: Student) => {
         return (
             entry["firstName"]
                 .toLowerCase()

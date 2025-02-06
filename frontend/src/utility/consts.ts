@@ -1,3 +1,5 @@
+import { Student } from "../types"
+
 export const addState = {
     firstName: "",
     lastName: "",
@@ -23,7 +25,7 @@ export const addState = {
         firstName: "",
         lastName: ""
     }
-}
+} as Student
 
 export const labels = {
     firstName: "First Name",

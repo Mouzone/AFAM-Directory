@@ -1,12 +1,12 @@
 import { labels } from "./utility/consts"
 import { User } from "firebase/auth"
-export type student = {
+export type Student = {
     id?: string,
     firstName: string,
     lastName: string,
-    schoolYear: "9" | "10" | "11" | "12",
+    schoolYear: "" | "9" | "10" | "11" | "12",
     dob: string,
-    gender: "Male" | "Female",
+    gender: "" | "Male" | "Female",
     highSchool: string,
     phoneNumber: string,
     email: string,

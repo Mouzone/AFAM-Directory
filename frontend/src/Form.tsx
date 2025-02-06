@@ -1,14 +1,13 @@
 import { SetStateAction, useState } from "react";
 import { useAuth } from "./AuthProvider";
-import { student, Teacher } from "./types";
+import { Student, Teacher } from "./types";
 import isoDateToInputDate from "./utility/isoDateToInputDate";
 
-export default function Form({ type, state, onCancel, teachers }: {type: "add" | "view", state: student, onCancel: React.Dispatch<SetStateAction<false>> | React.Dispatch<SetStateAction<null>>, teachers: Teacher[] | undefined}) {
+export default function Form({ type, state, onCancel, teachers }: {type: "add" | "view", state: Student, onCancel: React.Dispatch<SetStateAction<false>> | React.Dispatch<SetStateAction<null>>, teachers: Teacher[] | undefined}) {
     const [formData, setFormData] = useState(state);
 	const [isEdit, setIsEdit] = useState(false)
     const {token} = useAuth()
     
-    console.log(formData)
 	const onSubmit = (formData) => {
 		if (type === "add") {
 			fetch("https://us-central1-afam-directory.cloudfunctions.net/createStudent", {

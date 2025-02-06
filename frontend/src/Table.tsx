@@ -1,7 +1,7 @@
 import { SetStateAction } from "react"
-import { student } from "./types"
+import { Student } from "./types"
 
-export default function Table({filtered, setProfile}: {filtered: student[], setProfile: React.Dispatch<SetStateAction<student | null>>}) {
+export default function Table({filtered, setProfile}: {filtered: Student[], setProfile: React.Dispatch<SetStateAction<Student | null>>}) {
     return (
         <table className="w-full border-collapse">
             <thead>
