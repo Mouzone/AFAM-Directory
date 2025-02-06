@@ -1,8 +1,7 @@
 import React, { SetStateAction, useState } from "react";
 import { useAuth } from "./AuthProvider";
-import { Student, Teacher, HomeKeys, PrimaryContactKeys, BackendStudent } from "./types";
+import { Student, Teacher, HomeKeys, PrimaryContactKeys } from "./types";
 import isoDateToInputDate from "./utility/isoDateToInputDate";
-import { Timestamp } from "firebase/firestore";
 
 export default function Form({ state, closeForm, teachers }: {state: Student, closeForm: () => void, teachers: Teacher[] | undefined}) {
     const [formData, setFormData] = useState<Student>(state);
@@ -10,7 +9,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
     const {token} = useAuth()
     const disabled = "id" in formData && !isEdit
 
-	const onSubmit = (formData: BackendStudent) => {
+	const onSubmit = (formData: Student) => {
 		if (!formData.id) {
 			fetch("https://us-central1-afam-directory.cloudfunctions.net/createStudent", {
                 headers: {
@@ -94,13 +93,8 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             alert("Please fill out all required fields.");
             return;
         }
-
-        const processedData = {
-            ...formData,
-            dob: Timestamp.fromDate(new Date(formData.dob)),
-        }
 	    
-        onSubmit(processedData);
+        onSubmit(formData);
     };
   
   return (

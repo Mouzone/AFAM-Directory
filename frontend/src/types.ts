@@ -1,6 +1,5 @@
 import { labels } from "./utility/consts"
 import { User } from "firebase/auth"
-import { Timestamp } from "firebase/firestore"
 
 export type Student = {
     id?: string,
@@ -28,10 +27,6 @@ export type Student = {
         firstName: string,
         lastName: string
     }
-}
-
-export type BackendStudent = Omit<Student, 'dob'> & { // Create a new type
-    dob: Timestamp; // Use Timestamp for the backend
 }
 
 export type HomeKeys = keyof Student["home"]
