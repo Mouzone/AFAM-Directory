@@ -39,9 +39,10 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 converted_row["firstName"] = row["First Name"]
                 converted_row["lastName"] = row["Last Name"]
                 converted_row["schoolYear"] = row["Grade"]
+
                 # to go from 1/17/2009 to 2025-02-28
                 dob_parts = row["Date of Birth (DOB)"].split("/")
-                converted_row["dob"] = f"{dob_parts[2]}-{dob_parts[0]}-{dob_parts[1]}" 
+                converted_row["dob"] = f"20{dob_parts[2]}-{dob_parts[0].zfill(2)}-{dob_parts[1].zfill(2)}" 
 
                 if row["Allergies"] == "":
                     converted_row["allergies"] = []
@@ -56,7 +57,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                     "streetAddress": row["Street Address"],
                     "zipCode": row["Postal Code"]
                 }
-                # figure out if we need both parents, or just one guardian
+
                 converted_row["guardian1"] = {
                     "email": row["Parent 1 Email Address"],
                     "firstName": row["Parent 1 First Name"],
