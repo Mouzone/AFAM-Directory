@@ -19,6 +19,9 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
 
         db = firestore.client()
         collection_ref = db.collection(collection_name)
+        dummy_doc_ref = collection_ref.document("dummy_document")  # You can use an auto-generated ID
+        dummy_doc_ref.set({"dummy_field": "dummy_value"})  # Add some dummy data
+
         with open(csv_file_path, 'r', encoding='utf-8') as csvfile:  # Handle potential encoding issues
             reader = csv.DictReader(csvfile)  # Assumes first row is header
 
@@ -101,6 +104,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
     finally:
         # Close the Firestore client (good practice)
         if firebase_admin._apps: # Only close if initialized.
+            dummy_doc_ref.delete()
             db.close()
 
 # Example usage:
