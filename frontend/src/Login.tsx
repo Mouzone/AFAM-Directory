@@ -1,15 +1,23 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { app } from "./utility/firebase"; // Adjust the path to your Firebase initialization file
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
 
 export default function Login() {
-    const { setUser, setToken } = useAuth();
+    const { user, setUser, setToken, isLoading: authLoading } = useAuth();
 	const [credentials, setCredentials] = useState({ email: "", password: "" });
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string>("");
 	const navigate = useNavigate()
+
+    useEffect(() => {
+        if (!authLoading) { // Only check if auth is not loading
+            if (user) {
+                navigate("/students", { replace: true }); // Redirect if user is logged in
+            }
+        }
+    }, [user, navigate, authLoading])
 
   	const onChange = (key: "email" | "password", e: React.ChangeEvent<HTMLInputElement>) => {
 		setCredentials({ ...credentials, [key]: e.target.value });

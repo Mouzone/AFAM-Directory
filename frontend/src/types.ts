@@ -49,6 +49,7 @@ export type AuthContextType = {
     setUser: (user: User | null) => void;
     token: string | null;
     setToken: (token: string | null) => void;
+    isLoading: boolean
 };
 
 export type LabelsKey = keyof typeof labels

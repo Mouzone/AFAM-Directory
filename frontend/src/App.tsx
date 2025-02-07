@@ -9,14 +9,19 @@ import { addState, labels} from "./utility/consts"
 import { getFunctions, httpsCallable } from "firebase/functions"
 
 function App() {
-    const { token } = useAuth()
+    const { user, token, isLoading: authLoading } = useAuth()
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (!token) {
-            navigate("/", { replace: true})
+        if (authLoading) { // Wait for authentication context to load
+            return;
         }
-    }, [token, navigate])
+
+        if (!user || !token) {
+            navigate("/", { replace: true });
+        }
+
+    }, [user, token, navigate, authLoading])
 
     const [students, setStudents] = useState<Student[]>([])
     const [teachers, setTeachers] = useState<Teacher[]>([])
