@@ -7,19 +7,34 @@ import google.cloud.firestore
 app = initialize_app()
 fireStore_client: google.cloud.firestore.Client = firestore.client()
 
-@https_fn.on_call(cors=options.CorsOptions(cors_origins="*", cors_methods=["GET"]))
-def getCollection(req: https_fn.CallableRequest) -> https_fn.Response:  # Use CallableRequest
+@https_fn.on_call()
+def getStudents(req: https_fn.CallableRequest) -> https_fn.Response:  # Use CallableRequest
     if not req.auth:  # Essential check for authentication
         return jsonify({"error": "Unauthorized"}), 401
 
     try:
-        # Get the 'type' data from the request
-        collection_type = req.data.get("type") # Access data using req.data
-        if not collection_type:
-            return jsonify({"error": "Missing 'type' parameter"}), 400
-
         # Fetch documents from Firestore (unchanged)
-        documents = fireStore_client.collection(collection_type).stream()
+        documents = fireStore_client.collection("students").stream()
+        entries = []
+        for document in documents:
+            entry = document.to_dict()
+            entry["id"] = document.id
+            entries.append(entry)
+
+        return jsonify(entries), 200
+
+    except Exception as e:
+        print(f"Error fetching documents: {e}")
+        return jsonify({"error": "Internal Server Error"}), 500
+    
+@https_fn.on_call()
+def getTeachers(req: https_fn.CallableRequest) -> https_fn.Response:  # Use CallableRequest
+    if not req.auth:  # Essential check for authentication
+        return jsonify({"error": "Unauthorized"}), 401
+
+    try:
+        # Fetch documents from Firestore (unchanged)
+        documents = fireStore_client.collection("teachers").stream()
         entries = []
         for document in documents:
             entry = document.to_dict()
@@ -32,8 +47,7 @@ def getCollection(req: https_fn.CallableRequest) -> https_fn.Response:  # Use Ca
         print(f"Error fetching documents: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
 
-
-@https_fn.on_call(cors=options.CorsOptions(cors_origins="*", cors_methods=["POST"]))
+@https_fn.on_call()
 def createStudent(req: https_fn.CallableRequest) -> https_fn.Response: # Use CallableRequest
     if not req.auth:  # Essential check for authentication
         return jsonify({"error": "Unauthorized"}), 401
@@ -54,7 +68,7 @@ def createStudent(req: https_fn.CallableRequest) -> https_fn.Response: # Use Cal
         return jsonify({"error": "Internal Server Error"}), 500
 
 
-@https_fn.on_call(cors=options.CorsOptions(cors_origins="*", cors_methods=["PUT"]))
+@https_fn.on_call()
 def editStudent(req: https_fn.CallableRequest) -> https_fn.Response: # Use CallableRequest
     if not req.auth:  # Essential check for authentication
         return jsonify({"error": "Unauthorized"}), 401
