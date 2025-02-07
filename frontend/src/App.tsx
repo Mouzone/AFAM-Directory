@@ -141,10 +141,16 @@ function App() {
 
     return (
         <div className="p-5 font-sans">
-	        {/* Search Inputs */}
-            <button type="button" onClick={handleSignOut}>
-                Sign Out
-            </button>
+            <div className="flex justify-end">
+                <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" // Tailwind styles
+                >
+                    Sign Out
+                </button>
+            </div>
+            {/* Search Inputs */}
 		    <div className="flex gap-4 mb-5 items-center">
 			    {
                     Object.entries(searchValues).map(([key, value]) => (
