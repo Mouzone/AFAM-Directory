@@ -45,12 +45,14 @@ function App() {
         const getTeachers = httpsCallable(functions, "getTeachers")
         getStudents()
             .then((result) => {
-                setStudents(result.data.students)
+                const studentsData = result.data as {students: Student[]}
+                setStudents(studentsData.students)
             })
     
         getTeachers()
             .then((result) => {
-                setTeachers(result.data.teachers)
+                const teachersData = result.data as {teachers: Teacher[]}
+                setTeachers(teachersData.teachers)
             })  
     }, [])
     
