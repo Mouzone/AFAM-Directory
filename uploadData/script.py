@@ -54,13 +54,13 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                     "zipCode": row["Postal Code"]
                 }
                 # figure out if we need both parents, or just one guardian
-                converted_row["Guardian 1"] = {
+                converted_row["guardian1"] = {
                     "email": row["Parent 1 Email Address"],
                     "firstName": row["Parent 1 First Name"],
                     "lastName": row["Parent 1 Last Name"],
                     "phoneNumber": row["Parent 1 Phone Number"]
                 }
-                converted_row["Guardian 2"] = {
+                converted_row["guardian2"] = {
                     "email": row["Parent 2 Email Address"],
                     "firstName": row["Parent 2 First Name"],
                     "lastName": row["Parent 2 Last Name"],
