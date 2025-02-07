@@ -8,9 +8,10 @@ import { Student, LabelsKey, Teacher } from "./types";
 import { addState, labels} from "./utility/consts"
 import { collection, onSnapshot, query, getFirestore, getDocs } from "firebase/firestore";
 import { app } from "./utility/firebase";
+import { getAuth, signOut } from "firebase/auth";
 
 function App() {
-    const { user, token, isLoading: authLoading, setUser, setToken } = useAuth()
+    const { user, token, isLoading: authLoading } = useAuth()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -18,10 +19,13 @@ function App() {
             return;
         }
 
-        if (!user || !token) {
-            navigate("/", { replace: true });
-        }
+        const checkAuth = async () => {  // Create an async function inside useEffect
+            if (!user || !token) {
+                navigate("/", { replace: true });
+            }
+        };
 
+        checkAuth()
     }, [user, token, navigate, authLoading])
 
     const [students, setStudents] = useState<Student[]>([])
@@ -47,10 +51,9 @@ function App() {
         setShowForm(true)
     }
 
-    const signOut = () => {
-        setUser(null) 
-        setToken(null)
-        localStorage.removeItem('token')
+    const handleSignOut = async () => { 
+        const auth = getAuth()
+        signOut(auth)
     }
 
     useEffect(() => {
@@ -158,7 +161,7 @@ function App() {
     return (
         <div className="p-5 font-sans">
 	        {/* Search Inputs */}
-            <button type="button" onClick={signOut}>
+            <button type="button" onClick={handleSignOut}>
                 Sign Out
             </button>
 		    <div className="flex gap-4 mb-5 items-center">

@@ -1,6 +1,5 @@
 import React, { SetStateAction, useState } from "react";
 import { Student, Teacher, HomeKeys, GuardianKeys } from "./types";
-import isoDateToInputDate from "./utility/isoDateToInputDate";
 import { getFunctions, httpsCallable } from "firebase/functions"
 
 export default function Form({ state, closeForm, teachers }: {state: Student, closeForm: () => void, teachers: Teacher[] | undefined}) {
@@ -13,13 +12,11 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
         const addStudent = httpsCallable(functions, "addStudent")
         const editStudent = httpsCallable(functions, "editStudent")
 		if (!formData.id) {
-            console.log(formData)
             addStudent(formData)
                 .then((result) => {
                     console.log(result)
                 })
 		} else {
-            console.log(formData)
             editStudent(formData)
                 .then((result) => {
                     console.log(result)
