@@ -15,13 +15,13 @@ export const addState = {
         city: "",
         zipCode: ""
     },
-    "Guardian 1": {
+    guardian1: {
         firstName: "",
         lastName: "",
         phoneNumber: "",
         email: "",
     },
-    "Guardian 2": {
+    guardian2: {
         firstName: "",
         lastName: "",
         phoneNumber: "",

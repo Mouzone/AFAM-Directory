@@ -1,6 +1,6 @@
 import React, { SetStateAction, useState } from "react";
 import { useAuth } from "./AuthProvider";
-import { Student, Teacher, HomeKeys, PrimaryContactKeys } from "./types";
+import { Student, Teacher, HomeKeys, GuardianKeys } from "./types";
 import isoDateToInputDate from "./utility/isoDateToInputDate";
 
 export default function Form({ state, closeForm, teachers }: {state: Student, closeForm: () => void, teachers: Teacher[] | undefined}) {
@@ -10,6 +10,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
     const disabled = "id" in formData && !isEdit
 
 	const onSubmit = (formData: Student) => {
+        console.log(formData)
 		if (!formData.id) {
 			fetch("https://us-central1-afam-directory.cloudfunctions.net/createStudent", {
                 headers: {
@@ -54,12 +55,12 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
         })
     }
 
-    const handlePrimaryContactChange = (field: PrimaryContactKeys) => {
+    const handleGuardianChange = (guardian: "guardian1" | "guardian2", field: GuardianKeys) => {
         return (e: React.ChangeEvent<HTMLInputElement>) => {
             setFormData({
                 ...formData,
-                primaryContact: {
-                    ...formData["primaryContact"],
+                [guardian]: {
+                    ...formData[guardian],
                     [field]: e.target.value
                 }
             })
@@ -288,8 +289,8 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 				<input
 					type="text"
 					name="primaryContactFirstName"
-					value={formData.primaryContact.firstName}
-					onChange={handlePrimaryContactChange("firstName")}
+					value={formData["guardian1"].firstName}
+					onChange={handleGuardianChange("guardian1", "firstName")}
 					className="border border-gray-300 rounded p-2"
 					required
 					disabled={disabled}
@@ -301,8 +302,8 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 				<input
 					type="text"
 					name="primaryContactLastName"
-					value={formData.primaryContact.lastName}
-					onChange={handlePrimaryContactChange("lastName")}
+					value={formData["guardian1"].lastName}
+					onChange={handleGuardianChange("guardian1", "lastName")}
 					className="border border-gray-300 rounded p-2"
 					required
 					disabled={disabled}
@@ -315,8 +316,8 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 				<input
 					type="tel"
 					name="primaryContactPhone"
-					value={formData.primaryContact.phoneNumber}
-					onChange={handlePrimaryContactChange("phoneNumber")}
+					value={formData["guardian1"].phoneNumber}
+					onChange={handleGuardianChange("guardian1", "phoneNumber")}
 					className="border border-gray-300 rounded p-2"
 					required
 					disabled={disabled}
@@ -329,8 +330,8 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 				<input
 					type="email"
 					name="primaryContactEmail"
-					value={formData.primaryContact.email}
-					onChange={handlePrimaryContactChange("email")}
+					value={formData["guardian1"].email}
+					onChange={handleGuardianChange("guardian1", "email")}
 					className="border border-gray-300 rounded p-2"
 					required
 					disabled={disabled}
