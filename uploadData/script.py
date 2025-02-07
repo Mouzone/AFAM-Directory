@@ -34,8 +34,10 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                     converted_row["firstName"] = row["First Name"]
                     converted_row["lastName"] = row["Last Name"]
                     converted_row["schoolYear"] = row["Grade"]
-                    # figure out how to go from 1/17/2009 to 2025-02-28
-                    converted_row["dob"] = row["Date of Birth (DOB)"]
+                    # to go from 1/17/2009 to 2025-02-28
+                    dob_parts = row["Date of Birth (DOB)"].split("/")
+                    converted_row["dob"] = f"{dob_parts[2]}-{dob_parts[0]}-{dob_parts[1]}" 
+
                     converted_row["allergies"] = row["Allergies"].split(",")
                     converted_row["email"] = row["Personal Email Address"]
                     converted_row["phoneNumber"] = row["Personal Phone Number"]
@@ -47,16 +49,23 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                         "zipCode": row["Postal Code"]
                     }
                     # figure out if we need both parents, or just one guardian
-                    converted_row["primaryContact"] = {
-                        "email": row["email"],
-                        "firstName": row["firstName"],
-                        "lastName": row["lastName"],
-                        "phoneNumber": row["phoneNumber"]
+                    converted_row["Guardian 1"] = {
+                        "email": row["Parent 1 Email Address"],
+                        "firstName": row["Parent 1 First Name"],
+                        "lastName": row["Parent 1 Last Name"],
+                        "phoneNumber": row["Parent 1 Phone Number"]
                     }
-                    # for teacher split row["Small Group Class"]
+                    converted_row["Guardian 2"] = {
+                        "email": row["Parent 2 Email Address"],
+                        "firstName": row["Parent 2 First Name"],
+                        "lastName": row["Parent 2 Last Name"],
+                        "phoneNumber": row["Parent 2 Phone Number"]
+                    }
+                    # from 10A Sunny Liu to {Sunny, Liu}
+                    teacher_parts = row["Small Group Class"].split(" ")
                     converted_row["teacher"] = {
-                        "firstName": row["firstName"],
-                        "lastName": row["lastName"]
+                        "firstName": teacher_parts[0],
+                        "lastName": teacher_parts[1]
                     }
 
                 except (ValueError, TypeError):  # Handle conversion errors
