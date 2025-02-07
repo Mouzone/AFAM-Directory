@@ -7,46 +7,6 @@ app = initialize_app()
 fireStore_client: google.cloud.firestore.Client = firestore.client()
 
 @https_fn.on_call()
-def getStudents(req: https_fn.CallableRequest) -> https_fn.Response:  # Use CallableRequest
-    if not req.auth:  # Essential check for authentication
-        return {"error": "Unauthorized"}
-
-    try:
-        # Fetch documents from Firestore (unchanged)
-        documents = fireStore_client.collection("students").stream()
-        entries = []
-        for document in documents:
-            entry = document.to_dict()
-            entry["id"] = document.id
-            entries.append(entry)
-
-        return {"students": entries}
-
-    except Exception as e:
-        print(f"Error fetching documents: {e}")
-        return {"error": "Internal Server Error"}
-    
-@https_fn.on_call()
-def getTeachers(req: https_fn.CallableRequest) -> https_fn.Response:  # Use CallableRequest
-    if not req.auth:  # Essential check for authentication
-        return {"error": "Unauthorized"}
-
-    try:
-        # Fetch documents from Firestore (unchanged)
-        documents = fireStore_client.collection("teachers").stream()
-        entries = []
-        for document in documents:
-            entry = document.to_dict()
-            entry["id"] = document.id
-            entries.append(entry)
-
-        return {"teachers": entries}
-
-    except Exception as e:
-        print(f"Error fetching documents: {e}")
-        return {"error": "Internal Server Error"}
-
-@https_fn.on_call()
 def createStudent(req: https_fn.CallableRequest) -> https_fn.Response: # Use CallableRequest
     if not req.auth:  # Essential check for authentication
         return {"error": "Unauthorized"}

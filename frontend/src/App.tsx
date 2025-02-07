@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Student, LabelsKey, Teacher } from "./types";
 import { addState, labels} from "./utility/consts"
-import { getFunctions, httpsCallable } from "firebase/functions"
+import { collection, onSnapshot, query, getFirestore } from "firebase/firestore";
+import { app } from "./utility/firebase";
 
 function App() {
     const { user, token, isLoading: authLoading } = useAuth()
@@ -33,6 +34,8 @@ function App() {
         schoolYear: "",
         teacher: "",
     });
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [error, setError] = useState<Error | null>(null);
 
     const closeForm = () => {
         setProfile(addState)
@@ -45,21 +48,57 @@ function App() {
     }
 
     useEffect(() => {
-        const functions = getFunctions()
-        const getStudents = httpsCallable(functions, "getStudents")
-        const getTeachers = httpsCallable(functions, "getTeachers")
-        getStudents()
-            .then((result) => {
-                const studentsData = result.data as {students: Student[]}
-                setStudents(studentsData.students)
-            })
-    
-        getTeachers()
-            .then((result) => {
-                const teachersData = result.data as {teachers: Teacher[]}
-                setTeachers(teachersData.teachers)
-            })  
-    }, [])
+        const q = query(collection(getFirestore(app), "students"));
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const updatedStudents: Student[] = []; // Type the updatedStudents array
+
+            snapshot.docChanges().forEach((change) => {
+                const student = change.doc.data() as Student; // Type the student data
+                student.id = change.doc.id;
+
+                switch (change.type) {
+                    case "added":
+                        updatedStudents.push(student);
+                        break;
+                    case "modified":
+                        setStudents((prevStudents) => {
+                            const modifiedIndex = prevStudents.findIndex((prevStudent) => prevStudent.id === student.id);
+                            if (modifiedIndex !== -1) {
+                                const newStudents = [...prevStudents];
+                                newStudents[modifiedIndex] = student;
+                                return newStudents;
+                            }
+                            return prevStudents;
+                        });
+                        break;
+                    case "removed":
+                        setStudents((prevStudents) => prevStudents.filter((prevStudent) => prevStudent.id !== student.id));
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            if (snapshot.metadata.hasPendingWrites === false && updatedStudents.length > 0) {
+                setStudents((prevStudents) => {
+                    if (prevStudents.length === 0) {
+                        return updatedStudents;
+                    } else {
+                        return prevStudents;
+                    }
+                });
+                setIsLoading(false);
+            }
+
+        }, (error) => {
+            console.error("Error listening for updates:", error);
+            setError(error);
+            setIsLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
     
     const filtered = students.filter((entry: Student) => {
         return (
