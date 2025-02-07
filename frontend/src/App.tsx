@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Student, LabelsKey, Teacher } from "./types";
 import { addState, labels} from "./utility/consts"
-import { getStudents, getTeachers } from "./utility/cloudFunctions";
+import { getFunctions, httpsCallable } from "firebase/functions"
 
 function App() {
     const { token } = useAuth()
@@ -40,6 +40,9 @@ function App() {
     }
 
     useEffect(() => {
+        const functions = getFunctions()
+        const getStudents = httpsCallable(functions, "getStudents")
+        const getTeachers = httpsCallable(functions, "getTeachers")
         getStudents()
             .then((result) => {
                 setStudents(result.data.students)

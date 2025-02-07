@@ -1,33 +1,27 @@
 import React, { SetStateAction, useState } from "react";
-import { useAuth } from "./AuthProvider";
 import { Student, Teacher, HomeKeys, GuardianKeys } from "./types";
 import isoDateToInputDate from "./utility/isoDateToInputDate";
+import { getFunctions, httpsCallable } from "firebase/functions"
 
 export default function Form({ state, closeForm, teachers }: {state: Student, closeForm: () => void, teachers: Teacher[] | undefined}) {
     const [formData, setFormData] = useState<Student>(state);
 	const [isEdit, setIsEdit] = useState(false)
-    const {token} = useAuth()
     const disabled = "id" in formData && !isEdit
 
 	const onSubmit = (formData: Student) => {
+        const functions = getFunctions()
+        const addStudent = httpsCallable(functions, "addStudent")
+        const editStudent = httpsCallable(functions, "editStudent")
 		if (!formData.id) {
-			fetch("https://us-central1-afam-directory.cloudfunctions.net/createStudent", {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-				method: "POST",
-				body: JSON.stringify(formData)
-			})
+            addStudent(formData)
+                .then((result) => {
+                    console.log(result)
+                })
 		} else {
-			fetch("https://us-central1-afam-directory.cloudfunctions.net/editStudent", {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-				method: "PUT",
-				body: JSON.stringify(formData)
-			})
+            editStudent(formData)
+                .then((result) => {
+                    console.log(result)
+                })
 	}
         closeForm()
 	}
