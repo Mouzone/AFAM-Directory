@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Student, LabelsKey, Teacher } from "./types";
 import { addState, labels} from "./utility/consts"
-import { collection, onSnapshot, query, getFirestore } from "firebase/firestore";
+import { collection, onSnapshot, query, getFirestore, getDocs } from "firebase/firestore";
 import { app } from "./utility/firebase";
 
 function App() {
@@ -49,7 +49,7 @@ function App() {
 
     useEffect(() => {
         const q = query(collection(getFirestore(app), "students"));
-
+        
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const updatedStudents: Student[] = []; // Type the updatedStudents array
 
@@ -96,10 +96,36 @@ function App() {
             setError(error);
             setIsLoading(false);
         });
-        setTeachers([])
         return () => unsubscribe();
     }, []);
-    console.log(error, isLoading)
+
+    useEffect(() => {
+        const fetchTeachers = async () => {
+            try {
+                const teachersQuery = query(collection(getFirestore(app), "teachers"));
+                const teachersSnapshot = await getDocs(teachersQuery);
+                const fetchedTeachers: Teacher[] = [];
+
+                teachersSnapshot.forEach((doc) => {
+                    const teacher = doc.data() as Teacher;
+                    teacher.id = doc.id;
+                    fetchedTeachers.push(teacher);
+                });
+
+                setTeachers(fetchedTeachers);
+            } catch (err) {
+                console.error("Error fetching teachers:", err);
+                setError(err);
+            }
+        };
+
+        fetchTeachers(); // Fetch teachers only once
+
+    }, []); // Empty dependency array ensures this runs only on mount
+
+    if (isLoading) return <div> Loading... </div>
+    if (error) return <div> Error </div>
+
     const filtered = students.filter((entry: Student) => {
         return (
             entry["firstName"]
