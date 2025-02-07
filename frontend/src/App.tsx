@@ -1,13 +1,12 @@
 import { useState } from "react";
-import useSWRImmutable from "swr";
 import Form from "./Form";
 import Table from "./Table"
 import { useAuth } from "./AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { fetcher } from "./utility/fetcher";
 import { Student, LabelsKey, Teacher } from "./types";
 import { addState, labels} from "./utility/consts"
+import { getStudents, getTeachers } from "./utility/cloudFunctions";
 
 function App() {
     const { token } = useAuth()
@@ -19,6 +18,8 @@ function App() {
         }
     }, [token, navigate])
 
+    const [students, setStudents] = useState<Student[]>([])
+    const [teachers, setTeachers] = useState<Teacher[]>([])
     const [profile, setProfile] = useState<Student>(addState);
     const [showForm, setShowForm] = useState<boolean>(false)
     const [searchValues, setSearchValues] = useState({
@@ -38,24 +39,18 @@ function App() {
         setShowForm(true)
     }
 
-    const { data: students, error: studentsError, isLoading: studentsIsLoading } = useSWRImmutable(
-        ["https://us-central1-afam-directory.cloudfunctions.net/getCollection?type=students", token],
-        fetcher,
-    );
-
-    const { data: teachers } = useSWRImmutable<Teacher[]>(
-        ["https://us-central1-afam-directory.cloudfunctions.net/getCollection?type=teachers", token],
-        fetcher,
-    );
-
-    if (studentsError) {
-        return <div className="text-red-500">Failed to load data.</div>;
-    }
-
-    if (studentsIsLoading) {
-        return <div className="text-blue-500">Loading...</div>;
-    }
-
+    useEffect(() => {
+        getStudents()
+            .then((result) => {
+                setStudents(result.data.students)
+            })
+    
+        getTeachers()
+            .then((result) => {
+                setTeachers(result.data.teachers)
+            })  
+    }, [])
+    
     const filtered = students.filter((entry: Student) => {
         return (
             entry["firstName"]
