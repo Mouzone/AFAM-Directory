@@ -96,10 +96,10 @@ function App() {
             setError(error);
             setIsLoading(false);
         });
-
+        setTeachers([])
         return () => unsubscribe();
     }, []);
-    
+    console.log(error, isLoading)
     const filtered = students.filter((entry: Student) => {
         return (
             entry["firstName"]
