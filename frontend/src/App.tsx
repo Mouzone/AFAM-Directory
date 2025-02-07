@@ -1,8 +1,6 @@
 import { useState } from "react";
 import Form from "./Form";
 import Table from "./Table"
-import { useAuth } from "./AuthProvider";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Student, LabelsKey, Teacher } from "./types";
 import { addState, labels} from "./utility/consts"
@@ -11,23 +9,6 @@ import { app } from "./utility/firebase";
 import { getAuth, signOut } from "firebase/auth";
 
 function App() {
-    const { user, token, isLoading: authLoading } = useAuth()
-    const navigate = useNavigate()
-
-    useEffect(() => {
-        if (authLoading) { // Wait for authentication context to load
-            return;
-        }
-
-        const checkAuth = async () => {  // Create an async function inside useEffect
-            if (!user || !token) {
-                navigate("/", { replace: true });
-            }
-        };
-
-        checkAuth()
-    }, [user, token, navigate, authLoading])
-
     const [students, setStudents] = useState<Student[]>([])
     const [teachers, setTeachers] = useState<Teacher[]>([])
     const [profile, setProfile] = useState<Student>(addState);

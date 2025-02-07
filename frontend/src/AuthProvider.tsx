@@ -1,57 +1,50 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { getAuth, onAuthStateChanged, onIdTokenChanged, User } from "firebase/auth";
-import { app } from "./utility/firebase";
-import { AuthContextType } from "./types"; // Make sure your types include isLoading
+import { onAuthStateChanged, User } from "firebase/auth";
+import { auth } from "./utility/firebase";
+import { useNavigate } from "react-router-dom";
+import { useTimeout } from "usehooks-ts"
 
-const AuthContext = createContext<AuthContextType>({
-    user: null,
-    setUser: () => {},
-    token: null,
-    setToken: () => {},
-    isLoading: true, // Initial loading state
-});
+const AuthContext = createContext<User | null | false>(null);
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null);
-    const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
-    const [isLoading, setIsLoading] = useState(true); // Add isLoading state
-    const auth = getAuth(app);
+    const [user, setUser] = useState<User | null | false>(null);
 
     useEffect(() => {
-        const combinedUnsubscribe = onAuthStateChanged(auth, async (user) => {
-            setUser(user);
-
-            if (user) {
-                const idToken = await user.getIdToken();
-                setToken(idToken);
-                localStorage.setItem('token', idToken);
-            } else {
-                setToken(null);
-                localStorage.removeItem('token');
-            }
-
-            setIsLoading(false); // Authentication status is known, set isLoading to false
-        });
-
-        onIdTokenChanged(auth, async (user) => {
-          if (user) {
-            const idToken = await user.getIdToken();
-            setToken(idToken);
-            localStorage.setItem('token', idToken);
-          } else {
-            setToken(null);
-            localStorage.removeItem('token');
-          }
-      });
-
-        return () => combinedUnsubscribe();
+        return onAuthStateChanged(auth, (user) => setUser(user || false))
     }, [auth]);
 
     return (
-        <AuthContext.Provider value={{ user, setUser, token, setToken, isLoading }}> {/* Include isLoading in the value */}
+        <AuthContext.Provider value={user}> {/* Include isLoading in the value */}
             {children}
         </AuthContext.Provider>
     );
 };
 
-export const useAuth = () => useContext(AuthContext);
+const UserContext = createContext<User>(undefined as unknown as User)
+export const useUser = () => useContext(UserContext)!!
+export const UserProvider = ({ children }: React.PropsWithChildren) => {
+    const user = useAuth()
+    const navigate = useNavigate()
+    useTimeout(() => {
+        if (!user) {
+            navigate("/", {replace: true})
+        }
+    }, 5000)
+
+    useEffect(() => {
+        if (user === false) {
+            navigate("/", {replace: true})
+        }
+    }, [user, navigate])
+
+    if (!user) {
+        return <div> Loading ... </div>
+    }
+
+    return (
+        <UserContext.Provider value={user}>
+            {children}
+        </UserContext.Provider>
+    )
+}

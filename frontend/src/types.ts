@@ -45,12 +45,4 @@ export type Teacher = {
     grade: "9" | "10" | "11" | "12"
 }
 
-export type AuthContextType = {
-    user: User | null;
-    setUser: (user: User | null) => void;
-    token: string | null;
-    setToken: (token: string | null) => void;
-    isLoading: boolean
-};
-
 export type LabelsKey = keyof typeof labels
