@@ -26,6 +26,9 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
             batch = db.batch()
 
             for i, row in enumerate(reader):
+                print(row)
+                if row["First Name"] == "":
+                    break
                 doc_ref = collection_ref.document()  # Auto-generate document IDs
 
                 # Convert all values to appropriate types.  Critical for Firestore!
@@ -37,7 +40,10 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 dob_parts = row["Date of Birth (DOB)"].split("/")
                 converted_row["dob"] = f"{dob_parts[2]}-{dob_parts[0]}-{dob_parts[1]}" 
 
-                converted_row["allergies"] = row["Allergies"].split(",")
+                if row["Allergies"] == "":
+                    converted_row["allergies"] = []
+                else:
+                    converted_row["allergies"] = row["Allergies"].split(",")
                 converted_row["email"] = row["Personal Email Address"]
                 converted_row["phoneNumber"] = row["Personal Phone Number"]
                 converted_row["gender"] = row["Gender"]
@@ -62,10 +68,16 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 }
                 # from 10A Sunny Liu to {Sunny, Liu}
                 teacher_parts = row["Small Group Class"].split(" ")
-                converted_row["teacher"] = {
-                    "firstName": teacher_parts[0],
-                    "lastName": teacher_parts[1]
-                }
+                if len(teacher_parts) == 3:
+                    converted_row["teacher"] = {
+                        "firstName": teacher_parts[1],
+                        "lastName": teacher_parts[2]
+                    }
+                else:
+                    converted_row["teacher"] = {
+                        "firstName": "",
+                        "lastName": ""
+                    }
 
                 batch.set(doc_ref, converted_row)
 
