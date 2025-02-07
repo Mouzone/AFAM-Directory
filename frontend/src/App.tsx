@@ -55,7 +55,6 @@ function App() {
     if (studentsIsLoading) {
         return <div className="text-blue-500">Loading...</div>;
     }
-    console.log(students)
 
     const filtered = students.filter((entry: Student) => {
         return (

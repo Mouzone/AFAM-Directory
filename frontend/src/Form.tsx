@@ -10,7 +10,6 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
     const disabled = "id" in formData && !isEdit
 
 	const onSubmit = (formData: Student) => {
-        console.log(formData)
 		if (!formData.id) {
 			fetch("https://us-central1-afam-directory.cloudfunctions.net/createStudent", {
                 headers: {
