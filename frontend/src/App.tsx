@@ -10,7 +10,7 @@ import { collection, onSnapshot, query, getFirestore, getDocs } from "firebase/f
 import { app } from "./utility/firebase";
 
 function App() {
-    const { user, token, isLoading: authLoading } = useAuth()
+    const { user, token, isLoading: authLoading, setUser, setToken } = useAuth()
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -35,7 +35,7 @@ function App() {
         teacher: "",
     });
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [error, setError] = useState<Error | null>(null);
+    const [error, setError] = useState<String | null>(null);
 
     const closeForm = () => {
         setProfile(addState)
@@ -45,6 +45,12 @@ function App() {
     const editForm = (student: Student) => {
         setProfile(student)
         setShowForm(true)
+    }
+
+    const signOut = () => {
+        setUser(null) 
+        setToken(null)
+        localStorage.removeItem('token')
     }
 
     useEffect(() => {
@@ -93,7 +99,7 @@ function App() {
 
         }, (error) => {
             console.error("Error listening for updates:", error);
-            setError(error);
+            setError(error.message);
             setIsLoading(false);
         });
         return () => unsubscribe();
@@ -114,8 +120,12 @@ function App() {
 
                 setTeachers(fetchedTeachers);
             } catch (err) {
+                if (err instanceof Error) {
+                    setError(err.message); // Set the error message if it's an Error object
+                } else {
+                    setError("An unknown error occurred."); // Handle non-Error objects
+                }
                 console.error("Error fetching teachers:", err);
-                setError(err);
             }
         };
 
@@ -148,6 +158,9 @@ function App() {
     return (
         <div className="p-5 font-sans">
 	        {/* Search Inputs */}
+            <button type="button" onClick={signOut}>
+                Sign Out
+            </button>
 		    <div className="flex gap-4 mb-5 items-center">
 			    {
                     Object.entries(searchValues).map(([key, value]) => (

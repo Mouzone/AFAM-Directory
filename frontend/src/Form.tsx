@@ -13,11 +13,13 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
         const addStudent = httpsCallable(functions, "addStudent")
         const editStudent = httpsCallable(functions, "editStudent")
 		if (!formData.id) {
+            console.log(formData)
             addStudent(formData)
                 .then((result) => {
                     console.log(result)
                 })
 		} else {
+            console.log(formData)
             editStudent(formData)
                 .then((result) => {
                     console.log(result)
@@ -154,7 +156,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 				<input
 					type="date"
 					name="dob"
-					value={isoDateToInputDate(formData.dob)}
+					value={formData.dob}
 					onChange={handleChange}
 					className="border border-gray-300 rounded p-2"
 					required

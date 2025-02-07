@@ -39,6 +39,7 @@ export type HomeKeys = keyof Student["home"]
 export type GuardianKeys = keyof Student["guardian1"]
 
 export type Teacher = {
+    id: string,
     firstName: string,
     lastName: string,
     grade: "9" | "10" | "11" | "12"
