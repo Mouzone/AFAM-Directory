@@ -15,7 +15,13 @@ export const addState = {
         city: "",
         zipCode: ""
     },
-    primaryContact: {
+    "Guardian 1": {
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        email: "",
+    },
+    "Guardian 2": {
         firstName: "",
         lastName: "",
         phoneNumber: "",

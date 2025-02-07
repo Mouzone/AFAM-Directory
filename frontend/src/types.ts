@@ -17,7 +17,13 @@ export type Student = {
         city: string,
         zipCode: string,
     },
-    primaryContact: {
+    "Guardian 1": {
+        firstName: string,
+        lastName: string,
+        phoneNumber: string,
+        email: string,
+    },
+    "Guardian 2": {
         firstName: string,
         lastName: string,
         phoneNumber: string,
@@ -30,7 +36,7 @@ export type Student = {
 }
 
 export type HomeKeys = keyof Student["home"]
-export type PrimaryContactKeys = keyof Student["primaryContact"]
+export type PrimaryContactKeys = keyof Student["Guardian 1"]
 
 export type Teacher = {
     firstName: string,
