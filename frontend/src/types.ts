@@ -1,5 +1,4 @@
 import { labels } from "./utility/consts"
-import { User } from "firebase/auth"
 
 export type Student = {
     id?: string,
