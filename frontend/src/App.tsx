@@ -21,7 +21,9 @@ function App() {
     });
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<String | null>(null);
-
+    const [updates, setUpdates] = useState<{added: String[], modified: String[], removed: String[]}>({added: [], modified:[], removed: []})
+    const [showUpdates, setShowUpdates] = useState<boolean>(false)
+    
     const closeForm = () => {
         setProfile(addState)
 		setShowForm(false); 
@@ -42,6 +44,9 @@ function App() {
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const updatedStudents: Student[] = []; 
+            const added: string[] = []
+            const modified: string[] = []
+            const removed: string[] = []
             snapshot.docChanges().forEach((change) => {
                 const student = change.doc.data() as Student; 
                 student.id = change.doc.id;
@@ -49,6 +54,7 @@ function App() {
                 switch (change.type) {
                     case "added":
                         updatedStudents.push(student);
+                        added.push(`${student.firstName} ${student.lastName}`)
                         break;
                     case "modified":
                         setStudents((prevStudents) => {
@@ -60,15 +66,17 @@ function App() {
                             }
                             return prevStudents;
                         });
+                        modified.push(`${student.firstName} ${student.lastName}`)
                         break;
                     case "removed":
                         setStudents((prevStudents) => prevStudents.filter((prevStudent) => prevStudent.id !== student.id));
+                        removed.push(`${student.firstName} ${student.lastName}`)
                         break;
                     default:
                         break;
                 }
             });
-
+            
             if (updatedStudents.length > 0) {
                 setStudents((prevStudents) => {
                     if (prevStudents.length === 0) {
@@ -79,6 +87,13 @@ function App() {
                 });
                 setIsLoading(false);
             }
+
+            setUpdates({added, modified, removed})
+            setShowUpdates(true)
+            setTimeout(() => {
+                setShowUpdates(false)
+                setUpdates({added: [], modified: [], removed: []})
+            }, 3000)
 
         }, (error) => {
             console.error("Error listening for updates:", error);
@@ -194,7 +209,29 @@ function App() {
                     </div>
                 )
             }
-	        <Table filtered={filtered} editForm={editForm}/>	  
+	        <Table filtered={filtered} editForm={editForm}/>
+            {/* Popup that details Action: [names] that truncates*/}
+            {
+                showUpdates && (
+                    <div className="bg-gray-100 border border-gray-200 rounded-md p-4 shadow-sm absolute">
+                    {updates["added"].length !== 0 && (
+                        <p className="text-green-600 font-medium">
+                        Added: {updates["added"].join(" ")}
+                        </p>
+                    )}
+                    {updates["modified"].length !== 0 && (
+                        <p className="text-blue-600 font-medium">
+                        Edited: {updates["modified"].join(" ")}
+                        </p>
+                    )}
+                    {updates["removed"].length !== 0 && (
+                        <p className="text-red-600 font-medium">
+                        Deleted: {updates["removed"].join(" ")}
+                        </p>
+                    )}
+                    </div>
+                )
+            }
 	    </div>
     );
 }
