@@ -1,6 +1,7 @@
 import React, { SetStateAction, useState } from "react";
 import { Student, Teacher, HomeKeys, GuardianKeys } from "./types";
-import { getFunctions, httpsCallable } from "firebase/functions"
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { db } from "./utility/firebase";
 
 export default function Form({ state, closeForm, teachers }: {state: Student, closeForm: () => void, teachers: Teacher[] | undefined}) {
     const [formData, setFormData] = useState<Student>(state);
@@ -8,20 +9,26 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
     const disabled = "id" in formData && !isEdit
 
 	const onSubmit = (formData: Student) => {
-        const functions = getFunctions()
-        const addStudent = httpsCallable(functions, "addStudent")
-        const editStudent = httpsCallable(functions, "editStudent")
-		if (!formData.id) {
-            addStudent(formData)
-                .then((result) => {
-                    console.log(result)
+        if (!formData["id"]){
+            const colRef = collection(db, "students")
+            addDoc(colRef, formData)
+                .then((docRef) => {
+                    console.log("Document written with ID: ", docRef.id)
                 })
-		} else {
-            editStudent(formData)
-                .then((result) => {
-                    console.log(result)
+                .catch((error) => {
+                    console.error("Error adding document: ", error)
                 })
-	}
+        } else {
+            const docRef = doc(db, "students", formData["id"])
+            updateDoc(docRef, formData)
+                .then(() => {
+                    console.log("Document successfully updated!");
+                })
+                .catch((error) => {
+                    console.error("Error updating document: ", error);
+                });
+        }
+
         closeForm()
 	}
 

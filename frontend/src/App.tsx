@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { Student, LabelsKey, Teacher } from "./types";
 import { addState, labels} from "./utility/consts"
 import { collection, onSnapshot, query, getFirestore, getDocs } from "firebase/firestore";
-import { app } from "./utility/firebase";
+import { app, db } from "./utility/firebase";
 import { getAuth, signOut } from "firebase/auth";
 
 function App() {
@@ -38,13 +38,13 @@ function App() {
     }
 
     useEffect(() => {
-        const q = query(collection(getFirestore(app), "students"));
-        
+        const q = query(collection(db, "students"));
+
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            const updatedStudents: Student[] = []; // Type the updatedStudents array
+            const updatedStudents: Student[] = []; 
 
             snapshot.docChanges().forEach((change) => {
-                const student = change.doc.data() as Student; // Type the student data
+                const student = change.doc.data() as Student; 
                 student.id = change.doc.id;
 
                 switch (change.type) {
