@@ -348,6 +348,60 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 					disabled={disabled}
 				/>
 			</div>
+            
+            <div className="flex flex-col">
+				<label className="font-bold">Secondary Contact First Name:</label>
+				<input
+					type="text"
+					name="primaryContactFirstName"
+					value={formData["guardian2"].firstName}
+					onChange={handleGuardianChange("guardian2", "firstName")}
+					className="border border-gray-300 rounded p-2"
+					required
+					disabled={disabled}
+				/>
+			</div>
+
+            <div className="flex flex-col">
+				<label className="font-bold">Secondary Contact Last Name:</label>
+				<input
+					type="text"
+					name="primaryContactLastName"
+					value={formData["guardian2"].lastName}
+					onChange={handleGuardianChange("guardian2", "lastName")}
+					className="border border-gray-300 rounded p-2"
+					required
+					disabled={disabled}
+				/>
+			</div>
+
+			{/* Primary Contact Phone */}
+			<div className="flex flex-col">
+				<label className="font-bold">Secondary Contact Phone:</label>
+				<input
+					type="tel"
+					name="primaryContactPhone"
+					value={formData["guardian2"].phoneNumber}
+					onChange={handleGuardianChange("guardian2", "phoneNumber")}
+					className="border border-gray-300 rounded p-2"
+					required
+					disabled={disabled}
+				/>
+			</div>
+
+			{/* Primary Contact Email */}
+			<div className="flex flex-col">
+				<label className="font-bold">Secondary Contact Email:</label>
+				<input
+					type="email"
+					name="primaryContactEmail"
+					value={formData["guardian2"].email}
+					onChange={handleGuardianChange("guardian2", "email")}
+					className="border border-gray-300 rounded p-2"
+					required
+					disabled={disabled}
+				/>
+			</div>
 
 			{/* AFAM Teacher*/}
 			<div className="flex flex-col">
