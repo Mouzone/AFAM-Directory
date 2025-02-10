@@ -1,6 +1,6 @@
 import React, { SetStateAction, useState } from "react";
 import { Student, Teacher, HomeKeys, GuardianKeys } from "./types";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "./utility/firebase";
 
 export default function Form({ state, closeForm, teachers }: {state: Student, closeForm: () => void, teachers: Teacher[] | undefined}) {
@@ -31,6 +31,18 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 
         closeForm()
 	}
+
+    const onDelete = () => {
+        const docRef = doc(db, "students", formData["id"] as string)
+        deleteDoc(docRef)
+            .then(() => {
+                console.log("Document successfully deleted!");
+            })
+            .catch((error) => {
+                console.error("Error deleting document: ", error);
+            });
+        closeForm()
+    }
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 		const { name, value } = e.target;
@@ -360,12 +372,12 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 			</div>
 		</div>
 
-		<Buttons type={!("id" in formData)  ? "add" : "view"} isEdit={isEdit} setIsEdit={setIsEdit} closeForm={closeForm}/>
+		<Buttons type={!("id" in formData)  ? "add" : "view"} isEdit={isEdit} onDelete={onDelete} setIsEdit={setIsEdit} closeForm={closeForm}/>
 	</form>
   );
 }
 
-function Buttons({type, isEdit, setIsEdit, closeForm}: {type: "add" | "view", isEdit: boolean, setIsEdit: React.Dispatch<SetStateAction<boolean>>, closeForm: () => void}) {
+function Buttons({type, isEdit, onDelete, setIsEdit, closeForm}: {type: "add" | "view", isEdit: boolean, onDelete: () => void, setIsEdit: React.Dispatch<SetStateAction<boolean>>, closeForm: () => void}) {
     const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault(); 
         setIsEdit(true)
@@ -381,13 +393,23 @@ function Buttons({type, isEdit, setIsEdit, closeForm}: {type: "add" | "view", is
 				>
 					Submit
 				</button> )
-				: (<button
-					type="button"
-					onClick={onClick}
-					className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-				>
-					Edit
-				</button> )
+				: (<>
+                    <button
+                        type="button"
+                        onClick={onClick}
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    >
+                        Edit
+                    </button> 
+                    <button
+                        type="button"
+                        onClick={onDelete}
+                        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                    >
+                        Delete
+                    </button> 
+                </>
+                )
 			}
 			
 			<button
