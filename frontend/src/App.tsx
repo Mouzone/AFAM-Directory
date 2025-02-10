@@ -42,7 +42,6 @@ function App() {
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
             const updatedStudents: Student[] = []; 
-
             snapshot.docChanges().forEach((change) => {
                 const student = change.doc.data() as Student; 
                 student.id = change.doc.id;
@@ -70,12 +69,12 @@ function App() {
                 }
             });
 
-            if (snapshot.metadata.hasPendingWrites === false && updatedStudents.length > 0) {
+            if (updatedStudents.length > 0) {
                 setStudents((prevStudents) => {
                     if (prevStudents.length === 0) {
                         return updatedStudents;
                     } else {
-                        return prevStudents;
+                        return [...prevStudents, ...updatedStudents];
                     }
                 });
                 setIsLoading(false);
@@ -105,17 +104,17 @@ function App() {
                 setTeachers(fetchedTeachers);
             } catch (err) {
                 if (err instanceof Error) {
-                    setError(err.message); // Set the error message if it's an Error object
+                    setError(err.message);
                 } else {
-                    setError("An unknown error occurred."); // Handle non-Error objects
+                    setError("An unknown error occurred."); 
                 }
                 console.error("Error fetching teachers:", err);
             }
         };
 
-        fetchTeachers(); // Fetch teachers only once
+        fetchTeachers(); 
 
-    }, []); // Empty dependency array ensures this runs only on mount
+    }, []); 
 
     if (isLoading) return <div> Loading... </div>
     if (error) return <div> Error </div>
