@@ -6,7 +6,9 @@ import MainInfo from "./StudentFormComponent/MainInfo";
 import HomeInfo from "./StudentFormComponent/HomeInfo";
 import GuardianInfo from "./StudentFormComponent/GuardianInfo";
 import SelectInput from "./Inputs/SelectInput";
+import AllergiesInput from "./Inputs/AllergiesInput"
 import Buttons from "./StudentFormComponent/Buttons";
+
 export default function Form({ state, closeForm, teachers }: {state: Student, closeForm: () => void, teachers: Teacher[] | undefined}) {
     const [formData, setFormData] = useState<Student>(state);
 	const [isEdit, setIsEdit] = useState(false)
@@ -56,6 +58,13 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 	  		[name]: value,
 		});
   	};
+
+    const handleAllergiesChange = (allergy: string) => {
+        setFormData({
+            ...formData,
+            allergies: [...formData.allergies, allergy]
+        })
+    }
 
     const handleHomeChange = (field: HomeKeys) => {
         return (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,6 +134,11 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             {/* Grid Layout for Form Fields */}
             <div className="grid grid-cols-2 gap-4">
                 <MainInfo formData={formData} handleChange={handleMainChange} disabled={disabled}/>
+                <AllergiesInput
+                    allergies={formData.allergies}
+                    handleAllergiesChange={handleAllergiesChange}
+                    disabled={disabled}
+                />
                 <HomeInfo home={formData["home"]} handleHomeChange={handleHomeChange} disabled={disabled}/>
 
                 <GuardianInfo 

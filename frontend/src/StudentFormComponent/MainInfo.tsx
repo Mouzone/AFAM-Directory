@@ -71,19 +71,6 @@ export default function MainInfo({formData, handleChange, disabled}: {formData: 
                 onChange={handleChange}
                 disabled={disabled}
             />
-
-            {/* Allergies */}
-            <div className="flex flex-col">
-                <label className="font-bold">Allergies (optional):</label>
-                <input
-                    type="text"
-                    name="allergies"
-                    value={formData.allergies}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded p-2"
-                    disabled={disabled}
-                />
-            </div>
         </>
     )
 }
