@@ -53,6 +53,30 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 		});
   	};
 
+    const handleHomeChange = (field: HomeKeys) => {
+        return (e: React.ChangeEvent<HTMLInputElement>) => {
+            setFormData({
+                ...formData,
+                home: {
+                    ...formData["home"],
+                    [field]: e.target.value
+                }
+            })
+        }
+    }
+
+    const handleGuardianChange = (guardian: "guardian1" | "guardian2") => {
+        return (e: React.ChangeEvent<HTMLInputElement>) => {
+            setFormData({
+                ...formData,
+                [guardian]: {
+                    ...formData[guardian],
+                    [e.target.name]: e.target.value
+                }
+            })
+        }
+    }
+
     const handleTeacherChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const teacherName = e.target.value
         const teacherNameList = teacherName.split(" ")
@@ -65,30 +89,6 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
                 lastName
             }
         })
-    }
-
-    const handleGuardianChange = (guardian: "guardian1" | "guardian2", field: GuardianKeys) => {
-        return (e: React.ChangeEvent<HTMLInputElement>) => {
-            setFormData({
-                ...formData,
-                [guardian]: {
-                    ...formData[guardian],
-                    [field]: e.target.value
-                }
-            })
-        }
-    }
-
-    const handleHomeChange = (field: HomeKeys) => {
-        return (e: React.ChangeEvent<HTMLInputElement>) => {
-            setFormData({
-                ...formData,
-                home: {
-                    ...formData["home"],
-                    [field]: e.target.value
-                }
-            })
-        }
     }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -123,114 +123,18 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
                 <MainInfo formData={formData} handleChange={handleChange} disabled={disabled}/>
                 <HomeInfo home={formData["home"]} handleHomeChange={handleHomeChange} disabled={disabled}/>
 
-                {/* Primary Contact */}
-                <div className="flex flex-col">
-                    <label className="font-bold">Primary Contact First Name:</label>
-                    <input
-                        type="text"
-                        name="primaryContactFirstName"
-                        value={formData["guardian1"].firstName}
-                        onChange={handleGuardianChange("guardian1", "firstName")}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                <div className="flex flex-col">
-                    <label className="font-bold">Primary Contact Last Name:</label>
-                    <input
-                        type="text"
-                        name="primaryContactLastName"
-                        value={formData["guardian1"].lastName}
-                        onChange={handleGuardianChange("guardian1", "lastName")}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                {/* Primary Contact Phone */}
-                <div className="flex flex-col">
-                    <label className="font-bold">Primary Contact Phone:</label>
-                    <input
-                        type="tel"
-                        name="primaryContactPhone"
-                        value={formData["guardian1"].phoneNumber}
-                        onChange={handleGuardianChange("guardian1", "phoneNumber")}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                {/* Primary Contact Email */}
-                <div className="flex flex-col">
-                    <label className="font-bold">Primary Contact Email:</label>
-                    <input
-                        type="email"
-                        name="primaryContactEmail"
-                        value={formData["guardian1"].email}
-                        onChange={handleGuardianChange("guardian1", "email")}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-                
-                <div className="flex flex-col">
-                    <label className="font-bold">Secondary Contact First Name:</label>
-                    <input
-                        type="text"
-                        name="primaryContactFirstName"
-                        value={formData["guardian2"].firstName}
-                        onChange={handleGuardianChange("guardian2", "firstName")}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                <div className="flex flex-col">
-                    <label className="font-bold">Secondary Contact Last Name:</label>
-                    <input
-                        type="text"
-                        name="primaryContactLastName"
-                        value={formData["guardian2"].lastName}
-                        onChange={handleGuardianChange("guardian2", "lastName")}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                {/* Primary Contact Phone */}
-                <div className="flex flex-col">
-                    <label className="font-bold">Secondary Contact Phone:</label>
-                    <input
-                        type="tel"
-                        name="primaryContactPhone"
-                        value={formData["guardian2"].phoneNumber}
-                        onChange={handleGuardianChange("guardian2", "phoneNumber")}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                {/* Primary Contact Email */}
-                <div className="flex flex-col">
-                    <label className="font-bold">Secondary Contact Email:</label>
-                    <input
-                        type="email"
-                        name="primaryContactEmail"
-                        value={formData["guardian2"].email}
-                        onChange={handleGuardianChange("guardian2", "email")}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
+                <Contact 
+                    title="Primary Contact" 
+                    guardian={formData["guardian1"]} 
+                    onChange={handleGuardianChange("guardian1")}
+                    disabled={disabled}
+                />
+                <Contact 
+                    title="Secondary Contact"
+                    guardian={formData["guardian2"]} 
+                    onChange={handleGuardianChange("guardian2")} 
+                    disabled={disabled}
+                />
 
                 {/* AFAM Teacher*/}
                 <div className="flex flex-col">
@@ -437,6 +341,66 @@ function HomeInfo({home, handleHomeChange, disabled}: {home: {streetAddress: str
                     name="zipCode"
                     value={home.zipCode}
                     onChange={handleHomeChange("zipCode")}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                />
+            </div>
+        </>
+    )
+}
+
+function Contact({title, guardian, disabled, onChange}: {title: string, guardian: {firstName: string, lastName: string, phoneNumber: string, email: string}, disabled: boolean, onChange: (e:React.ChangeEvent<HTMLInputElement>) => void}) {
+    return (
+        <>
+            <div className="flex flex-col">
+                <label className="font-bold">{title} First Name:</label>
+                <input
+                    type="text"
+                    name="firstName"
+                    value={guardian.firstName}
+                    onChange={onChange}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                />
+            </div>
+
+            <div className="flex flex-col">
+                <label className="font-bold">{title} Last Name:</label>
+                <input
+                    type="text"
+                    name="lastName"
+                    value={guardian.lastName}
+                    onChange={onChange}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                />
+            </div>
+
+            {/* Primary Contact Phone */}
+            <div className="flex flex-col">
+                <label className="font-bold">{title} Phone:</label>
+                <input
+                    type="tel"
+                    name="primaryContactPhone"
+                    value={guardian.phoneNumber}
+                    onChange={onChange}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                />
+            </div>
+
+            {/* Primary Contact Email */}
+            <div className="flex flex-col">
+                <label className="font-bold">{title} Email:</label>
+                <input
+                    type="email"
+                    name="primaryContactEmail"
+                    value={guardian.email}
+                    onChange={onChange}
                     className="border border-gray-300 rounded p-2"
                     required
                     disabled={disabled}
