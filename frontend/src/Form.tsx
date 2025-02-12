@@ -121,88 +121,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             {/* Grid Layout for Form Fields */}
             <div className="grid grid-cols-2 gap-4">
                 <MainInfo formData={formData} handleChange={handleChange} disabled={disabled}/>
-                {/* Street Address */}
-                <div className="flex flex-col">
-                    <label className="font-bold">Street Address:</label>
-                    <input
-                        type="text"
-                        name="streetAddress"
-                        value={formData.home.streetAddress}
-                        onChange={handleHomeChange("streetAddress")}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                {/* City */}
-                <div className="flex flex-col">
-                    <label className="font-bold">City:</label>
-                    <input
-                        type="text"
-                        name="city"
-                        value={formData.home.city}
-                        onChange={handleHomeChange("city")}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                {/* Zip Code */}
-                <div className="flex flex-col">
-                    <label className="font-bold">Zip Code:</label>
-                    <input
-                        type="text"
-                        name="zipCode"
-                        value={formData.home.zipCode}
-                        onChange={handleHomeChange("zipCode")}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                {/* Phone Number */}
-                <div className="flex flex-col">
-                    <label className="font-bold">Phone Number:</label>
-                    <input
-                        type="tel"
-                        name="phoneNumber"
-                        value={formData.phoneNumber}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                {/* Email */}
-                <div className="flex flex-col">
-                    <label className="font-bold">Email:</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                {/* Allergies */}
-                <div className="flex flex-col">
-                    <label className="font-bold">Allergies (optional):</label>
-                    <input
-                        type="text"
-                        name="allergies"
-                        value={formData.allergies}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded p-2"
-                        disabled={disabled}
-                    />
-                </div>
+                <HomeInfo home={formData["home"]} handleHomeChange={handleHomeChange} disabled={disabled}/>
 
                 {/* Primary Contact */}
                 <div className="flex flex-col">
@@ -434,10 +353,98 @@ function MainInfo({formData, handleChange, disabled}: {formData: Student, handle
                     disabled={disabled}
                 />
             </div>
+
+            {/* Phone Number */}
+            <div className="flex flex-col">
+                <label className="font-bold">Phone Number:</label>
+                <input
+                    type="tel"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                />
+            </div>
+
+            {/* Email */}
+            <div className="flex flex-col">
+                <label className="font-bold">Email:</label>
+                <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                />
+            </div>
+
+            {/* Allergies */}
+            <div className="flex flex-col">
+                <label className="font-bold">Allergies (optional):</label>
+                <input
+                    type="text"
+                    name="allergies"
+                    value={formData.allergies}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded p-2"
+                    disabled={disabled}
+                />
+            </div>
         </>
     )
 }
 
+function HomeInfo({home, handleHomeChange, disabled}: {home: {streetAddress: string, city: string, zipCode: string}, handleHomeChange: (field: HomeKeys) => (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}){
+    return (
+        <>
+            {/* Street Address */}
+            <div className="flex flex-col">
+                <label className="font-bold">Street Address:</label>
+                <input
+                    type="text"
+                    name="streetAddress"
+                    value={home.streetAddress}
+                    onChange={handleHomeChange("streetAddress")}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                />
+            </div>
+
+            {/* City */}
+            <div className="flex flex-col">
+                <label className="font-bold">City:</label>
+                <input
+                    type="text"
+                    name="city"
+                    value={home.city}
+                    onChange={handleHomeChange("city")}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                />
+            </div>
+
+            {/* Zip Code */}
+            <div className="flex flex-col">
+                <label className="font-bold">Zip Code:</label>
+                <input
+                    type="text"
+                    name="zipCode"
+                    value={home.zipCode}
+                    onChange={handleHomeChange("zipCode")}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                />
+            </div>
+        </>
+    )
+}
 function Buttons({type, isEdit, onDelete, setIsEdit, closeForm}: {type: "add" | "view", isEdit: boolean, onDelete: () => void, setIsEdit: React.Dispatch<SetStateAction<boolean>>, closeForm: () => void}) {
     const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault(); 
