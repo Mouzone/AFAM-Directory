@@ -164,7 +164,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
                     label="Teacher:"
                     value={`${formData["teacher"]["firstName"]} ${formData["teacher"]["lastName"]}`}
                     name="teacher"
-                    options={teachers ? teachers.map(teacher => `${teacher["firstName"]} ${teacher["lastName"]}`) : []}
+                    options={teachers ? teachers.map(teacher => `${teacher["firstName"]} ${teacher["lastName"] ?? ""}`) : []}
                     onChange={handleTeacherChange}
                     disabled={disabled}
                 />

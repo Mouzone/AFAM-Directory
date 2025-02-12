@@ -19,7 +19,7 @@ export default function Table({filtered, editForm}: {filtered: Student[], editFo
                             <td className="border border-gray-300 p-2 w-1/4">{student.lastName}</td>
                             <td className="border border-gray-300 p-2 w-1/4">{student.schoolYear}</td>
                             <td className="border border-gray-300 p-2 w-1/4">
-                                {student["teacher"]["firstName"]}, {student["teacher"]["lastName"]}
+                                {`${student.teacher.firstName}${student.teacher.lastName ? `, ${student.teacher.lastName}` : ""}`}
                             </td>
                         </tr>
                     ))
