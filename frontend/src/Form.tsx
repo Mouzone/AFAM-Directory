@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Student, Teacher, HomeKeys } from "./types";
+import { Student, Teacher } from "./types";
 import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "./utility/firebase";
 import MainInfo from "./StudentFormComponent/MainInfo";
