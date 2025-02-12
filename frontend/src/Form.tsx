@@ -166,19 +166,6 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 function MainInfo({formData, handleChange, disabled}: {formData: Student, handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void, disabled: boolean}){
     return (
         <>
-            {/* First Name */}
-            <div className="flex flex-col">
-                <label className="font-bold">First Name:</label>
-                <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                />
-            </div>
             <TextInput
                 label="First Name:"
                 value={formData.firstName}
@@ -217,8 +204,8 @@ function MainInfo({formData, handleChange, disabled}: {formData: Student, handle
 
             <SelectInput
                 label="School Year:"
-                value={formData.schoolYear}
-                options={["9", "10", "11", "12"]}
+                value={formData.gender}
+                options={["Male", "Female"]}
                 onChange={handleChange}
                 disabled={disabled}
             />
@@ -237,26 +224,13 @@ function MainInfo({formData, handleChange, disabled}: {formData: Student, handle
                 disabled={disabled}
             />
 
-            {/* Email */}
-            <div className="flex flex-col">
-                <label className="font-bold">Email:</label>
-                <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                />
-            </div>
             <EmailInput
                 label="Email:"
                 value={formData.email}
                 onChange={handleChange}
                 disabled={disabled}
             />
-            
+
             {/* Allergies */}
             <div className="flex flex-col">
                 <label className="font-bold">Allergies (optional):</label>
@@ -273,50 +247,25 @@ function MainInfo({formData, handleChange, disabled}: {formData: Student, handle
     )
 }
 
-function HomeInfo({home, handleHomeChange, disabled}: {home: {streetAddress: string, city: string, zipCode: string}, handleHomeChange: (field: HomeKeys) => (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}){
+function HomeInfo({home, handleHomeChange, disabled}: {home: Student["home"], handleHomeChange: (field: HomeKeys) => (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}){
+    const titleMap: Record<HomeKeys, string> = {
+        "streetAddress": "Street Address:",
+        "city": "City",
+        "zipCode": "Zip Code"
+    }
     return (
         <>
-            {/* Street Address */}
-            <div className="flex flex-col">
-                <label className="font-bold">Street Address:</label>
-                <input
-                    type="text"
-                    name="streetAddress"
-                    value={home.streetAddress}
-                    onChange={handleHomeChange("streetAddress")}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                />
-            </div>
-
-            {/* City */}
-            <div className="flex flex-col">
-                <label className="font-bold">City:</label>
-                <input
-                    type="text"
-                    name="city"
-                    value={home.city}
-                    onChange={handleHomeChange("city")}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                />
-            </div>
-
-            {/* Zip Code */}
-            <div className="flex flex-col">
-                <label className="font-bold">Zip Code:</label>
-                <input
-                    type="text"
-                    name="zipCode"
-                    value={home.zipCode}
-                    onChange={handleHomeChange("zipCode")}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                />
-            </div>
+            {
+                Object.entries(titleMap).map(([key, value]) => {
+                    return (
+                        <TextInput
+                            label={value}
+                            value={home[key as HomeKeys]}
+                            onChange={handleHomeChange(key as HomeKeys)}
+                            disabled={disabled}
+                        />)
+                    })
+            }
         </>
     )
 }
