@@ -109,325 +109,330 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
         onSubmit(formData);
     };
   
-  return (
-	<form
-		onSubmit={handleSubmit}
-		className="space-y-4 max-h-[80vh] overflow-y-auto p-4"
-		noValidate
-	>
-		<h2 className="text-xl font-bold mb-4">Student Form</h2>
+    return (
+        <>
+        {/* edit and delete confirmation modal */}
+            <div>
 
-		{/* Grid Layout for Form Fields */}
-		<div className="grid grid-cols-2 gap-4">
-			{/* First Name */}
-			<div className="flex flex-col">
-				<label className="font-bold">First Name:</label>
-				<input
-					type="text"
-					name="firstName"
-					value={formData.firstName}
-					onChange={handleChange}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+            </div>
+            <form
+                onSubmit={handleSubmit}
+                className="space-y-4 max-h-[80vh] overflow-y-auto p-4"
+                noValidate
+            >
+                <h2 className="text-xl font-bold mb-4">Student Form</h2>
 
-			{/* Last Name */}
-			<div className="flex flex-col">
-				<label className="font-bold">Last Name:</label>
-				<input
-					type="text"
-					name="lastName"
-					value={formData.lastName}
-					onChange={handleChange}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                {/* Grid Layout for Form Fields */}
+                <div className="grid grid-cols-2 gap-4">
+                    {/* First Name */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">First Name:</label>
+                        <input
+                            type="text"
+                            name="firstName"
+                            value={formData.firstName}
+                            onChange={handleChange}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-			{/* School Year */}
-			<div className="flex flex-col">
-				<label className="font-bold">School Year:</label>
-				<select
-					name="schoolYear"
-					value={formData.schoolYear}
-					onChange={handleChange}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				>
-					<option value="">Select</option>
-					<option value="9">9</option>
-					<option value="10">10</option>
-					<option value="11">11</option>
-					<option value="12">12</option>
-				</select>
-			</div>
+                    {/* Last Name */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Last Name:</label>
+                        <input
+                            type="text"
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={handleChange}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-			{/* Date of Birth */}
-			<div className="flex flex-col">
-				<label className="font-bold">Date of Birth:</label>
-				<input
-					type="date"
-					name="dob"
-					value={formData.dob}
-					onChange={handleChange}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    {/* School Year */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">School Year:</label>
+                        <select
+                            name="schoolYear"
+                            value={formData.schoolYear}
+                            onChange={handleChange}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        >
+                            <option value="">Select</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </div>
 
-			{/* Gender */}
-			<div className="flex flex-col">
-				<label className="font-bold">Gender:</label>
-				<select
-					name="gender"
-					value={formData.gender}
-					onChange={handleChange}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				>
-					<option value="">Select</option>
-					<option value="Male">Male</option>
-					<option value="Female">Female</option>
-			    </select>
-			</div>
+                    {/* Date of Birth */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Date of Birth:</label>
+                        <input
+                            type="date"
+                            name="dob"
+                            value={formData.dob}
+                            onChange={handleChange}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-			{/* High School */}
-			<div className="flex flex-col">
-				<label className="font-bold">High School:</label>
-				<input
-					type="text"
-					name="highSchool"
-					value={formData.highSchool}
-					onChange={handleChange}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    {/* Gender */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Gender:</label>
+                        <select
+                            name="gender"
+                            value={formData.gender}
+                            onChange={handleChange}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        >
+                            <option value="">Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
 
-			{/* Street Address */}
-			<div className="flex flex-col">
-				<label className="font-bold">Street Address:</label>
-				<input
-					type="text"
-					name="streetAddress"
-					value={formData.home.streetAddress}
-					onChange={handleHomeChange("streetAddress")}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    {/* High School */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">High School:</label>
+                        <input
+                            type="text"
+                            name="highSchool"
+                            value={formData.highSchool}
+                            onChange={handleChange}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-            {/* City */}
-            <div className="flex flex-col">
-				<label className="font-bold">City:</label>
-				<input
-					type="text"
-					name="city"
-					value={formData.home.city}
-					onChange={handleHomeChange("city")}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    {/* Street Address */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Street Address:</label>
+                        <input
+                            type="text"
+                            name="streetAddress"
+                            value={formData.home.streetAddress}
+                            onChange={handleHomeChange("streetAddress")}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-            {/* Zip Code */}
-            <div className="flex flex-col">
-				<label className="font-bold">Zip Code:</label>
-				<input
-					type="text"
-					name="zipCode"
-					value={formData.home.zipCode}
-					onChange={handleHomeChange("zipCode")}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    {/* City */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">City:</label>
+                        <input
+                            type="text"
+                            name="city"
+                            value={formData.home.city}
+                            onChange={handleHomeChange("city")}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-			{/* Phone Number */}
-			<div className="flex flex-col">
-				<label className="font-bold">Phone Number:</label>
-				<input
-					type="tel"
-					name="phoneNumber"
-					value={formData.phoneNumber}
-					onChange={handleChange}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    {/* Zip Code */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Zip Code:</label>
+                        <input
+                            type="text"
+                            name="zipCode"
+                            value={formData.home.zipCode}
+                            onChange={handleHomeChange("zipCode")}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-			{/* Email */}
-			<div className="flex flex-col">
-				<label className="font-bold">Email:</label>
-				<input
-					type="email"
-					name="email"
-					value={formData.email}
-					onChange={handleChange}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    {/* Phone Number */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Phone Number:</label>
+                        <input
+                            type="tel"
+                            name="phoneNumber"
+                            value={formData.phoneNumber}
+                            onChange={handleChange}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-			{/* Allergies */}
-			<div className="flex flex-col">
-				<label className="font-bold">Allergies (optional):</label>
-				<input
-					type="text"
-					name="allergies"
-					value={formData.allergies}
-					onChange={handleChange}
-					className="border border-gray-300 rounded p-2"
-					disabled={disabled}
-				/>
-			</div>
+                    {/* Email */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Email:</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-			{/* Primary Contact */}
-			<div className="flex flex-col">
-				<label className="font-bold">Primary Contact First Name:</label>
-				<input
-					type="text"
-					name="primaryContactFirstName"
-					value={formData["guardian1"].firstName}
-					onChange={handleGuardianChange("guardian1", "firstName")}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    {/* Allergies */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Allergies (optional):</label>
+                        <input
+                            type="text"
+                            name="allergies"
+                            value={formData.allergies}
+                            onChange={handleChange}
+                            className="border border-gray-300 rounded p-2"
+                            disabled={disabled}
+                        />
+                    </div>
 
-            <div className="flex flex-col">
-				<label className="font-bold">Primary Contact Last Name:</label>
-				<input
-					type="text"
-					name="primaryContactLastName"
-					value={formData["guardian1"].lastName}
-					onChange={handleGuardianChange("guardian1", "lastName")}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    {/* Primary Contact */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Primary Contact First Name:</label>
+                        <input
+                            type="text"
+                            name="primaryContactFirstName"
+                            value={formData["guardian1"].firstName}
+                            onChange={handleGuardianChange("guardian1", "firstName")}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-			{/* Primary Contact Phone */}
-			<div className="flex flex-col">
-				<label className="font-bold">Primary Contact Phone:</label>
-				<input
-					type="tel"
-					name="primaryContactPhone"
-					value={formData["guardian1"].phoneNumber}
-					onChange={handleGuardianChange("guardian1", "phoneNumber")}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    <div className="flex flex-col">
+                        <label className="font-bold">Primary Contact Last Name:</label>
+                        <input
+                            type="text"
+                            name="primaryContactLastName"
+                            value={formData["guardian1"].lastName}
+                            onChange={handleGuardianChange("guardian1", "lastName")}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-			{/* Primary Contact Email */}
-			<div className="flex flex-col">
-				<label className="font-bold">Primary Contact Email:</label>
-				<input
-					type="email"
-					name="primaryContactEmail"
-					value={formData["guardian1"].email}
-					onChange={handleGuardianChange("guardian1", "email")}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
-            
-            <div className="flex flex-col">
-				<label className="font-bold">Secondary Contact First Name:</label>
-				<input
-					type="text"
-					name="primaryContactFirstName"
-					value={formData["guardian2"].firstName}
-					onChange={handleGuardianChange("guardian2", "firstName")}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    {/* Primary Contact Phone */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Primary Contact Phone:</label>
+                        <input
+                            type="tel"
+                            name="primaryContactPhone"
+                            value={formData["guardian1"].phoneNumber}
+                            onChange={handleGuardianChange("guardian1", "phoneNumber")}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-            <div className="flex flex-col">
-				<label className="font-bold">Secondary Contact Last Name:</label>
-				<input
-					type="text"
-					name="primaryContactLastName"
-					value={formData["guardian2"].lastName}
-					onChange={handleGuardianChange("guardian2", "lastName")}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    {/* Primary Contact Email */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Primary Contact Email:</label>
+                        <input
+                            type="email"
+                            name="primaryContactEmail"
+                            value={formData["guardian1"].email}
+                            onChange={handleGuardianChange("guardian1", "email")}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
+                    
+                    <div className="flex flex-col">
+                        <label className="font-bold">Secondary Contact First Name:</label>
+                        <input
+                            type="text"
+                            name="primaryContactFirstName"
+                            value={formData["guardian2"].firstName}
+                            onChange={handleGuardianChange("guardian2", "firstName")}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-			{/* Primary Contact Phone */}
-			<div className="flex flex-col">
-				<label className="font-bold">Secondary Contact Phone:</label>
-				<input
-					type="tel"
-					name="primaryContactPhone"
-					value={formData["guardian2"].phoneNumber}
-					onChange={handleGuardianChange("guardian2", "phoneNumber")}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    <div className="flex flex-col">
+                        <label className="font-bold">Secondary Contact Last Name:</label>
+                        <input
+                            type="text"
+                            name="primaryContactLastName"
+                            value={formData["guardian2"].lastName}
+                            onChange={handleGuardianChange("guardian2", "lastName")}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-			{/* Primary Contact Email */}
-			<div className="flex flex-col">
-				<label className="font-bold">Secondary Contact Email:</label>
-				<input
-					type="email"
-					name="primaryContactEmail"
-					value={formData["guardian2"].email}
-					onChange={handleGuardianChange("guardian2", "email")}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				/>
-			</div>
+                    {/* Primary Contact Phone */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Secondary Contact Phone:</label>
+                        <input
+                            type="tel"
+                            name="primaryContactPhone"
+                            value={formData["guardian2"].phoneNumber}
+                            onChange={handleGuardianChange("guardian2", "phoneNumber")}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-			{/* AFAM Teacher*/}
-			<div className="flex flex-col">
-				<label className="font-bold">Teacher</label>
-				<select
-					name="teacher"
-					value={`${formData["teacher"]["firstName"]} ${formData["teacher"]["lastName"]}`}
-					onChange={handleTeacherChange}
-					className="border border-gray-300 rounded p-2"
-					required
-					disabled={disabled}
-				>
-					<option value="">Select</option>
-					{
-						teachers && teachers.map((teacher, index) => {
-							return <option key={index} value={`${teacher["firstName"]} ${teacher["lastName"]}`}>
-								{teacher["firstName"]} {teacher["lastName"]}
-							</option>
-						})
-					}
-				</select>
-			</div>
-		</div>
+                    {/* Primary Contact Email */}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Secondary Contact Email:</label>
+                        <input
+                            type="email"
+                            name="primaryContactEmail"
+                            value={formData["guardian2"].email}
+                            onChange={handleGuardianChange("guardian2", "email")}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        />
+                    </div>
 
-		<Buttons type={!("id" in formData)  ? "add" : "view"} isEdit={isEdit} onDelete={onDelete} setIsEdit={setIsEdit} closeForm={closeForm}/>
-	</form>
+                    {/* AFAM Teacher*/}
+                    <div className="flex flex-col">
+                        <label className="font-bold">Teacher</label>
+                        <select
+                            name="teacher"
+                            value={`${formData["teacher"]["firstName"]} ${formData["teacher"]["lastName"]}`}
+                            onChange={handleTeacherChange}
+                            className="border border-gray-300 rounded p-2"
+                            required
+                            disabled={disabled}
+                        >
+                            <option value="">Select</option>
+                            {
+                                teachers && teachers.map((teacher, index) => {
+                                    return <option key={index} value={`${teacher["firstName"]} ${teacher["lastName"]}`}>
+                                        {teacher["firstName"]} {teacher["lastName"]}
+                                    </option>
+                                })
+                            }
+                        </select>
+                    </div>
+                </div>
+                <Buttons type={!("id" in formData)  ? "add" : "view"} isEdit={isEdit} onDelete={onDelete} setIsEdit={setIsEdit} closeForm={closeForm}/>
+            </form>
+        </>
   );
 }
 
