@@ -120,98 +120,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 
             {/* Grid Layout for Form Fields */}
             <div className="grid grid-cols-2 gap-4">
-                {/* First Name */}
-                <div className="flex flex-col">
-                    <label className="font-bold">First Name:</label>
-                    <input
-                        type="text"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                {/* Last Name */}
-                <div className="flex flex-col">
-                    <label className="font-bold">Last Name:</label>
-                    <input
-                        type="text"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                {/* School Year */}
-                <div className="flex flex-col">
-                    <label className="font-bold">School Year:</label>
-                    <select
-                        name="schoolYear"
-                        value={formData.schoolYear}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    >
-                        <option value="">Select</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                    </select>
-                </div>
-
-                {/* Date of Birth */}
-                <div className="flex flex-col">
-                    <label className="font-bold">Date of Birth:</label>
-                    <input
-                        type="date"
-                        name="dob"
-                        value={formData.dob}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
-                {/* Gender */}
-                <div className="flex flex-col">
-                    <label className="font-bold">Gender:</label>
-                    <select
-                        name="gender"
-                        value={formData.gender}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    >
-                        <option value="">Select</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </div>
-
-                {/* High School */}
-                <div className="flex flex-col">
-                    <label className="font-bold">High School:</label>
-                    <input
-                        type="text"
-                        name="highSchool"
-                        value={formData.highSchool}
-                        onChange={handleChange}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    />
-                </div>
-
+                <MainInfo formData={formData} handleChange={handleChange} disabled={disabled}/>
                 {/* Street Address */}
                 <div className="flex flex-col">
                     <label className="font-bold">Street Address:</label>
@@ -429,6 +338,104 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             <Buttons type={!("id" in formData)  ? "add" : "view"} isEdit={isEdit} onDelete={onDelete} setIsEdit={setIsEdit} closeForm={closeForm}/>
         </form>
   );
+}
+
+function MainInfo({formData, handleChange, disabled}: {formData: Student, handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void, disabled: boolean}){
+    return (
+        <>
+            {/* First Name */}
+            <div className="flex flex-col">
+                <label className="font-bold">First Name:</label>
+                <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                />
+            </div>
+
+            {/* Last Name */}
+            <div className="flex flex-col">
+                <label className="font-bold">Last Name:</label>
+                <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                />
+            </div>
+
+            {/* School Year */}
+            <div className="flex flex-col">
+                <label className="font-bold">School Year:</label>
+                <select
+                    name="schoolYear"
+                    value={formData.schoolYear}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                >
+                    <option value="">Select</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select>
+            </div>
+
+            {/* Date of Birth */}
+            <div className="flex flex-col">
+                <label className="font-bold">Date of Birth:</label>
+                <input
+                    type="date"
+                    name="dob"
+                    value={formData.dob}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                />
+            </div>
+
+            {/* Gender */}
+            <div className="flex flex-col">
+                <label className="font-bold">Gender:</label>
+                <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                >
+                    <option value="">Select</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+
+            {/* High School */}
+            <div className="flex flex-col">
+                <label className="font-bold">High School:</label>
+                <input
+                    type="text"
+                    name="highSchool"
+                    value={formData.highSchool}
+                    onChange={handleChange}
+                    className="border border-gray-300 rounded p-2"
+                    required
+                    disabled={disabled}
+                />
+            </div>
+        </>
+    )
 }
 
 function Buttons({type, isEdit, onDelete, setIsEdit, closeForm}: {type: "add" | "view", isEdit: boolean, onDelete: () => void, setIsEdit: React.Dispatch<SetStateAction<boolean>>, closeForm: () => void}) {
