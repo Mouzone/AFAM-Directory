@@ -213,24 +213,26 @@ function App() {
             {/* Popup that details Action: [names] that truncates*/}
             {
                 showUpdates && (
-                    <div className="bg-gray-100 border border-gray-200 rounded-md p-4 shadow-sm absolute">
-                    {updates["added"].length !== 0 && (
-                        <p className="text-green-600 font-medium">
-                        Added: {updates["added"].join(" ")}
-                        </p>
-                    )}
-                    {updates["modified"].length !== 0 && (
-                        <p className="text-blue-600 font-medium">
-                        Edited: {updates["modified"].join(" ")}
-                        </p>
-                    )}
-                    {updates["removed"].length !== 0 && (
-                        <p className="text-red-600 font-medium">
-                        Deleted: {updates["removed"].join(" ")}
-                        </p>
-                    )}
-                    </div>
-                )
+                <div className="fixed w-6xl bottom-4 left-1/2 -translate-x-1/2 bg-gray-100 border border-gray-200 rounded-md p-4 shadow-sm z-50">
+                    {
+                        updates["added"].length !== 0 && (
+                        <p className="text-green-600 font-medium truncate">
+                            Added: {updates["added"].join(", ")}
+                        </p>)
+                    }
+                    {
+                        updates["modified"].length !== 0 && (
+                        <p className="text-blue-600 font-medium truncate">
+                            Edited: {updates["modified"].join(" ")}
+                        </p>)
+                    }
+                    {
+                        updates["removed"].length !== 0 && (
+                        <p className="text-red-600 font-medium truncate">
+                            Deleted: {updates["removed"].join(" ")}
+                        </p>)
+                    }
+                </div>)
             }
 	    </div>
     );
