@@ -87,14 +87,15 @@ function App() {
                 });
                 setIsLoading(false);
             }
-
-            setUpdates({added, modified, removed})
-            setShowUpdates(true)
-            setTimeout(() => {
-                setShowUpdates(false)
-                setUpdates({added: [], modified: [], removed: []})
-            }, 3000)
-
+            
+            if (snapshot.metadata.hasPendingWrites){
+                setUpdates({added, modified, removed})
+                setShowUpdates(true)
+                setTimeout(() => {
+                    setShowUpdates(false)
+                    setUpdates({added: [], modified: [], removed: []})
+                }, 3000)
+            }
         }, (error) => {
             console.error("Error listening for updates:", error);
             setError(error.message);
@@ -213,7 +214,7 @@ function App() {
             {/* Popup that details Action: [names] that truncates*/}
             {
                 showUpdates && (
-                <div className="fixed w-6xl bottom-4 left-1/2 -translate-x-1/2 bg-gray-100 border border-gray-200 rounded-md p-4 shadow-sm z-50">
+                <div className="fixed w-l bottom-4 left-1/2 -translate-x-1/2 bg-gray-100 border border-gray-200 rounded-md p-4 shadow-sm z-50">
                     {
                         updates["added"].length !== 0 && (
                         <p className="text-green-600 font-medium truncate">
