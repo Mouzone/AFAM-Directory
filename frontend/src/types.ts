@@ -34,6 +34,7 @@ export type Student = {
     }
 }
 
+export type StudentKeys = keyof Student
 export type HomeKeys = keyof Student["home"]
 export type GuardianKeys = keyof Student["guardian1"]
 
