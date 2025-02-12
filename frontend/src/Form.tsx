@@ -1,8 +1,12 @@
-import React, { SetStateAction, useState } from "react";
-import { Student, Teacher, HomeKeys, GuardianKeys } from "./types";
+import React, { useState } from "react";
+import { Student, Teacher, HomeKeys } from "./types";
 import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "./utility/firebase";
-
+import MainInfo from "./StudentFormComponent/MainInfo";
+import HomeInfo from "./StudentFormComponent/HomeInfo";
+import GuardianInfo from "./StudentFormComponent/GuardianInfo";
+import SelectInput from "./Inputs/SelectInput";
+import Buttons from "./StudentFormComponent/Buttons";
 export default function Form({ state, closeForm, teachers }: {state: Student, closeForm: () => void, teachers: Teacher[] | undefined}) {
     const [formData, setFormData] = useState<Student>(state);
 	const [isEdit, setIsEdit] = useState(false)
@@ -45,7 +49,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
         closeForm()
     }
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+	const handleMainChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 		const { name, value } = e.target;
 		setFormData({
 	  		...formData,
@@ -120,303 +124,31 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 
             {/* Grid Layout for Form Fields */}
             <div className="grid grid-cols-2 gap-4">
-                <MainInfo formData={formData} handleChange={handleChange} disabled={disabled}/>
+                <MainInfo formData={formData} handleChange={handleMainChange} disabled={disabled}/>
                 <HomeInfo home={formData["home"]} handleHomeChange={handleHomeChange} disabled={disabled}/>
 
-                <Contact 
+                <GuardianInfo 
                     title="Primary Contact" 
                     guardian={formData["guardian1"]} 
                     onChange={handleGuardianChange("guardian1")}
                     disabled={disabled}
                 />
-                <Contact 
+                <GuardianInfo 
                     title="Secondary Contact"
                     guardian={formData["guardian2"]} 
                     onChange={handleGuardianChange("guardian2")} 
                     disabled={disabled}
                 />
 
-                {/* AFAM Teacher*/}
-                <div className="flex flex-col">
-                    <label className="font-bold">Teacher</label>
-                    <select
-                        name="teacher"
-                        value={`${formData["teacher"]["firstName"]} ${formData["teacher"]["lastName"]}`}
-                        onChange={handleTeacherChange}
-                        className="border border-gray-300 rounded p-2"
-                        required
-                        disabled={disabled}
-                    >
-                        <option value="">Select</option>
-                        {
-                            teachers && teachers.map((teacher, index) => {
-                                return <option key={index} value={`${teacher["firstName"]} ${teacher["lastName"]}`}>
-                                    {teacher["firstName"]} {teacher["lastName"]}
-                                </option>
-                            })
-                        }
-                    </select>
-                </div>
+                <SelectInput
+                    label="Teacher:"
+                    value={`${formData["teacher"]["firstName"]} ${formData["teacher"]["lastName"]}`}
+                    options={teachers ? teachers.map(teacher => `${teacher["firstName"]} ${teacher["lastName"]}`) : []}
+                    onChange={handleTeacherChange}
+                    disabled={disabled}
+                />
             </div>
             <Buttons type={!("id" in formData)  ? "add" : "view"} isEdit={isEdit} onDelete={onDelete} setIsEdit={setIsEdit} closeForm={closeForm}/>
         </form>
   );
-}
-
-function MainInfo({formData, handleChange, disabled}: {formData: Student, handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void, disabled: boolean}){
-    return (
-        <>
-            <TextInput
-                label="First Name:"
-                value={formData.firstName}
-                onChange={handleChange}
-                disabled={disabled}
-            />
-
-            <TextInput
-                label="Last Name:"
-                value={formData.lastName}
-                onChange={handleChange}
-                disabled={disabled}
-            />
-
-            <SelectInput
-                label="School Year:"
-                value={formData.schoolYear}
-                options={["9", "10", "11", "12"]}
-                onChange={handleChange}
-                disabled={disabled}
-            />
-            
-            {/* Date of Birth */}
-            <div className="flex flex-col">
-                <label className="font-bold">Date of Birth:</label>
-                <input
-                    type="date"
-                    name="dob"
-                    value={formData.dob}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                />
-            </div>
-
-            <SelectInput
-                label="School Year:"
-                value={formData.gender}
-                options={["Male", "Female"]}
-                onChange={handleChange}
-                disabled={disabled}
-            />
-
-            <TextInput
-                label="High School:"
-                value={formData.highSchool}
-                onChange={handleChange}
-                disabled={disabled}
-            />
-
-            <PhoneInput
-                label="Phone Number:"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                disabled={disabled}
-            />
-
-            <EmailInput
-                label="Email:"
-                value={formData.email}
-                onChange={handleChange}
-                disabled={disabled}
-            />
-
-            {/* Allergies */}
-            <div className="flex flex-col">
-                <label className="font-bold">Allergies (optional):</label>
-                <input
-                    type="text"
-                    name="allergies"
-                    value={formData.allergies}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded p-2"
-                    disabled={disabled}
-                />
-            </div>
-        </>
-    )
-}
-
-function HomeInfo({home, handleHomeChange, disabled}: {home: Student["home"], handleHomeChange: (field: HomeKeys) => (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}){
-    const titleMap: Record<HomeKeys, string> = {
-        "streetAddress": "Street Address:",
-        "city": "City",
-        "zipCode": "Zip Code"
-    }
-    return (
-        <>
-            {
-                Object.entries(titleMap).map(([key, value]) => {
-                    return (
-                        <TextInput
-                            label={value}
-                            value={home[key as HomeKeys]}
-                            onChange={handleHomeChange(key as HomeKeys)}
-                            disabled={disabled}
-                        />)
-                    })
-            }
-        </>
-    )
-}
-
-function Contact({title, guardian, disabled, onChange}: {title: string, guardian: {firstName: string, lastName: string, phoneNumber: string, email: string}, disabled: boolean, onChange: (e:React.ChangeEvent<HTMLInputElement>) => void}) {
-    return (
-        <>
-            <TextInput
-                label={`${title} First Name:`}
-                value={guardian.firstName}
-                onChange={onChange}
-                disabled={disabled}
-            />
-
-            <TextInput
-                label={`${title} Last Name:`}
-                value={guardian.lastName}
-                onChange={onChange}
-                disabled={disabled}
-            />
-
-            <PhoneInput
-                label={`${title} Phone:`}
-                value={guardian.phoneNumber}
-                onChange={onChange}
-                disabled={disabled}
-            />
-
-            <EmailInput
-                label={`${title} Email:`}
-                value={guardian.email}
-                onChange={onChange}
-                disabled={disabled}
-            />
-        </>
-    )
-}
-
-function TextInput({label, value, onChange, disabled}: {label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}){
-    return (
-        <div className="flex flex-col">
-                <label className="font-bold">{label}</label>
-                <input
-                    type="text"
-                    name="firstName"
-                    value={value}
-                    onChange={onChange}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                />
-            </div>
-    )
-}
-
-function PhoneInput({label, value, onChange, disabled}: {label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}){
-    return (
-        <div className="flex flex-col">
-            <label className="font-bold">{label}</label>
-            <input
-                type="tel"
-                name="primaryContactPhone"
-                value={value}
-                onChange={onChange}
-                className="border border-gray-300 rounded p-2"
-                required
-                disabled={disabled}
-            />
-        </div>
-    )
-}
-
-function EmailInput({label, value, onChange, disabled}: {label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}) {
-    return (
-        <div className="flex flex-col">
-            <label className="font-bold">{label}</label>
-            <input
-                type="email"
-                name="primaryContactEmail"
-                value={value}
-                onChange={onChange}
-                className="border border-gray-300 rounded p-2"
-                required
-                disabled={disabled}
-            />
-        </div>
-    )
-}
-
-function SelectInput({label, value, options, onChange, disabled}: {label: string, value: string, options: string[], onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, disabled: boolean}) {
-    return (
-        <div className="flex flex-col">
-            <label className="font-bold">{label}</label>
-            <select
-                name="schoolYear"
-                value={value}
-                onChange={onChange}
-                className="border border-gray-300 rounded p-2"
-                required
-                disabled={disabled}
-            >
-                <option value="">Select</option>
-                {
-                    options.map(option => <option value={option} key={option}>{option}</option>)
-                }
-            </select>
-        </div>
-    )
-}
-function Buttons({type, isEdit, onDelete, setIsEdit, closeForm}: {type: "add" | "view", isEdit: boolean, onDelete: () => void, setIsEdit: React.Dispatch<SetStateAction<boolean>>, closeForm: () => void}) {
-    const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault(); 
-        setIsEdit(true)
-    }
-    
-	return (
-		<div className="sticky bottom-0 bg-white py-4 flex gap-4">
-			{ 
-				(type === "add" || isEdit)
-				?  (<button
-					type="submit"
-					className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-				>
-					Submit
-				</button> )
-				: (<>
-                    <button
-                        type="button"
-                        onClick={onClick}
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    >
-                        Edit
-                    </button> 
-                    <button
-                        type="button"
-                        onClick={onDelete}
-                        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                    >
-                        Delete
-                    </button> 
-                </>
-                )
-			}
-			
-			<button
-				type="button"
-				onClick={closeForm}
-				className="bg-white border-2 px-3 py-2 rounded hover:bg-gray-300"
-			>
-				Cancel
-			</button>
-	  </div>
-	)
 }
