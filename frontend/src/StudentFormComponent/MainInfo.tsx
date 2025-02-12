@@ -10,6 +10,7 @@ export default function MainInfo({formData, handleChange, disabled}: {formData: 
             <TextInput
                 label="First Name:"
                 value={formData.firstName}
+                name="firstName"
                 onChange={handleChange}
                 disabled={disabled}
             />
@@ -17,6 +18,7 @@ export default function MainInfo({formData, handleChange, disabled}: {formData: 
             <TextInput
                 label="Last Name:"
                 value={formData.lastName}
+                name="lastName"
                 onChange={handleChange}
                 disabled={disabled}
             />
@@ -24,6 +26,7 @@ export default function MainInfo({formData, handleChange, disabled}: {formData: 
             <SelectInput
                 label="School Year:"
                 value={formData.schoolYear}
+                name="schoolYear"
                 options={["9", "10", "11", "12"]}
                 onChange={handleChange}
                 disabled={disabled}
@@ -46,6 +49,7 @@ export default function MainInfo({formData, handleChange, disabled}: {formData: 
             <SelectInput
                 label="School Year:"
                 value={formData.gender}
+                name="gender"
                 options={["Male", "Female"]}
                 onChange={handleChange}
                 disabled={disabled}
@@ -54,6 +58,7 @@ export default function MainInfo({formData, handleChange, disabled}: {formData: 
             <TextInput
                 label="High School:"
                 value={formData.highSchool}
+                name="highSchool"
                 onChange={handleChange}
                 disabled={disabled}
             />
@@ -61,6 +66,7 @@ export default function MainInfo({formData, handleChange, disabled}: {formData: 
             <PhoneInput
                 label="Phone Number:"
                 value={formData.phoneNumber}
+                name="phoneNumber"
                 onChange={handleChange}
                 disabled={disabled}
             />
@@ -68,6 +74,7 @@ export default function MainInfo({formData, handleChange, disabled}: {formData: 
             <EmailInput
                 label="Email:"
                 value={formData.email}
+                name="email"
                 onChange={handleChange}
                 disabled={disabled}
             />

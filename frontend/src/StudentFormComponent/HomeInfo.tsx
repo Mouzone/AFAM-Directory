@@ -1,7 +1,7 @@
 import TextInput from "../Inputs/TextInput"
 import { Student, HomeKeys } from "../types"
 
-export default function HomeInfo({home, handleHomeChange, disabled}: {home: Student["home"], handleHomeChange: (field: HomeKeys) => (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}){
+export default function HomeInfo({home, handleHomeChange, disabled}: {home: Student["home"], handleHomeChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}){
     const titleMap: Record<HomeKeys, string> = {
         "streetAddress": "Street Address:",
         "city": "City",
@@ -16,7 +16,8 @@ export default function HomeInfo({home, handleHomeChange, disabled}: {home: Stud
                             key={key}
                             label={value}
                             value={home[key as HomeKeys]}
-                            onChange={handleHomeChange(key as HomeKeys)}
+                            name={key}
+                            onChange={handleHomeChange}
                             disabled={disabled}
                         />)
                     })

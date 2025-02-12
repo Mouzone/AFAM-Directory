@@ -8,6 +8,7 @@ export default function GuardianInfo({title, guardian, disabled, onChange}: {tit
             <TextInput
                 label={`${title} First Name:`}
                 value={guardian.firstName}
+                name="firstName"
                 onChange={onChange}
                 disabled={disabled}
             />
@@ -15,6 +16,7 @@ export default function GuardianInfo({title, guardian, disabled, onChange}: {tit
             <TextInput
                 label={`${title} Last Name:`}
                 value={guardian.lastName}
+                name="lastName"
                 onChange={onChange}
                 disabled={disabled}
             />
@@ -22,6 +24,7 @@ export default function GuardianInfo({title, guardian, disabled, onChange}: {tit
             <PhoneInput
                 label={`${title} Phone:`}
                 value={guardian.phoneNumber}
+                name="phoneNumber"
                 onChange={onChange}
                 disabled={disabled}
             />
@@ -29,6 +32,7 @@ export default function GuardianInfo({title, guardian, disabled, onChange}: {tit
             <EmailInput
                 label={`${title} Email:`}
                 value={guardian.email}
+                name="email"
                 onChange={onChange}
                 disabled={disabled}
             />

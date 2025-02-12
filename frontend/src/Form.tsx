@@ -73,16 +73,14 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
         })
     }
 
-    const handleHomeChange = (field: HomeKeys) => {
-        return (e: React.ChangeEvent<HTMLInputElement>) => {
-            setFormData({
-                ...formData,
-                home: {
-                    ...formData["home"],
-                    [field]: e.target.value
-                }
-            })
-        }
+    const handleHomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({
+            ...formData,
+            home: {
+                ...formData["home"],
+                [e.target.name]: e.target.value
+            }
+        })
     }
 
     const handleGuardianChange = (guardian: "guardian1" | "guardian2") => {
@@ -165,6 +163,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
                 <SelectInput
                     label="Teacher:"
                     value={`${formData["teacher"]["firstName"]} ${formData["teacher"]["lastName"]}`}
+                    name="teacher"
                     options={teachers ? teachers.map(teacher => `${teacher["firstName"]} ${teacher["lastName"]}`) : []}
                     onChange={handleTeacherChange}
                     disabled={disabled}
