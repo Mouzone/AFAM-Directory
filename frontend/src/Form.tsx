@@ -59,10 +59,17 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
 		});
   	};
 
-    const handleAllergiesChange = (allergy: string) => {
+    const addAllergy = (allergy: string) => {
         setFormData({
             ...formData,
             allergies: [...formData.allergies, allergy]
+        })
+    }
+
+    const removeAllergy = (allergyToRemove: string) => {
+        setFormData({
+            ...formData,
+            allergies: formData.allergies.filter(allergy => allergy !== allergyToRemove)
         })
     }
 
@@ -136,7 +143,8 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
                 <MainInfo formData={formData} handleChange={handleMainChange} disabled={disabled}/>
                 <AllergiesInput
                     allergies={formData.allergies}
-                    handleAllergiesChange={handleAllergiesChange}
+                    addAllergy={addAllergy}
+                    removeAllergy={removeAllergy}
                     disabled={disabled}
                 />
                 <HomeInfo home={formData["home"]} handleHomeChange={handleHomeChange} disabled={disabled}/>
