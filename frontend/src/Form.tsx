@@ -179,40 +179,28 @@ function MainInfo({formData, handleChange, disabled}: {formData: Student, handle
                     disabled={disabled}
                 />
             </div>
+            <TextInput
+                label="First Name:"
+                value={formData.firstName}
+                onChange={handleChange}
+                disabled={disabled}
+            />
 
-            {/* Last Name */}
-            <div className="flex flex-col">
-                <label className="font-bold">Last Name:</label>
-                <input
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                />
-            </div>
+            <TextInput
+                label="Last Name:"
+                value={formData.lastName}
+                onChange={handleChange}
+                disabled={disabled}
+            />
 
-            {/* School Year */}
-            <div className="flex flex-col">
-                <label className="font-bold">School Year:</label>
-                <select
-                    name="schoolYear"
-                    value={formData.schoolYear}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                >
-                    <option value="">Select</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                </select>
-            </div>
-
+            <SelectInput
+                label="School Year:"
+                value={formData.schoolYear}
+                options={["9", "10", "11", "12"]}
+                onChange={handleChange}
+                disabled={disabled}
+            />
+            
             {/* Date of Birth */}
             <div className="flex flex-col">
                 <label className="font-bold">Date of Birth:</label>
@@ -227,50 +215,27 @@ function MainInfo({formData, handleChange, disabled}: {formData: Student, handle
                 />
             </div>
 
-            {/* Gender */}
-            <div className="flex flex-col">
-                <label className="font-bold">Gender:</label>
-                <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                >
-                    <option value="">Select</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
-            </div>
+            <SelectInput
+                label="School Year:"
+                value={formData.schoolYear}
+                options={["9", "10", "11", "12"]}
+                onChange={handleChange}
+                disabled={disabled}
+            />
 
-            {/* High School */}
-            <div className="flex flex-col">
-                <label className="font-bold">High School:</label>
-                <input
-                    type="text"
-                    name="highSchool"
-                    value={formData.highSchool}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                />
-            </div>
+            <TextInput
+                label="High School:"
+                value={formData.highSchool}
+                onChange={handleChange}
+                disabled={disabled}
+            />
 
-            {/* Phone Number */}
-            <div className="flex flex-col">
-                <label className="font-bold">Phone Number:</label>
-                <input
-                    type="tel"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={handleChange}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                />
-            </div>
+            <PhoneInput
+                label="Phone Number:"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                disabled={disabled}
+            />
 
             {/* Email */}
             <div className="flex flex-col">
@@ -285,7 +250,13 @@ function MainInfo({formData, handleChange, disabled}: {formData: Student, handle
                     disabled={disabled}
                 />
             </div>
-
+            <EmailInput
+                label="Email:"
+                value={formData.email}
+                onChange={handleChange}
+                disabled={disabled}
+            />
+            
             {/* Allergies */}
             <div className="flex flex-col">
                 <label className="font-bold">Allergies (optional):</label>
@@ -353,60 +324,106 @@ function HomeInfo({home, handleHomeChange, disabled}: {home: {streetAddress: str
 function Contact({title, guardian, disabled, onChange}: {title: string, guardian: {firstName: string, lastName: string, phoneNumber: string, email: string}, disabled: boolean, onChange: (e:React.ChangeEvent<HTMLInputElement>) => void}) {
     return (
         <>
-            <div className="flex flex-col">
-                <label className="font-bold">{title} First Name:</label>
+            <TextInput
+                label={`${title} First Name:`}
+                value={guardian.firstName}
+                onChange={onChange}
+                disabled={disabled}
+            />
+
+            <TextInput
+                label={`${title} Last Name:`}
+                value={guardian.lastName}
+                onChange={onChange}
+                disabled={disabled}
+            />
+
+            <PhoneInput
+                label={`${title} Phone:`}
+                value={guardian.phoneNumber}
+                onChange={onChange}
+                disabled={disabled}
+            />
+
+            <EmailInput
+                label={`${title} Email:`}
+                value={guardian.email}
+                onChange={onChange}
+                disabled={disabled}
+            />
+        </>
+    )
+}
+
+function TextInput({label, value, onChange, disabled}: {label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}){
+    return (
+        <div className="flex flex-col">
+                <label className="font-bold">{label}</label>
                 <input
                     type="text"
                     name="firstName"
-                    value={guardian.firstName}
+                    value={value}
                     onChange={onChange}
                     className="border border-gray-300 rounded p-2"
                     required
                     disabled={disabled}
                 />
             </div>
+    )
+}
 
-            <div className="flex flex-col">
-                <label className="font-bold">{title} Last Name:</label>
-                <input
-                    type="text"
-                    name="lastName"
-                    value={guardian.lastName}
-                    onChange={onChange}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                />
-            </div>
+function PhoneInput({label, value, onChange, disabled}: {label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}){
+    return (
+        <div className="flex flex-col">
+            <label className="font-bold">{label}</label>
+            <input
+                type="tel"
+                name="primaryContactPhone"
+                value={value}
+                onChange={onChange}
+                className="border border-gray-300 rounded p-2"
+                required
+                disabled={disabled}
+            />
+        </div>
+    )
+}
 
-            {/* Primary Contact Phone */}
-            <div className="flex flex-col">
-                <label className="font-bold">{title} Phone:</label>
-                <input
-                    type="tel"
-                    name="primaryContactPhone"
-                    value={guardian.phoneNumber}
-                    onChange={onChange}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                />
-            </div>
+function EmailInput({label, value, onChange, disabled}: {label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}) {
+    return (
+        <div className="flex flex-col">
+            <label className="font-bold">{label}</label>
+            <input
+                type="email"
+                name="primaryContactEmail"
+                value={value}
+                onChange={onChange}
+                className="border border-gray-300 rounded p-2"
+                required
+                disabled={disabled}
+            />
+        </div>
+    )
+}
 
-            {/* Primary Contact Email */}
-            <div className="flex flex-col">
-                <label className="font-bold">{title} Email:</label>
-                <input
-                    type="email"
-                    name="primaryContactEmail"
-                    value={guardian.email}
-                    onChange={onChange}
-                    className="border border-gray-300 rounded p-2"
-                    required
-                    disabled={disabled}
-                />
-            </div>
-        </>
+function SelectInput({label, value, options, onChange, disabled}: {label: string, value: string, options: string[], onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, disabled: boolean}) {
+    return (
+        <div className="flex flex-col">
+            <label className="font-bold">{label}</label>
+            <select
+                name="schoolYear"
+                value={value}
+                onChange={onChange}
+                className="border border-gray-300 rounded p-2"
+                required
+                disabled={disabled}
+            >
+                <option value="">Select</option>
+                {
+                    options.map(option => <option value={option} key={option}>{option}</option>)
+                }
+            </select>
+        </div>
     )
 }
 function Buttons({type, isEdit, onDelete, setIsEdit, closeForm}: {type: "add" | "view", isEdit: boolean, onDelete: () => void, setIsEdit: React.Dispatch<SetStateAction<boolean>>, closeForm: () => void}) {
