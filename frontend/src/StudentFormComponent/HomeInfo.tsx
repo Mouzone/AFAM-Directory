@@ -19,8 +19,9 @@ export default function HomeInfo({home, handleHomeChange, disabled}: {home: Stud
                             name={key}
                             onChange={handleHomeChange}
                             disabled={disabled}
-                        />)
-                    })
+                        />
+                    )
+                })
             }
         </>
     )

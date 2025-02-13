@@ -1,7 +1,4 @@
 export default function PhoneInput({label, value, name, onChange, disabled}: {label: string, value: string, name: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}){
-    // if key is not number then don't change
-    // for value add dashes after first two set of three digits?
-
     const formatPhoneNumber = (value: string) => {
         const cleaned = value.replace(/[^0-9]/g, '');
         let formatted = '';
