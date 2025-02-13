@@ -132,6 +132,11 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
         <form
             onSubmit={handleSubmit}
             className="space-y-4 max-h-[80vh] overflow-y-auto p-4"
+            onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault()
+                }
+            }}
             noValidate
         >
             <h1 className="text-2xl font-bold mb-4">Student Form</h1>
