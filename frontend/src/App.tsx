@@ -182,7 +182,7 @@ function App() {
                 )
             }
 
-            <div className={`p-5 font-sans`}>
+            <div className={`p-5 font-sans ${showForm ? "max-h-screen overflow-hidden" : ""}`}>
                 <div className="flex justify-end">
                     <button
                         type="button"
