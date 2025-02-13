@@ -137,8 +137,8 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             <h1 className="text-2xl font-bold mb-4">Student Form</h1>
 
             {/* Grid Layout for Form Fields */}
-            <h2 className="text-xl font-bold underline"> Student Info </h2>
-            <div className="grid grid-cols-4 gap-4">
+            <h2 className="text-xl font-bold underline"> Basic Info </h2>
+            <div className="grid grid-cols-4 gap-4 w-4xl">
                 <MainInfo formData={formData} handleChange={handleMainChange} disabled={disabled}/>
                 <SelectInput
                     label="Teacher:"
