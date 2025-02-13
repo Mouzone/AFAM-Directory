@@ -4,7 +4,7 @@ export default function AllergiesInput({allergies, addAllergy, removeAllergy, di
     const [input, setInput] = useState("")
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && input !== "") {
-            addAllergy(input); 
+            addAllergy(input.toLowerCase()); 
             setInput(""); 
             e.preventDefault()
         }
@@ -30,9 +30,9 @@ export default function AllergiesInput({allergies, addAllergy, removeAllergy, di
                     >
                         <span>{allergy}</span>
                         <button
-                        onClick={() => removeAllergy(allergy)}
-                        disabled={disabled}
-                        className="ml-1" 
+                            onClick={() => removeAllergy(allergy)}
+                            disabled={disabled}
+                            className="ml-1" 
                         >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
