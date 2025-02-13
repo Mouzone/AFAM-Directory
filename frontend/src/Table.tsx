@@ -1,8 +1,8 @@
 import { Student } from "./types"
 
-export default function Table({filtered, editForm, showForm}: {filtered: Student[], editForm: (student: Student) => void}) {
+export default function Table({filtered, editForm}: {filtered: Student[], editForm: (student: Student) => void}) {
     return (
-        <table className={`w-full border-collapse ${!showForm ? "overflow" : "" }`}>
+        <table className="w-full border-collapse">
             <thead>
                 <tr className="bg-gray-200">
                     <th className="border border-gray-300 p-2 w-1/4">First Name</th>

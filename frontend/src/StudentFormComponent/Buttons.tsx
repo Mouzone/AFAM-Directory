@@ -6,7 +6,7 @@ export default function Buttons({type, isEdit, onDelete, setIsEdit, closeForm}: 
     }
     
 	return (
-		<div className="sticky bottom-0 bg-white py-4 flex gap-4">
+		<div className="fixed bottom-15 bg-white flex gap-4">
 			{ 
 				(type === "add" || isEdit)
 				?  (<button

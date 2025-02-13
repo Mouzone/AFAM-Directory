@@ -181,7 +181,8 @@ function App() {
                     </div>
                 )
             }
-            <div className={`p-5 font-sans ${showForm ? "overflow" : "" }`}>
+
+            <div className={`p-5 font-sans`}>
                 <div className="flex justify-end">
                     <button
                         type="button"
@@ -197,9 +198,10 @@ function App() {
 
 	            <Table filtered={filtered} editForm={editForm}/>
 	        </div>
+
             {/* Popup that details Action: [names] that truncates*/}
-            { showUpdates && <Updates updates={updates}/>}
-           </>
+            { showUpdates && <Updates updates={updates}/> }
+        </>
     );
 }
 
