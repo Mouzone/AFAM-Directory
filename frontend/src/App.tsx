@@ -2,11 +2,13 @@ import { useState } from "react";
 import Form from "./Form";
 import Table from "./Table"
 import { useEffect } from "react";
-import { Student, LabelsKey, Teacher } from "./types";
-import { addState, labels} from "./utility/consts"
+import { Student, Teacher } from "./types";
+import { addState} from "./utility/consts"
 import { collection, onSnapshot, query, getFirestore, getDocs } from "firebase/firestore";
 import { app, db } from "./utility/firebase";
 import { getAuth, signOut } from "firebase/auth";
+import Updates from "./AppComponents/Updates";
+import Search from "./AppComponents/Search";
 
 function App() {
     const [students, setStudents] = useState<Student[]>([])
@@ -20,8 +22,8 @@ function App() {
         teacher: "",
     });
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [error, setError] = useState<String | null>(null);
-    const [updates, setUpdates] = useState<{added: String[], modified: String[], removed: String[]}>({added: [], modified:[], removed: []})
+    const [error, setError] = useState<string | null>(null);
+    const [updates, setUpdates] = useState<{added: string[], modified: string[], removed: string[]}>({added: [], modified:[], removed: []})
     const [showUpdates, setShowUpdates] = useState<boolean>(false)
     
     const closeForm = () => {
@@ -155,47 +157,16 @@ function App() {
     })
 
     return (
-        <div className="p-5 font-sans">
-            <div className="flex justify-end">
-                <button
-                    type="button"
-                    onClick={handleSignOut}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" // Tailwind styles
-                >
-                    Sign Out
-                </button>
-            </div>
-            {/* Search Inputs */}
-		    <div className="flex gap-4 mb-5 items-center">
-			    {
-                    Object.entries(searchValues).map(([key, value]) => (
-                        <div key={key} className="flex flex-col">
-                            <label className="font-bold">{labels[key as LabelsKey]}</label>
-                            <input
-                                className="border border-gray-300 rounded p-2"
-                                value={value}
-                                onChange={(e) =>
-                                    setSearchValues({ ...searchValues, [key]: e.target.value })
-                                }
-                            />
-                        </div>
-                    ))
-			    }
-                {/* Add Button */}
-                <button
-                    className=" bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    onClick={() => setShowForm(true)}
-                >
-                    Add Student
-                </button>
-		    </div>
-
+        <>
             {/* Form Modal */}
             {
-                (showForm) && (
+                showForm && (
                     <div
                         className="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex justify-center items-center"
-                        onClick={() => {setShowForm(false); setProfile(addState)}} // Close modal on outside click
+                        onClick={() => {
+                            setShowForm(false)
+                            setProfile(addState)}
+                        } // Close modal on outside click
                     >
                         <div
                             className="bg-white p-6 rounded-lg w-fit"
@@ -210,32 +181,25 @@ function App() {
                     </div>
                 )
             }
-	        <Table filtered={filtered} editForm={editForm}/>
+            <div className={`p-5 font-sans ${showForm ? "overflow" : "" }`}>
+                <div className="flex justify-end">
+                    <button
+                        type="button"
+                        onClick={handleSignOut}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" // Tailwind styles
+                    >
+                        Sign Out
+                    </button>
+                </div>
+
+                {/* Search Inputs */}
+                <Search searchValues={searchValues} setSearchValues={setSearchValues} setShowForm={setShowForm}/>
+
+	            <Table filtered={filtered} editForm={editForm}/>
+	        </div>
             {/* Popup that details Action: [names] that truncates*/}
-            {
-                showUpdates && (
-                <div className="fixed w-l bottom-4 left-1/2 -translate-x-1/2 bg-gray-100 border border-gray-200 rounded-md p-4 shadow-sm z-50">
-                    {
-                        updates["added"].length !== 0 && (
-                        <p className="text-green-600 font-medium truncate">
-                            Added: {updates["added"].join(", ")}
-                        </p>)
-                    }
-                    {
-                        updates["modified"].length !== 0 && (
-                        <p className="text-blue-600 font-medium truncate">
-                            Edited: {updates["modified"].join(" ")}
-                        </p>)
-                    }
-                    {
-                        updates["removed"].length !== 0 && (
-                        <p className="text-red-600 font-medium truncate">
-                            Deleted: {updates["removed"].join(" ")}
-                        </p>)
-                    }
-                </div>)
-            }
-	    </div>
+            { showUpdates && <Updates updates={updates}/>}
+           </>
     );
 }
 
