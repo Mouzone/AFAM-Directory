@@ -134,32 +134,12 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             className="space-y-4 max-h-[80vh] overflow-y-auto p-4"
             noValidate
         >
-            <h2 className="text-xl font-bold mb-4">Student Form</h2>
+            <h1 className="text-2xl font-bold mb-4">Student Form</h1>
 
             {/* Grid Layout for Form Fields */}
-            <div className="grid grid-cols-2 gap-4">
+            <h2 className="text-xl font-bold underline"> Student Info </h2>
+            <div className="grid grid-cols-4 gap-4">
                 <MainInfo formData={formData} handleChange={handleMainChange} disabled={disabled}/>
-                <AllergiesInput
-                    allergies={formData.allergies}
-                    addAllergy={addAllergy}
-                    removeAllergy={removeAllergy}
-                    disabled={disabled}
-                />
-                <HomeInfo home={formData["home"]} handleHomeChange={handleHomeChange} disabled={disabled}/>
-
-                <GuardianInfo 
-                    title="Primary Contact" 
-                    guardian={formData["guardian1"]} 
-                    onChange={handleGuardianChange("guardian1")}
-                    disabled={disabled}
-                />
-                <GuardianInfo 
-                    title="Secondary Contact"
-                    guardian={formData["guardian2"]} 
-                    onChange={handleGuardianChange("guardian2")} 
-                    disabled={disabled}
-                />
-
                 <SelectInput
                     label="Teacher:"
                     value={`${formData["teacher"]["firstName"]} ${formData["teacher"]["lastName"]}`}
@@ -168,7 +148,37 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
                     onChange={handleTeacherChange}
                     disabled={disabled}
                 />
+                <AllergiesInput
+                    allergies={formData.allergies}
+                    addAllergy={addAllergy}
+                    removeAllergy={removeAllergy}
+                    disabled={disabled}
+                />
             </div>
+
+            <h2 className="text-xl font-bold underline"> Home </h2>
+            <div className="grid grid-cols-4 gap-4">
+                <HomeInfo home={formData["home"]} handleHomeChange={handleHomeChange} disabled={disabled}/>
+            </div>
+
+            <h2 className="text-xl font-bold underline"> Guardian 1 </h2>
+            <div className="grid grid-cols-4 gap-4">
+                <GuardianInfo 
+                    guardian={formData["guardian1"]} 
+                    onChange={handleGuardianChange("guardian1")}
+                    disabled={disabled}
+                />
+            </div>
+
+            <h2  className="text-xl font-bold underline"> Guardian 2 </h2>
+            <div className="grid grid-cols-4 gap-4">
+                <GuardianInfo 
+                    guardian={formData["guardian2"]} 
+                    onChange={handleGuardianChange("guardian2")} 
+                    disabled={disabled}
+                />
+            </div>
+            
             <Buttons type={!("id" in formData)  ? "add" : "view"} isEdit={isEdit} onDelete={onDelete} setIsEdit={setIsEdit} closeForm={closeForm}/>
         </form>
   );
