@@ -4,7 +4,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 # Replace with your Firebase project credentials
-CREDENTIALS_PATH = "/Users/sunnyliu/Repos/AFAM-Directory/backend/server/afam-directory-firebase-adminsdk-fbsvc-c6f23bf9b8.json"  # e.g., "serviceAccountKey.json"
+CREDENTIALS_PATH = "afam-directory-firebase-adminsdk-fbsvc-40f7c683b1.json"  # e.g., "serviceAccountKey.json"
 COLLECTION_NAME = "students"  # The Firestore collection to store data in
 BATCH_SIZE = 500  # Adjust batch size as needed; 500-1000 is usually a good starting point
 
