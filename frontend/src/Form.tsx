@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Student, Teacher } from "./types";
 import { addDoc, collection, deleteDoc, doc, updateDoc} from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL, getMetadata } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
 import { db, storage } from "./utility/firebase";
 import MainInfo from "./StudentFormComponent/MainInfo";
 import HomeInfo from "./StudentFormComponent/HomeInfo";
@@ -36,6 +36,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             });
     }, [])
 
+    // todo: delete image as well
     const onDelete = () => {
         const docRef = doc(db, "students", formData["id"] as string)
         deleteDoc(docRef)
@@ -45,6 +46,15 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             .catch((error) => {
                 console.error("Error deleting document: ", error);
             });
+        
+        const headshotRef = ref(storage, `images/${docRef.id}`);
+        deleteObject(headshotRef)
+            .then(() =>
+                console.log("Image delete", docRef.id)
+            )
+            .catch((error) =>
+                console.error(error)
+            )
         closeForm()
     }
 
