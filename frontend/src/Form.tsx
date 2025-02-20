@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Student, Teacher } from "./types";
-import { addDoc, collection, deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { db } from "./utility/firebase";
+import { addDoc, collection, deleteDoc, doc, updateDoc} from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
+import { db, storage } from "./utility/firebase";
 import MainInfo from "./StudentFormComponent/MainInfo";
 import HomeInfo from "./StudentFormComponent/HomeInfo";
 import GuardianInfo from "./StudentFormComponent/GuardianInfo";
@@ -13,32 +14,29 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
     const [formData, setFormData] = useState<Student>(state);
 	const [isEdit, setIsEdit] = useState(false)
 
+    const [image, setImage] = useState<File | null>(null);
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
     const disabled = "id" in formData && !isEdit
 
-	const onSubmit = (formData: Student) => {
-        if (!formData["id"]){
-            const colRef = collection(db, "students")
-            addDoc(colRef, formData)
-                .then((docRef) => {
-                    console.log("Document written with ID: ", docRef.id)
-                })
-                .catch((error) => {
-                    console.error("Error adding document: ", error)
-                })
-        } else {
-            const docRef = doc(db, "students", formData["id"])
-            updateDoc(docRef, formData)
-                .then(() => {
-                    console.log("Document successfully updated!");
-                })
-                .catch((error) => {
-                    console.error("Error updating document: ", error);
-                });
+    useEffect(() => {
+        // Check if an image URL exists in local storage (for persistence)
+        if (!formData["id"]) {
+            return
         }
 
-        closeForm()
-	}
+        const headshotRef = ref(storage, `images/${formData["id"]}`)
+        getDownloadURL(headshotRef)
+            .then((url) => {
+                setImageUrl(url);
+            })
+            .catch((error) => {
+                console.error("Error getting download URL:", error);
+            });
+    }, [])
 
+    // todo: delete image as well
     const onDelete = () => {
         const docRef = doc(db, "students", formData["id"] as string)
         deleteDoc(docRef)
@@ -48,6 +46,15 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             .catch((error) => {
                 console.error("Error deleting document: ", error);
             });
+        
+        const headshotRef = ref(storage, `images/${docRef.id}`);
+        deleteObject(headshotRef)
+            .then(() =>
+                console.log("Image delete", docRef.id)
+            )
+            .catch((error) =>
+                console.error(error)
+            )
         closeForm()
     }
 
@@ -108,6 +115,64 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             }
         })
     }
+    
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) {
+            return
+        }
+        setImage(e.target.files[0]);
+        setError(null); // Clear any previous errors
+    }
+
+    function uploadImage(id: string) {
+        if (!image) {
+            return
+        }
+
+        const storageRef = ref(storage, `images/${id}`)
+        const uploadTask = uploadBytesResumable(storageRef, image)
+        uploadTask
+            .on('state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                },
+                (error) => {
+                    setError(error.message); // Set the error message
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    setImageUrl(downloadURL);
+                    setImage(null); // Clear the selected image after successful upload
+                    });
+                }
+            );
+    }
+    const onSubmit = (formData: Student) => {
+        if (!formData["id"]){
+            const colRef = collection(db, "students")
+            addDoc(colRef, formData)
+                .then((docRef) => {
+                    console.log("Document written with ID: ", docRef.id)
+                    uploadImage(docRef.id)
+                })
+                .catch((error) => {
+                    console.error("Error adding document: ", error)
+                })
+        } else {
+            const docRef = doc(db, "students", formData["id"])
+            updateDoc(docRef, formData)
+                .then(() => {
+                    console.log("Document successfully updated!");
+                })
+                .catch((error) => {
+                    console.error("Error updating document: ", error);
+                });
+            uploadImage(docRef.id)
+        }
+
+        closeForm()
+	}
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 	    e.preventDefault();
@@ -140,6 +205,17 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             noValidate
         >
             <h1 className="text-2xl font-bold mb-4">Student Form</h1>
+            <div>
+                <input type="file" accept="image/*" onChange={handleImageChange} disabled={disabled}/>
+
+                {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
+
+                {imageUrl && (
+                    <div>
+                        <img src={imageUrl} alt="Uploaded Image" style={{ maxWidth: '300px' }} />
+                    </div>
+                )}
+            </div>
 
             {/* Grid Layout for Form Fields */}
             <h2 className="text-xl font-bold underline"> Basic Info </h2>
