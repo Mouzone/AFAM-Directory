@@ -153,7 +153,6 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             const colRef = collection(db, "students")
             addDoc(colRef, formData)
                 .then((docRef) => {
-
                     console.log("Document written with ID: ", docRef.id)
                     uploadImage(docRef.id)
                 })
