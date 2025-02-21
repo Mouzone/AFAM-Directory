@@ -1,17 +1,14 @@
 import { SetStateAction } from "react";
-export default function Buttons({
-    type,
-    isEdit,
-    onDelete,
-    setIsEdit,
-    closeForm,
-}: {
+
+interface ButtonsProps {
     type: "add" | "view";
     isEdit: boolean;
     onDelete: () => void;
     setIsEdit: React.Dispatch<SetStateAction<boolean>>;
     closeForm: () => void;
-}) {
+}
+
+export default function Buttons({type, isEdit, onDelete, setIsEdit, closeForm}: ButtonsProps) {
     const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         setIsEdit(true);

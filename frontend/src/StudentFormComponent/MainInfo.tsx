@@ -4,17 +4,15 @@ import SelectInput from "../Inputs/SelectInput";
 import PhoneInput from "../Inputs/PhoneInput";
 import EmailInput from "../Inputs/EmailInput";
 
-export default function MainInfo({
-    formData,
-    handleChange,
-    disabled,
-}: {
+interface MainInfoProps {
     formData: Student;
     handleChange: (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => void;
     disabled: boolean;
-}) {
+}
+
+export default function MainInfo({formData, handleChange, disabled,}: MainInfoProps) {
     return (
         <>
             <TextInput

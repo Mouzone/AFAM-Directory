@@ -2,11 +2,7 @@ import TextInput from "../Inputs/TextInput";
 import PhoneInput from "../Inputs/PhoneInput";
 import EmailInput from "../Inputs/EmailInput";
 
-export default function GuardianInfo({
-    guardian,
-    disabled,
-    onChange,
-}: {
+interface GuardianInfoProps {
     guardian: {
         firstName: string;
         lastName: string;
@@ -15,7 +11,9 @@ export default function GuardianInfo({
     };
     disabled: boolean;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}) {
+}
+
+export default function GuardianInfo({guardian, disabled, onChange}: GuardianInfoProps) {
     return (
         <>
             <TextInput
