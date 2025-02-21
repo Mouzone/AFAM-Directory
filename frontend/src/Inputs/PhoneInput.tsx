@@ -1,16 +1,12 @@
-export default function PhoneInput({
-    label,
-    value,
-    name,
-    onChange,
-    disabled,
-}: {
+interface PhoneInputProps {
     label: string;
     value: string;
     name: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     disabled: boolean;
-}) {
+}
+
+export default function PhoneInput({label, value, name, onChange, disabled}: PhoneInputProps) {
     const formatPhoneNumber = (value: string) => {
         const cleaned = value.replace(/[^0-9]/g, "");
         let formatted = "";

@@ -1,16 +1,11 @@
-export default function TextInput({
-    label,
-    value,
-    name,
-    onChange,
-    disabled,
-}: {
+interface TextInputProps {
     label: string;
     value: string;
     name: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     disabled: boolean;
-}) {
+}
+export default function TextInput({label, value, name, onChange, disabled}: TextInputProps) {
     const formatZipCode = (value: string) => {
         const cleaned = value.replace(/[^0-9]/g, ""); // Remove non-numeric chars
         return cleaned.slice(0, 5); // Limit to 5 digits

@@ -1,18 +1,13 @@
-export default function SelectInput({
-    label,
-    value,
-    name,
-    options,
-    onChange,
-    disabled,
-}: {
+interface SelectInputProps {
     label: string;
     value: string;
     name: string;
     options: string[];
     onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
     disabled: boolean;
-}) {
+}
+
+export default function SelectInput({label, value, name, options, onChange, disabled}: SelectInputProps) {
     return (
         <div className="flex flex-col">
             <label className="font-bold">{label}</label>

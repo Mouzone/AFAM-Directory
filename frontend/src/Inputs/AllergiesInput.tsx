@@ -1,16 +1,13 @@
 import { useState } from "react";
 
-export default function AllergiesInput({
-    allergies,
-    addAllergy,
-    removeAllergy,
-    disabled,
-}: {
+interface AllergiesInputProps {
     allergies: string[];
     addAllergy: (allergy: string) => void;
     removeAllergy: (allergy: string) => void;
     disabled: boolean;
-}) {
+}
+
+export default function AllergiesInput({allergies, addAllergy, removeAllergy, disabled,}: AllergiesInputProps) {
     const [input, setInput] = useState("");
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && input !== "") {
