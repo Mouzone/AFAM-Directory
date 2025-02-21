@@ -1,12 +1,11 @@
-import { Student } from "./types";
+import { Student } from "../types";
 
-export default function Table({
-    filtered,
-    editForm,
-}: {
+interface TableProps {
     filtered: Student[];
     editForm: (student: Student) => void;
-}) {
+}
+
+export default function Table({filtered, editForm}: TableProps) {
     return (
         <table className="w-full border-collapse">
             <thead>

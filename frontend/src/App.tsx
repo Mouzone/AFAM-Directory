@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Form from "./Form";
-import Table from "./Table";
+import Table from "./AppComponents/Table";
 import { useEffect } from "react";
 import { Student, Teacher } from "./types";
 import { addState } from "./utility/consts";
