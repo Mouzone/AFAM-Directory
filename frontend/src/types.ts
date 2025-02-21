@@ -46,3 +46,10 @@ export type Teacher = {
 };
 
 export type LabelsKey = keyof typeof labels;
+
+export type SearchValues = {
+    firstName: string,
+    lastName: string,
+    schoolYear: string,
+    teacher: string,
+}

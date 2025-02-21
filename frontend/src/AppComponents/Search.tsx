@@ -1,20 +1,15 @@
 import React, { SetStateAction } from "react";
-import { LabelsKey } from "../types";
+import { LabelsKey, SearchValues } from "../types";
 import { labels } from "../utility/consts";
-export default function Search({
-    searchValues,
-    setSearchValues,
-    setShowForm,
-}: {
-    searchValues: {
-        firstName: string;
-        lastName: string;
-        schoolYear: string;
-        teacher: string;
-    };
-    setSearchValues: React.Dispatch<SetStateAction<typeof searchValues>>;
-    setShowForm: React.Dispatch<SetStateAction<boolean>>;
-}) {
+
+
+interface SearchProps {
+    searchValues: SearchValues,
+    setSearchValues: React.Dispatch<SetStateAction<SearchValues>>,
+    setShowForm: React.Dispatch<SetStateAction<boolean>>
+}
+
+export default function Search({searchValues, setSearchValues, setShowForm,}: SearchProps) {
     return (
         <div className="flex gap-4 mb-5 items-center">
             {Object.entries(searchValues).map(([key, value]) => (
