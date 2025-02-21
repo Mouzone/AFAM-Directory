@@ -121,6 +121,7 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             return
         }
         setImage(e.target.files[0]);
+        setImageUrl(URL.createObjectURL(e.target.files[0]))
         setError(null); // Clear any previous errors
     }
 
@@ -142,8 +143,8 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
                 },
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    setImageUrl(downloadURL);
-                    setImage(null); // Clear the selected image after successful upload
+                        setImageUrl(downloadURL);
+                        setImage(null); // Clear the selected image after successful upload
                     });
                 }
             );
