@@ -1,8 +1,21 @@
-import TextInput from "../Inputs/TextInput"
-import PhoneInput from "../Inputs/PhoneInput"
-import EmailInput from "../Inputs/EmailInput"
+import TextInput from "../Inputs/TextInput";
+import PhoneInput from "../Inputs/PhoneInput";
+import EmailInput from "../Inputs/EmailInput";
 
-export default function GuardianInfo({guardian, disabled, onChange}: {guardian: {firstName: string, lastName: string, phoneNumber: string, email: string}, disabled: boolean, onChange: (e:React.ChangeEvent<HTMLInputElement>) => void}) {
+export default function GuardianInfo({
+    guardian,
+    disabled,
+    onChange,
+}: {
+    guardian: {
+        firstName: string;
+        lastName: string;
+        phoneNumber: string;
+        email: string;
+    };
+    disabled: boolean;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
     return (
         <>
             <TextInput
@@ -37,5 +50,5 @@ export default function GuardianInfo({guardian, disabled, onChange}: {guardian: 
                 disabled={disabled}
             />
         </>
-    )
+    );
 }

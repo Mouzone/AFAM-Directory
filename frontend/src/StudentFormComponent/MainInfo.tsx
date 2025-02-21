@@ -1,10 +1,20 @@
-import { Student } from "../types"
-import TextInput from "../Inputs/TextInput"
-import SelectInput from "../Inputs/SelectInput"
-import PhoneInput from "../Inputs/PhoneInput"
-import EmailInput from "../Inputs/EmailInput"
+import { Student } from "../types";
+import TextInput from "../Inputs/TextInput";
+import SelectInput from "../Inputs/SelectInput";
+import PhoneInput from "../Inputs/PhoneInput";
+import EmailInput from "../Inputs/EmailInput";
 
-export default function MainInfo({formData, handleChange, disabled}: {formData: Student, handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void, disabled: boolean}){
+export default function MainInfo({
+    formData,
+    handleChange,
+    disabled,
+}: {
+    formData: Student;
+    handleChange: (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => void;
+    disabled: boolean;
+}) {
     return (
         <>
             <TextInput
@@ -31,7 +41,7 @@ export default function MainInfo({formData, handleChange, disabled}: {formData: 
                 onChange={handleChange}
                 disabled={disabled}
             />
-            
+
             {/* Date of Birth */}
             <div className="flex flex-col">
                 <label className="font-bold">Date of Birth:</label>
@@ -79,5 +89,5 @@ export default function MainInfo({formData, handleChange, disabled}: {formData: 
                 disabled={disabled}
             />
         </>
-    )
+    );
 }

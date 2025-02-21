@@ -1,4 +1,18 @@
-export default function SelectInput({label, value, name, options, onChange, disabled}: {label: string, value: string, name: string, options: string[], onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void, disabled: boolean}) {
+export default function SelectInput({
+    label,
+    value,
+    name,
+    options,
+    onChange,
+    disabled,
+}: {
+    label: string;
+    value: string;
+    name: string;
+    options: string[];
+    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+    disabled: boolean;
+}) {
     return (
         <div className="flex flex-col">
             <label className="font-bold">{label}</label>
@@ -11,10 +25,12 @@ export default function SelectInput({label, value, name, options, onChange, disa
                 disabled={disabled}
             >
                 <option value="">Select</option>
-                {
-                    options.map(option => <option value={option} key={option}>{option}</option>)
-                }
+                {options.map((option) => (
+                    <option value={option} key={option}>
+                        {option}
+                    </option>
+                ))}
             </select>
         </div>
-    )
+    );
 }
