@@ -35,36 +35,37 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 doc_ref = collection_ref.document()  # Auto-generate document IDs
 
                 # Convert all values to appropriate types.  Critical for Firestore!
-                converted_row = {}
-                converted_row["firstName"] = row["First Name"].strip()
-                converted_row["lastName"] = row["Last Name"].strip()
-                converted_row["schoolYear"] = row["Grade"].strip()
+                general_info = {}
+                private_info = {}
+                general_info["firstName"] = row["First Name"].strip()
+                general_info["lastName"] = row["Last Name"].strip()
+                general_info["schoolYear"] = row["Grade"].strip()
 
                 # to go from 1/17/2009 to 2025-02-28
                 dob_parts = row["Date of Birth (DOB)"].split("/")
-                converted_row["dob"] = f"20{dob_parts[2]}-{dob_parts[0].zfill(2)}-{dob_parts[1].zfill(2)}" 
+                general_info["dob"] = f"20{dob_parts[2]}-{dob_parts[0].zfill(2)}-{dob_parts[1].zfill(2)}" 
 
                 if row["Allergies"] == "":
-                    converted_row["allergies"] = []
+                    private_info["allergies"] = []
                 else:
-                    converted_row["allergies"] = [allergy.strip().lower() for allergy in row.get("Allergies", "").split(",")]
-                converted_row["email"] = row["Personal Email Address"].strip()
-                converted_row["phoneNumber"] = row["Personal Phone Number"].strip()
-                converted_row["gender"] = row["Gender"].strip()
-                converted_row["highSchool"] = row["High School"].strip()
-                converted_row["home"] = {
+                    general_info["allergies"] = [allergy.strip().lower() for allergy in row.get("Allergies", "").split(",")]
+                private_info["email"] = row["Personal Email Address"].strip()
+                private_info["phoneNumber"] = row["Personal Phone Number"].strip()
+                general_info["gender"] = row["Gender"].strip()
+                private_info["highSchool"] = row["High School"].strip()
+                private_info["home"] = {
                     "city": row["City"].strip(),
                     "streetAddress": row["Street Address"].strip(),
                     "zipCode": row["Postal Code"].strip()
                 }
 
-                converted_row["guardian1"] = {
+                private_info["guardian1"] = {
                     "email": row["Parent 1 Email Address"].strip(),
                     "firstName": row["Parent 1 First Name"].strip(),
                     "lastName": row["Parent 1 Last Name"].strip(),
                     "phoneNumber": row["Parent 1 Phone Number"].strip()
                 }
-                converted_row["guardian2"] = {
+                private_info["guardian2"] = {
                     "email": row["Parent 2 Email Address"].strip(),
                     "firstName": row["Parent 2 First Name"].strip(),
                     "lastName": row["Parent 2 Last Name"].strip(),
@@ -73,16 +74,16 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 # from 10A Sunny Liu to {Sunny, Liu}
                 teacher_parts = row["Small Group Class"].split(" ")
                 if len(teacher_parts) == 3:
-                    converted_row["teacher"] = {
+                    general_info["teacher"] = {
                         "firstName": teacher_parts[1].strip(),
                         "lastName": teacher_parts[2].strip()
                     }
                 else:
-                    converted_row["teacher"] = {
+                    general_info["teacher"] = {
                         "firstName": "Unassigned"
                     }
 
-                batch.set(doc_ref, converted_row)
+                batch.set(doc_ref, private_info)
 
                 batch_count += 1
 
