@@ -12,11 +12,10 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
     """Reads CSV data and writes it to Firestore in batches."""
 
     try:
-        # Initialize Firebase Admin SDK if not already initialized
         if not firebase_admin._apps:  # Check if already initialized. Important for multiple calls
             cred = credentials.Certificate(CREDENTIALS_PATH)
             firebase_admin.initialize_app(cred)
-
+        
         db = firestore.client()
         collection_ref = db.collection(collection_name)
         dummy_doc_ref = collection_ref.document("dummy_document")  # You can use an auto-generated ID
@@ -46,7 +45,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 general_info["dob"] = f"20{dob_parts[2]}-{dob_parts[0].zfill(2)}-{dob_parts[1].zfill(2)}" 
 
                 if row["Allergies"] == "":
-                    private_info["allergies"] = []
+                    general_info["allergies"] = []
                 else:
                     general_info["allergies"] = [allergy.strip().lower() for allergy in row.get("Allergies", "").split(",")]
                 private_info["email"] = row["Personal Email Address"].strip()
