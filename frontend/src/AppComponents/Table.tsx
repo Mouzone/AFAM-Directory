@@ -43,7 +43,7 @@ export default function Table({filtered, editForm}: TableProps) {
                         <td className="border border-gray-300 p-2 w-1/4">
                             {`${student.teacher.firstName}${
                                 student.teacher.lastName
-                                    ? `, ${student.teacher.lastName}`
+                                    ? ` ${student.teacher.lastName}`
                                     : ""
                             }`}
                         </td>
