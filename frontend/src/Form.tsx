@@ -21,15 +21,13 @@ import SelectInput from "./Inputs/SelectInput";
 import AllergiesInput from "./Inputs/AllergiesInput";
 import Buttons from "./StudentFormComponent/Buttons";
 
-export default function Form({
-    state,
-    closeForm,
-    teachers,
-}: {
+interface FormProps {
     state: Student;
     closeForm: () => void;
     teachers: Teacher[] | undefined;
-}) {
+}
+
+export default function Form({state, closeForm, teachers}: FormProps) {
     const [formData, setFormData] = useState<Student>(state);
     const [isEdit, setIsEdit] = useState(false);
 
