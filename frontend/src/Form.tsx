@@ -164,12 +164,12 @@ export default function Form({ state, closeForm, teachers }: {state: Student, cl
             const docRef = doc(db, "students", formData["id"])
             updateDoc(docRef, formData)
                 .then(() => {
+                    uploadImage(docRef.id)
                     console.log("Document successfully updated!");
                 })
                 .catch((error) => {
                     console.error("Error updating document: ", error);
                 });
-            uploadImage(docRef.id)
         }
 
         closeForm()
