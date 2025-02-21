@@ -4,7 +4,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 
 # Replace with your Firebase project credentials
-CREDENTIALS_PATH = "afam-directory-firebase-adminsdk-fbsvc-40f7c683b1.json"  # e.g., "serviceAccountKey.json"
+CREDENTIALS_PATH = "uploadData/afam-directory-firebase-adminsdk-fbsvc-40f7c683b1.json"  # e.g., "serviceAccountKey.json"
 COLLECTION_NAME = "students"  # The Firestore collection to store data in
 BATCH_SIZE = 500  # Adjust batch size as needed; 500-1000 is usually a good starting point
 
@@ -32,7 +32,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 print(row)
                 if row["First Name"] == "":
                     break
-                doc_ref = collection_ref.document()  # Auto-generate document IDs
+                general_doc_ref = collection_ref.document()  # Auto-generate document IDs
 
                 # Convert all values to appropriate types.  Critical for Firestore!
                 general_info = {}
@@ -83,8 +83,10 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                         "firstName": "Unassigned"
                     }
 
-                batch.set(doc_ref, private_info)
-
+                batch.set(general_doc_ref, general_info)
+                subcollection_ref = general_doc_ref.collection("private")
+                private_doc_ref = collection_ref.document(general_doc_ref.id).collection("private").document("privateInfo")
+                batch.set(private_doc_ref, private_info)
                 batch_count += 1
 
                 if batch_count == batch_size:
