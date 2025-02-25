@@ -5,7 +5,7 @@ service cloud.firestore {
       allow read, create: if request.auth != null; // Allow read access to students
       allow read, create, delete, update: if request.auth != null &&
           request.auth.token.role == 'admin'
-      match /students/{studentId}/private/{document=**} {
+      match /private/{document=**} {
         allow read, create, delete, update: if request.auth != null &&
           request.auth.token.role == 'admin'
       }
