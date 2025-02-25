@@ -1,16 +1,23 @@
 import { labels } from "./utility/consts";
 
-export type Student = {
+export type StudentGeneralInfo = {
     id?: string;
     firstName: string;
     lastName: string;
+    highSchool: string;
     schoolYear: "" | "9" | "10" | "11" | "12";
     dob: string;
     gender: "" | "Male" | "Female";
-    highSchool: string;
+    allergies: string[];
+    teacher: {
+        firstName: string;
+        lastName: string;
+    };
+};
+
+export type StudentPrivateInfo = {
     phoneNumber: string;
     email: string;
-    allergies: string[];
     home: {
         streetAddress: string;
         city: string;
@@ -28,15 +35,10 @@ export type Student = {
         phoneNumber: string;
         email: string;
     };
-    teacher: {
-        firstName: string;
-        lastName: string;
-    };
-};
+}
 
-export type StudentKeys = keyof Student;
-export type HomeKeys = keyof Student["home"];
-export type GuardianKeys = keyof Student["guardian1"];
+export type HomeKeys = keyof StudentPrivateInfo["home"];
+export type GuardianKeys = keyof StudentPrivateInfo["guardian1"];
 
 export type Teacher = {
     id: string;

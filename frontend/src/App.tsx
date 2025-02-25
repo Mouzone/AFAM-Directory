@@ -2,7 +2,7 @@ import { useState } from "react";
 import Form from "./Form";
 import Table from "./AppComponents/Table";
 import { useEffect } from "react";
-import { Student, Teacher } from "./types";
+import { StudentGeneralInfo, Teacher } from "./types";
 import { addState } from "./utility/consts";
 import {
     collection,
@@ -17,9 +17,9 @@ import Updates from "./AppComponents/Updates";
 import Search from "./AppComponents/Search";
 
 function App() {
-    const [students, setStudents] = useState<Student[]>([]);
+    const [students, setStudents] = useState<StudentGeneralInfo[]>([]);
     const [teachers, setTeachers] = useState<Teacher[]>([]);
-    const [profile, setProfile] = useState<Student>(addState);
+    const [profile, setProfile] = useState<StudentGeneralInfo>(addState);
     const [showForm, setShowForm] = useState<boolean>(false);
     const [searchValues, setSearchValues] = useState({
         firstName: "",
@@ -41,7 +41,7 @@ function App() {
         setShowForm(false);
     };
 
-    const editForm = (student: Student) => {
+    const editForm = (student: StudentGeneralInfo) => {
         setProfile(student);
         setShowForm(true);
     };
@@ -57,12 +57,12 @@ function App() {
         const unsubscribe = onSnapshot(
             q,
             (snapshot) => {
-                const updatedStudents: Student[] = [];
+                const updatedStudents: StudentGeneralInfo[] = [];
                 const added: string[] = [];
                 const modified: string[] = [];
                 const removed: string[] = [];
                 snapshot.docChanges().forEach((change) => {
-                    const student = change.doc.data() as Student;
+                    const student = change.doc.data() as StudentGeneralInfo;
                     student.id = change.doc.id;
 
                     switch (change.type) {
@@ -166,7 +166,7 @@ function App() {
     if (isLoading) return <div> Loading... </div>;
     if (error) return <div> Error </div>;
 
-    const filtered = students.filter((entry: Student) => {
+    const filtered = students.filter((entry: StudentGeneralInfo) => {
         return (
             entry["firstName"]
                 .toLowerCase()
@@ -200,7 +200,7 @@ function App() {
                         onClick={(e) => e.stopPropagation()} // Prevent clicks inside modal from closing it
                     >
                         <Form
-                            state={profile}
+                            generalState={profile}
                             closeForm={closeForm}
                             teachers={teachers}
                         />

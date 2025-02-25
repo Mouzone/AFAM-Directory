@@ -1,8 +1,8 @@
 import TextInput from "../Inputs/TextInput";
-import { Student, HomeKeys } from "../types";
+import { StudentPrivateInfo, HomeKeys } from "../types";
 
 interface HomeInfoProps {
-    home: Student["home"];
+    home: StudentPrivateInfo["home"];
     handleHomeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     disabled: boolean;
 }

@@ -13,8 +13,45 @@ interface MainInfoProps {
 }
 
 export default function MainInfo({formData, handleChange, disabled,}: MainInfoProps) {
+    const handleMainChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value,
+        });
+    };
+    const addAllergy = (allergy: string) => {
+        setFormData({
+            ...formData,
+            allergies: [...formData.allergies, allergy],
+        });
+    };
+
+    const removeAllergy = (allergyToRemove: string) => {
+        setFormData({
+            ...formData,
+            allergies: formData.allergies.filter(
+                (allergy) => allergy !== allergyToRemove
+            ),
+        });
+    };
+    const handleTeacherChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+            const teacherName = e.target.value;
+            const teacherNameList = teacherName.split(" ");
+            const firstName = teacherNameList[0];
+            const lastName = teacherNameList[1];
+            setFormData({
+                ...formData,
+                teacher: {
+                    firstName,
+                    lastName,
+                },
+            });
+        };
     return (
-        <>
+        <div className="grid grid-cols-4 gap-4 w-4xl">
             <TextInput
                 label="First Name:"
                 value={formData.firstName}
@@ -86,6 +123,30 @@ export default function MainInfo({formData, handleChange, disabled,}: MainInfoPr
                 onChange={handleChange}
                 disabled={disabled}
             />
-        </>
+
+             <SelectInput
+                label="Teacher:"
+                value={`${formData["teacher"]["firstName"]} ${formData["teacher"]["lastName"]}`}
+                name="teacher"
+                options={
+                    teachers
+                        ? teachers.map(
+                                (teacher) =>
+                                    `${teacher["firstName"]} ${
+                                        teacher["lastName"] ?? ""
+                                    }`
+                            )
+                        : []
+                }
+                onChange={handleTeacherChange}
+                disabled={disabled}
+            />
+            <AllergiesInput
+                allergies={formData.allergies}
+                addAllergy={addAllergy}
+                removeAllergy={removeAllergy}
+                disabled={disabled}
+            />
+        </div>
     );
 }

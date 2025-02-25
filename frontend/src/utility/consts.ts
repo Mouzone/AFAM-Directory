@@ -1,15 +1,22 @@
-import { Student } from "../types";
+import { StudentGeneralInfo, StudentPrivateInfo } from "../types";
 
-export const addState = {
+export const studentGeneralInfoDefault = {
     firstName: "",
     lastName: "",
     schoolYear: "",
     dob: "",
     gender: "",
     highSchool: "",
+    allergies: [],
+    teacher: {
+        firstName: "",
+        lastName: "",
+    },
+} as StudentGeneralInfo;
+
+export const studentPrivateInfoDefault = {
     phoneNumber: "",
     email: "",
-    allergies: [],
     home: {
         streetAddress: "",
         city: "",
@@ -27,11 +34,7 @@ export const addState = {
         phoneNumber: "",
         email: "",
     },
-    teacher: {
-        firstName: "",
-        lastName: "",
-    },
-} as Student;
+} as StudentPrivateInfo
 
 export const labels = {
     firstName: "First Name",
