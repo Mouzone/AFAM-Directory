@@ -1,38 +1,37 @@
-import { Student } from "../types";
+import { StudentGeneralInfo, Teacher } from "../types";
 import TextInput from "../Inputs/TextInput";
 import SelectInput from "../Inputs/SelectInput";
-import PhoneInput from "../Inputs/PhoneInput";
-import EmailInput from "../Inputs/EmailInput";
+import AllergiesInput from "../Inputs/AllergiesInput";
+import React from "react";
 
-interface MainInfoProps {
-    formData: Student;
-    handleChange: (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-    ) => void;
-    disabled: boolean;
+interface GeneralProps {
+    disabled: boolean,
+    teachers: Teacher[] | undefined,
+    generalData: StudentGeneralInfo;
+    setGeneralData: React.Dispatch<React.SetStateAction<StudentGeneralInfo>>
 }
 
-export default function General({generalData, handleChange, disabled,}: MainInfoProps) {
-    const handleMainChange = (
+export default function General({disabled, teachers, generalData, setGeneralData}: GeneralProps) {
+    const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        setGeneralData({
+            ...generalData,
             [name]: value,
         });
     };
     const addAllergy = (allergy: string) => {
-        setFormData({
-            ...formData,
-            allergies: [...formData.allergies, allergy],
+        setGeneralData({
+            ...generalData,
+            allergies: [...generalData.allergies, allergy],
         });
     };
 
     const removeAllergy = (allergyToRemove: string) => {
-        setFormData({
-            ...formData,
-            allergies: formData.allergies.filter(
+        setGeneralData({
+            ...generalData,
+            allergies: generalData.allergies.filter(
                 (allergy) => allergy !== allergyToRemove
             ),
         });
@@ -42,8 +41,8 @@ export default function General({generalData, handleChange, disabled,}: MainInfo
             const teacherNameList = teacherName.split(" ");
             const firstName = teacherNameList[0];
             const lastName = teacherNameList[1];
-            setFormData({
-                ...formData,
+            setGeneralData({
+                ...generalData,
                 teacher: {
                     firstName,
                     lastName,
@@ -54,7 +53,7 @@ export default function General({generalData, handleChange, disabled,}: MainInfo
         <div className="grid grid-cols-4 gap-4 w-4xl">
             <TextInput
                 label="First Name:"
-                value={formData.firstName}
+                value={generalData.firstName}
                 name="firstName"
                 onChange={handleChange}
                 disabled={disabled}
@@ -62,7 +61,7 @@ export default function General({generalData, handleChange, disabled,}: MainInfo
 
             <TextInput
                 label="Last Name:"
-                value={formData.lastName}
+                value={generalData.lastName}
                 name="lastName"
                 onChange={handleChange}
                 disabled={disabled}
@@ -70,7 +69,7 @@ export default function General({generalData, handleChange, disabled,}: MainInfo
 
             <SelectInput
                 label="School Year:"
-                value={formData.schoolYear}
+                value={generalData.schoolYear}
                 name="schoolYear"
                 options={["9", "10", "11", "12"]}
                 onChange={handleChange}
@@ -83,7 +82,7 @@ export default function General({generalData, handleChange, disabled,}: MainInfo
                 <input
                     type="date"
                     name="dob"
-                    value={formData.dob}
+                    value={generalData.dob}
                     onChange={handleChange}
                     className="border border-gray-300 rounded p-2"
                     required
@@ -93,7 +92,7 @@ export default function General({generalData, handleChange, disabled,}: MainInfo
 
             <SelectInput
                 label="School Year:"
-                value={formData.gender}
+                value={generalData.gender}
                 name="gender"
                 options={["Male", "Female"]}
                 onChange={handleChange}
@@ -102,31 +101,15 @@ export default function General({generalData, handleChange, disabled,}: MainInfo
 
             <TextInput
                 label="High School:"
-                value={formData.highSchool}
+                value={generalData.highSchool}
                 name="highSchool"
-                onChange={handleChange}
-                disabled={disabled}
-            />
-
-            <PhoneInput
-                label="Phone Number:"
-                value={formData.phoneNumber}
-                name="phoneNumber"
-                onChange={handleChange}
-                disabled={disabled}
-            />
-
-            <EmailInput
-                label="Email:"
-                value={formData.email}
-                name="email"
                 onChange={handleChange}
                 disabled={disabled}
             />
 
              <SelectInput
                 label="Teacher:"
-                value={`${formData["teacher"]["firstName"]} ${formData["teacher"]["lastName"]}`}
+                value={`${generalData["teacher"]["firstName"]} ${generalData["teacher"]["lastName"]}`}
                 name="teacher"
                 options={
                     teachers
@@ -142,7 +125,7 @@ export default function General({generalData, handleChange, disabled,}: MainInfo
                 disabled={disabled}
             />
             <AllergiesInput
-                allergies={formData.allergies}
+                allergies={generalData.allergies}
                 addAllergy={addAllergy}
                 removeAllergy={removeAllergy}
                 disabled={disabled}

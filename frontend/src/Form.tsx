@@ -12,6 +12,7 @@ import Buttons from "./StudentFormComponent/Buttons";
 import { studentPrivateInfoDefault } from "./utility/consts";
 import General from "./StudentFormComponent/General";
 import Private from "./StudentFormComponent/Private";
+
 interface FormProps {
     generalState: StudentGeneralInfo;
     closeForm: () => void;
