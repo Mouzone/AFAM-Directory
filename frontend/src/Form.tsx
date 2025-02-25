@@ -6,6 +6,7 @@ import {
     deleteDoc,
     doc,
     updateDoc,
+    getDoc
 } from "firebase/firestore";
 import {
     ref,
@@ -38,10 +39,22 @@ export default function Form({state, closeForm, teachers}: FormProps) {
     const disabled = "id" in formData && !isEdit;
 
     useEffect(() => {
-        // Check if an image URL exists in local storage (for persistence)
         if (!formData["id"]) {
             return;
         }
+        async function fetchPrivateInfo() {
+            // if (!formData["id"]) {
+            //   setPrivateInfo(null); // Clear previous data if ID is missing
+            //   return;
+            // }
+      
+            const studentRef = doc(db, "students", formData["id"]);
+            const privateCollectionRef = collection(studentRef, "private");
+            const privateDocRef = doc(privateCollectionRef, "privateInfo");
+            const privateDocSnapshot = await getDoc(privateDocRef);
+            console.log(privateDocSnapshot.data())
+        }
+        fetchPrivateInfo()
 
         const headshotRef = ref(storage, `images/${formData["id"]}`);
         getDownloadURL(headshotRef)
