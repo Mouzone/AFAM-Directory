@@ -3,7 +3,7 @@ import Form from "./Form";
 import Table from "./AppComponents/Table";
 import { useEffect } from "react";
 import { StudentGeneralInfo, Teacher } from "./types";
-import { addState } from "./utility/consts";
+import { studentGeneralInfoDefault } from "./utility/consts";
 import {
     collection,
     onSnapshot,
@@ -19,7 +19,7 @@ import Search from "./AppComponents/Search";
 function App() {
     const [students, setStudents] = useState<StudentGeneralInfo[]>([]);
     const [teachers, setTeachers] = useState<Teacher[]>([]);
-    const [profile, setProfile] = useState<StudentGeneralInfo>(addState);
+    const [profile, setProfile] = useState<StudentGeneralInfo>(studentGeneralInfoDefault);
     const [showForm, setShowForm] = useState<boolean>(false);
     const [searchValues, setSearchValues] = useState({
         firstName: "",
@@ -37,7 +37,7 @@ function App() {
     const [showUpdates, setShowUpdates] = useState<boolean>(false);
 
     const closeForm = () => {
-        setProfile(addState);
+        setProfile(studentGeneralInfoDefault);
         setShowForm(false);
     };
 
@@ -192,7 +192,7 @@ function App() {
                     className="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex justify-center items-center"
                     onClick={() => {
                         setShowForm(false);
-                        setProfile(addState);
+                        setProfile(studentGeneralInfoDefault);
                     }} // Close modal on outside click
                 >
                     <div
