@@ -117,29 +117,20 @@ export default function Form({generalState, closeForm, teachers}: FormProps) {
         );
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         if (!generalData["id"]) {
-            const colRef = collection(db, "students");
-            addDoc(colRef, generalData)
-                .then((docRef) => {
-                    console.log("Document written with ID: ", docRef.id);
-                    uploadImage(docRef.id);
-                })
-                .catch((error) => {
-                    console.error("Error adding document: ", error);
-                });
+            const generalColRef = collection(db, "students");
+            const docRef = await addDoc(generalColRef, generalData)
+            const privateColRef = collection(docRef, "private")
+            await addDoc(privateColRef, privateData)
         } else {
             const docRef = doc(db, "students", generalData["id"]);
-            updateDoc(docRef, generalData)
-                .then(() => {
-                    uploadImage(docRef.id);
-                    console.log("Document successfully updated!");
-                })
-                .catch((error) => {
-                    console.error("Error updating document: ", error);
-                });
+            const privateColRef = collection(docRef, "private")
+            const privateDocRef = doc(privateColRef, "private", "privateInfo")
+            
+            await updateDoc(docRef, generalData)
+            await updateDoc(privateDocRef, privateData)
         }
-
         closeForm();
     };
 
