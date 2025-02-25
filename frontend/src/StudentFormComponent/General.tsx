@@ -12,7 +12,7 @@ interface MainInfoProps {
     disabled: boolean;
 }
 
-export default function General({formData, handleChange, disabled,}: MainInfoProps) {
+export default function General({generalData, handleChange, disabled,}: MainInfoProps) {
     const handleMainChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {

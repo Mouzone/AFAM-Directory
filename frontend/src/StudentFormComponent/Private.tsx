@@ -1,7 +1,8 @@
 import { StudentPrivateInfo } from "../types";
 import HomeInfo from "./HomeInfo";
 import GuardianInfo from "./GuardianInfo";
-
+import PhoneInput from "../Inputs/PhoneInput";
+import EmailInput from "../Inputs/EmailInput";
 interface PrivateProps {
     disabled: boolean,
     privateData: StudentPrivateInfo,
@@ -33,6 +34,22 @@ export default function Private({disabled, privateData, setPrivateData}: Private
     
     return (
         <>
+            <PhoneInput
+                label="Phone Number:"
+                value={privateData.phoneNumber}
+                name="phoneNumber"
+                onChange={(e) => setPrivateData({...privateData, phoneNumber: e.target.value})}
+                disabled={disabled}
+            />
+
+            <EmailInput
+                label="Email:"
+                value={privateData.email}
+                name="email"
+                onChange={(e) => setPrivateData({...privateData, email: e.target.value})}
+                disabled={disabled}
+            />
+
             <h2 className="text-xl font-bold underline"> Home </h2>
             <div className="grid grid-cols-4 gap-4">
                 <HomeInfo
