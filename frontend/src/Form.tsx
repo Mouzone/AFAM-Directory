@@ -25,6 +25,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     const [privateData, setPrivateData] = useState<StudentPrivateInfo>(
         studentPrivateInfoDefault
     );
+    const [tab, setTab] = useState<"general" | "private">("general");
     const [isEdit, setIsEdit] = useState(false);
 
     const [image, setImage] = useState<File | null>(null);
@@ -146,6 +147,10 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
         >
             <h1 className="text-2xl font-bold mb-4">Student Form</h1>
             <div>
+                <div onClick={() => setTab("general")}> General </div>
+                <div onClick={() => setTab("private")}> Private </div>
+            </div>
+            <div>
                 <input
                     type="file"
                     accept="image/*"
@@ -165,8 +170,10 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                 )}
             </div>
 
-            <General disabled={disabled} teachers={teachers} generalData={generalData} setGeneralData={setGeneralData}/>
-            <Private disabled={disabled} privateData={privateData} setPrivateData={setPrivateData}/>
+            { tab == "general" 
+                ? <General disabled={disabled} teachers={teachers} generalData={generalData} setGeneralData={setGeneralData}/>
+                : <Private disabled={disabled} privateData={privateData} setPrivateData={setPrivateData}/>
+            }
 
             <Buttons
                 type={!("id" in generalData) ? "add" : "view"}
