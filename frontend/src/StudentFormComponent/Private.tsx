@@ -1,9 +1,19 @@
-export default function Private() {
+import { StudentPrivateInfo } from "../types";
+import HomeInfo from "./HomeInfo";
+import GuardianInfo from "./GuardianInfo";
+
+interface PrivateProps {
+    disabled: boolean,
+    privateData: StudentPrivateInfo,
+    setPrivateData: React.Dispatch<React.SetStateAction<StudentPrivateInfo>>
+}
+
+export default function Private({disabled, privateData, setPrivateData}: PrivateProps) {
     const handleHomeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
+        setPrivateData({
+            ...privateData,
             home: {
-                ...formData["home"],
+                ...privateData["home"],
                 [e.target.name]: e.target.value,
             },
         });
@@ -11,10 +21,10 @@ export default function Private() {
 
     const handleGuardianChange = (guardian: "guardian1" | "guardian2") => {
         return (e: React.ChangeEvent<HTMLInputElement>) => {
-            setFormData({
-                ...formData,
+            setPrivateData({
+                ...privateData,
                 [guardian]: {
-                    ...formData[guardian],
+                    ...privateData[guardian],
                     [e.target.name]: e.target.value,
                 },
             });
@@ -26,7 +36,7 @@ export default function Private() {
             <h2 className="text-xl font-bold underline"> Home </h2>
             <div className="grid grid-cols-4 gap-4">
                 <HomeInfo
-                    home={formData["home"]}
+                    home={privateData["home"]}
                     handleHomeChange={handleHomeChange}
                     disabled={disabled}
                 />
@@ -35,7 +45,7 @@ export default function Private() {
             <h2 className="text-xl font-bold underline"> Guardian 1 </h2>
             <div className="grid grid-cols-4 gap-4">
                 <GuardianInfo
-                    guardian={formData["guardian1"]}
+                    guardian={privateData["guardian1"]}
                     onChange={handleGuardianChange("guardian1")}
                     disabled={disabled}
                 />
@@ -44,7 +54,7 @@ export default function Private() {
             <h2 className="text-xl font-bold underline"> Guardian 2 </h2>
             <div className="grid grid-cols-4 gap-4">
                 <GuardianInfo
-                    guardian={formData["guardian2"]}
+                    guardian={privateData["guardian2"]}
                     onChange={handleGuardianChange("guardian2")}
                     disabled={disabled}
                 />

@@ -10,7 +10,8 @@ import {
 import { db, storage } from "./utility/firebase";
 import Buttons from "./StudentFormComponent/Buttons";
 import { studentPrivateInfoDefault } from "./utility/consts";
-
+import General from "./StudentFormComponent/General";
+import Private from "./StudentFormComponent/Private";
 interface FormProps {
     generalState: StudentGeneralInfo;
     closeForm: () => void;
@@ -163,8 +164,8 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                 )}
             </div>
 
-            <General />
-            <Private />
+            <General disabled={disabled} teachers={teachers} generalData={generalData} setGeneralData={setGeneralData}/>
+            <Private disabled={disabled} privateData={privateData} setPrivateData={setPrivateData}/>
 
             <Buttons
                 type={!("id" in generalData) ? "add" : "view"}
