@@ -15,7 +15,7 @@ export default function Buttons({type, isEdit, onDelete, setIsEdit, closeForm}: 
     };
 
     return (
-        <div className="fixed bottom-15 bg-white flex gap-4">
+        <div className=" justify-end bg-white flex gap-4">
             {type === "add" || isEdit ? (
                 <button
                     type="submit"

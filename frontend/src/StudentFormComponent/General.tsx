@@ -50,7 +50,8 @@ export default function General({disabled, teachers, generalData, setGeneralData
             });
         };
     return (
-        <div className="grid grid-cols-4 gap-4 w-4xl">
+        <div className="h-[250px]">
+            <div className="grid grid-cols-4 gap-4 w-4xl">
             <TextInput
                 label="First Name:"
                 value={generalData.firstName}
@@ -130,6 +131,7 @@ export default function General({disabled, teachers, generalData, setGeneralData
                 removeAllergy={removeAllergy}
                 disabled={disabled}
             />
+            </div>
         </div>
     );
 }

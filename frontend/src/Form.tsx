@@ -183,8 +183,8 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                     )}
                 </div>
 
-                <div>
-                    <div className="flex gap-4">
+                <div className="flex flex-col">
+                    <div className="flex gap-4 mb-7">
                         <div
                             onClick={() => setTab("general")}
                             className={`cursor-pointer px-4 py-2 rounded-md transition-colors duration-200 ${
@@ -220,16 +220,15 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                             setPrivateData={setPrivateData}
                         />
                     )}
+                    <Buttons
+                        type={!("id" in generalData) ? "add" : "view"}
+                        isEdit={isEdit}
+                        onDelete={onDelete}
+                        setIsEdit={setIsEdit}
+                        closeForm={closeForm}
+                    />
                 </div>
             </div>
-
-            <Buttons
-                type={!("id" in generalData) ? "add" : "view"}
-                isEdit={isEdit}
-                onDelete={onDelete}
-                setIsEdit={setIsEdit}
-                closeForm={closeForm}
-            />
         </form>
     );
 }
