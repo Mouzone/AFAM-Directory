@@ -146,10 +146,6 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             noValidate
         >
             <h1 className="text-2xl font-bold mb-4">Student Form</h1>
-            <div>
-                <div onClick={() => setTab("general")}> General </div>
-                <div onClick={() => setTab("private")}> Private </div>
-            </div>
             <div className="flex">
                 <div>
                     <input
@@ -160,21 +156,71 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                     />
                     {error && <p style={{ color: "red" }}>{error}</p>}{" "}
                     {/* Display error message */}
-                    {imageUrl && (
-                        <div>
-                            <img
-                                src={imageUrl}
-                                alt="Uploaded Image"
-                                style={{ maxWidth: "300px" }}
+                    {imageUrl ? (
+                        <img
+                            src={imageUrl}
+                            alt="Uploaded Image"
+                            style={{ maxWidth: "300px" }}
+                        />
+                    ) : (
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="300"
+                            height="300"
+                            viewBox="0 0 100 100"
+                            style={{
+                                border: "1px solid #ddd",
+                                borderRadius: "5%",
+                                background: "#f0f0f0",
+                            }}
+                        >
+                            <circle cx="50" cy="35" r="20" fill="#bbb" />
+                            <path
+                                d="M50 65c-20 0-35 10-35 35h70c0-25-15-35-35-35z"
+                                fill="#bbb"
                             />
-                        </div>
+                        </svg>
                     )}
                 </div>
 
-                { tab == "general" 
-                    ? <General disabled={disabled} teachers={teachers} generalData={generalData} setGeneralData={setGeneralData}/>
-                    : <Private disabled={disabled} privateData={privateData} setPrivateData={setPrivateData}/>
-                }
+                <div>
+                    <div className="flex gap-4">
+                        <div
+                            onClick={() => setTab("general")}
+                            className={`cursor-pointer px-4 py-2 rounded-md transition-colors duration-200 ${
+                                tab === "general"
+                                    ? "bg-blue-600 text-white shadow-md"
+                                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            }`}
+                        >
+                            General
+                        </div>
+                        <div
+                            onClick={() => setTab("private")}
+                            className={`cursor-pointer px-4 py-2 rounded-md transition-colors duration-200 ${
+                                tab === "private"
+                                    ? "bg-blue-600 text-white shadow-md"
+                                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                            }`}
+                        >
+                            Private
+                        </div>
+                    </div>
+                    {tab == "general" ? (
+                        <General
+                            disabled={disabled}
+                            teachers={teachers}
+                            generalData={generalData}
+                            setGeneralData={setGeneralData}
+                        />
+                    ) : (
+                        <Private
+                            disabled={disabled}
+                            privateData={privateData}
+                            setPrivateData={setPrivateData}
+                        />
+                    )}
+                </div>
             </div>
 
             <Buttons
