@@ -84,7 +84,10 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                         "lastName": teacher_parts[2].strip(),
                     }
                 else:
-                    general_info["teacher"] = {"firstName": "Unassigned"}
+                    general_info["teacher"] = {
+                        "firstName": "Unassigned",
+                        "lastName": "",
+                    }
 
                 batch.set(general_doc_ref, general_info)
                 private_doc_ref = (
