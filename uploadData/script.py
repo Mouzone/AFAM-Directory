@@ -1,10 +1,8 @@
 import csv
 import firebase_admin
-from firebase_admin import credentials
 from firebase_admin import firestore
 
 # Replace with your Firebase project credentials
-CREDENTIALS_PATH = "uploadData/afam-directory-firebase-adminsdk-fbsvc-40f7c683b1.json"
 COLLECTION_NAME = "students"  # The Firestore collection to store data in
 BATCH_SIZE = 500
 
@@ -13,12 +11,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
     """Reads CSV data and writes it to Firestore in batches."""
 
     try:
-        if (
-            not firebase_admin._apps
-        ):  # Check if already initialized. Important for multiple calls
-            cred = credentials.Certificate(CREDENTIALS_PATH)
-            firebase_admin.initialize_app(cred)
-
+        firebase_admin.initialize_app()
         db = firestore.client()
         collection_ref = db.collection(collection_name)
         dummy_doc_ref = collection_ref.document("dummy_document")
@@ -60,10 +53,11 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                         allergy.strip().lower()
                         for allergy in row.get("Allergies", "").split(",")
                     ]
-                private_info["email"] = row["Personal Email Address"].strip()
-                private_info["phoneNumber"] = row["Personal Phone Number"].strip()
                 general_info["gender"] = row["Gender"].strip()
                 general_info["highSchool"] = row["High School"].strip()
+
+                private_info["email"] = row["Personal Email Address"].strip()
+                private_info["phoneNumber"] = row["Personal Phone Number"].strip()
                 private_info["home"] = {
                     "city": row["City"].strip(),
                     "streetAddress": row["Street Address"].strip(),
