@@ -146,14 +146,20 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             noValidate
         >
             <h1 className="text-2xl font-bold mb-4">Student Form</h1>
-            <div className="flex">
-                <div>
+            <div className="flex gap-5">
+                <div className="flex flex-col gap-4">
                     <input
                         type="file"
                         accept="image/*"
                         onChange={handleImageChange}
                         disabled={disabled}
+                        className={`block w-full text-sm text-slate-500
+                            file:mr-4 file:py-2 file:px-4 file:rounded-md
+                            file:border-0 file:text-sm file:font-semibold
+                            file:bg-blue-100 file:text-blue-700
+                            ${!disabled && "hover:file:bg-blue-100"}`}
                     />
+                    
                     {error && <p style={{ color: "red" }}>{error}</p>}{" "}
                     {/* Display error message */}
                     {imageUrl ? (
