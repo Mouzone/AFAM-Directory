@@ -106,7 +106,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
         // type "generalData["id"]" as string since, fireStore will autogenerate a new id if it doesnt exist
         const docRef = doc(db, "students", generalData["id"] as string);
         const privateColRef = collection(docRef, "private");
-        const privateDocRef = doc(privateColRef, "private", "privateInfo");
+        const privateDocRef = doc(privateColRef, "privateInfo");
 
         await setDoc(docRef, generalData, { merge: true });
         await setDoc(privateDocRef, privateData, { merge: true });
