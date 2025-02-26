@@ -52,7 +52,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             setImageUrl(url);
         }
 
-        fetchHeadshot;
+        fetchHeadshot();
         fetchPrivateInfo();
     }, []);
 
@@ -150,30 +150,32 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                 <div onClick={() => setTab("general")}> General </div>
                 <div onClick={() => setTab("private")}> Private </div>
             </div>
-            <div>
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    disabled={disabled}
-                />
-                {error && <p style={{ color: "red" }}>{error}</p>}{" "}
-                {/* Display error message */}
-                {imageUrl && (
-                    <div>
-                        <img
-                            src={imageUrl}
-                            alt="Uploaded Image"
-                            style={{ maxWidth: "300px" }}
-                        />
-                    </div>
-                )}
-            </div>
+            <div className="flex">
+                <div>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        disabled={disabled}
+                    />
+                    {error && <p style={{ color: "red" }}>{error}</p>}{" "}
+                    {/* Display error message */}
+                    {imageUrl && (
+                        <div>
+                            <img
+                                src={imageUrl}
+                                alt="Uploaded Image"
+                                style={{ maxWidth: "300px" }}
+                            />
+                        </div>
+                    )}
+                </div>
 
-            { tab == "general" 
-                ? <General disabled={disabled} teachers={teachers} generalData={generalData} setGeneralData={setGeneralData}/>
-                : <Private disabled={disabled} privateData={privateData} setPrivateData={setPrivateData}/>
-            }
+                { tab == "general" 
+                    ? <General disabled={disabled} teachers={teachers} generalData={generalData} setGeneralData={setGeneralData}/>
+                    : <Private disabled={disabled} privateData={privateData} setPrivateData={setPrivateData}/>
+                }
+            </div>
 
             <Buttons
                 type={!("id" in generalData) ? "add" : "view"}

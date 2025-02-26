@@ -33,7 +33,7 @@ export default function Private({disabled, privateData, setPrivateData}: Private
     };
     
     return (
-        <>
+        <div className="grid grid-cols-4 gap-4 w-4xl">
             <PhoneInput
                 label="Phone Number:"
                 value={privateData.phoneNumber}
@@ -76,6 +76,6 @@ export default function Private({disabled, privateData, setPrivateData}: Private
                     disabled={disabled}
                 />
             </div>
-        </>
+        </div>
     )
 }
