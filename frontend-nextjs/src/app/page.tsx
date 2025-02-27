@@ -3,12 +3,13 @@
 import { FormEvent, useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../utility/firebase";
+import { useRouter } from "next/navigation";
 
-export default function Login() {
+export default function Page() {
+    const router = useRouter()
     const [credentials, setCredentials] = useState({ email: "", password: "" });
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
-    // const navigate = useNavigate();
 
     const onChange = (
         key: "email" | "password",
@@ -31,6 +32,7 @@ export default function Login() {
             );
 
             // navigate("/students", { replace: true });
+            router.push("/directory")
         } catch (error) {
             if (error instanceof Error) {
                 setError(error.message); // Set the error message if it's an Error object
