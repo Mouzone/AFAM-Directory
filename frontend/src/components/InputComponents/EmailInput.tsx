@@ -1,4 +1,12 @@
-export default function EmailInput({label, value, name, onChange, disabled}: {label: string, value: string, name: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, disabled: boolean}) {
+interface EmailInputProps {
+    label: string;
+    value: string;
+    name: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    disabled: boolean;
+}
+
+export default function EmailInput({label, value, name, onChange, disabled}: EmailInputProps) {
     return (
         <div className="flex flex-col">
             <label className="font-bold">{label}</label>
@@ -12,5 +20,5 @@ export default function EmailInput({label, value, name, onChange, disabled}: {la
                 disabled={disabled}
             />
         </div>
-    )
+    );
 }
