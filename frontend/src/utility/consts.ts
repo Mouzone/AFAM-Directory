@@ -1,4 +1,4 @@
-import { StudentGeneralInfo, StudentPrivateInfo } from "../types";
+import { StudentGeneralInfo, StudentPrivateInfo } from "../app/types";
 
 export const studentGeneralInfoDefault = {
     firstName: "",
