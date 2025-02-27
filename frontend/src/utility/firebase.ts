@@ -17,7 +17,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-if (window.location.hostname === "localhost") {
+if (typeof window !== "undefined" && window.location.hostname === "localhost") {
     // Check if running locally
     connectAuthEmulator(auth, "http://127.0.0.1:9099");
     connectFirestoreEmulator(db, "localhost", 8080); // Connect to the emulator
