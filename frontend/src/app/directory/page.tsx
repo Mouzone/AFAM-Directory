@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react";
 import Form from "@/components/DirectoryComponents/Form";
 import Table from "@/components/DirectoryComponents/Table";
