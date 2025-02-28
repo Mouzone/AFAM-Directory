@@ -1,9 +1,11 @@
-"use client"
+"use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter
+import { getAuth, onAuthStateChanged, signOut, User } from "firebase/auth";
+import { app, db } from "../../utility/firebase";
 import Form from "@/components/DirectoryComponents/Form";
 import Table from "@/components/DirectoryComponents/Table";
-import { useEffect } from "react";
 import { StudentGeneralInfo, Teacher } from "@/types";
 import { studentGeneralInfoDefault } from "@/utility/consts";
 import {
@@ -13,12 +15,14 @@ import {
     getFirestore,
     getDocs,
 } from "firebase/firestore";
-import { app, db } from "../../utility/firebase";
-import { getAuth, signOut } from "firebase/auth";
 import Updates from "@/components/DirectoryComponents/Updates";
 import Search from "@/components/DirectoryComponents/Search";
 
 export default function Page() {
+    const [user, setUser] = useState<User | null>(null); // Add user state
+    const [loading, setLoading] = useState(true); // Add loading state
+    const router = useRouter(); // Initialize useRouter
+
     const [students, setStudents] = useState<StudentGeneralInfo[]>([]);
     const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [profile, setProfile] = useState<StudentGeneralInfo>(studentGeneralInfoDefault);
@@ -29,7 +33,6 @@ export default function Page() {
         schoolYear: "",
         teacher: "",
     });
-    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [updates, setUpdates] = useState<{
         added: string[];
@@ -54,6 +57,24 @@ export default function Page() {
     };
 
     useEffect(() => {
+        const auth = getAuth();
+        const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+            setLoading(false);
+        });
+
+        return () => unsubscribeAuth();
+    }, []);
+
+    useEffect(() => {
+        if (!loading && !user) {
+            router.push("/");
+        }
+    }, [user, loading, router]);
+
+    useEffect(() => {
+        if (!user) return; // Only fetch data if user is authenticated
+
         const q = query(collection(db, "students"));
 
         const unsubscribe = onSnapshot(
@@ -115,7 +136,7 @@ export default function Page() {
                             return [...prevStudents, ...updatedStudents];
                         }
                     });
-                    setIsLoading(false);
+                    setLoading(false);
                 }
 
                 if (snapshot.metadata.hasPendingWrites) {
@@ -130,13 +151,14 @@ export default function Page() {
             (error) => {
                 console.error("Error listening for updates:", error);
                 setError(error.message);
-                setIsLoading(false);
+                setLoading(false);
             }
         );
         return () => unsubscribe();
-    }, []);
+    }, [user]); // Add user dependency
 
     useEffect(() => {
+        if (!user) return; // Only fetch data if user is authenticated
         const fetchTeachers = async () => {
             try {
                 const teachersQuery = query(
@@ -163,10 +185,12 @@ export default function Page() {
         };
 
         fetchTeachers();
-    }, []);
+    }, [user]); // Add user dependency
 
-    if (isLoading) return <div> Loading... </div>;
+    if (loading) return <div> Loading... </div>;
     if (error) return <div> Error </div>;
+
+    if (!user) return null; // Prevent rendering if not logged in after loading
 
     const filtered = students.filter((entry: StudentGeneralInfo) => {
         return (
