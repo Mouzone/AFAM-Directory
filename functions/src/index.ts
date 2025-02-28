@@ -4,7 +4,10 @@ import * as admin from "firebase-admin"; // Import the whole admin module
 admin.initializeApp();
 const authAdmin = admin.auth();
 
-export const createUserWithRole = https.onCall(async (data, context) => {
+// check who is sending request
+// if it is authenticated: then check role 
+// hardcode check that role is pastor, deacon, student, teacher, welcome team leader
+export const createUserWithRole = https.onCall(async (data, _context) => {
     const { email, password, role } = data;
 
     if (!email || !password || !role) {
@@ -29,7 +32,7 @@ export const createUserWithRole = https.onCall(async (data, context) => {
     }
 });
 
-export const generateInviteLink = https.onCall(async (data, context) => {
+export const generateInviteLink = https.onCall(async (data, _context) => {
     const { role } = data;
 
     if (!role) {
