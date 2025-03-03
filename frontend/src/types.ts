@@ -55,3 +55,5 @@ export type SearchValues = {
     schoolYear: string,
     teacher: string,
 }
+
+export type Role = "pastor" | "teacher" | "deacon" | "student" | "welcome team leader"
