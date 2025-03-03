@@ -1,5 +1,5 @@
 import { https } from "firebase-functions";
-import * as admin from "firebase-admin"; // Import the whole admin module
+import * as admin from "firebase-admin";
 
 type AccountData = {
     email?: string,
