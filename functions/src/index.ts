@@ -17,7 +17,7 @@ const authAdmin = admin.auth();
 // check who is sending request
 // if it is authenticated: then check role 
 // hardcode check that role is pastor, deacon, student, teacher, welcome team leader
-export const generateInviteLink = https.onCall({ enforceAppCheck: true, }, async (request) => {
+export const generateInviteLink = https.onCall(async (request) => {
     const { role } = request.data as RoleData;
 
     if (!role) {
@@ -40,7 +40,7 @@ export const generateInviteLink = https.onCall({ enforceAppCheck: true, }, async
     }
 });
 
-export const createUserWithRole = https.onCall({ enforceAppCheck: true, }, async (request) => {
+export const createUserWithRole = https.onCall(async (request) => {
     const { email, password, role } = request.data as AccountData;
 
     if (!email || !password || !role) {
