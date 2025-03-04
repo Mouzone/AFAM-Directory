@@ -22,10 +22,9 @@ export const generateInviteLink = https.onCall(async (request) => {
 
     try {
         const userToken = request.auth.token;
-        const customClaims = userToken.custom_claims;
+        const userRole = userToken.role;
         const { role: roleToCreate } = request.data;
-
-        if (!customClaims || !customClaims.role) {
+        if (!userRole) {
             throw new https.HttpsError(
                 "permission-denied",
                 "The request has no role."
@@ -33,21 +32,21 @@ export const generateInviteLink = https.onCall(async (request) => {
         }
 
         const disallowedRoles = ["student", "teacher", "deacon"];
-        if (disallowedRoles.includes(customClaims.role)) {
+        if (disallowedRoles.includes(userRole)) {
             throw new https.HttpsError(
                 "permission-denied",
                 "The role cannot send invites."
             );
         }
 
-        if (customClaims.role === "pastor" && roleToCreate === "admin") {
+        if (userRole === "pastor" && roleToCreate === "admin") {
             throw new https.HttpsError(
                 "permission-denied",
                 "Invalid role to invite."
             );
         }
 
-        if (customClaims.role === "welcome team leader" && roleToCreate !== "student") {
+        if (userRole === "welcome team leader" && roleToCreate !== "student") {
             throw new https.HttpsError(
                 "permission-denied",
                 "Invalid role to invite."
