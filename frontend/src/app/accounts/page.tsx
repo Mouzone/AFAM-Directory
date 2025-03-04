@@ -13,6 +13,10 @@ export default function Page() {
     const [loading, setLoading] = useState(true); // Added loading state
     const router = useRouter();
 
+    const onClick = () => {
+        
+    }
+    
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -56,12 +60,15 @@ export default function Page() {
     }
 
     return (
-        <select>
-            {invitableRoles.map((invitableRole) => (
-                <option key={invitableRole} value={invitableRole}>
-                    {invitableRole}
-                </option>
-            ))}
-        </select>
+        <>
+            <select>
+                {invitableRoles.map((invitableRole) => (
+                    <option key={invitableRole} value={invitableRole}>
+                        {invitableRole}
+                    </option>
+                ))}
+            </select>
+            <button> Generate Link </button>
+        </>
     );
 }
