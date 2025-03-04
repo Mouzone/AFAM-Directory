@@ -28,7 +28,7 @@ const functions = getFunctions(app);
 if (typeof window !== "undefined" && window.location.hostname === "localhost") {
     // Check if running locally
     connectAuthEmulator(auth, "http://127.0.0.1:9099");
-    connectFirestoreEmulator(db, "localhost", 8080);
+    connectFirestoreEmulator(db, "127.0.0.1", 8080);
     connectStorageEmulator(storage, "127.0.0.1", 9199);
     connectFunctionsEmulator(functions, "127.0.0.1", 5001);
 }

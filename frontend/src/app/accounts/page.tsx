@@ -14,10 +14,10 @@ export default function Page() {
     const [loading, setLoading] = useState(true); // Added loading state
     const router = useRouter();
 
-    const onClick = async (e) => {
+    const onClick = async () => {
         try {
-            const generatedLink = await generateInviteLink({role: "teacher"})
-            console.log(generatedLink)
+            generateInviteLink({role: "teacher"}).then((result) => console.log(result)
+        )
         } catch(e) {
             console.log(e)
         }
@@ -74,7 +74,7 @@ export default function Page() {
                     </option>
                 ))}
             </select>
-            <button onClick={onClick}> Generate Link </button>
+            <button type="button" onClick={onClick}> Generate Link </button>
         </>
     );
 }
