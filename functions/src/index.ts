@@ -23,7 +23,7 @@ export const generateInviteLink = https.onCall(async (request) => {
     try {
         const userToken = request.auth.token;
         const customClaims = userToken.custom_claims;
-        const { role } = request.data;
+        const { role: roleToCreate } = request.data;
 
         if (!customClaims || !customClaims.role) {
             throw new https.HttpsError(
@@ -40,28 +40,28 @@ export const generateInviteLink = https.onCall(async (request) => {
             );
         }
 
-        if (customClaims.role === "pastor" && role === "admin") {
+        if (customClaims.role === "pastor" && roleToCreate === "admin") {
             throw new https.HttpsError(
                 "permission-denied",
                 "Invalid role to invite."
             );
         }
 
-        if (customClaims.role === "welcome team leader" && role !== "student") {
+        if (customClaims.role === "welcome team leader" && roleToCreate !== "student") {
             throw new https.HttpsError(
                 "permission-denied",
                 "Invalid role to invite."
             );
         }
 
-        if (!role) {
+        if (!roleToCreate) {
             throw new https.HttpsError(
                 "invalid-argument",
                 "Missing required parameters."
             );
         }
 
-        const token = await admin.auth().createCustomToken("deez", { role }); // Consider replacing 'deez' with a more appropriate UID.
+        const token = await admin.auth().createCustomToken("deez", { roleToCreate }); // Consider replacing 'deez' with a more appropriate UID.
         const link = `https://your-app.com/signup?token=${token}`;
 
         return { link };
