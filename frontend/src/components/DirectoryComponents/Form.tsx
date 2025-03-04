@@ -54,7 +54,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
 
         fetchHeadshot();
         fetchPrivateInfo();
-    }, []);
+    }, [generalData]);
 
     const onDelete = async () => {
         const docRef = doc(db, "students", generalData["id"] as string);
