@@ -13,5 +13,8 @@ service cloud.firestore {
     match /teachers/{teacherId} {
       allow read: if request.auth != null; // Allow read access to teacher
     }
+    match /roles/{role} {
+        allow read: if request.auth != null;
+    }
   }
 }
