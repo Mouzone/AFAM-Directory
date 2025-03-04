@@ -1,5 +1,5 @@
-import { getFunctions, httpsCallable } from "firebase/functions";
+import { functions } from "./firebase";
+import { httpsCallable } from "firebase/functions";
 
-const functions = getFunctions();
-const createUserWithRole = httpsCallable(functions, 'createUserWithRole');
-const generateInviteLink = httpsCallable(functions, "generateInviteLink");
+export const createUserWithRole = httpsCallable(functions, 'createUserWithRole');
+export const generateInviteLink = httpsCallable(functions, "generateInviteLink");

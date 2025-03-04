@@ -6,6 +6,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { Role } from "@/types";
 import { doc, getDoc } from "firebase/firestore";
+import { generateInviteLink } from "@/utility/cloud-functions";
 
 export default function Page() {
     const [role, setRole] = useState<Role | null>(null);
@@ -13,10 +14,15 @@ export default function Page() {
     const [loading, setLoading] = useState(true); // Added loading state
     const router = useRouter();
 
-    const onClick = () => {
-        
+    const onClick = async (e) => {
+        try {
+            const generatedLink = await generateInviteLink({role: "teacher"})
+            console.log(generatedLink)
+        } catch(e) {
+            console.log(e)
+        }
     }
-    
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -68,7 +74,7 @@ export default function Page() {
                     </option>
                 ))}
             </select>
-            <button> Generate Link </button>
+            <button onClick={onClick}> Generate Link </button>
         </>
     );
 }
