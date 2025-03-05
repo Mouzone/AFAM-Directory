@@ -31,7 +31,7 @@ export default function Page(){
         try {
             await signInWithCustomToken(auth, token)
         } catch(e) {
-            setErrorMessage('Invalid or expired token.')
+            setErrorMessage(`Invalid or expired token. ${e}`)
         } finally {
             setLoading(false)
         }
@@ -40,7 +40,7 @@ export default function Page(){
     const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
-            const userCredential = await signInWithCustomToken(auth, token as string)
+            await signInWithCustomToken(auth, token as string)
             if (!auth.currentUser) {
                 setErrorMessage("Invalid token")
                 return
@@ -66,6 +66,7 @@ export default function Page(){
                 <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 <button type="submit">Create Account</button>
             </form>
+            { loading && <p> Loading... </p>}
             { errorMessage && <p> {errorMessage} </p> }
         </>
     )

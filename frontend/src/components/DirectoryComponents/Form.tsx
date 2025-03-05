@@ -12,6 +12,7 @@ import Buttons from "../FormComponents/Buttons";
 import { studentPrivateInfoDefault } from "@/utility/consts";
 import General from "../FormComponents/General";
 import Private from "../FormComponents/Private";
+import Image from "next/image";
 
 interface FormProps {
     generalState: StudentGeneralInfo;
@@ -163,7 +164,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                     {error && <p style={{ color: "red" }}>{error}</p>}{" "}
                     {/* Display error message */}
                     {imageUrl ? (
-                        <img
+                        <Image
                             src={imageUrl}
                             alt="Uploaded Image"
                             style={{ maxWidth: "300px" }}
