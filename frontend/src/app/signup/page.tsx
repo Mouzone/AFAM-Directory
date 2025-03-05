@@ -1,6 +1,8 @@
 "use client"
 
 import { createUserWithRole } from "@/utility/cloud-functions"
+import { auth } from "@/utility/firebase"
+import { signInWithCustomToken } from "firebase/auth"
 import { useRouter, useSearchParams } from "next/navigation"
 import React, { useEffect, useState } from "react"
 
@@ -10,18 +12,43 @@ export default function Page(){
 
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
+    const [loading, setLoading] = useState(true)
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     
     const token = searchParams.get("token")
 
-    if (!token) {
-        router.push("/")
+
+
+    useEffect(() => {
+        if (!token) {
+            router.push("/")
+        } else {
+            verifyToken(token)
+        }
+    })
+    
+    async function verifyToken(token: string) {
+        try {
+            await signInWithCustomToken(auth, token)
+        } catch(e) {
+            setErrorMessage('Invalid or expired token.')
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
-            const response = await createUserWithRole({ email, password, token})
+            const userCredential = await signInWithCustomToken(auth, token as string)
+            if (!auth.currentUser) {
+                setErrorMessage("Invalid token")
+                return
+            }
+            const idTokenResult = await auth.currentUser.getIdTokenResult()
+            const claims = idTokenResult.claims
+            const role = claims.roleToCreate
+            const response = await createUserWithRole({ email, password, role})
             // if error show error message, else show success and redirect to login
             console.log(response)
         } catch (error) {
