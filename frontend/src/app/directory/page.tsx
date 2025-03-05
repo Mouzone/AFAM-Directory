@@ -17,7 +17,7 @@ import {
 } from "firebase/firestore";
 import Updates from "@/components/DirectoryComponents/Updates";
 import Search from "@/components/DirectoryComponents/Search";
-
+import Link from "next/link";
 export default function Page() {
     const [user, setUser] = useState<User | null>(null); // Add user state
     const [loading, setLoading] = useState(true); // Add loading state
@@ -25,7 +25,9 @@ export default function Page() {
 
     const [students, setStudents] = useState<StudentGeneralInfo[]>([]);
     const [teachers, setTeachers] = useState<Teacher[]>([]);
-    const [profile, setProfile] = useState<StudentGeneralInfo>(studentGeneralInfoDefault);
+    const [profile, setProfile] = useState<StudentGeneralInfo>(
+        studentGeneralInfoDefault
+    );
     const [showForm, setShowForm] = useState<boolean>(false);
     const [searchValues, setSearchValues] = useState({
         firstName: "",
@@ -212,6 +214,37 @@ export default function Page() {
 
     return (
         <>
+            <div className="flex justify-center">
+                <div>
+                    <Link href="/accounts"> Accounts </Link>
+                </div>
+                <div>
+                    <div
+                        className={`p-5 font-sans ${
+                            showForm ? "max-h-screen overflow-hidden" : ""
+                        }`}
+                    >
+                        <div className="flex justify-end">
+                            <button
+                                type="button"
+                                onClick={handleSignOut}
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" // Tailwind styles
+                            >
+                                Sign Out
+                            </button>
+                        </div>
+
+                        {/* Search Inputs */}
+                        <Search
+                            searchValues={searchValues}
+                            setSearchValues={setSearchValues}
+                            setShowForm={setShowForm}
+                        />
+
+                        <Table filtered={filtered} editForm={editForm} />
+                    </div>
+                </div>
+            </div>
             {/* Form Modal */}
             {showForm && (
                 <div
@@ -233,32 +266,6 @@ export default function Page() {
                     </div>
                 </div>
             )}
-
-            <div
-                className={`p-5 font-sans ${
-                    showForm ? "max-h-screen overflow-hidden" : ""
-                }`}
-            >
-                <div className="flex justify-end">
-                    <button
-                        type="button"
-                        onClick={handleSignOut}
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" // Tailwind styles
-                    >
-                        Sign Out
-                    </button>
-                </div>
-
-                {/* Search Inputs */}
-                <Search
-                    searchValues={searchValues}
-                    setSearchValues={setSearchValues}
-                    setShowForm={setShowForm}
-                />
-
-                <Table filtered={filtered} editForm={editForm} />
-            </div>
-
             {/* Popup that details Action: [names] that truncates*/}
             {showUpdates && <Updates updates={updates} />}
         </>
