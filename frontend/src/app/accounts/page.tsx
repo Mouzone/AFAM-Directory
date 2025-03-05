@@ -16,11 +16,15 @@ export default function Page() {
 
     const onClick = async () => {
         try {
-            generateInviteLink({role: "teacher"}).then((result) => console.log(result)
+            generateInviteLink({ role }).then((result) => console.log(result)
         )
         } catch(e) {
             console.log(e)
         }
+    }
+
+    const onSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setRole(e.target.value as Role)
     }
 
     useEffect(() => {
@@ -67,7 +71,7 @@ export default function Page() {
 
     return (
         <>
-            <select>
+            <select onSelect={onSelect} value={role}>
                 {invitableRoles.map((invitableRole) => (
                     <option key={invitableRole} value={invitableRole}>
                         {invitableRole}
