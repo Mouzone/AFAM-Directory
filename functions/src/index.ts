@@ -9,9 +9,6 @@ type AccountData = {
 admin.initializeApp();
 const authAdmin = admin.auth();
 
-// check who is sending request
-// if it is authenticated: then check role
-// hardcode check that role is pastor, deacon, student, teacher, welcome team leader
 export const generateInviteLink = https.onCall(async (request) => {
     if (!request.auth) {
         throw new https.HttpsError(
@@ -60,10 +57,10 @@ export const generateInviteLink = https.onCall(async (request) => {
             );
         }
 
-        const token = await admin.auth().createCustomToken("deez", { roleToCreate }); // Consider replacing 'deez' with a more appropriate UID.
-        const link = `https://your-app.com/signup?token=${token}`;
+        const uid = admin.firestore().collection('temp').doc().id
+        const token = await admin.auth().createCustomToken(uid, { roleToCreate });
 
-        return { link };
+        return { token };
     } catch (error) {
         console.error("Error generating invite link:", error);
 
