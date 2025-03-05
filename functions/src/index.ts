@@ -3,7 +3,7 @@ import * as admin from "firebase-admin";
 type AccountData = {
     email?: string;
     password?: string;
-    role?: string;
+    token?: string;
 };
 
 admin.initializeApp();
@@ -78,9 +78,9 @@ export const generateInviteToken = https.onCall(async (request) => {
 });
 
 export const createUserWithRole = https.onCall(async (request) => {
-    const { email, password, role } = request.data as AccountData;
+    const { email, password, token } = request.data as AccountData;
 
-    if (!email || !password || !role) {
+    if (!email || !password || !token) {
         throw new https.HttpsError(
             "invalid-argument",
             "Missing required parameters."
@@ -88,6 +88,9 @@ export const createUserWithRole = https.onCall(async (request) => {
     }
 
     try {
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const role = decodedToken.roleToCreate
+
         const userRecord = await authAdmin.createUser({
             email,
             password,
