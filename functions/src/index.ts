@@ -9,7 +9,7 @@ type AccountData = {
 admin.initializeApp();
 const authAdmin = admin.auth();
 
-export const generateInviteLink = https.onCall(async (request) => {
+export const generateInviteToken = https.onCall(async (request) => {
     if (!request.auth) {
         throw new https.HttpsError(
             "unauthenticated",

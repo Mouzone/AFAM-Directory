@@ -6,7 +6,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { GenerateInviteResponse, Role } from "@/types";
 import { doc, getDoc } from "firebase/firestore";
-import { generateInviteLink } from "@/utility/cloud-functions";
+import { generateInviteToken } from "@/utility/cloud-functions";
 import { HttpsCallableResult } from "firebase/functions";
 
 export default function Page() {
@@ -18,7 +18,7 @@ export default function Page() {
 
     const onClick = async () => {
         try {
-            const response: HttpsCallableResult<GenerateInviteResponse> = await generateInviteLink({ role })
+            const response: HttpsCallableResult<GenerateInviteResponse> = await generateInviteToken({ role })
             setToken(response.data.token)
         } catch(e) {
             console.log(e)
