@@ -10,7 +10,8 @@ import { generateInviteToken } from "@/utility/cloud-functions";
 import { HttpsCallableResult } from "firebase/functions";
 
 export default function Page() {
-    const [role, setRole] = useState<Role>("student");
+    const [userRole, setUserRole] = useState<Role | null>(null);
+    const [roleToCreate, setRoleToCreate] = useState<Role>("student");
     const [token, setToken] = useState<string | null>(null)
     const [invitableRoles, setInvitableRoles] = useState<Role[] | null>(null);
     const [loading, setLoading] = useState(true); // Added loading state
@@ -18,7 +19,7 @@ export default function Page() {
 
     const onClick = async () => {
         try {
-            const response: HttpsCallableResult<GenerateInviteResponse> = await generateInviteToken({ role })
+            const response: HttpsCallableResult<GenerateInviteResponse> = await generateInviteToken({ role: roleToCreate })
             setToken(response.data.token)
         } catch(e) {
             console.log(e)
@@ -26,14 +27,14 @@ export default function Page() {
     }
 
     const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setRole(e.target.value as Role)
+        setRoleToCreate(e.target.value as Role)
     }
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const idTokenResult = await user.getIdTokenResult();
-                setRole(idTokenResult.claims.role as Role);
+                setUserRole(idTokenResult.claims.role as Role);
             } else {
                 router.push("/");
             }
@@ -45,8 +46,8 @@ export default function Page() {
 
     useEffect(() => {
         async function fetchInvitableRoles() {
-            if (role) {
-                const docRef = doc(db, "roles", role);
+            if (userRole) {
+                const docRef = doc(db, "roles", userRole);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     setInvitableRoles(docSnap.data().canInvite as Role[]);
@@ -57,13 +58,13 @@ export default function Page() {
         }
 
         fetchInvitableRoles();
-    }, [role]);
+    }, [userRole]);
 
     if (loading) {
         return <div>Loading...</div>; // Show a loading indicator while checking auth
     }
 
-    if (!role) {
+    if (!userRole) {
         return null; // Don't render anything if not authenticated
     }
 
@@ -73,7 +74,7 @@ export default function Page() {
 
     return (
         <>
-            <select onChange={onChange} value={role}>
+            <select onChange={onChange} value={roleToCreate}>
                 {invitableRoles.map((invitableRole) => (
                     <option key={invitableRole} value={invitableRole}>
                         {invitableRole}
