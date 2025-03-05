@@ -57,3 +57,7 @@ export type SearchValues = {
 }
 
 export type Role = "pastor" | "teacher" | "deacon" | "student" | "welcome team leader"
+
+export interface GenerateInviteResponse {
+    token: string;
+  }

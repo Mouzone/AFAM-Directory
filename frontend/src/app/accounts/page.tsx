@@ -4,26 +4,28 @@ import { useEffect, useState } from "react";
 import { auth, db } from "@/utility/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { Role } from "@/types";
+import { GenerateInviteResponse, Role } from "@/types";
 import { doc, getDoc } from "firebase/firestore";
 import { generateInviteLink } from "@/utility/cloud-functions";
+import { HttpsCallableResult } from "firebase/functions";
 
 export default function Page() {
-    const [role, setRole] = useState<Role | null>(null);
+    const [role, setRole] = useState<Role>("student");
+    const [token, setToken] = useState<string | null>(null)
     const [invitableRoles, setInvitableRoles] = useState<Role[] | null>(null);
     const [loading, setLoading] = useState(true); // Added loading state
     const router = useRouter();
 
     const onClick = async () => {
         try {
-            generateInviteLink({ role }).then((result) => console.log(result)
-        )
+            const response: HttpsCallableResult<GenerateInviteResponse> = await generateInviteLink({ role })
+            setToken(response.data.token)
         } catch(e) {
             console.log(e)
         }
     }
 
-    const onSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setRole(e.target.value as Role)
     }
 
@@ -71,14 +73,18 @@ export default function Page() {
 
     return (
         <>
-            <select onSelect={onSelect} value={role}>
+            <select onChange={onChange} value={role}>
                 {invitableRoles.map((invitableRole) => (
                     <option key={invitableRole} value={invitableRole}>
                         {invitableRole}
                     </option>
                 ))}
             </select>
+            <div> {`${window.location.origin}/signup?token=${token}`} </div>
             <button type="button" onClick={onClick}> Generate Link </button>
+            <button type="button" onClick={() => navigator.clipboard.writeText(`${window.location.origin}/signup?token=${token}`)}>
+                Copy
+            </button>
         </>
     );
 }
