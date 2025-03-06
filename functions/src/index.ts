@@ -2,6 +2,8 @@ import { https } from "firebase-functions";
 import * as admin from "firebase-admin";
 type AccountData = {
     uid?: string;
+    firstName?: string,
+    lastName?: string,
     email?: string;
     password?: string;
 };
@@ -84,9 +86,9 @@ export const generateInviteToken = https.onCall(async (request) => {
 });
 
 export const createUserWithRole = https.onCall(async (request) => {
-    const { uid, email, password } = request.data as AccountData;
+    const { uid, firstName, lastName, email, password } = request.data as AccountData;
 
-    if (!uid || !email || !password) {
+    if (!uid || !firstName || !lastName || !email || !password) {
         throw new https.HttpsError(
             "invalid-argument",
             "Missing required parameters."
@@ -119,6 +121,7 @@ export const createUserWithRole = https.onCall(async (request) => {
 
         const role = userData.role;
         await admin.auth().setCustomUserClaims(uid, { role });
+        await admin.firestore().collection("users").doc(uid).update({firstName, lastName, email})
 
         return { result: `User ${userRecord.uid} created with role ${role}.` };
     } catch (error) {
@@ -127,7 +130,5 @@ export const createUserWithRole = https.onCall(async (request) => {
             throw new https.HttpsError("internal", error.message);
         }
         throw new https.HttpsError("internal", "An unknown error occurred.");
-    } finally {
-        await admin.firestore().collection("users").doc(uid).delete();
     }
 });
