@@ -136,6 +136,13 @@ export const createUserWithRole = https.onCall(async (request) => {
 });
 
 export const deleteUser = https.onCall(async (request) => {
+    if (!request.auth) {
+        throw new https.HttpsError(
+            "unauthenticated",
+            "The function must be called while authenticated."
+        );
+    }
+
     const { id } = request.data;
 
     if (!id) {
@@ -144,14 +151,26 @@ export const deleteUser = https.onCall(async (request) => {
             "Missing required parameters."
         );
     }
-    // get role from the id in its custom claim
-    // if teacher clear it from teachers list
-    // after that clear it from organization
     const claims = (await admin.auth().getUser(id)).customClaims
     if (!claims) {
         throw new https.HttpsError("internal", "Invalid id, account does not exist")
     }
+    const requestRole = request.auth.token.role
     const role = claims.role
+    const notAllowedToDelete = ["teacher", "student", "deacon"]
+    if (requestRole in notAllowedToDelete) {
+        throw new https.HttpsError(
+            "permission-denied",
+            "User does not have the permission to delete"
+        );
+    }
+    if (requestRole == "welcome team leader" && role !== "student") {
+        throw new https.HttpsError(
+            "permission-denied",
+            "User does not have the permission to delete"
+        );
+    }
+    
     await admin.firestore().collection("organization").doc("roles").collection(role).doc(id).delete();
     await admin.auth().deleteUser(id);
 })
