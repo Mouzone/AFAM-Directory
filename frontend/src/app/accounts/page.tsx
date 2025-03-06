@@ -14,22 +14,10 @@ export default function Page() {
     const [roleToCreate, setRoleToCreate] = useState<Role>("student");
     const [token, setToken] = useState<string | null>(null);
     const [invitableRoles, setInvitableRoles] = useState<Role[] | null>(null);
-    const [loading, setLoading] = useState(true); // Added loading state
+    const [loading, setLoading] = useState(true);
+    const [generated, setGenerated] = useState(false);
+    const [copied, setCopied] = useState(false);
     const router = useRouter();
-
-    const onClick = async () => {
-        try {
-            const response: HttpsCallableResult<GenerateInviteResponse> =
-                await generateInviteToken({ role: roleToCreate });
-            setToken(response.data.token);
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setRoleToCreate(e.target.value as Role);
-    };
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -61,6 +49,31 @@ export default function Page() {
         fetchInvitableRoles();
     }, [userRole]);
 
+    const onGenerateLink = async () => {
+        try {
+            const response: HttpsCallableResult<GenerateInviteResponse> =
+                await generateInviteToken({ role: roleToCreate });
+            setToken(response.data.token);
+            setGenerated(true);
+            setTimeout(() => {
+                setGenerated(false);
+            }, 1500);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const onCopy = async () => {
+        navigator.clipboard.writeText(
+            `${window.location.origin}/signup?token=${token}`
+        );
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+    }
+    const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setRoleToCreate(e.target.value as Role);
+    };
+
     if (loading) {
         return <div>Loading...</div>; // Show a loading indicator while checking auth
     }
@@ -74,39 +87,39 @@ export default function Page() {
     }
 
     return (
-        <div className="flex flex-col md:flex-row justify-center gap-4 mt-20 items-center">
-            <select
-                onChange={onChange}
-                value={roleToCreate}
-                className="border rounded p-2" // Added basic styling to select
-            >
-                {invitableRoles.map((invitableRole) => (
-                    <option key={invitableRole} value={invitableRole}>
-                        {invitableRole}
-                    </option>
-                ))}
-            </select>
-            <div className="w-full md:w-60 truncate border rounded p-2 break-all">
-                {`${window.location.origin}/signup?token=${token}`}
+        <>
+            <div className="flex flex-col md:flex-row justify-center gap-4 mt-20 items-center">
+                <select
+                    onChange={onChange}
+                    value={roleToCreate}
+                    className="border rounded p-2" // Added basic styling to select
+                >
+                    {invitableRoles.map((invitableRole) => (
+                        <option key={invitableRole} value={invitableRole}>
+                            {invitableRole}
+                        </option>
+                    ))}
+                </select>
+                <div className="w-full md:w-60 truncate border rounded p-2 break-all">
+                    {`${window.location.origin}/signup?token=${token}`}
+                </div>
+                <button
+                    type="button"
+                    onClick={onGenerateLink}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" // added button styling
+                >
+                    Generate
+                </button>
+                <button
+                    type="button"
+                    onClick={onCopy}
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" //added button styling
+                >
+                    Copy
+                </button>
             </div>
-            <button
-                type="button"
-                onClick={onClick}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" // added button styling
-            >
-                Generate
-            </button>
-            <button
-                type="button"
-                onClick={() =>
-                    navigator.clipboard.writeText(
-                        `${window.location.origin}/signup?token=${token}`
-                    )
-                }
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" //added button styling
-            >
-                Copy
-            </button>
-        </div>
+            {generated && <p> Link Generated </p>}
+            {copied && <p> Link Copied </p>}
+        </>
     );
 }
