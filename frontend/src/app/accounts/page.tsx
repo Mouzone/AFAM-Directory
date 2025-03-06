@@ -12,23 +12,24 @@ import { HttpsCallableResult } from "firebase/functions";
 export default function Page() {
     const [userRole, setUserRole] = useState<Role | null>(null);
     const [roleToCreate, setRoleToCreate] = useState<Role>("student");
-    const [token, setToken] = useState<string | null>(null)
+    const [token, setToken] = useState<string | null>(null);
     const [invitableRoles, setInvitableRoles] = useState<Role[] | null>(null);
     const [loading, setLoading] = useState(true); // Added loading state
     const router = useRouter();
 
     const onClick = async () => {
         try {
-            const response: HttpsCallableResult<GenerateInviteResponse> = await generateInviteToken({ role: roleToCreate })
-            setToken(response.data.token)
-        } catch(e) {
-            console.log(e)
+            const response: HttpsCallableResult<GenerateInviteResponse> =
+                await generateInviteToken({ role: roleToCreate });
+            setToken(response.data.token);
+        } catch (e) {
+            console.log(e);
         }
-    }
+    };
 
     const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setRoleToCreate(e.target.value as Role)
-    }
+        setRoleToCreate(e.target.value as Role);
+    };
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -73,19 +74,39 @@ export default function Page() {
     }
 
     return (
-        <>
-            <select onChange={onChange} value={roleToCreate}>
+        <div className="flex flex-col md:flex-row justify-center gap-4 mt-20 items-center">
+            <select
+                onChange={onChange}
+                value={roleToCreate}
+                className="border rounded p-2" // Added basic styling to select
+            >
                 {invitableRoles.map((invitableRole) => (
                     <option key={invitableRole} value={invitableRole}>
                         {invitableRole}
                     </option>
                 ))}
             </select>
-            <div> {`${window.location.origin}/signup?token=${token}`} </div>
-            <button type="button" onClick={onClick}> Generate Link </button>
-            <button type="button" onClick={() => navigator.clipboard.writeText(`${window.location.origin}/signup?token=${token}`)}>
+            <div className="w-full md:w-60 truncate border rounded p-2 break-all">
+                {`${window.location.origin}/signup?token=${token}`}
+            </div>
+            <button
+                type="button"
+                onClick={onClick}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" // added button styling
+            >
+                Generate
+            </button>
+            <button
+                type="button"
+                onClick={() =>
+                    navigator.clipboard.writeText(
+                        `${window.location.origin}/signup?token=${token}`
+                    )
+                }
+                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" //added button styling
+            >
                 Copy
             </button>
-        </>
+        </div>
     );
 }
