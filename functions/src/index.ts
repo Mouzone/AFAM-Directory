@@ -134,3 +134,18 @@ export const createUserWithRole = https.onCall(async (request) => {
         await admin.firestore().collection("users").doc(uid).delete();
     }
 });
+
+export const deleteUser = https.onCall(async (request) => {
+    const { id } = request.data;
+
+    if (!id) {
+        throw new https.HttpsError(
+            "invalid-argument",
+            "Missing required parameters."
+        );
+    }
+    // get role from the id in its custom claim
+    // if teacher clear it from teachers list
+    // after that clear it from organization
+    await admin.auth().deleteUser(id);
+})

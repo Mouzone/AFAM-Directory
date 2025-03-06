@@ -63,6 +63,7 @@ export interface GenerateInviteResponse {
   }
 
 export type Subordinate = {
+    id: string,
     firstName?: string,
     lastName?: string
     role: string,

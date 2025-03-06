@@ -62,6 +62,7 @@ export default function Page() {
                 studentsSnapshot.forEach((studentDoc) => {
                     subordinates.push({
                         ...studentDoc.data(),
+                        id: studentDoc.id,
                         role: "student",
                     });
                 });
@@ -78,6 +79,7 @@ export default function Page() {
                 welcomeTeamLeadersSnapshot.forEach((welcomeTeamLeaderDoc) => {
                     subordinates.push({
                         ...welcomeTeamLeaderDoc.data(),
+                        id: welcomeTeamLeaderDoc.id,
                         role: "welcome team leader",
                     });
                 });
@@ -88,6 +90,7 @@ export default function Page() {
                 deaconsSnapshot.forEach((deaconDoc) => {
                     subordinates.push({
                         ...deaconDoc.data(),
+                        id: deaconDoc.id,
                         role: "deacon",
                     });
                 });
@@ -98,6 +101,7 @@ export default function Page() {
                 teachersSnapshot.forEach((teacherDoc) => {
                     subordinates.push({
                         ...teacherDoc.data(),
+                        id: teacherDoc.id,
                         role: "teacher",
                     });
                 });
@@ -109,6 +113,7 @@ export default function Page() {
                 pastorsSnapshot.forEach((pastorDoc) => {
                     subordinates.push({
                         ...pastorDoc.data(),
+                        id: pastorDoc.id,
                         role: "pastor",
                     });
                 });
@@ -131,12 +136,16 @@ export default function Page() {
         }
     };
 
-    const onCopy = async () => {
+    const onCopy = () => {
         navigator.clipboard.writeText(
             `${window.location.origin}/signup?token=${token}`
         );
         setCopied(true);
     };
+
+    const onDelete = async (id: string) => {
+        const response = await deleteUser({id})
+    }
 
     if (loading) {
         return <div>Loading...</div>; // Show a loading indicator while checking auth
@@ -185,29 +194,31 @@ export default function Page() {
             <table>
                 <thead>
                     <tr>
-                        <th>
-                            First Name
-                        </th>
-                        <th>
-                            Last Name
-                        </th>
-                        <th>
-                            Role
-                        </th>
-                        <th>
-                            Email
-                        </th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Role</th>
+                        <th>Email</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     {subordinates &&
                         subordinates.map((subordinate) => {
                             return (
-                                <tr key={`${subordinate.role + subordinate.firstName + subordinate.lastName}`}>
+                                <tr
+                                    key={`${
+                                        subordinate.id
+                                    }`}
+                                >
                                     <td>{subordinate.firstName}</td>
                                     <td>{subordinate.lastName}</td>
                                     <td>{subordinate.role}</td>
                                     <td>{subordinate.email}</td>
+                                    <td>
+                                        <button onClick={() => onDelete(subordinate.id)}>
+                                            Delete
+                                        </button>
+                                    </td>
                                 </tr>
                             );
                         })}
