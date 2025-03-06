@@ -57,7 +57,7 @@ export const generateInviteToken = https.onCall(async (request) => {
             );
         }
 
-        const uid = admin.firestore().collection("temp").doc().id;
+        const uid = await admin.firestore().collection("temp").doc().id;
         const token = await admin.auth().createCustomToken(uid);
         await admin
             .firestore()
@@ -65,6 +65,7 @@ export const generateInviteToken = https.onCall(async (request) => {
             .doc(uid)
             .set({ role: roleToCreate });
 
+        await admin.firestore().collection("temp").doc().delete();
         return { token };
     } catch (error) {
         console.error("Error generating invite link:", error);
@@ -116,7 +117,6 @@ export const createUserWithRole = https.onCall(async (request) => {
         }
 
         const role = userData.role;
-        console.log(role)
         await admin.auth().setCustomUserClaims(uid, { role });
 
         return { result: `User ${userRecord.uid} created with role ${role}.` };
@@ -126,5 +126,7 @@ export const createUserWithRole = https.onCall(async (request) => {
             throw new https.HttpsError("internal", error.message);
         }
         throw new https.HttpsError("internal", "An unknown error occurred.");
+    } finally {
+        await admin.firestore().collection("users").doc(uid).delete();
     }
 });
