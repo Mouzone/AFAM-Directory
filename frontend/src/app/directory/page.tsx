@@ -214,9 +214,16 @@ export default function Page() {
 
     return (
         <>
-            <div className="flex justify-center">
-                <div>
-                    <Link href="/accounts"> Accounts </Link>
+            <div className="flex w-full justify-center gap-9">
+                <div className="flex flex-col justify-start pt-20">
+                    <Link href="/accounts" className="justify-end"> Accounts </Link>
+                    <button
+                        type="button"
+                        onClick={handleSignOut}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" // Tailwind styles
+                    >
+                        Sign Out
+                    </button>
                 </div>
                 <div>
                     <div
@@ -224,16 +231,6 @@ export default function Page() {
                             showForm ? "max-h-screen overflow-hidden" : ""
                         }`}
                     >
-                        <div className="flex justify-end">
-                            <button
-                                type="button"
-                                onClick={handleSignOut}
-                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" // Tailwind styles
-                            >
-                                Sign Out
-                            </button>
-                        </div>
-
                         {/* Search Inputs */}
                         <Search
                             searchValues={searchValues}
