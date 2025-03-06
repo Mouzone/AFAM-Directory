@@ -8,6 +8,7 @@ import { GenerateInviteResponse, Role } from "@/types";
 import { doc, getDoc } from "firebase/firestore";
 import { generateInviteToken } from "@/utility/cloud-functions";
 import { HttpsCallableResult } from "firebase/functions";
+import Notifications from "@/components/AccountsComponents/Notifications";
 
 export default function Page() {
     const [userRole, setUserRole] = useState<Role | null>(null);
@@ -55,9 +56,6 @@ export default function Page() {
                 await generateInviteToken({ role: roleToCreate });
             setToken(response.data.token);
             setGenerated(true);
-            setTimeout(() => {
-                setGenerated(false);
-            }, 1500);
         } catch (e) {
             console.log(e);
         }
@@ -68,11 +66,7 @@ export default function Page() {
             `${window.location.origin}/signup?token=${token}`
         );
         setCopied(true);
-        setTimeout(() => setCopied(false), 1500);
     }
-    const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setRoleToCreate(e.target.value as Role);
-    };
 
     if (loading) {
         return <div>Loading...</div>; // Show a loading indicator while checking auth
@@ -90,7 +84,7 @@ export default function Page() {
         <>
             <div className="flex flex-col md:flex-row justify-center gap-4 mt-20 items-center">
                 <select
-                    onChange={onChange}
+                    onChange={(e) => setRoleToCreate(e.target.value as Role)}
                     value={roleToCreate}
                     className="border rounded p-2" // Added basic styling to select
                 >
@@ -118,8 +112,7 @@ export default function Page() {
                     Copy
                 </button>
             </div>
-            {generated && <p> Link Generated </p>}
-            {copied && <p> Link Copied </p>}
+            <Notifications generated={generated} copied={copied} setGenerated={setGenerated} setCopied={setCopied}/>
         </>
     );
 }
