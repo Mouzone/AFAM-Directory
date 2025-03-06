@@ -121,7 +121,7 @@ export const createUserWithRole = https.onCall(async (request) => {
 
         const role = userData.role;
         await admin.auth().setCustomUserClaims(uid, { role });
-        await admin.firestore().collection("users").doc(uid).update({firstName, lastName, email})
+        await admin.firestore().collection("organization").doc("roles").collection(role).doc(uid).create({firstName, lastName, email})
 
         return { result: `User ${userRecord.uid} created with role ${role}.` };
     } catch (error) {
@@ -130,5 +130,7 @@ export const createUserWithRole = https.onCall(async (request) => {
             throw new https.HttpsError("internal", error.message);
         }
         throw new https.HttpsError("internal", "An unknown error occurred.");
+    } finally {
+        await admin.firestore().collection("users").doc(uid).delete();
     }
 });
