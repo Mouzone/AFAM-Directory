@@ -147,5 +147,11 @@ export const deleteUser = https.onCall(async (request) => {
     // get role from the id in its custom claim
     // if teacher clear it from teachers list
     // after that clear it from organization
+    const claims = (await admin.auth().getUser(id)).customClaims
+    if (!claims) {
+        throw new https.HttpsError("internal", "Invalid id, account does not exist")
+    }
+    const role = claims.role
+    await admin.firestore().collection("organization").doc("roles").collection(role).doc(id).delete();
     await admin.auth().deleteUser(id);
 })
