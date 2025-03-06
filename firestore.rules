@@ -16,5 +16,8 @@ service cloud.firestore {
     match /roles/{role} {
         allow read: if request.auth != null;
     }
+    match /users/{user} {
+        allow read: if request.auth != null;
+    }
   }
 }

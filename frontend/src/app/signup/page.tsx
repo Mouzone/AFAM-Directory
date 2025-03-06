@@ -78,6 +78,7 @@ export default function Page(){
     return (
         <>
             <form onSubmit={handleSignup}>
+                <div> Role: {role} </div>
                 <input type="firstName" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                 <input type="lastName" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
                 <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
