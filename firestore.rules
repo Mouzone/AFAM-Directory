@@ -13,11 +13,22 @@ service cloud.firestore {
     match /teachers/{teacherId} {
       allow read: if request.auth != null; // Allow read access to teacher
     }
-    match /roles/{role} {
+    match /privileges/{role} {
         allow read: if request.auth != null;
     }
     match /users/{user} {
         allow read: if request.auth != null;
+    }
+    match /organization/roles/{roleId}/{document=**} {
+      allow read, delete, update: if request.auth != null && (
+        request.auth.token.role == "admin" ||
+        (roleId == "deacon" || roleId == "teacher" || roleId == "welcome team leader") && request.auth.token.role == "pastor" ||
+        roleId == "student" && (request.auth.token.role == "welcome team leader" || request.auth.token.role == "pastor")
+      );
+      allow create: if request.auth != null && request.auth.token.role == "admin"; //Only admins can create documents.
+    }
+    match /organization/roles/pastor/{document=**} {
+        allow create: if request.auth != null && request.auth.token.role == "admin"; //Only admins can create documents.
     }
   }
 }

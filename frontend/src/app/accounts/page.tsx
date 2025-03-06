@@ -5,7 +5,7 @@ import { auth, db } from "@/utility/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { GenerateInviteResponse, Role } from "@/types";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { generateInviteToken } from "@/utility/cloud-functions";
 import { HttpsCallableResult } from "firebase/functions";
 import Notifications from "@/components/AccountsComponents/Notifications";
@@ -15,6 +15,8 @@ export default function Page() {
     const [roleToCreate, setRoleToCreate] = useState<Role>("student");
     const [token, setToken] = useState<string | null>(null);
     const [invitableRoles, setInvitableRoles] = useState<Role[] | null>(null);
+    const [subordinates, setSubordinates] = useState(null);
+
     const [loading, setLoading] = useState(true);
     const [generated, setGenerated] = useState(false);
     const [copied, setCopied] = useState(false);
@@ -37,7 +39,7 @@ export default function Page() {
     useEffect(() => {
         async function fetchInvitableRoles() {
             if (userRole) {
-                const docRef = doc(db, "roles", userRole);
+                const docRef = doc(db, "privileges", userRole);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     setInvitableRoles(docSnap.data().canInvite as Role[]);
@@ -47,7 +49,75 @@ export default function Page() {
             }
         }
 
+        async function fetchSubordinates() {
+            const subordinates = [];
+            if (
+                userRole === "admin" ||
+                userRole === "pastor" ||
+                userRole == "welcome team leader"
+            ) {
+                const studentsSnapshot = await getDocs(
+                    collection(db, "organization", "roles", "student")
+                );
+                studentsSnapshot.forEach((studentDoc) => {
+                    subordinates.push({
+                        ...studentDoc.data(),
+                        role: "student",
+                    });
+                });
+            }
+            if (userRole === "admin" || userRole === "pastor") {
+                const welcomeTeamLeadersSnapshot = await getDocs(
+                    collection(
+                        db,
+                        "organization",
+                        "roles",
+                        "welcome team leader"
+                    )
+                );
+                welcomeTeamLeadersSnapshot.forEach((welcomeTeamLeaderDoc) => {
+                    subordinates.push({
+                        ...welcomeTeamLeaderDoc.data(),
+                        role: "welcome team leader",
+                    });
+                });
+
+                const deaconsSnapshot = await getDocs(
+                    collection(db, "organization", "roles", "deacon")
+                );
+                deaconsSnapshot.forEach((deaconDoc) => {
+                    subordinates.push({
+                        ...deaconDoc.data(),
+                        role: "deacon",
+                    });
+                });
+
+                const teachersSnapshot = await getDocs(
+                    collection(db, "organization", "roles", "teacher")
+                );
+                teachersSnapshot.forEach((teacherDoc) => {
+                    subordinates.push({
+                        ...teacherDoc.data(),
+                        role: "teacher",
+                    });
+                });
+            }
+            if (userRole == "admin") {
+                const pastorsSnapshot = await getDocs(
+                    collection(db, "organization", "roles", "pastor")
+                );
+                pastorsSnapshot.forEach((pastorDoc) => {
+                    subordinates.push({
+                        ...pastorDoc.data(),
+                        role: "pastor",
+                    });
+                });
+            }
+            setSubordinates(subordinates);
+        }
+
         fetchInvitableRoles();
+        fetchSubordinates();
     }, [userRole]);
 
     const onGenerateLink = async () => {
@@ -66,7 +136,7 @@ export default function Page() {
             `${window.location.origin}/signup?token=${token}`
         );
         setCopied(true);
-    }
+    };
 
     if (loading) {
         return <div>Loading...</div>; // Show a loading indicator while checking auth
@@ -112,7 +182,43 @@ export default function Page() {
                     Copy
                 </button>
             </div>
-            <Notifications generated={generated} copied={copied} setGenerated={setGenerated} setCopied={setCopied}/>
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            First Name
+                        </th>
+                        <th>
+                            Last Name
+                        </th>
+                        <th>
+                            Role
+                        </th>
+                        <th>
+                            Email
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {subordinates &&
+                        subordinates.map((subordinate) => {
+                            return (
+                                <tr key={`${subordinate.role + subordinate.firstName + subordinate.lastName}`}>
+                                    <td>{subordinate.firstName}</td>
+                                    <td>{subordinate.lastName}</td>
+                                    <td>{subordinate.role}</td>
+                                    <td>{subordinate.email}</td>
+                                </tr>
+                            );
+                        })}
+                </tbody>
+            </table>
+            <Notifications
+                generated={generated}
+                copied={copied}
+                setGenerated={setGenerated}
+                setCopied={setCopied}
+            />
         </>
     );
 }
