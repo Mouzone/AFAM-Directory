@@ -6,7 +6,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { GenerateInviteResponse, Role, Subordinate } from "@/types";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-import { generateInviteToken } from "@/utility/cloud-functions";
+import { deleteUser, generateInviteToken } from "@/utility/cloud-functions";
 import { HttpsCallableResult } from "firebase/functions";
 import Notifications from "@/components/AccountsComponents/Notifications";
 
@@ -144,7 +144,13 @@ export default function Page() {
     };
 
     const onDelete = async (id: string) => {
-        const response = await deleteUser({id})
+        try {
+            await deleteUser({id})
+            const newSubordinates = subordinates.filter(subordinate => subordinate.id !== id)
+            setSubordinates(newSubordinates)
+        } catch(e) {
+            console.log(e);
+        }
     }
 
     if (loading) {
