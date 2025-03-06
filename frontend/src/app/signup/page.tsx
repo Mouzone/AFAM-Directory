@@ -40,7 +40,6 @@ export default function Page(){
     const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
-            await signInWithCustomToken(auth, token as string)
             if (!auth.currentUser) {
                 setErrorMessage("Invalid token")
                 return
@@ -48,8 +47,6 @@ export default function Page(){
 
             const uid = auth.currentUser.uid
             const response = await createUserWithRole({uid, email, password})
-            await updateEmail(auth.currentUser, email);
-            await updatePassword(auth.currentUser, password)
             // if error show error message, else show success and redirect to login
             console.log(response)
         } catch (error) {
