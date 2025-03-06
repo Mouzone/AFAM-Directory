@@ -105,6 +105,7 @@ export const createUserWithRole = https.onCall(async (request) => {
             .doc(uid)
             .get();
         if (!userDoc.exists) {
+            await admin.auth().deleteUser(uid)
             throw new https.HttpsError(
                 "internal",
                 "Role information not found"
