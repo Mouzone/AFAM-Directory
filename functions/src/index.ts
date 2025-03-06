@@ -1,9 +1,9 @@
 import { https } from "firebase-functions";
 import * as admin from "firebase-admin";
 type AccountData = {
+    uid?: string;
     email?: string;
     password?: string;
-    role?: string;
 };
 
 admin.initializeApp();
@@ -57,8 +57,13 @@ export const generateInviteToken = https.onCall(async (request) => {
             );
         }
 
-        const uid = admin.firestore().collection('temp').doc().id
-        const token = await admin.auth().createCustomToken(uid, { roleToCreate });
+        const uid = admin.firestore().collection("temp").doc().id;
+        const token = await admin.auth().createCustomToken(uid);
+        await admin
+            .firestore()
+            .collection("users")
+            .doc(uid)
+            .set({ role: roleToCreate });
 
         return { token };
     } catch (error) {
@@ -78,9 +83,9 @@ export const generateInviteToken = https.onCall(async (request) => {
 });
 
 export const createUserWithRole = https.onCall(async (request) => {
-    const { email, password, role } = request.data as AccountData;
+    const { uid, email, password } = request.data as AccountData;
 
-    if (!email || !password || !role) {
+    if (!uid || !email || !password) {
         throw new https.HttpsError(
             "invalid-argument",
             "Missing required parameters."
@@ -88,12 +93,31 @@ export const createUserWithRole = https.onCall(async (request) => {
     }
 
     try {
-        const userRecord = await authAdmin.createUser({
+        const userRecord = await authAdmin.updateUser(uid, {
             email,
             password,
         });
 
-        await authAdmin.setCustomUserClaims(userRecord.uid, { role });
+        const userDoc = await admin
+            .firestore()
+            .collection("users")
+            .doc(uid)
+            .get();
+        if (!userDoc.exists) {
+            throw new https.HttpsError(
+                "internal",
+                "Role information not found"
+            );
+        }
+        const userData = userDoc.data();
+
+        if (!userData || !userData.role) {
+            throw new Error("User role data is missing or invalid");
+        }
+
+        const role = userData.role;
+        console.log(role)
+        await admin.auth().setCustomUserClaims(uid, { role });
 
         return { result: `User ${userRecord.uid} created with role ${role}.` };
     } catch (error) {

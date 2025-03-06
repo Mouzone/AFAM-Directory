@@ -2,7 +2,7 @@
 
 import { createUserWithRole } from "@/utility/cloud-functions"
 import { auth } from "@/utility/firebase"
-import { signInWithCustomToken } from "firebase/auth"
+import { signInWithCustomToken, updateEmail, updatePassword } from "firebase/auth"
 import { useRouter, useSearchParams } from "next/navigation"
 import React, { useEffect, useState } from "react"
 
@@ -45,10 +45,11 @@ export default function Page(){
                 setErrorMessage("Invalid token")
                 return
             }
-            const idTokenResult = await auth.currentUser.getIdTokenResult()
-            const claims = idTokenResult.claims
-            const role = claims.roleToCreate
-            const response = await createUserWithRole({ email, password, role})
+
+            const uid = auth.currentUser.uid
+            const response = await createUserWithRole({uid, email, password})
+            await updateEmail(auth.currentUser, email);
+            await updatePassword(auth.currentUser, password)
             // if error show error message, else show success and redirect to login
             console.log(response)
         } catch (error) {
