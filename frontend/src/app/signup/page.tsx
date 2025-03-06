@@ -2,7 +2,7 @@
 
 import { createUserWithRole } from "@/utility/cloud-functions"
 import { auth } from "@/utility/firebase"
-import { signInWithCustomToken, updateEmail, updatePassword } from "firebase/auth"
+import { signInWithCustomToken } from "firebase/auth"
 import { useRouter, useSearchParams } from "next/navigation"
 import React, { useEffect, useState } from "react"
 
