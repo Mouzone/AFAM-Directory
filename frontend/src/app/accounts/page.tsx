@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { auth, db } from "@/utility/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { GenerateInviteResponse, Role } from "@/types";
+import { GenerateInviteResponse, Role, Subordinate } from "@/types";
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { generateInviteToken } from "@/utility/cloud-functions";
 import { HttpsCallableResult } from "firebase/functions";
@@ -15,7 +15,7 @@ export default function Page() {
     const [roleToCreate, setRoleToCreate] = useState<Role>("student");
     const [token, setToken] = useState<string | null>(null);
     const [invitableRoles, setInvitableRoles] = useState<Role[] | null>(null);
-    const [subordinates, setSubordinates] = useState(null);
+    const [subordinates, setSubordinates] = useState<Subordinate[]>([]);
 
     const [loading, setLoading] = useState(true);
     const [generated, setGenerated] = useState(false);
@@ -50,7 +50,7 @@ export default function Page() {
         }
 
         async function fetchSubordinates() {
-            const subordinates = [];
+            const subordinates: Subordinate[] = [];
             if (
                 userRole === "admin" ||
                 userRole === "pastor" ||

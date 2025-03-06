@@ -56,8 +56,15 @@ export type SearchValues = {
     teacher: string,
 }
 
-export type Role = "pastor" | "teacher" | "deacon" | "student" | "welcome team leader"
+export type Role = "admin" | "pastor" | "teacher" | "deacon" | "student" | "welcome team leader"
 
 export interface GenerateInviteResponse {
     token: string;
   }
+
+export type Subordinate = {
+    firstName?: string,
+    lastName?: string
+    role: string,
+    email?: string
+}
