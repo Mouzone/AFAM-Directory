@@ -224,8 +224,8 @@ export default function Page() {
                     </tr>
                 </thead>
                 <tbody>
-                    {subordinates &&
-                        subordinates.map((subordinate) => {
+                    {subordinatesToShow &&
+                        subordinatesToShow.map((subordinate) => {
                             return (
                                 <tr
                                     key={`${
