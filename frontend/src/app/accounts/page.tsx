@@ -241,7 +241,7 @@ export default function Page() {
                     ))}
                 </select>
             </div>
-            <div className="mt-8 overflow-x-auto">
+            <div className="mt-8 overflow-x-auto px-10">
                 <table className="min-w-full border border-gray-200 rounded-md">
                     <thead className="bg-gray-50">
                         <tr>
