@@ -12,6 +12,8 @@ export default function Page() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
+    const [redirect, setRedirect] = useState(false); 
+
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
@@ -25,11 +27,17 @@ export default function Page() {
         const token = searchParams.get("token");
 
         if (!token) {
-            router.push("/");
+            setRedirect(true)
         } else {
             verifyToken(token);
         }
     }, [searchParams]);
+
+    useEffect(() => {
+        if (redirect) {
+            router.push("/");
+        }
+    }, [redirect, router])
 
     async function verifyToken(token: string) {
         try {
