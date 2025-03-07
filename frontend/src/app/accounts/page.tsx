@@ -167,7 +167,7 @@ export default function Page() {
         return <div>Loading roles...</div>; // Show loading while fetching roles
     }
 
-    const subordinatesToShow = subordinates.filter(subordinate => subordinate.role === roleToFilter) 
+    const subordinatesToShow = roleToFilter ? subordinates.filter(subordinate => subordinate.role === roleToFilter) : subordinates
     return (
         <>
             <div className="flex flex-col md:flex-row justify-center gap-4 mt-20 items-center">
@@ -206,6 +206,7 @@ export default function Page() {
                     value={roleToFilter}
                     className="border rounded p-2" // Added basic styling to select
                 >
+                    <option key="none" value={undefined}> all </option>
                     {invitableRoles.map((invitableRole) => (
                         <option key={invitableRole} value={invitableRole}>
                             {invitableRole}
