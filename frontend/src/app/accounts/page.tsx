@@ -257,9 +257,7 @@ export default function Page() {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
                                 Email
                             </th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
-                                Actions
-                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5"></th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -278,14 +276,20 @@ export default function Page() {
                                     <td className="px-6 py-4 whitespace-nowrap w-1/5">
                                         {subordinate.email}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium w-1/5">
+                                    <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium w-1/5">
                                         <button
                                             onClick={() =>
                                                 onDelete(subordinate.id)
                                             }
-                                            className="text-red-600 hover:text-red-900"
                                         >
-                                            Delete
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-5 w-5 inline-block fill-red-500 hover:fill-red-900 focus:outline-none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <title>trash-can</title>
+                                                <path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M9,8H11V17H9V8M13,8H15V17H13V8Z" />
+                                            </svg>
                                         </button>
                                     </td>
                                 </tr>
