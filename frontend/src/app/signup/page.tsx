@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 
 export default function Page() {
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -21,7 +22,6 @@ export default function Page() {
 
 
     useEffect(() => {
-        const searchParams = useSearchParams();
         const token = searchParams.get("token");
 
         if (!token) {
