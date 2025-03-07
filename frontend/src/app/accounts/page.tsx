@@ -178,14 +178,14 @@ export default function Page() {
             (lastName === "" || subordinate.lastName?.includes(lastName))
         );
     });
-    console.log(subordinates, subordinatesToShow);
+
     return (
         <>
             <div className="flex flex-col md:flex-row justify-center gap-4 mt-20 items-center">
                 <select
                     onChange={(e) => setRoleToCreate(e.target.value as Role)}
                     value={roleToCreate}
-                    className="border rounded p-2" // Added basic styling to select
+                    className="border rounded p-2 focus:outline-none focus:ring focus:border-blue-300"
                 >
                     {invitableRoles.map((invitableRole) => (
                         <option key={invitableRole} value={invitableRole}>
@@ -193,42 +193,46 @@ export default function Page() {
                         </option>
                     ))}
                 </select>
-                <div className="w-full md:w-60 truncate border rounded p-2 break-all">
+                <div className="w-full md:w-60 truncate border rounded p-2 break-all bg-gray-100 text-sm">
                     {`${window.location.origin}/signup?token=${token}`}
                 </div>
                 <button
                     type="button"
                     onClick={onGenerateLink}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" // added button styling
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow-md transition-colors duration-200"
                 >
                     Generate
                 </button>
                 <button
                     type="button"
                     onClick={onCopy}
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" //added button styling
+                    className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded shadow-md transition-colors duration-200"
                 >
                     Copy
                 </button>
             </div>
-            <div>
+            <div className="mt-8 flex flex-wrap gap-4 justify-center">
                 <input
                     type="text"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="First Name"
+                    className="border rounded p-2 focus:outline-none focus:ring focus:border-blue-300"
                 />
                 <input
                     type="text"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Last Name"
+                    className="border rounded p-2 focus:outline-none focus:ring focus:border-blue-300"
                 />
                 <select
                     onChange={(e) => setRoleToFilter(e.target.value as Role)}
                     value={roleToFilter}
-                    className="border rounded p-2" // Added basic styling to select
+                    className="border rounded p-2 focus:outline-none focus:ring focus:border-blue-300"
                 >
                     <option key="none" value="">
-                        all
+                        All Roles
                     </option>
                     {invitableRoles.map((invitableRole) => (
                         <option key={invitableRole} value={invitableRole}>
@@ -237,39 +241,58 @@ export default function Page() {
                     ))}
                 </select>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Role</th>
-                        <th>Email</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {subordinatesToShow &&
-                        subordinatesToShow.map((subordinate) => {
-                            return (
+            <div className="mt-8 overflow-x-auto">
+                <table className="min-w-full border border-gray-200 rounded-md">
+                    <thead className="bg-gray-50">
+                        <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
+                                First Name
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
+                                Last Name
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
+                                Role
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
+                                Email
+                            </th>
+                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {subordinatesToShow &&
+                            subordinatesToShow.map((subordinate) => (
                                 <tr key={`${subordinate.id}`}>
-                                    <td>{subordinate.firstName}</td>
-                                    <td>{subordinate.lastName}</td>
-                                    <td>{subordinate.role}</td>
-                                    <td>{subordinate.email}</td>
-                                    <td>
+                                    <td className="px-6 py-4 whitespace-nowrap w-1/5">
+                                        {subordinate.firstName}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap w-1/5">
+                                        {subordinate.lastName}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap w-1/5">
+                                        {subordinate.role}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap w-1/5">
+                                        {subordinate.email}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium w-1/5">
                                         <button
                                             onClick={() =>
                                                 onDelete(subordinate.id)
                                             }
+                                            className="text-red-600 hover:text-red-900"
                                         >
                                             Delete
                                         </button>
                                     </td>
                                 </tr>
-                            );
-                        })}
-                </tbody>
-            </table>
+                            ))}
+                    </tbody>
+                </table>
+            </div>
             <Notifications
                 generated={generated}
                 copied={copied}
