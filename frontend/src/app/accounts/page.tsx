@@ -20,6 +20,8 @@ export default function Page() {
     const [loading, setLoading] = useState(true);
     const [generated, setGenerated] = useState(false);
     const [copied, setCopied] = useState(false);
+
+    const [roleToFilter, setRoleToFilter] = useState<Role | undefined>(undefined)
     const router = useRouter();
 
     useEffect(() => {
@@ -165,6 +167,7 @@ export default function Page() {
         return <div>Loading roles...</div>; // Show loading while fetching roles
     }
 
+    const subordinatesToShow = subordinates.filter(subordinate => subordinate.role === roleToFilter) 
     return (
         <>
             <div className="flex flex-col md:flex-row justify-center gap-4 mt-20 items-center">
@@ -196,6 +199,19 @@ export default function Page() {
                 >
                     Copy
                 </button>
+            </div>
+            <div>
+            <select
+                    onChange={(e) => setRoleToFilter(e.target.value as Role)}
+                    value={roleToFilter}
+                    className="border rounded p-2" // Added basic styling to select
+                >
+                    {invitableRoles.map((invitableRole) => (
+                        <option key={invitableRole} value={invitableRole}>
+                            {invitableRole}
+                        </option>
+                    ))}
+                </select>
             </div>
             <table>
                 <thead>
