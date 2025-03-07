@@ -6,7 +6,7 @@ import { auth, db } from "@/utility/firebase"
 import { signInWithCustomToken } from "firebase/auth"
 import { doc, getDoc } from "firebase/firestore"
 import { useRouter, useSearchParams } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import React, { Suspense, useEffect, useState } from "react"
 
 export default function Page(){
     const router = useRouter()
@@ -77,16 +77,19 @@ export default function Page(){
 
     return (
         <>
+        <Suspense>
             <form onSubmit={handleSignup}>
-                <div> Role: {role} </div>
-                <input type="firstName" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                <input type="lastName" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                <button type="submit">Create Account</button>
-            </form>
-            { loading && <p> Loading... </p>}
-            { errorMessage && <p> {errorMessage} </p> }
+                    <div> Role: {role} </div>
+                    <input type="firstName" placeholder="First Name" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                    <input type="lastName" placeholder="Last Name" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                    <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <button type="submit">Create Account</button>
+                </form>
+                { loading && <p> Loading... </p>}
+                { errorMessage && <p> {errorMessage} </p> }
+        </Suspense>
+            
         </>
     )
 }
