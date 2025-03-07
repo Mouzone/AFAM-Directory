@@ -29,7 +29,7 @@ export default function Page() {
         } else {
             verifyToken(token);
         }
-    });
+    }, [searchParams]);
 
     async function verifyToken(token: string) {
         try {
