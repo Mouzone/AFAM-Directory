@@ -21,7 +21,9 @@ export default function Page() {
     const [generated, setGenerated] = useState(false);
     const [copied, setCopied] = useState(false);
 
-    const [roleToFilter, setRoleToFilter] = useState<Role | undefined>(undefined)
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [roleToFilter, setRoleToFilter] = useState<Role | "">("");
     const router = useRouter();
 
     useEffect(() => {
@@ -147,13 +149,15 @@ export default function Page() {
 
     const onDelete = async (id: string) => {
         try {
-            await deleteUser({id})
-            const newSubordinates = subordinates.filter(subordinate => subordinate.id !== id)
-            setSubordinates(newSubordinates)
-        } catch(e) {
+            await deleteUser({ id });
+            const newSubordinates = subordinates.filter(
+                (subordinate) => subordinate.id !== id
+            );
+            setSubordinates(newSubordinates);
+        } catch (e) {
             console.log(e);
         }
-    }
+    };
 
     if (loading) {
         return <div>Loading...</div>; // Show a loading indicator while checking auth
@@ -167,7 +171,14 @@ export default function Page() {
         return <div>Loading roles...</div>; // Show loading while fetching roles
     }
 
-    const subordinatesToShow = roleToFilter ? subordinates.filter(subordinate => subordinate.role === roleToFilter) : subordinates
+    const subordinatesToShow = subordinates.filter((subordinate) => {
+        return (
+            (roleToFilter === "" || subordinate.role === roleToFilter) &&
+            (firstName === "" || subordinate.firstName?.includes(firstName)) &&
+            (lastName === "" || subordinate.lastName?.includes(lastName))
+        );
+    });
+    console.log(subordinates, subordinatesToShow);
     return (
         <>
             <div className="flex flex-col md:flex-row justify-center gap-4 mt-20 items-center">
@@ -201,12 +212,24 @@ export default function Page() {
                 </button>
             </div>
             <div>
-            <select
+                <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                />
+                <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                />
+                <select
                     onChange={(e) => setRoleToFilter(e.target.value as Role)}
                     value={roleToFilter}
                     className="border rounded p-2" // Added basic styling to select
                 >
-                    <option key="none" value={undefined}> all </option>
+                    <option key="none" value="">
+                        all
+                    </option>
                     {invitableRoles.map((invitableRole) => (
                         <option key={invitableRole} value={invitableRole}>
                             {invitableRole}
@@ -228,17 +251,17 @@ export default function Page() {
                     {subordinatesToShow &&
                         subordinatesToShow.map((subordinate) => {
                             return (
-                                <tr
-                                    key={`${
-                                        subordinate.id
-                                    }`}
-                                >
+                                <tr key={`${subordinate.id}`}>
                                     <td>{subordinate.firstName}</td>
                                     <td>{subordinate.lastName}</td>
                                     <td>{subordinate.role}</td>
                                     <td>{subordinate.email}</td>
                                     <td>
-                                        <button onClick={() => onDelete(subordinate.id)}>
+                                        <button
+                                            onClick={() =>
+                                                onDelete(subordinate.id)
+                                            }
+                                        >
                                             Delete
                                         </button>
                                     </td>
