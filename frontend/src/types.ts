@@ -35,7 +35,7 @@ export type StudentPrivateInfo = {
         phoneNumber: string;
         email: string;
     };
-}
+};
 
 export type HomeKeys = keyof StudentPrivateInfo["home"];
 export type GuardianKeys = keyof StudentPrivateInfo["guardian1"];
@@ -50,22 +50,29 @@ export type Teacher = {
 export type LabelsKey = keyof typeof labels;
 
 export type SearchValues = {
-    firstName: string,
-    lastName: string,
-    schoolYear: string,
-    teacher: string,
-}
+    firstName: string;
+    lastName: string;
+    schoolYear: string;
+    teacher: string;
+};
 
-export type Role = "admin" | "pastor" | "teacher" | "deacon" | "student" | "welcome team leader"
+export type Role =
+    | "admin"
+    | "pastor"
+    | "teacher"
+    | "deacon"
+    | "student"
+    | "welcome team leader";
 
 export interface GenerateInviteResponse {
     token: string;
-  }
+}
 
 export type Subordinate = {
-    id: string,
-    firstName?: string,
-    lastName?: string
-    role: string,
-    email?: string
-}
+    id: string;
+    firstName?: string;
+    lastName?: string;
+    role: string;
+    email?: string;
+    grade?: string;
+};

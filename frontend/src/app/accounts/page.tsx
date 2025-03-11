@@ -254,10 +254,15 @@ export default function Page() {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
                                 Role
                             </th>
+                            {roleToFilter === "teacher" && (
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
+                                    Grade
+                                </th>
+                            )}
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
                                 Email
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5"></th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12"></th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -273,10 +278,15 @@ export default function Page() {
                                     <td className="px-6 py-4 whitespace-nowrap w-1/5">
                                         {subordinate.role}
                                     </td>
+                                    {roleToFilter === "teacher" && (
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
+                                            {subordinate.grade ?? "N/A"}
+                                        </th>
+                                    )}
                                     <td className="px-6 py-4 whitespace-nowrap w-1/5">
                                         {subordinate.email}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium w-1/5">
+                                    <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium w-1/12">
                                         <button
                                             onClick={() =>
                                                 onDelete(subordinate.id)

@@ -160,7 +160,6 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                             file:bg-blue-100 file:text-blue-700
                             ${!disabled && "hover:file:bg-blue-100"}`}
                     />
-                    
                     {error && <p style={{ color: "red" }}>{error}</p>}{" "}
                     {/* Display error message */}
                     {imageUrl ? (
