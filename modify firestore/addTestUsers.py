@@ -41,15 +41,4 @@ def add_test_users():
             )
 
 
-# forgot to set auth local emulator, so have to remove all accounts from cloud
-def delete_test_users():
-    page = auth.list_users()
-    while page:
-        for user in page.users:
-            if len(user.email) == 12:
-                auth.delete_user(user.uid)
-        page = page.get_next_page()
-
-
-# delete_test_users()
 add_test_users()
