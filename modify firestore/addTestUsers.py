@@ -30,6 +30,7 @@ def add_test_users():
             password = "123456"
 
             user = auth.create_user(email=email, password=password)
+            auth.set_custom_user_claims(user.uid, {"role": role})
             user_doc_ref = db.document("organization", "roles", role, user.uid)
             user_doc_ref.set(
                 {
