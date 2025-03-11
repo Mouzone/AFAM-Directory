@@ -1,11 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { auth, db } from "@/utility/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { GenerateInviteResponse, Role, Subordinate } from "@/types";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import {
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    updateDoc,
+} from "firebase/firestore";
 import { deleteUser, generateInviteToken } from "@/utility/cloud-functions";
 import { HttpsCallableResult } from "firebase/functions";
 import Notifications from "@/components/AccountsComponents/Notifications";
@@ -159,6 +165,19 @@ export default function Page() {
         }
     };
 
+    const changeGrade = (teacherId: string) => {
+        return async (e: ChangeEvent<HTMLSelectElement>) => {
+            const docRef = doc(db, `organization/roles/teacher/`, teacherId);
+            await updateDoc(docRef, { grade: e.target.value });
+            const newSubordinates = subordinates.map((subordinate) =>
+                subordinate.id === teacherId
+                    ? { ...subordinate, grade: e.target.value }
+                    : subordinate
+            );
+            setSubordinates([...newSubordinates]);
+        };
+    };
+
     if (loading) {
         return <div>Loading...</div>; // Show a loading indicator while checking auth
     }
@@ -279,9 +298,22 @@ export default function Page() {
                                         {subordinate.role}
                                     </td>
                                     {roleToFilter === "teacher" && (
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
-                                            {subordinate.grade ?? "N/A"}
-                                        </th>
+                                        <td className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
+                                            <select
+                                                onChange={changeGrade(
+                                                    subordinate.id
+                                                )}
+                                                value={
+                                                    subordinate.grade ?? "N/A"
+                                                }
+                                            >
+                                                <option> N/A </option>
+                                                <option> 9 </option>
+                                                <option> 10 </option>
+                                                <option> 11 </option>
+                                                <option> 12 </option>
+                                            </select>
+                                        </td>
                                     )}
                                     <td className="px-6 py-4 whitespace-nowrap w-1/5">
                                         {subordinate.email}
