@@ -169,10 +169,20 @@ export default function Page() {
         return async (e: ChangeEvent<HTMLSelectElement>) => {
             const docRef = doc(db, `organization/roles/teacher/`, teacherId);
             await updateDoc(docRef, { grade: e.target.value });
+            console.log(
+                subordinates.filter(
+                    (subordinate) => subordinate.role === "teacher"
+                )
+            );
             const newSubordinates = subordinates.map((subordinate) =>
                 subordinate.id === teacherId
                     ? { ...subordinate, grade: e.target.value }
                     : subordinate
+            );
+            console.log(
+                newSubordinates.filter(
+                    (subordinate) => subordinate.role === "teacher"
+                )
             );
             setSubordinates([...newSubordinates]);
         };
@@ -307,11 +317,11 @@ export default function Page() {
                                                     subordinate.grade ?? "N/A"
                                                 }
                                             >
-                                                <option> N/A </option>
-                                                <option> 9 </option>
-                                                <option> 10 </option>
-                                                <option> 11 </option>
-                                                <option> 12 </option>
+                                                <option value="N/A">N/A</option>
+                                                <option value="9"> 9 </option>
+                                                <option value="10"> 10 </option>
+                                                <option value="11"> 11 </option>
+                                                <option value="12"> 12 </option>
                                             </select>
                                         </td>
                                     )}
