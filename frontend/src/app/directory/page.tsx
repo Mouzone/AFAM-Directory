@@ -3,18 +3,12 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import { getAuth, onAuthStateChanged, signOut, User } from "firebase/auth";
-import { app, db } from "../../utility/firebase";
+import { db } from "../../utility/firebase";
 import Form from "@/components/DirectoryComponents/Form";
 import Table from "@/components/DirectoryComponents/Table";
 import { StudentGeneralInfo, Teacher } from "@/types";
 import { studentGeneralInfoDefault } from "@/utility/consts";
-import {
-    collection,
-    onSnapshot,
-    query,
-    getFirestore,
-    getDocs,
-} from "firebase/firestore";
+import { collection, onSnapshot, query, getDocs } from "firebase/firestore";
 import Updates from "@/components/DirectoryComponents/Updates";
 import Search from "@/components/DirectoryComponents/Search";
 import Link from "next/link";
