@@ -1,7 +1,8 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
-import { getFirestore, Timestamp } from "firebase-admin/firestore";
+import { getFirestore } from "firebase-admin/firestore";
+import { onSchedule } from "firebase-functions/scheduler";
 
 type AccountData = {
     uid?: string;
@@ -65,9 +66,8 @@ export const generateInviteToken = onCall(async (request) => {
 
         const uid = firestore.collection("temp").doc().id;
         const token = await auth.createCustomToken(uid);
-        await firestore.collection("users").doc(uid).set({
+        await firestore.collection("temp").doc(uid).set({
             role: roleToCreate,
-            created: Timestamp.now(),
         });
 
         await firestore.collection("temp").doc().delete();
@@ -102,7 +102,7 @@ export const createUserWithRole = onCall(async (request) => {
             password,
         });
 
-        const userDoc = await firestore.collection("users").doc(uid).get();
+        const userDoc = await firestore.collection("temp").doc(uid).get();
         if (!userDoc.exists) {
             await auth.deleteUser(uid);
             throw new HttpsError("internal", "Role information not found");
@@ -130,7 +130,7 @@ export const createUserWithRole = onCall(async (request) => {
         }
         throw new HttpsError("internal", "An unknown error occurred.");
     } finally {
-        await firestore.collection("users").doc(uid).delete();
+        await firestore.collection("temp").doc(uid).delete();
     }
 });
 
@@ -177,4 +177,54 @@ export const deleteUser = onCall(async (request) => {
         .doc(id)
         .delete();
     await auth.deleteUser(id);
+});
+
+export const tokenCleanup = onSchedule("0 0 1 1 *", async (event) => {
+    const ONE_MONTH_MILLIS = 30 * 24 * 60 * 60 * 1000; // Approximate month in milliseconds
+    const now = Date.now();
+
+    try {
+        const tempAccounts = await firestore.collection("temp").get();
+        const deletePromises: Promise<void>[] = [];
+
+        tempAccounts.forEach((tempAccount) => {
+            const createTimeMillis = tempAccount.data().createTime?.toMillis();
+            if (
+                createTimeMillis &&
+                now - createTimeMillis >= ONE_MONTH_MILLIS
+            ) {
+                const userId = tempAccount.id;
+                deletePromises.push(
+                    (async () => {
+                        try {
+                            await firestore
+                                .collection("temp")
+                                .doc(userId)
+                                .delete();
+                            console.log(`Document ${userId} deleted.`);
+                            try {
+                                await auth.deleteUser(userId);
+                                console.log(`User ${userId} deleted.`);
+                            } catch (authError) {
+                                console.error(
+                                    "User did not activate link:",
+                                    authError
+                                );
+                            }
+                        } catch (firestoreError) {
+                            console.error(
+                                `Error deleting document ${userId}:`,
+                                firestoreError
+                            );
+                        }
+                    })()
+                );
+            }
+        });
+
+        await Promise.all(deletePromises);
+        console.log("Cleanup completed.");
+    } catch (error) {
+        console.error("Error during cleanup:", error);
+    }
 });
