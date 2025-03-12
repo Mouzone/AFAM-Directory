@@ -164,7 +164,7 @@ export default function Page() {
         const fetchTeachers = async () => {
             try {
                 const teachersQuery = query(
-                    collection(getFirestore(app), "teachers")
+                    collection(db, "organization/roles", "teacher")
                 );
                 const teachersSnapshot = await getDocs(teachersQuery);
                 const fetchedTeachers: Teacher[] = [];
@@ -174,7 +174,6 @@ export default function Page() {
                     teacher.id = doc.id;
                     fetchedTeachers.push(teacher);
                 });
-
                 setTeachers(fetchedTeachers);
             } catch (err) {
                 if (err instanceof Error) {
@@ -216,7 +215,10 @@ export default function Page() {
         <>
             <div className="flex w-full justify-center gap-9">
                 <div className="flex flex-col justify-start pt-20">
-                    <Link href="/accounts" className="justify-end"> Accounts </Link>
+                    <Link href="/accounts" className="justify-end">
+                        {" "}
+                        Accounts{" "}
+                    </Link>
                     <button
                         type="button"
                         onClick={handleSignOut}
