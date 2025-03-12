@@ -2,33 +2,29 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /students/{studentId} {
-      allow read, create: if request.auth != null; // Allow read access to students
-      allow read, create, delete, update: if request.auth != null &&
-          request.auth.token.role == 'admin'
-      match /private/{document=**} {
+        allow read, create: if request.auth != null; // Allow read access to students
         allow read, create, delete, update: if request.auth != null &&
-          request.auth.token.role == 'admin'
-      }
-    }
-    match /teachers/{teacherId} {
-      allow read: if request.auth != null; // Allow read access to teacher
+            request.auth.token.role == 'admin' || request.auth.token.role == "teacher" || request.auth.token.role == "pastor"
+            || request.auth.token.role == "welcome team leader"
+        match /private/{document=**} {
+            allow read, create, delete, update: if request.auth != null &&
+            request.auth.token.role == 'admin' || request.auth.token.role == "teacher" || request.auth.token.role == "pastor"
+            || request.auth.token.role == "welcome team leader"
+        }
     }
     match /privileges/{role} {
         allow read: if request.auth != null;
     }
-    match /users/{user} {
-        allow read: if request.auth != null;
-    }
     match /organization/roles/{roleId}/{document=**} {
-      allow read, delete, update: if request.auth != null && (
-        request.auth.token.role == "admin" ||
-        (roleId == "deacon" || roleId == "teacher" || roleId == "welcome team leader") && request.auth.token.role == "pastor" ||
-        roleId == "student" && (request.auth.token.role == "welcome team leader" || request.auth.token.role == "pastor")
-      );
-      allow create: if request.auth != null && request.auth.token.role == "admin"; //Only admins can create documents.
+        allow read, delete, update: if request.auth != null && (
+            request.auth.token.role == "admin" ||
+            (roleId == "deacon" || roleId == "teacher" || roleId == "welcome team leader") && request.auth.token.role == "pastor" ||
+            roleId == "student" && (request.auth.token.role == "welcome team leader" || request.auth.token.role == "pastor")
+        );
+        allow create: if request.auth != null && request.auth.token.role == "admin"; //Only admins can create documents.
     }
     match /organization/roles/pastor/{document=**} {
-        allow create: if request.auth != null && request.auth.token.role == "admin"; //Only admins can create documents.
+        allow read, delete, update, create: if request.auth != null && request.auth.token.role == "admin"; //Only admins can create documents.
     }
   }
 }
