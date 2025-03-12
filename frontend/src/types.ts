@@ -44,7 +44,7 @@ export type Teacher = {
     id: string;
     firstName: string;
     lastName: string;
-    grade: "9" | "10" | "11" | "12";
+    grade?: "9" | "10" | "11" | "12" | "N/A";
 };
 
 export type LabelsKey = keyof typeof labels;

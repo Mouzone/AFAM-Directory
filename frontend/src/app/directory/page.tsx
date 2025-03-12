@@ -174,6 +174,11 @@ export default function Page() {
                     teacher.id = doc.id;
                     fetchedTeachers.push(teacher);
                 });
+                fetchedTeachers.push({
+                    firstName: "Unassigned",
+                    lastName: "",
+                    id: "",
+                });
                 setTeachers(fetchedTeachers);
             } catch (err) {
                 if (err instanceof Error) {
