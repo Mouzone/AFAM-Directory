@@ -167,24 +167,15 @@ export default function Page() {
 
     const changeGrade = (teacherId: string) => {
         return async (e: ChangeEvent<HTMLSelectElement>) => {
-            const docRef = doc(db, `organization/roles/teacher/`, teacherId);
-            await updateDoc(docRef, { grade: e.target.value });
-            console.log(
-                subordinates.filter(
-                    (subordinate) => subordinate.role === "teacher"
-                )
-            );
             const newSubordinates = subordinates.map((subordinate) =>
                 subordinate.id === teacherId
                     ? { ...subordinate, grade: e.target.value }
-                    : subordinate
-            );
-            console.log(
-                newSubordinates.filter(
-                    (subordinate) => subordinate.role === "teacher"
-                )
+                    : { ...subordinate }
             );
             setSubordinates([...newSubordinates]);
+
+            const docRef = doc(db, `organization/roles/teacher/`, teacherId);
+            await updateDoc(docRef, { grade: e.target.value });
         };
     };
 
@@ -314,7 +305,7 @@ export default function Page() {
                                                     subordinate.id
                                                 )}
                                                 value={
-                                                    subordinate.grade ?? "N/A"
+                                                    subordinate?.grade ?? "N/A"
                                                 }
                                             >
                                                 <option value="N/A">N/A</option>
