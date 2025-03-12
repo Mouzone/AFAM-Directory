@@ -1,19 +1,23 @@
-import { https } from "firebase-functions";
-import * as admin from "firebase-admin";
+import { onCall, HttpsError } from "firebase-functions/v2/https";
+import { initializeApp } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
+import { getFirestore, Timestamp } from "firebase-admin/firestore";
+
 type AccountData = {
     uid?: string;
-    firstName?: string,
-    lastName?: string,
+    firstName?: string;
+    lastName?: string;
     email?: string;
     password?: string;
 };
 
-admin.initializeApp();
-const authAdmin = admin.auth();
+initializeApp();
+const auth = getAuth();
+const firestore = getFirestore();
 
-export const generateInviteToken = https.onCall(async (request) => {
+export const generateInviteToken = onCall(async (request) => {
     if (!request.auth) {
-        throw new https.HttpsError(
+        throw new HttpsError(
             "unauthenticated",
             "The function must be called while authenticated."
         );
@@ -24,7 +28,7 @@ export const generateInviteToken = https.onCall(async (request) => {
         const userRole = userToken.role;
         const { role: roleToCreate } = request.data;
         if (!userRole) {
-            throw new https.HttpsError(
+            throw new HttpsError(
                 "permission-denied",
                 "The request has no role."
             );
@@ -32,86 +36,76 @@ export const generateInviteToken = https.onCall(async (request) => {
 
         const disallowedRoles = ["student", "teacher", "deacon"];
         if (disallowedRoles.includes(userRole)) {
-            throw new https.HttpsError(
+            throw new HttpsError(
                 "permission-denied",
                 "The role cannot send invites."
             );
         }
 
         if (userRole === "pastor" && roleToCreate === "admin") {
-            throw new https.HttpsError(
+            throw new HttpsError(
                 "permission-denied",
                 "Invalid role to invite."
             );
         }
 
         if (userRole === "welcome team leader" && roleToCreate !== "student") {
-            throw new https.HttpsError(
+            throw new HttpsError(
                 "permission-denied",
                 "Invalid role to invite."
             );
         }
 
         if (!roleToCreate) {
-            throw new https.HttpsError(
+            throw new HttpsError(
                 "invalid-argument",
                 "Missing required parameters."
             );
         }
 
-        const uid = await admin.firestore().collection("temp").doc().id;
-        const token = await admin.auth().createCustomToken(uid);
-        await admin
-            .firestore()
-            .collection("users")
-            .doc(uid)
-            .set({ role: roleToCreate });
+        const uid = firestore.collection("temp").doc().id;
+        const token = await auth.createCustomToken(uid);
+        await firestore.collection("users").doc(uid).set({
+            role: roleToCreate,
+            created: Timestamp.now(),
+        });
 
-        await admin.firestore().collection("temp").doc().delete();
+        await firestore.collection("temp").doc().delete();
         return { token };
     } catch (error) {
         console.error("Error generating invite link:", error);
 
-        if (error instanceof https.HttpsError) {
+        if (error instanceof HttpsError) {
             throw error; // Re-throw Firebase Functions errors as they are.
         } else if (error instanceof Error) {
-            throw new https.HttpsError("internal", error.message);
+            throw new HttpsError("internal", error.message);
         } else {
-            throw new https.HttpsError(
-                "internal",
-                "An unknown error occurred."
-            );
+            throw new HttpsError("internal", "An unknown error occurred.");
         }
     }
 });
 
-export const createUserWithRole = https.onCall(async (request) => {
-    const { uid, firstName, lastName, email, password } = request.data as AccountData;
+export const createUserWithRole = onCall(async (request) => {
+    const { uid, firstName, lastName, email, password } =
+        request.data as AccountData;
 
     if (!uid || !firstName || !lastName || !email || !password) {
-        throw new https.HttpsError(
+        throw new HttpsError(
             "invalid-argument",
             "Missing required parameters."
         );
     }
 
     try {
-        const userRecord = await authAdmin.updateUser(uid, {
+        const userRecord = await auth.updateUser(uid, {
             email,
             password,
         });
 
-        const userDoc = await admin
-            .firestore()
-            .collection("users")
-            .doc(uid)
-            .get();
+        const userDoc = await firestore.collection("users").doc(uid).get();
         if (!userDoc.exists) {
-            await admin.auth().deleteUser(uid)
-            throw new https.HttpsError(
-                "internal",
-                "Role information not found"
-            );
+            await auth.deleteUser(uid);
+            throw new HttpsError("internal", "Role information not found");
         }
         const userData = userDoc.data();
 
@@ -120,24 +114,29 @@ export const createUserWithRole = https.onCall(async (request) => {
         }
 
         const role = userData.role;
-        await admin.auth().setCustomUserClaims(uid, { role });
-        await admin.firestore().collection("organization").doc("roles").collection(role).doc(uid).create({firstName, lastName, email})
+        await auth.setCustomUserClaims(uid, { role });
+        await firestore
+            .collection("organization")
+            .doc("roles")
+            .collection(role)
+            .doc(uid)
+            .create({ firstName, lastName, email });
 
         return { result: `User ${userRecord.uid} created with role ${role}.` };
     } catch (error) {
         console.error("Error creating user:", error);
         if (error instanceof Error) {
-            throw new https.HttpsError("internal", error.message);
+            throw new HttpsError("internal", error.message);
         }
-        throw new https.HttpsError("internal", "An unknown error occurred.");
+        throw new HttpsError("internal", "An unknown error occurred.");
     } finally {
-        await admin.firestore().collection("users").doc(uid).delete();
+        await firestore.collection("users").doc(uid).delete();
     }
 });
 
-export const deleteUser = https.onCall(async (request) => {
+export const deleteUser = onCall(async (request) => {
     if (!request.auth) {
-        throw new https.HttpsError(
+        throw new HttpsError(
             "unauthenticated",
             "The function must be called while authenticated."
         );
@@ -146,31 +145,36 @@ export const deleteUser = https.onCall(async (request) => {
     const { id } = request.data;
 
     if (!id) {
-        throw new https.HttpsError(
+        throw new HttpsError(
             "invalid-argument",
             "Missing required parameters."
         );
     }
-    const claims = (await admin.auth().getUser(id)).customClaims
+    const claims = (await auth.getUser(id)).customClaims;
     if (!claims) {
-        throw new https.HttpsError("internal", "Invalid id, account does not exist")
+        throw new HttpsError("internal", "Invalid id, account does not exist");
     }
-    const requestRole = request.auth.token.role
-    const role = claims.role
-    const notAllowedToDelete = ["teacher", "student", "deacon"]
+    const requestRole = request.auth.token.role;
+    const role = claims.role;
+    const notAllowedToDelete = ["teacher", "student", "deacon"];
     if (requestRole in notAllowedToDelete) {
-        throw new https.HttpsError(
+        throw new HttpsError(
             "permission-denied",
             "User does not have the permission to delete"
         );
     }
     if (requestRole == "welcome team leader" && role !== "student") {
-        throw new https.HttpsError(
+        throw new HttpsError(
             "permission-denied",
             "User does not have the permission to delete"
         );
     }
-    
-    await admin.firestore().collection("organization").doc("roles").collection(role).doc(id).delete();
-    await admin.auth().deleteUser(id);
-})
+
+    await firestore
+        .collection("organization")
+        .doc("roles")
+        .collection(role)
+        .doc(id)
+        .delete();
+    await auth.deleteUser(id);
+});
