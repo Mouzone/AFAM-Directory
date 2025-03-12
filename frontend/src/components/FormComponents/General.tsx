@@ -6,7 +6,7 @@ import React from "react";
 
 interface GeneralProps {
     disabled: boolean;
-    teachers: Teacher[] | undefined;
+    teachers: Teacher[];
     generalData: StudentGeneralInfo;
     setGeneralData: React.Dispatch<React.SetStateAction<StudentGeneralInfo>>;
 }
@@ -54,6 +54,13 @@ export default function General({
             },
         });
     };
+
+    const filteredTeachers =
+        generalData.schoolYear != ""
+            ? teachers.filter(
+                  (teacher) => teacher.grade === generalData.schoolYear
+              )
+            : teachers;
     return (
         <div className="h-[250px]">
             <div className="grid grid-cols-4 gap-4 w-4xl">
@@ -97,7 +104,7 @@ export default function General({
                 </div>
 
                 <SelectInput
-                    label="School Year:"
+                    label="Gender:"
                     value={generalData.gender}
                     name="gender"
                     options={["Male", "Female"]}
@@ -117,16 +124,12 @@ export default function General({
                     label="Teacher:"
                     value={`${generalData["teacher"]["firstName"]} ${generalData["teacher"]["lastName"]}`}
                     name="teacher"
-                    options={
-                        teachers
-                            ? teachers.map(
-                                  (teacher) =>
-                                      `${teacher["firstName"]} ${
-                                          teacher["lastName"] ?? ""
-                                      }`
-                              )
-                            : []
-                    }
+                    options={filteredTeachers.map(
+                        (teacher) =>
+                            `${teacher["firstName"]} ${
+                                teacher["lastName"] ?? ""
+                            }`
+                    )}
                     onChange={handleTeacherChange}
                     disabled={disabled}
                 />

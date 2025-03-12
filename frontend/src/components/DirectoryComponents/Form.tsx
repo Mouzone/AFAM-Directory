@@ -17,7 +17,7 @@ import Image from "next/image";
 interface FormProps {
     generalState: StudentGeneralInfo;
     closeForm: () => void;
-    teachers: Teacher[] | undefined;
+    teachers: Teacher[];
 }
 
 export default function Form({ generalState, closeForm, teachers }: FormProps) {
