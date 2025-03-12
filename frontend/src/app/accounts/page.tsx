@@ -165,18 +165,19 @@ export default function Page() {
         }
     };
 
-    const changeGrade = (teacherId: string) => {
-        return async (e: ChangeEvent<HTMLSelectElement>) => {
-            const newSubordinates = subordinates.map((subordinate) =>
-                subordinate.id === teacherId
-                    ? { ...subordinate, grade: e.target.value }
-                    : { ...subordinate }
-            );
-            setSubordinates([...newSubordinates]);
+    const changeGrade = async (
+        e: ChangeEvent<HTMLSelectElement>,
+        teacherId: string
+    ) => {
+        const newSubordinates = subordinates.map((subordinate) =>
+            subordinate.id === teacherId
+                ? { ...subordinate, grade: e.target.value }
+                : { ...subordinate }
+        );
+        setSubordinates([...newSubordinates]);
 
-            const docRef = doc(db, `organization/roles/teacher/`, teacherId);
-            await updateDoc(docRef, { grade: e.target.value });
-        };
+        const docRef = doc(db, `organization/roles/teacher/`, teacherId);
+        await updateDoc(docRef, { grade: e.target.value });
     };
 
     if (loading) {
@@ -301,9 +302,12 @@ export default function Page() {
                                     {roleToFilter === "teacher" && (
                                         <td className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
                                             <select
-                                                onChange={changeGrade(
-                                                    subordinate.id
-                                                )}
+                                                onChange={(e) =>
+                                                    changeGrade(
+                                                        e,
+                                                        subordinate.id
+                                                    )
+                                                }
                                                 value={
                                                     subordinate?.grade ?? "N/A"
                                                 }
