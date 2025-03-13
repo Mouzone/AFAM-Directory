@@ -43,6 +43,13 @@ export const generateInviteToken = onCall(async (request) => {
             );
         }
 
+        if (!roleToCreate) {
+            throw new HttpsError(
+                "invalid-argument",
+                "Missing required parameters."
+            );
+        }
+
         if (userRole === "pastor" && roleToCreate === "admin") {
             throw new HttpsError(
                 "permission-denied",
@@ -54,13 +61,6 @@ export const generateInviteToken = onCall(async (request) => {
             throw new HttpsError(
                 "permission-denied",
                 "Invalid role to invite."
-            );
-        }
-
-        if (!roleToCreate) {
-            throw new HttpsError(
-                "invalid-argument",
-                "Missing required parameters."
             );
         }
 
@@ -154,6 +154,7 @@ export const deleteUser = onCall(async (request) => {
     if (!claims) {
         throw new HttpsError("internal", "Invalid id, account does not exist");
     }
+    // rename role and requestRole better
     const requestRole = request.auth.token.role;
     const role = claims.role;
     const notAllowedToDelete = ["teacher", "student", "deacon"];
@@ -163,7 +164,22 @@ export const deleteUser = onCall(async (request) => {
             "User does not have the permission to delete"
         );
     }
+
+    if (!role) {
+        throw new HttpsError(
+            "invalid-argument",
+            "Missing required parameters."
+        );
+    }
+
     if (requestRole == "welcome team leader" && role !== "student") {
+        throw new HttpsError(
+            "permission-denied",
+            "User does not have the permission to delete"
+        );
+    }
+
+    if (requestRole == "pastor" && role !== "admin") {
         throw new HttpsError(
             "permission-denied",
             "User does not have the permission to delete"
