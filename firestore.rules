@@ -5,15 +5,18 @@ service cloud.firestore {
         allow read, create: if request.auth != null; // Allow read access to students
         allow read, create, delete, update: if request.auth != null &&
             request.auth.token.role == 'admin' || request.auth.token.role == "teacher" || request.auth.token.role == "pastor"
-            || request.auth.token.role == "welcome team leader"
+            || request.auth.token.role == "welcome team leader" || request.auth.token.role == "deacon"
         match /private/{document=**} {
             allow read, create, delete, update: if request.auth != null &&
             request.auth.token.role == 'admin' || request.auth.token.role == "teacher" || request.auth.token.role == "pastor"
-            || request.auth.token.role == "welcome team leader"
+            || request.auth.token.role == "welcome team leader" || request.auth.token.role == "deacon"
         }
     }
     match /privileges/{role} {
         allow read: if request.auth != null;
+    }
+    match /organization/roles/teacher/{document=**} {
+        allow read: if request.auth != null
     }
     match /organization/roles/{roleId}/{document=**} {
         allow read, delete, update: if request.auth != null && (
