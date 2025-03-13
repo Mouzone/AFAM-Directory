@@ -3,6 +3,7 @@ import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { onSchedule } from "firebase-functions/scheduler";
+import { user } from "firebase-functions/v1/auth";
 
 type AccountData = {
     uid?: string;
@@ -193,6 +194,49 @@ export const deleteUser = onCall(async (request) => {
         .doc(id)
         .delete();
     await auth.deleteUser(id);
+});
+
+export const toggleWelcomeTeamLeader = onCall(async (request) => {
+    if (!request.auth) {
+        throw new HttpsError(
+            "unauthenticated",
+            "The function must be called while authenticated."
+        );
+    }
+
+    // only pastor or admin can set it
+    const cannotToggle = ["teacher", "deacon", "student"];
+    if (cannotToggle.includes(request.auth.token.role)) {
+        throw new HttpsError(
+            "permission-denied",
+            "User does not have the permission to toggle"
+        );
+    }
+
+    const { uid } = request.data;
+    const userToToggle = await auth.getUser(uid);
+    const userToggleCustomClaims = userToToggle.customClaims || {};
+    const userTogggleRole = userToggleCustomClaims.role;
+    if (!userTogggleRole) {
+        throw new HttpsError(
+            "permission-denied",
+            "UserToToggle does not have a role"
+        );
+    }
+    userToggleCustomClaims.welcomeTeamLeader =
+        "welcomeTeamLeader" in userToggleCustomClaims
+            ? !userToggleCustomClaims.welcomeTeamLeader
+            : (userToggleCustomClaims.welcomeTeamLeader = true);
+
+    await auth.setCustomUserClaims(uid, userToggleCustomClaims);
+    await firestore
+        .collection("organization")
+        .doc("roles")
+        .collection(userTogggleRole)
+        .doc(uid)
+        .update({
+            welcomeTeamLeader: userToggleCustomClaims.welcomeTeamLeader,
+        });
 });
 
 export const tokenCleanup = onSchedule("0 0 1 1 *", async (event) => {
