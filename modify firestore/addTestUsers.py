@@ -31,17 +31,18 @@ def add_test_users():
 
             user = auth.create_user(email=email, password=password)
             custom_claims = {"role": role}
+            user_data = {
+                "firstName": first_name,
+                "lastName": last_name,
+                "email": email,
+            }
             if role == "teacher" or role == "deacon":
                 custom_claims["isWelcomeTeamLeader"] = False
+                user_data["isWelcomeTeamLeader"] = False
+
             auth.set_custom_user_claims(user.uid, custom_claims)
             user_doc_ref = db.document("organization", "roles", role, user.uid)
-            user_doc_ref.set(
-                {
-                    "firstName": first_name,
-                    "lastName": last_name,
-                    "email": email,
-                }
-            )
+            user_doc_ref.set(user_data)
 
 
 add_test_users()
