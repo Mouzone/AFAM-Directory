@@ -27,7 +27,7 @@ export const generateInviteToken = onCall(async (request) => {
     try {
         const userToken = request.auth.token;
         const userRole = userToken.role;
-        const isWelcomeTeamLeader = userToken.welcomeTeamLeader ?? false;
+        const isWelcomeTeamLeader = userToken.isWelcomeTeamLeader ?? false;
         const { role: roleToCreate } = request.data;
         if (!userRole) {
             throw new HttpsError(
@@ -117,7 +117,7 @@ export const createUserWithRole = onCall(async (request) => {
         const role = userData.role;
         const customClaims: Record<string, unknown> = { role };
         if (role == "teacher" || role == "deacon") {
-            customClaims["welcomeTeamLeader"] = false;
+            customClaims["isWelcomeTeamLeader"] = false;
         }
         await auth.setCustomUserClaims(uid, customClaims);
         await firestore
@@ -162,7 +162,7 @@ export const deleteUser = onCall(async (request) => {
     // rename role and requestRole better
     const userToken = request.auth.token;
     const userRole = userToken.role;
-    const userIsWelcomeTeamLeader = userToken.welcomeTeamLeader;
+    const userIsWelcomeTeamLeader = userToken.isWelcomeTeamLeader;
     const role = claims.role;
     const notAllowedToDelete = ["teacher", "student", "deacon"];
     if (userRole in notAllowedToDelete) {
@@ -229,10 +229,10 @@ export const toggleWelcomeTeamLeader = onCall(async (request) => {
             "UserToToggle does not have a role"
         );
     }
-    userToggleCustomClaims.welcomeTeamLeader =
-        "welcomeTeamLeader" in userToggleCustomClaims
-            ? !userToggleCustomClaims.welcomeTeamLeader
-            : (userToggleCustomClaims.welcomeTeamLeader = true);
+    userToggleCustomClaims.isWelcomeTeamLeader =
+        "isWelcomeTeamLeader" in userToggleCustomClaims
+            ? !userToggleCustomClaims.isWelcomeTeamLeader
+            : (userToggleCustomClaims.isWelcomeTeamLeader = true);
 
     await auth.setCustomUserClaims(uid, userToggleCustomClaims);
     await firestore
@@ -241,7 +241,7 @@ export const toggleWelcomeTeamLeader = onCall(async (request) => {
         .collection(userTogggleRole)
         .doc(uid)
         .update({
-            welcomeTeamLeader: userToggleCustomClaims.welcomeTeamLeader,
+            isWelcomeTeamLeader: userToggleCustomClaims.isWelcomeTeamLeader,
         });
 });
 

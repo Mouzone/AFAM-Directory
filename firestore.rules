@@ -13,13 +13,13 @@ service cloud.firestore {
       // Roles with full access to students
       allow create, read: if hasRequiredRole(["student"])
       allow create, read, update, delete: 
-        if hasRequiredRole(["admin", "teacher", "pastor", "welcome team leader", "deacon"]);
+        if hasRequiredRole(["admin", "teacher", "pastor", "deacon"]) || request.auth.token.isWelcomeTeamLeader; 
 
       // Private student data rules
       match /private/{document=**} {
         allow create: if hasRequiredRole(["student"]);
         allow create, read, update, delete: 
-            if hasRequiredRole(["admin", "teacher", "pastor", "welcome team leader", "deacon"]);
+            if hasRequiredRole(["admin", "teacher", "pastor", "deacon"]) || request.auth.token.isWelcomeTeamLeader;
       }
     }
 
@@ -32,8 +32,8 @@ service cloud.firestore {
     match /organization/roles/{roleId}/{document=**} {
       // Roles with read, update, delete access
       allow read, update, delete: if hasRequiredRole(["admin"]) ||
-                                      (hasRequiredRole(["pastor"]) && ["deacon", "teacher", "welcome team leader", "student"].hasAny(roleId)) || 
-                                      (hasRequiredRole(["welcome team leader"]) && roleId == "student");
+                                      (hasRequiredRole(["pastor"]) && ["deacon", "teacher", "student"].hasAny(roleId)) || 
+                                      (request.auth.token.isWelcomeTeamLeader && roleId == "student");
 
       // Only admins can create role documents
       allow create: if hasRequiredRole(["admin"]);
