@@ -3,7 +3,6 @@ import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { onSchedule } from "firebase-functions/scheduler";
-import { user } from "firebase-functions/v1/auth";
 
 type AccountData = {
     uid?: string;
@@ -28,6 +27,7 @@ export const generateInviteToken = onCall(async (request) => {
     try {
         const userToken = request.auth.token;
         const userRole = userToken.role;
+        const isWelcomeTeamLeader = userToken.welcomeTeamLeader ?? false;
         const { role: roleToCreate } = request.data;
         if (!userRole) {
             throw new HttpsError(
@@ -58,7 +58,7 @@ export const generateInviteToken = onCall(async (request) => {
             );
         }
 
-        if (userRole === "welcome team leader" && roleToCreate !== "student") {
+        if (isWelcomeTeamLeader && roleToCreate !== "student") {
             throw new HttpsError(
                 "permission-denied",
                 "Invalid role to invite."
@@ -115,7 +115,11 @@ export const createUserWithRole = onCall(async (request) => {
         }
 
         const role = userData.role;
-        await auth.setCustomUserClaims(uid, { role });
+        const customClaims: Record<string, unknown> = { role };
+        if (role == "teacher" || role == "deacon") {
+            customClaims["welcomeTeamLeader"] = false;
+        }
+        await auth.setCustomUserClaims(uid, customClaims);
         await firestore
             .collection("organization")
             .doc("roles")
@@ -156,10 +160,12 @@ export const deleteUser = onCall(async (request) => {
         throw new HttpsError("internal", "Invalid id, account does not exist");
     }
     // rename role and requestRole better
-    const requestRole = request.auth.token.role;
+    const userToken = request.auth.token;
+    const userRole = userToken.role;
+    const userIsWelcomeTeamLeader = userToken.welcomeTeamLeader;
     const role = claims.role;
     const notAllowedToDelete = ["teacher", "student", "deacon"];
-    if (requestRole in notAllowedToDelete) {
+    if (userRole in notAllowedToDelete) {
         throw new HttpsError(
             "permission-denied",
             "User does not have the permission to delete"
@@ -173,14 +179,14 @@ export const deleteUser = onCall(async (request) => {
         );
     }
 
-    if (requestRole == "welcome team leader" && role !== "student") {
+    if (userIsWelcomeTeamLeader && role !== "student") {
         throw new HttpsError(
             "permission-denied",
             "User does not have the permission to delete"
         );
     }
 
-    if (requestRole == "pastor" && role !== "admin") {
+    if (userRole == "pastor" && role !== "admin") {
         throw new HttpsError(
             "permission-denied",
             "User does not have the permission to delete"
