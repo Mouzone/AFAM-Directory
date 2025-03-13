@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { StudentGeneralInfo, StudentPrivateInfo, Teacher } from "../../types";
+import {
+    Role,
+    StudentGeneralInfo,
+    StudentPrivateInfo,
+    Teacher,
+} from "../../types";
 import { collection, doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
 import {
     ref,
@@ -7,12 +12,13 @@ import {
     getDownloadURL,
     deleteObject,
 } from "firebase/storage";
-import { db, storage } from "@/utility/firebase";
+import { auth, db, storage } from "@/utility/firebase";
 import Buttons from "../FormComponents/Buttons";
 import { studentPrivateInfoDefault } from "@/utility/consts";
 import General from "../FormComponents/General";
 import Private from "../FormComponents/Private";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface FormProps {
     generalState: StudentGeneralInfo;
@@ -28,16 +34,25 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     );
     const [tab, setTab] = useState<"general" | "private">("general");
     const [isEdit, setIsEdit] = useState(false);
-
+    const [showPrivate, setShowPrivate] = useState(false);
     const [image, setImage] = useState<File | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
+    const router = useRouter();
     const disabled = "id" in generalData && !isEdit;
 
     useEffect(() => {
         if (!generalData["id"]) {
             return;
+        }
+        async function getRole() {
+            const tokenResult = await auth.currentUser?.getIdTokenResult();
+            if (!tokenResult) {
+                return router.push("/error");
+            }
+            const userRole = tokenResult.claims.role as Role;
+            setShowPrivate("id" in generalData && userRole != "student");
         }
         async function fetchPrivateInfo() {
             const studentRef = doc(db, "students", generalData["id"] as string);
@@ -53,6 +68,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             setImageUrl(url);
         }
 
+        getRole();
         fetchHeadshot();
         fetchPrivateInfo();
     }, [generalData]);
@@ -201,16 +217,18 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                         >
                             General
                         </div>
-                        <div
-                            onClick={() => setTab("private")}
-                            className={`cursor-pointer px-4 py-2 rounded-md transition-colors duration-200 ${
-                                tab === "private"
-                                    ? "bg-blue-600 text-white shadow-md"
-                                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                            }`}
-                        >
-                            Private
-                        </div>
+                        {showPrivate && (
+                            <div
+                                onClick={() => setTab("private")}
+                                className={`cursor-pointer px-4 py-2 rounded-md transition-colors duration-200 ${
+                                    tab === "private"
+                                        ? "bg-blue-600 text-white shadow-md"
+                                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                }`}
+                            >
+                                Private
+                            </div>
+                        )}
                     </div>
                     {tab == "general" ? (
                         <General
@@ -220,11 +238,13 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                             setGeneralData={setGeneralData}
                         />
                     ) : (
-                        <Private
-                            disabled={disabled}
-                            privateData={privateData}
-                            setPrivateData={setPrivateData}
-                        />
+                        showPrivate && (
+                            <Private
+                                disabled={disabled}
+                                privateData={privateData}
+                                setPrivateData={setPrivateData}
+                            />
+                        )
                     )}
                     <Buttons
                         type={!("id" in generalData) ? "add" : "view"}
