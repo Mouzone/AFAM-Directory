@@ -4,18 +4,22 @@ service cloud.firestore {
 
     // Helper function to check for specific roles
     function hasRequiredRole(allowedRoles) {
-      return request.auth != null && request.auth.token.role is string && allowedRoles.hasAny([request.auth.token.role]);
+      return request.auth != null && 
+        request.auth.token.role is string && allowedRoles.hasAny([request.auth.token.role]);
     }
 
     // Students collection rules
     match /students/{studentId} {
       // Roles with full access to students
-      allow read, create, update, delete: if hasRequiredRole(["admin", "teacher", "pastor", "welcome team leader", "deacon"]);
+      allow create, read: if hasRequiredRole(["student"])
+      allow create, read, update, delete: 
+        if hasRequiredRole(["admin", "teacher", "pastor", "welcome team leader", "deacon"]);
 
       // Private student data rules
       match /private/{document=**} {
-        allow create, update: if hasRequiredRole(["student"]) && request.auth.uid == studentId;
-        allow read, delete: if hasRequiredRole(["admin", "teacher", "pastor", "welcome team leader", "deacon"]);
+        allow create: if hasRequiredRole(["student"]);
+        allow create, read, update, delete: 
+            if hasRequiredRole(["admin", "teacher", "pastor", "welcome team leader", "deacon"]);
       }
     }
 
@@ -28,7 +32,8 @@ service cloud.firestore {
     match /organization/roles/{roleId}/{document=**} {
       // Roles with read, update, delete access
       allow read, update, delete: if hasRequiredRole(["admin"]) ||
-                                      (hasRequiredRole(["pastor"]) && ["deacon", "teacher", "welcome team leader"].hasAny([roleId]));
+                                      hasRequiredRole(["pastor"]) || 
+                                      (hasRequiredRole(["welcome team leader"]) && roleId == "student");
 
       // Only admins can create role documents
       allow create: if hasRequiredRole(["admin"]);
