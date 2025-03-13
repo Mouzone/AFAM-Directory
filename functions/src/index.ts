@@ -116,8 +116,14 @@ export const createUserWithRole = onCall(async (request) => {
 
         const role = userData.role;
         const customClaims: Record<string, unknown> = { role };
+        const userInfo: Record<string, unknown> = {
+            firstName,
+            lastName,
+            email,
+        };
         if (role == "teacher" || role == "deacon") {
             customClaims["isWelcomeTeamLeader"] = false;
+            userInfo["isWelcomeTeamLeader"] = false;
         }
         await auth.setCustomUserClaims(uid, customClaims);
         await firestore
@@ -125,7 +131,7 @@ export const createUserWithRole = onCall(async (request) => {
             .doc("roles")
             .collection(role)
             .doc(uid)
-            .create({ firstName, lastName, email });
+            .create(userInfo);
 
         return { result: `User ${userRecord.uid} created with role ${role}.` };
     } catch (error) {
