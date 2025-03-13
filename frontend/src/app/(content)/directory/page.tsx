@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
-import { getAuth, onAuthStateChanged, signOut, User } from "firebase/auth";
-import { db } from "../../utility/firebase";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { auth, db } from "../../../utility/firebase";
 import Form from "@/components/DirectoryComponents/Form";
 import Table from "@/components/DirectoryComponents/Table";
 import { StudentGeneralInfo, Teacher } from "@/types";
@@ -11,7 +11,6 @@ import { studentGeneralInfoDefault } from "@/utility/consts";
 import { collection, onSnapshot, query, getDocs } from "firebase/firestore";
 import Updates from "@/components/DirectoryComponents/Updates";
 import Search from "@/components/DirectoryComponents/Search";
-import Link from "next/link";
 export default function Page() {
     const [user, setUser] = useState<User | null>(null); // Add user state
     const [loading, setLoading] = useState(true); // Add loading state
@@ -47,13 +46,7 @@ export default function Page() {
         setShowForm(true);
     };
 
-    const handleSignOut = async () => {
-        const auth = getAuth();
-        signOut(auth);
-    };
-
     useEffect(() => {
-        const auth = getAuth();
         const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             setLoading(false);
@@ -212,35 +205,20 @@ export default function Page() {
 
     return (
         <>
-            <div className="flex w-full justify-center gap-9">
-                <div className="flex flex-col justify-start pt-20">
-                    <Link href="/accounts" className="justify-end">
-                        {" "}
-                        Accounts{" "}
-                    </Link>
-                    <button
-                        type="button"
-                        onClick={handleSignOut}
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" // Tailwind styles
-                    >
-                        Sign Out
-                    </button>
-                </div>
-                <div>
-                    <div
-                        className={`p-5 font-sans ${
-                            showForm ? "max-h-screen overflow-hidden" : ""
-                        }`}
-                    >
-                        {/* Search Inputs */}
-                        <Search
-                            searchValues={searchValues}
-                            setSearchValues={setSearchValues}
-                            setShowForm={setShowForm}
-                        />
+            <div>
+                <div
+                    className={`p-5 font-sans ${
+                        showForm ? "max-h-screen overflow-hidden" : ""
+                    }`}
+                >
+                    {/* Search Inputs */}
+                    <Search
+                        searchValues={searchValues}
+                        setSearchValues={setSearchValues}
+                        setShowForm={setShowForm}
+                    />
 
-                        <Table filtered={filtered} editForm={editForm} />
-                    </div>
+                    <Table filtered={filtered} editForm={editForm} />
                 </div>
             </div>
             {/* Form Modal */}
