@@ -9,6 +9,9 @@ export default function ContentLayout({ children }: ContentLayoutProps) {
     return (
         <div className="flex w-full justify-center gap-9">
             <nav className="flex flex-col justify-start pt-20">
+                <Link href="/directory" className="justify-end">
+                    Directory
+                </Link>
                 <Link href="/accounts" className="justify-end">
                     Accounts
                 </Link>
