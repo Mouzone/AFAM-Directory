@@ -6,7 +6,7 @@ import random
 import string
 
 firebase_admin.initialize_app()
-ROLES = ["pastor", "deacon", "welcome team leader", "teacher", "student"]
+ROLES = ["pastor", "deacon", "teacher", "student"]
 
 
 def add_test_users():
@@ -30,7 +30,10 @@ def add_test_users():
             password = "123456"
 
             user = auth.create_user(email=email, password=password)
-            auth.set_custom_user_claims(user.uid, {"role": role})
+            custom_claims = {"role": role}
+            if role == "teacher" or role == "deacon":
+                custom_claims["isWelcomeTeamLeader"] = False
+            auth.set_custom_user_claims(user.uid, custom_claims)
             user_doc_ref = db.document("organization", "roles", role, user.uid)
             user_doc_ref.set(
                 {
