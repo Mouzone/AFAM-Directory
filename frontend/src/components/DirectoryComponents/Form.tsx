@@ -42,18 +42,29 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     const router = useRouter();
     const disabled = "id" in generalData && !isEdit;
 
+    // if "id" not in generalData show
+    // if "id" in generalData and not student show
     useEffect(() => {
-        if (!generalData["id"]) {
-            return;
-        }
         async function getRole() {
             const tokenResult = await auth.currentUser?.getIdTokenResult();
             if (!tokenResult) {
                 return router.push("/error");
             }
             const userRole = tokenResult.claims.role as Role;
-            setShowPrivate("id" in generalData && userRole != "student");
+            setShowPrivate(
+                !("id" in generalData) ||
+                    ("id" in generalData && userRole != "student")
+            );
         }
+
+        getRole();
+    }, []);
+
+    useEffect(() => {
+        if (!generalData["id"]) {
+            return;
+        }
+
         async function fetchPrivateInfo() {
             const studentRef = doc(db, "students", generalData["id"] as string);
             const privateCollectionRef = collection(studentRef, "private");
@@ -68,7 +79,6 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             setImageUrl(url);
         }
 
-        getRole();
         fetchHeadshot();
         fetchPrivateInfo();
     }, [generalData]);
