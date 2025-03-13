@@ -17,12 +17,11 @@ export default function ContentLayout({ children }: ContentLayoutProps) {
                 return router.push("/error");
             }
             const userRole = tokenResult.claims.role as Role;
+            const isWelcomeTeamLeader =
+                (tokenResult.claims.isWelcomeTeamLeader as boolean) || false;
             // todo: redirect to an error page
-            const showAccounts = [
-                "pastor",
-                "welcome team leader",
-                "admin",
-            ].includes(userRole);
+            const showAccounts =
+                ["pastor", "admin"].includes(userRole) || isWelcomeTeamLeader;
             setShowAccounts(showAccounts);
         }
         getRole();

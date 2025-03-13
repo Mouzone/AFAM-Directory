@@ -18,6 +18,7 @@ import Notifications from "@/components/AccountsComponents/Notifications";
 
 export default function Page() {
     const [userRole, setUserRole] = useState<Role | null>(null);
+    const [isWelcomeTeamLeader, setIsWelcomeTeamLeader] = useState(false);
     const [roleToCreate, setRoleToCreate] = useState<Role>("student");
     const [token, setToken] = useState<string | null>(null);
     const [invitableRoles, setInvitableRoles] = useState<Role[] | null>(null);
@@ -37,6 +38,10 @@ export default function Page() {
             if (user) {
                 const idTokenResult = await user.getIdTokenResult();
                 setUserRole(idTokenResult.claims.role as Role);
+                setIsWelcomeTeamLeader(
+                    (idTokenResult.claims.isWelcomeTeamLeader as boolean) ??
+                        false
+                );
             } else {
                 router.push("/");
             }
@@ -64,7 +69,7 @@ export default function Page() {
             if (
                 userRole === "admin" ||
                 userRole === "pastor" ||
-                userRole == "welcome team leader"
+                isWelcomeTeamLeader
             ) {
                 const studentsSnapshot = await getDocs(
                     collection(db, "organization", "roles", "student")
@@ -78,22 +83,6 @@ export default function Page() {
                 });
             }
             if (userRole === "admin" || userRole === "pastor") {
-                const welcomeTeamLeadersSnapshot = await getDocs(
-                    collection(
-                        db,
-                        "organization",
-                        "roles",
-                        "welcome team leader"
-                    )
-                );
-                welcomeTeamLeadersSnapshot.forEach((welcomeTeamLeaderDoc) => {
-                    subordinates.push({
-                        ...welcomeTeamLeaderDoc.data(),
-                        id: welcomeTeamLeaderDoc.id,
-                        role: "welcome team leader",
-                    });
-                });
-
                 const deaconsSnapshot = await getDocs(
                     collection(db, "organization", "roles", "deacon")
                 );

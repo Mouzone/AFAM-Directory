@@ -56,13 +56,7 @@ export type SearchValues = {
     teacher: string;
 };
 
-export type Role =
-    | "admin"
-    | "pastor"
-    | "teacher"
-    | "deacon"
-    | "student"
-    | "welcome team leader";
+export type Role = "admin" | "pastor" | "teacher" | "deacon" | "student";
 
 export interface GenerateInviteResponse {
     token: string;
