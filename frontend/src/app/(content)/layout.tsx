@@ -25,7 +25,7 @@ export default function ContentLayout({ children }: ContentLayoutProps) {
             setShowAccounts(showAccounts);
         }
         getRole();
-    }, []);
+    }, [router]);
 
     return (
         <div className="flex w-full justify-center gap-9">

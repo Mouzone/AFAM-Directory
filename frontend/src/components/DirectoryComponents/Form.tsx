@@ -58,7 +58,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
         }
 
         getRole();
-    }, []);
+    }, [generalData, router]);
 
     useEffect(() => {
         if (!generalData["id"]) {

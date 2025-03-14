@@ -130,7 +130,7 @@ export default function Page() {
 
         fetchInvitableRoles();
         fetchSubordinates();
-    }, [userRole]);
+    }, [userRole, isWelcomeTeamLeader]);
 
     const onGenerateLink = async () => {
         try {
