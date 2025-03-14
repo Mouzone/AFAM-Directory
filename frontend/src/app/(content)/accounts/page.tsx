@@ -87,7 +87,7 @@ export default function Page() {
                         ...studentDoc.data(),
                         id: studentDoc.id,
                         role: "student",
-                    });
+                    } as Subordinate);
                 });
             }
             if (userRole === "admin" || userRole === "pastor") {
@@ -99,7 +99,7 @@ export default function Page() {
                         ...deaconDoc.data(),
                         id: deaconDoc.id,
                         role: "deacon",
-                    });
+                    } as Subordinate);
                 });
 
                 const teachersSnapshot = await getDocs(
@@ -110,7 +110,7 @@ export default function Page() {
                         ...teacherDoc.data(),
                         id: teacherDoc.id,
                         role: "teacher",
-                    });
+                    } as Subordinate);
                 });
             }
             if (userRole == "admin") {
@@ -122,7 +122,7 @@ export default function Page() {
                         ...pastorDoc.data(),
                         id: pastorDoc.id,
                         role: "pastor",
-                    });
+                    } as Subordinate);
                 });
             }
             setSubordinates(subordinates);

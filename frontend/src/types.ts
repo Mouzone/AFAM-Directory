@@ -64,11 +64,10 @@ export interface GenerateInviteResponse {
 
 export type Subordinate = {
     id: string;
-    firstName?: string;
-    lastName?: string;
+    firstName: string;
+    lastName: string;
     role: string;
-    email?: string;
+    email: string;
     grade?: string;
-} & ({ role: "teacher" | "deacon" } extends { role: string }
-    ? { isWelcomeTeamLeader?: boolean }
-    : {});
+    isWelcomeTeamLeader?: boolean;
+};
