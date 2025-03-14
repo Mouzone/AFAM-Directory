@@ -48,5 +48,9 @@ service cloud.firestore {
     match /organization/roles/teacher/{document=**} {
       allow read: if request.auth != null;
     }
+
+    match /temp/{uid} {
+        allow read: if request.auth != null && request.auth.uid == uid;
+    }
   }
 }
