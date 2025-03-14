@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/components/AuthContext";
 
@@ -12,6 +12,12 @@ export default function Page() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
+
+    useEffect(() => {
+        if (user) {
+            router.push("/directory");
+        }
+    }, [user]);
 
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Prevent form submission refresh

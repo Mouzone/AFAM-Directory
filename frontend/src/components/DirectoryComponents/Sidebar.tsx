@@ -1,5 +1,5 @@
 import { SidebarContextType, Tab } from "@/types";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { signOut } from "firebase/auth";
 import { auth } from "@/utility/firebase";
@@ -23,9 +23,15 @@ function SidebarNav() {
     const { currentTab, setCurrentTab } = useContext(SidebarContext);
 
     const showAccounts =
-        user.role == "admin" ||
-        user.role == "pastor" ||
-        user.isWelcomeTeamLeader;
+        user &&
+        (user.role == "admin" ||
+            user.role == "pastor" ||
+            user.isWelcomeTeamLeader);
+
+    if (!user) {
+        return <></>;
+    }
+
     return (
         <nav className="flex flex-col justify-start pt-20">
             <Link

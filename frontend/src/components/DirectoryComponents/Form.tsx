@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { StudentGeneralInfo, StudentPrivateInfo, Teacher } from "../../types";
 import {
-    Role,
-    StudentGeneralInfo,
-    StudentPrivateInfo,
-    Teacher,
-} from "../../types";
-import { collection, doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
+    collection,
+    doc,
+    getDoc,
+    deleteDoc,
+    updateDoc,
+} from "firebase/firestore";
 import {
     ref,
     uploadBytesResumable,
     getDownloadURL,
     deleteObject,
 } from "firebase/storage";
-import { auth, db, storage } from "@/utility/firebase";
+import { db, storage } from "@/utility/firebase";
 import Buttons from "../FormComponents/Buttons";
 import { studentPrivateInfoDefault } from "@/utility/consts";
 import General from "../FormComponents/General";
 import Private from "../FormComponents/Private";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "../AuthContext";
 
 interface FormProps {
     generalState: StudentGeneralInfo;
@@ -27,6 +29,7 @@ interface FormProps {
 }
 
 export default function Form({ generalState, closeForm, teachers }: FormProps) {
+    const { user } = useContext(AuthContext);
     const [generalData, setGeneralData] =
         useState<StudentGeneralInfo>(generalState);
     const [privateData, setPrivateData] = useState<StudentPrivateInfo>(
@@ -44,13 +47,19 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
 
     // if "id" not in generalData show
     // if "id" in generalData and not student show
+
+    useEffect(() => {
+        if (!user) {
+            router.push("/");
+        }
+    }, [user]);
+
     useEffect(() => {
         async function getRole() {
-            const tokenResult = await auth.currentUser?.getIdTokenResult();
-            if (!tokenResult) {
+            if (!user) {
                 return router.push("/error");
             }
-            const userRole = tokenResult.claims.role as Role;
+            const userRole = user.role;
             setShowPrivate(
                 !("id" in generalData) ||
                     ("id" in generalData && userRole != "student")
@@ -135,8 +144,8 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
         const privateColRef = collection(docRef, "private");
         const privateDocRef = doc(privateColRef, "privateInfo");
 
-        await setDoc(docRef, generalData, { merge: true });
-        await setDoc(privateDocRef, privateData, { merge: true });
+        await updateDoc(docRef, generalData);
+        await updateDoc(privateDocRef, privateData);
 
         uploadImage(docRef.id);
         closeForm();

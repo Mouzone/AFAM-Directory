@@ -37,9 +37,16 @@ export default function Page() {
         Role | "" | "welcome team leader"
     >("");
 
+    const router = useRouter();
     const userRole = user.role;
     const isWelcomeTeamLeader = user.isWelcomeTeamLeader;
-    console.log(user);
+
+    useEffect(() => {
+        if (!user) {
+            router.push("/");
+        }
+    }, [user]);
+
     useEffect(() => {
         async function fetchInvitableRoles() {
             if (userRole == "admin" || userRole == "pastor") {
