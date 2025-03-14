@@ -80,38 +80,69 @@ function SignupForm() {
     };
 
     return (
-        <>
-            <form onSubmit={handleSignup}>
-                <div> Role: {role} </div>
+        <form
+            onSubmit={handleSignup}
+            className="max-w-md mx-auto p-6 bg-white rounded-md shadow-md"
+        >
+            <div className="mb-4">
+                <div className="text-lg font-semibold">Role: {role}</div>
+            </div>
+
+            <div className="mb-4">
                 <input
                     type="firstName"
                     placeholder="First Name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
                 />
+            </div>
+
+            <div className="mb-4">
                 <input
                     type="lastName"
                     placeholder="Last Name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
                 />
+            </div>
+
+            <div className="mb-4">
                 <input
                     type="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
                 />
+            </div>
+
+            <div className="mb-6">
                 <input
                     type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
                 />
-                <button type="submit">Create Account</button>
-            </form>
-            {loading && <p> Loading... </p>}
-            {errorMessage && <p> {errorMessage} </p>}
-        </>
+            </div>
+
+            <button
+                type="submit"
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:ring focus:border-blue-300"
+            >
+                Create Account
+            </button>
+
+            {loading && (
+                <p className="mt-4 text-center text-gray-600">Loading...</p>
+            )}
+
+            {errorMessage && (
+                <p className="mt-4 text-center text-red-500">{errorMessage}</p>
+            )}
+        </form>
     );
 }
 
