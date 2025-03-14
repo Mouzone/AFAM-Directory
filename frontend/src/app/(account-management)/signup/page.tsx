@@ -1,10 +1,11 @@
 "use client";
 
-import { Role } from "@/types";
+import { CreateUserWithRoleResponse, Role } from "@/types";
 import { createUserWithRole } from "@/utility/cloud-functions";
 import { auth, db } from "@/utility/firebase";
 import { signInWithCustomToken } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import { HttpsCallableResult } from "firebase/functions";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState, Suspense } from "react";
 
@@ -63,13 +64,13 @@ function SignupForm() {
             }
 
             const uid = auth.currentUser.uid;
-            const response = await createUserWithRole({
+            const response = (await createUserWithRole({
                 uid,
                 firstName,
                 lastName,
                 email,
                 password,
-            });
+            })) as HttpsCallableResult<CreateUserWithRoleResponse>;
             // if error show error message, else show success and redirect to login
             if (response.data.status === 200) {
                 setSucess(true);

@@ -71,3 +71,8 @@ export type Subordinate = {
     grade?: string;
     isWelcomeTeamLeader?: boolean;
 };
+
+export interface CreateUserWithRoleResponse {
+    status: number;
+    message?: string;
+}
