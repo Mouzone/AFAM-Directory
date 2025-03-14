@@ -274,9 +274,11 @@ export default function Page() {
                             {invitableRole}
                         </option>
                     ))}
-                    <option value="welcome team leader">
-                        Welcome Team Leader
-                    </option>
+                    {(roleToFilter == "admin" || roleToFilter == "pastor") && (
+                        <option value="welcome team leader">
+                            welcome team leader
+                        </option>
+                    )}
                 </select>
             </div>
             <div className="mt-8 overflow-x-auto px-10">
