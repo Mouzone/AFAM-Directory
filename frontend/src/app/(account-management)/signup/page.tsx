@@ -19,6 +19,7 @@ function SignupForm() {
     const [role, setRole] = useState<Role | null>(null);
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [success, setSucess] = useState(false);
 
     const token = searchParams.get("token");
 
@@ -70,7 +71,12 @@ function SignupForm() {
                 password,
             });
             // if error show error message, else show success and redirect to login
-            console.log(response);
+            if (response.data.status === 200) {
+                setSucess(true);
+                setTimeout(() => {
+                    router.push("/");
+                }, 2000);
+            }
         } catch (error) {
             console.error("Error creating user:", error);
             if (error instanceof Error) {
@@ -143,6 +149,11 @@ function SignupForm() {
                 {errorMessage && (
                     <p className="mt-4 text-center text-red-500">
                         {errorMessage}
+                    </p>
+                )}
+                {success && (
+                    <p className="mt-4 text-center text-green-500">
+                        Account Succesfully Created!
                     </p>
                 )}
             </form>
