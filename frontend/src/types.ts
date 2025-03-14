@@ -1,3 +1,4 @@
+import { SetStateAction } from "react";
 import { labels } from "./utility/consts";
 
 export type StudentGeneralInfo = {
@@ -76,3 +77,10 @@ export interface CreateUserWithRoleResponse {
     status: number;
     message?: string;
 }
+
+export type Tab = "Directory" | "Accounts";
+
+export type SidebarContextType = {
+    currentTab: Tab;
+    setCurrentTab: React.Dispatch<SetStateAction<Tab>>;
+};
