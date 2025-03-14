@@ -69,4 +69,6 @@ export type Subordinate = {
     role: string;
     email?: string;
     grade?: string;
-};
+} & ({ role: "teacher" | "deacon" } extends { role: infer R }
+    ? { isWelcomeTeamLeader?: boolean }
+    : {});

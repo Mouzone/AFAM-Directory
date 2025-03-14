@@ -12,7 +12,11 @@ import {
     getDocs,
     updateDoc,
 } from "firebase/firestore";
-import { deleteUser, generateInviteToken } from "@/utility/cloud-functions";
+import {
+    deleteUser,
+    generateInviteToken,
+    toggleWelcomeTeamLeader,
+} from "@/utility/cloud-functions";
 import { HttpsCallableResult } from "firebase/functions";
 import Notifications from "@/components/AccountsComponents/Notifications";
 
@@ -30,7 +34,9 @@ export default function Page() {
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [roleToFilter, setRoleToFilter] = useState<Role | "">("");
+    const [roleToFilter, setRoleToFilter] = useState<
+        Role | "" | "welcome team leader"
+    >("");
     const router = useRouter();
 
     useEffect(() => {
@@ -171,6 +177,19 @@ export default function Page() {
         await updateDoc(docRef, { grade: e.target.value });
     };
 
+    const toggleIsWelcomeTeamLeader = async (uid: string) => {
+        const newSubordinates = subordinates.map((subordinate) =>
+            subordinate.id === uid
+                ? {
+                      ...subordinate,
+                      isWelcomeTeamLeader: !subordinate.isWelcomeTeamLeader,
+                  }
+                : { ...subordinate }
+        );
+        setSubordinates([...newSubordinates]);
+        await toggleWelcomeTeamLeader({ uid });
+    };
+
     if (loading) {
         return <div>Loading...</div>; // Show a loading indicator while checking auth
     }
@@ -183,9 +202,13 @@ export default function Page() {
         return <div>Loading roles...</div>; // Show loading while fetching roles
     }
 
+    // todo: add Welcome Team Leader to filter, and when selected we find where it is true in the field
     const subordinatesToShow = subordinates.filter((subordinate) => {
         return (
-            (roleToFilter === "" || subordinate.role === roleToFilter) &&
+            (roleToFilter === "" ||
+                subordinate.role === roleToFilter ||
+                (roleToFilter == "welcome team leader" &&
+                    subordinate.isWelcomeTeamLeader)) &&
             (firstName === "" || subordinate.firstName?.includes(firstName)) &&
             (lastName === "" || subordinate.lastName?.includes(lastName))
         );
@@ -251,6 +274,9 @@ export default function Page() {
                             {invitableRole}
                         </option>
                     ))}
+                    <option value="welcome team leader">
+                        Welcome Team Leader
+                    </option>
                 </select>
             </div>
             <div className="mt-8 overflow-x-auto px-10">
@@ -269,6 +295,12 @@ export default function Page() {
                             {roleToFilter === "teacher" && (
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
                                     Grade
+                                </th>
+                            )}
+                            {(roleToFilter == "teacher" ||
+                                roleToFilter == "deacon") && (
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
+                                    Welcome Team Leader
                                 </th>
                             )}
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/5">
@@ -311,6 +343,24 @@ export default function Page() {
                                             </select>
                                         </td>
                                     )}
+                                    {(roleToFilter == "teacher" ||
+                                        roleToFilter == "deacon") &&
+                                        (subordinate.role == "teacher" ||
+                                            subordinate.role == "deacon") && (
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={
+                                                        subordinate.isWelcomeTeamLeader
+                                                    }
+                                                    onChange={() =>
+                                                        toggleIsWelcomeTeamLeader(
+                                                            subordinate.id
+                                                        )
+                                                    }
+                                                />
+                                            </td>
+                                        )}
                                     <td className="px-6 py-4 whitespace-nowrap w-1/5">
                                         {subordinate.email}
                                     </td>
