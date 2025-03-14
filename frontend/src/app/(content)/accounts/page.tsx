@@ -1,8 +1,7 @@
 "use client";
 
-import { ChangeEvent, useEffect, useState } from "react";
-import { auth, db } from "@/utility/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { db } from "@/utility/firebase";
 import { useRouter } from "next/navigation";
 import { GenerateInviteResponse, Role, Subordinate } from "@/types";
 import {
@@ -19,10 +18,10 @@ import {
 } from "@/utility/cloud-functions";
 import { HttpsCallableResult } from "firebase/functions";
 import Notifications from "@/components/AccountsComponents/Notifications";
+import { AuthContext } from "@/components/AuthContext";
 
 export default function Page() {
-    const [userRole, setUserRole] = useState<Role | null>(null);
-    const [isWelcomeTeamLeader, setIsWelcomeTeamLeader] = useState(false);
+    const { user } = useContext(AuthContext);
     const [roleToCreate, setRoleToCreate] = useState<Role>("student");
     const [token, setToken] = useState<string | null>(null);
     const [invitableRoles, setInvitableRoles] = useState<Role[] | null>(null);
@@ -37,26 +36,10 @@ export default function Page() {
     const [roleToFilter, setRoleToFilter] = useState<
         Role | "" | "welcome team leader"
     >("");
-    const router = useRouter();
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const idTokenResult = await user.getIdTokenResult();
-                setUserRole(idTokenResult.claims.role as Role);
-                setIsWelcomeTeamLeader(
-                    (idTokenResult.claims.isWelcomeTeamLeader as boolean) ??
-                        false
-                );
-            } else {
-                router.push("/");
-            }
-            setLoading(false); // Set loading to false after auth check
-        });
-
-        return () => unsubscribe(); // Cleanup the listener
-    }, [router]);
-
+    const userRole = user.role;
+    const isWelcomeTeamLeader = user.isWelcomeTeamLeader;
+    console.log(user);
     useEffect(() => {
         async function fetchInvitableRoles() {
             if (userRole == "admin" || userRole == "pastor") {
@@ -130,6 +113,7 @@ export default function Page() {
 
         fetchInvitableRoles();
         fetchSubordinates();
+        setLoading(false);
     }, [userRole, isWelcomeTeamLeader]);
 
     const onGenerateLink = async () => {

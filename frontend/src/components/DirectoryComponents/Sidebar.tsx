@@ -3,6 +3,7 @@ import { createContext, useContext, useState } from "react";
 import Link from "next/link";
 import { signOut } from "firebase/auth";
 import { auth } from "@/utility/firebase";
+import { AuthContext } from "../AuthContext";
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
@@ -18,8 +19,13 @@ export default function Sidebar() {
 const showAccounts = true;
 
 function SidebarNav() {
+    const { user } = useContext(AuthContext);
     const { currentTab, setCurrentTab } = useContext(SidebarContext);
 
+    const showAccounts =
+        user.role == "admin" ||
+        user.role == "pastor" ||
+        user.isWelcomeTeamLeader;
     return (
         <nav className="flex flex-col justify-start pt-20">
             <Link

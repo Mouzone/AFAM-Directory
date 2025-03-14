@@ -1,45 +1,28 @@
 "use client";
 
-import { FormEvent, useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../utility/firebase";
+import { FormEvent, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/components/AuthContext";
 
 export default function Page() {
     const router = useRouter();
-    const [credentials, setCredentials] = useState({ email: "", password: "" });
+    const { login, user } = useContext(AuthContext);
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
-    const onChange = (
-        key: "email" | "password",
-        e: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        setCredentials({ ...credentials, [key]: e.target.value });
-    };
-
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Prevent form submission refresh
-        setLoading(true);
         setError("");
 
         // write in different file
         try {
-            await signInWithEmailAndPassword(
-                auth,
-                credentials.email,
-                credentials.password
-            );
-
-            // navigate("/students", { replace: true });
+            await login(email, password);
             router.push("/directory");
-        } catch (error) {
-            if (error instanceof Error) {
-                setError(error.message); // Set the error message if it's an Error object
-            } else {
-                setError("An unknown error occurred."); // Handle non-Error objects
-            }
-            console.error("Error during login:", error); // Log the error for debugging
+        } catch (err: any) {
+            setError(err.message || "Login failed");
         } finally {
             setLoading(false);
         }
@@ -67,8 +50,8 @@ export default function Page() {
                         type="email"
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Enter your email"
-                        value={credentials.email}
-                        onChange={(e) => onChange("email", e)}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                     />
                 </div>
@@ -80,8 +63,8 @@ export default function Page() {
                         type="password"
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         placeholder="Enter your password"
-                        value={credentials.password}
-                        onChange={(e) => onChange("password", e)}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </div>
