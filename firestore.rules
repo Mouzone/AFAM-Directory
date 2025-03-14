@@ -32,7 +32,7 @@ service cloud.firestore {
     match /organization/roles/{roleId}/{document=**} {
       // Roles with read, update, delete access
       allow read, update, delete: if hasRequiredRole(["admin"]) ||
-                                      (hasRequiredRole(["pastor"]) && ["deacon", "teacher", "student"].hasAny(roleId)) || 
+                                      (hasRequiredRole(["pastor"]) && ["deacon", "teacher", "student"].hasAny([roleId])) || 
                                       (request.auth.token.isWelcomeTeamLeader && roleId == "student");
 
       // Only admins can create role documents
