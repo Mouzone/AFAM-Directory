@@ -133,7 +133,10 @@ export const createUserWithRole = onCall(async (request) => {
             .doc(uid)
             .create(userInfo);
 
-        return { result: `User ${userRecord.uid} created with role ${role}.` };
+        return {
+            status: 200,
+            result: `User ${userRecord.uid} created with role ${role}.`,
+        };
     } catch (error) {
         console.error("Error creating user:", error);
         if (error instanceof Error) {
