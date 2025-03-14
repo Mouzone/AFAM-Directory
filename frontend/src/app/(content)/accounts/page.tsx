@@ -53,7 +53,7 @@ export default function Page() {
 
     useEffect(() => {
         async function fetchInvitableRoles() {
-            if (userRole) {
+            if (userRole == "admin" || userRole == "pastor") {
                 const docRef = doc(db, "privileges", userRole);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
@@ -61,6 +61,8 @@ export default function Page() {
                 } else {
                     console.error("Document not found");
                 }
+            } else if (isWelcomeTeamLeader) {
+                setInvitableRoles(["student"]);
             }
         }
 
