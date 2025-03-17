@@ -5,9 +5,9 @@ import { auth } from "@/utility/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
-export const AuthContext = createContext<AuthProviderType | undefined>(
-    undefined
-);
+export const AuthContext = createContext<AuthProviderType>({
+    user: { uid: "", role: "" },
+});
 type AuthProviderProps = {
     children: ReactNode;
 };
@@ -33,28 +33,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         });
     }, []);
 
-    const login = async (email: string, password: string) => {
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-        } catch (error) {
-            console.error("Logout error:", error);
-        }
-    };
-
-    const logout = async () => {
-        try {
-            await auth.signOut();
-            // Firebase auth state change will automatically trigger the useEffect
-        } catch (error) {
-            console.error("Logout error:", error);
-            // Handle logout error
-        }
-    };
-
     const value = {
         user,
-        login,
-        logout,
     };
 
     return (

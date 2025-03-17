@@ -3,6 +3,8 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/components/AuthContext";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/utility/firebase";
 
 export default function Page() {
     const router = useRouter();
@@ -13,11 +15,7 @@ export default function Page() {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
-    if (!context) {
-        return <div>Loading authentication...</div>;
-    }
-
-    const { user, login } = context;
+    const { user } = context;
 
     useEffect(() => {
         // checks if user is false (logged out)
@@ -37,7 +35,7 @@ export default function Page() {
 
         // write in different file
         try {
-            await login(email, password);
+            await signInWithEmailAndPassword(auth, email, password);
             router.push("/directory");
         } catch (err: any) {
             setError(err.message || "Login failed");

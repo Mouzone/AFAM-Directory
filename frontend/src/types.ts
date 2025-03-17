@@ -93,6 +93,4 @@ export type AuthUser = {
 
 export type AuthProviderType = {
     user: false | null | AuthUser;
-    login: (email: string, password: string) => Promise<void>;
-    logout: () => Promise<void>;
 };

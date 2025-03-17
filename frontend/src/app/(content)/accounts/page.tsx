@@ -40,10 +40,6 @@ export default function Page() {
         Role | "" | "welcome team leader"
     >("");
 
-    if (!context) {
-        return <div>Loading authentication...</div>;
-    }
-
     const user = context.user;
 
     useEffect(() => {
