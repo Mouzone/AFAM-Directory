@@ -17,16 +17,16 @@ export default function Page() {
         return <div>Loading authentication...</div>;
     }
 
-    if (!context.user) {
+    if (context.user === null) {
         return <div> Loading... </div>;
     }
 
-    const user = context.user;
-    const login = context.login;
+    const { user, login } = context;
 
     useEffect(() => {
-        if (user) {
-            router.push("/directory");
+        // checks if user is false (logged out)
+        if (!user) {
+            router.push("/");
         }
     }, [user]);
 

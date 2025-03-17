@@ -26,6 +26,7 @@ function SidebarNav() {
         return <div>Loading authentication...</div>;
     }
 
+    // whether null or false, don't render the sidebar
     if (!authContext.user) {
         return <></>;
     }

@@ -24,6 +24,8 @@ export default function Page() {
     const context = useContext(AuthContext);
     const router = useRouter();
 
+    const [userRole, setUserRole] = useState("");
+    const [isWelcomeTeamLeader, setIsWelcomeTeamLeader] = useState(false);
     const [roleToCreate, setRoleToCreate] = useState<Role>("student");
     const [token, setToken] = useState<string | null>(null);
     const [invitableRoles, setInvitableRoles] = useState<Role[] | null>(null);
@@ -43,17 +45,19 @@ export default function Page() {
         return <div>Loading authentication...</div>;
     }
 
-    if (!context.user) {
+    if (context.user === null) {
         return <div> Loading... </div>;
     }
 
     const user = context.user;
-    const userRole = user.role;
-    const isWelcomeTeamLeader = user.isWelcomeTeamLeader;
 
     useEffect(() => {
+        // checks if user is false
         if (!user) {
             router.push("/");
+        } else {
+            setUserRole(user.role);
+            setIsWelcomeTeamLeader(user.isWelcomeTeamLeader || false);
         }
     }, [user]);
 
