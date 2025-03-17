@@ -47,7 +47,7 @@ export default function Page() {
         if (!user) {
             router.push("/");
         }
-    }, [user]);
+    }, [user, router]);
 
     useEffect(() => {
         if (!context.user) {
@@ -128,7 +128,7 @@ export default function Page() {
 
         fetchInvitableRoles();
         fetchSubordinates();
-    }, [userRole, isWelcomeTeamLeader]);
+    }, [userRole, isWelcomeTeamLeader, context.user]);
 
     const onGenerateLink = async () => {
         try {

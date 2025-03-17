@@ -2,7 +2,6 @@
 
 import { AuthProviderType, AuthUser } from "@/types";
 import { auth } from "@/utility/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
 export const AuthContext = createContext<AuthProviderType>({
