@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
-import { onAuthStateChanged, User } from "firebase/auth";
-import { auth, db } from "../../../utility/firebase";
+import { db } from "../../../utility/firebase";
 import Form from "@/components/DirectoryComponents/Form";
 import Table from "@/components/DirectoryComponents/Table";
 import { StudentGeneralInfo, Teacher } from "@/types";
@@ -174,6 +173,7 @@ export default function Page() {
 
     if (user === null) return <div> Loading... </div>;
     if (!user) return null; // Prevent rendering if not logged in after loading
+    if (error) return <div> {error} </div>;
 
     const filtered = students.filter((entry: StudentGeneralInfo) => {
         return (
