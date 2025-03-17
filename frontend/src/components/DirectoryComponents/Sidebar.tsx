@@ -1,5 +1,7 @@
+"use client";
+
 import { SidebarContextType, Tab } from "@/types";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import Link from "next/link";
 import { signOut } from "firebase/auth";
 import { auth } from "@/utility/firebase";
@@ -16,7 +18,6 @@ export default function Sidebar() {
         </SidebarContext.Provider>
     );
 }
-const showAccounts = true;
 
 function SidebarNav() {
     const authContext = useContext(AuthContext);
