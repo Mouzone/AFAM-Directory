@@ -45,9 +45,6 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     const router = useRouter();
     const disabled = "id" in generalData && !isEdit;
 
-    // if "id" not in generalData show
-    // if "id" in generalData and not student show
-
     useEffect(() => {
         if (!user) {
             router.push("/");
@@ -201,7 +198,8 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                         <Image
                             src={imageUrl}
                             alt="Uploaded Image"
-                            style={{ maxWidth: "300px" }}
+                            height="500"
+                            width="300"
                         />
                     ) : (
                         <svg
