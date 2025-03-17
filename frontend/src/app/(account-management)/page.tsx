@@ -37,8 +37,12 @@ export default function Page() {
         try {
             await signInWithEmailAndPassword(auth, email, password);
             router.push("/directory");
-        } catch (err: any) {
-            setError(err.message || "Login failed");
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message || "Login failed");
+            } else {
+                setError("An unexpected error occurred.");
+            }
         } finally {
             setLoading(false);
         }
