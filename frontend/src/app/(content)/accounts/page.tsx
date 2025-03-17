@@ -31,7 +31,6 @@ export default function Page() {
     const [invitableRoles, setInvitableRoles] = useState<Role[] | null>(null);
     const [subordinates, setSubordinates] = useState<Subordinate[]>([]);
 
-    const [loading, setLoading] = useState(true);
     const [generated, setGenerated] = useState(false);
     const [copied, setCopied] = useState(false);
 
@@ -45,23 +44,22 @@ export default function Page() {
         return <div>Loading authentication...</div>;
     }
 
-    if (context.user === null) {
-        return <div> Loading... </div>;
-    }
-
     const user = context.user;
 
     useEffect(() => {
         // checks if user is false
         if (!user) {
             router.push("/");
-        } else {
-            setUserRole(user.role);
-            setIsWelcomeTeamLeader(user.isWelcomeTeamLeader || false);
         }
     }, [user]);
 
     useEffect(() => {
+        if (!context.user) {
+            return;
+        } else {
+            setUserRole(context.user.role);
+            setIsWelcomeTeamLeader(context.user.isWelcomeTeamLeader || false);
+        }
         async function fetchInvitableRoles() {
             if (userRole == "admin" || userRole == "pastor") {
                 const docRef = doc(db, "privileges", userRole);
@@ -134,7 +132,6 @@ export default function Page() {
 
         fetchInvitableRoles();
         fetchSubordinates();
-        setLoading(false);
     }, [userRole, isWelcomeTeamLeader]);
 
     const onGenerateLink = async () => {
@@ -195,12 +192,8 @@ export default function Page() {
         await toggleWelcomeTeamLeader({ uid });
     };
 
-    if (loading) {
-        return <div>Loading...</div>; // Show a loading indicator while checking auth
-    }
-
-    if (!userRole) {
-        return null; // Don't render anything if not authenticated
+    if (context.user === null) {
+        return <div> Loading... </div>;
     }
 
     if (!invitableRoles) {

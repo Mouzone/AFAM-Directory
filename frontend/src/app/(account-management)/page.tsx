@@ -33,6 +33,7 @@ export default function Page() {
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Prevent form submission refresh
         setError("");
+        setLoading(true);
 
         // write in different file
         try {
