@@ -24,8 +24,6 @@ export default function Page() {
     const context = useContext(AuthContext);
     const router = useRouter();
 
-    const [userRole, setUserRole] = useState("");
-    const [isWelcomeTeamLeader, setIsWelcomeTeamLeader] = useState(false);
     const [roleToCreate, setRoleToCreate] = useState<Role>("student");
     const [token, setToken] = useState<string | null>(null);
     const [invitableRoles, setInvitableRoles] = useState<Role[] | null>(null);
@@ -50,85 +48,74 @@ export default function Page() {
     }, [user, router]);
 
     useEffect(() => {
-        if (!context.user) {
-            return;
-        } else {
-            setUserRole(context.user.role);
-            setIsWelcomeTeamLeader(context.user.isWelcomeTeamLeader || false);
-        }
-        async function fetchInvitableRoles() {
-            if (userRole == "admin" || userRole == "pastor") {
-                const docRef = doc(db, "privileges", userRole);
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    setInvitableRoles(docSnap.data().canInvite as Role[]);
-                } else {
-                    console.error("Document not found");
+        const { user } = context;
+        if (!user) return;
+
+        const role = user.role;
+        const isWelcomeTeamLeader = user.isWelcomeTeamLeader || false;
+
+        const fetchInvitableRoles = async () => {
+            if (role === "admin" || role === "pastor") {
+                try {
+                    const docSnap = await getDoc(doc(db, "privileges", role));
+                    if (docSnap.exists()) {
+                        setInvitableRoles(docSnap.data().canInvite || []); // Handle undefined canInvite
+                    } else {
+                        console.error(
+                            "Privileges document not found for role:",
+                            role
+                        );
+                        setInvitableRoles([]); // Set to empty array to avoid issues
+                    }
+                } catch (error) {
+                    console.error("Error fetching invitable roles:", error);
+                    setInvitableRoles([]); // Set to empty array on error
                 }
             } else if (isWelcomeTeamLeader) {
                 setInvitableRoles(["student"]);
             }
-        }
+        };
 
-        async function fetchSubordinates() {
+        const fetchSubordinates = async () => {
             const subordinates: Subordinate[] = [];
-            if (
-                userRole === "admin" ||
-                userRole === "pastor" ||
-                isWelcomeTeamLeader
-            ) {
-                const studentsSnapshot = await getDocs(
-                    collection(db, "organization", "roles", "student")
-                );
-                studentsSnapshot.forEach((studentDoc) => {
-                    subordinates.push({
-                        ...studentDoc.data(),
-                        id: studentDoc.id,
-                        role: "student",
-                    } as Subordinate);
-                });
-            }
-            if (userRole === "admin" || userRole === "pastor") {
-                const deaconsSnapshot = await getDocs(
-                    collection(db, "organization", "roles", "deacon")
-                );
-                deaconsSnapshot.forEach((deaconDoc) => {
-                    subordinates.push({
-                        ...deaconDoc.data(),
-                        id: deaconDoc.id,
-                        role: "deacon",
-                    } as Subordinate);
-                });
+            const rolesToFetch = []; // Use a Set to avoid duplicate roles
 
-                const teachersSnapshot = await getDocs(
-                    collection(db, "organization", "roles", "teacher")
-                );
-                teachersSnapshot.forEach((teacherDoc) => {
-                    subordinates.push({
-                        ...teacherDoc.data(),
-                        id: teacherDoc.id,
-                        role: "teacher",
-                    } as Subordinate);
-                });
+            if (role === "admin" || role === "pastor" || isWelcomeTeamLeader) {
+                rolesToFetch.push("student");
             }
-            if (userRole == "admin") {
-                const pastorsSnapshot = await getDocs(
-                    collection(db, "organization", "roles", "pastor")
-                );
-                pastorsSnapshot.forEach((pastorDoc) => {
-                    subordinates.push({
-                        ...pastorDoc.data(),
-                        id: pastorDoc.id,
-                        role: "pastor",
-                    } as Subordinate);
-                });
+            if (role === "admin" || role === "pastor") {
+                rolesToFetch.push("deacon");
+                rolesToFetch.push("teacher");
+            }
+            if (role === "admin") {
+                rolesToFetch.push("pastor");
+            }
+
+            for (const roleToFetch of rolesToFetch) {
+                try {
+                    const snapshot = await getDocs(
+                        collection(db, "organization", "roles", roleToFetch)
+                    );
+                    snapshot.forEach((docSnap) => {
+                        subordinates.push({
+                            ...docSnap.data(),
+                            id: docSnap.id,
+                            role: roleToFetch,
+                        } as Subordinate);
+                    });
+                } catch (error) {
+                    console.error(
+                        `Error fetching subordinates for role ${roleToFetch}:`,
+                        error
+                    );
+                }
             }
             setSubordinates(subordinates);
-        }
+        };
 
         fetchInvitableRoles();
         fetchSubordinates();
-    }, [userRole, isWelcomeTeamLeader, context.user]);
+    }, [context.user]); // Only depend on context.user
 
     const onGenerateLink = async () => {
         try {
