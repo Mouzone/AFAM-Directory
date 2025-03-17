@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth, db } from "../../../utility/firebase";
@@ -11,8 +11,8 @@ import { studentGeneralInfoDefault } from "@/utility/consts";
 import { collection, onSnapshot, query, getDocs } from "firebase/firestore";
 import Updates from "@/components/DirectoryComponents/Updates";
 import Search from "@/components/DirectoryComponents/Search";
+import { AuthContext } from "@/components/AuthContext";
 export default function Page() {
-    const [user, setUser] = useState<User | null>(null); // Add user state
     const [loading, setLoading] = useState(true); // Add loading state
     const router = useRouter(); // Initialize useRouter
 
@@ -35,6 +35,7 @@ export default function Page() {
         removed: string[];
     }>({ added: [], modified: [], removed: [] });
     const [showUpdates, setShowUpdates] = useState<boolean>(false);
+    const { user } = useContext(AuthContext);
 
     const closeForm = () => {
         setProfile(studentGeneralInfoDefault);
@@ -45,15 +46,6 @@ export default function Page() {
         setProfile(student);
         setShowForm(true);
     };
-
-    useEffect(() => {
-        const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-            setLoading(false);
-        });
-
-        return () => unsubscribeAuth();
-    }, []);
 
     useEffect(() => {
         if (!loading && !user) {
@@ -180,9 +172,7 @@ export default function Page() {
         fetchTeachers();
     }, [user]); // Add user dependency
 
-    if (loading) return <div> Loading... </div>;
-    if (error) return <div> Error </div>;
-
+    if (user === null) return <div> Loading... </div>;
     if (!user) return null; // Prevent rendering if not logged in after loading
 
     const filtered = students.filter((entry: StudentGeneralInfo) => {
