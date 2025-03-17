@@ -1,32 +1,36 @@
 "use client";
 
+import { AuthProviderType, AuthUser } from "@/types";
 import { auth } from "@/utility/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { createContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 
-export const AuthContext = createContext(undefined);
-export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+export const AuthContext = createContext<AuthProviderType | undefined>(
+    undefined
+);
+type AuthProviderProps = {
+    children: ReactNode;
+};
+export function AuthProvider({ children }: AuthProviderProps) {
+    const [user, setUser] = useState<AuthUser | false | null>(null); // null is used here to mean loading
 
     useEffect(() => {
         // i just need the role of the current user
-        const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
+        return auth.onAuthStateChanged(async (firebaseUser) => {
             if (firebaseUser) {
                 const idTokenResult = await firebaseUser.getIdTokenResult();
                 const mappedUser = {
                     uid: firebaseUser.uid,
-                    role: idTokenResult.claims.role,
+                    role: idTokenResult.claims.role as string,
                     isWelcomeTeamLeader:
-                        idTokenResult.claims.isWelcomeTeamLeader ?? false,
+                        (idTokenResult.claims.isWelcomeTeamLeader as boolean) ??
+                        false,
                 };
                 setUser(mappedUser);
             } else {
-                setUser(null);
+                setUser(false); // false is used here to mean logged out
             }
-            setLoading(false);
         });
-        return () => unsubscribe();
     }, []);
 
     const login = async (email: string, password: string) => {
@@ -49,7 +53,6 @@ export function AuthProvider({ children }) {
 
     const value = {
         user,
-        loading,
         login,
         logout,
     };

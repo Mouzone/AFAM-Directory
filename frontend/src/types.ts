@@ -84,3 +84,15 @@ export type SidebarContextType = {
     currentTab: Tab;
     setCurrentTab: React.Dispatch<SetStateAction<Tab>>;
 };
+
+export type AuthUser = {
+    uid: string;
+    role: string;
+    isWelcomeTeamLeader?: boolean;
+};
+
+export type AuthProviderType = {
+    user: false | null | AuthUser;
+    login: (email: string, password: string) => Promise<void>;
+    logout: () => Promise<void>;
+};
