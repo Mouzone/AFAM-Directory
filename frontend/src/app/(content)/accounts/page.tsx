@@ -21,7 +21,9 @@ import Notifications from "@/components/AccountsComponents/Notifications";
 import { AuthContext } from "@/components/AuthContext";
 
 export default function Page() {
-    const { user } = useContext(AuthContext);
+    const context = useContext(AuthContext);
+    const router = useRouter();
+
     const [roleToCreate, setRoleToCreate] = useState<Role>("student");
     const [token, setToken] = useState<string | null>(null);
     const [invitableRoles, setInvitableRoles] = useState<Role[] | null>(null);
@@ -37,7 +39,15 @@ export default function Page() {
         Role | "" | "welcome team leader"
     >("");
 
-    const router = useRouter();
+    if (!context) {
+        return <div>Loading authentication...</div>;
+    }
+
+    if (!context.user) {
+        return <div> Loading... </div>;
+    }
+
+    const user = context.user;
     const userRole = user.role;
     const isWelcomeTeamLeader = user.isWelcomeTeamLeader;
 

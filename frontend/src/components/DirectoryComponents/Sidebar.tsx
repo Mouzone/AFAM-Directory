@@ -19,18 +19,24 @@ export default function Sidebar() {
 const showAccounts = true;
 
 function SidebarNav() {
-    const { user } = useContext(AuthContext);
-    const { currentTab, setCurrentTab } = useContext(SidebarContext);
+    const authContext = useContext(AuthContext);
+    const sidebarContext = useContext(SidebarContext);
 
+    if (!authContext || !sidebarContext) {
+        return <div>Loading authentication...</div>;
+    }
+
+    if (!authContext.user) {
+        return <></>;
+    }
+
+    const user = authContext.user;
+    const { currentTab, setCurrentTab } = sidebarContext;
     const showAccounts =
         user &&
         (user.role == "admin" ||
             user.role == "pastor" ||
             user.isWelcomeTeamLeader);
-
-    if (!user) {
-        return <></>;
-    }
 
     return (
         <nav className="flex flex-col justify-start pt-20">

@@ -6,12 +6,23 @@ import { AuthContext } from "@/components/AuthContext";
 
 export default function Page() {
     const router = useRouter();
-    const { login, user } = useContext(AuthContext);
+    const context = useContext(AuthContext);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
+
+    if (!context) {
+        return <div>Loading authentication...</div>;
+    }
+
+    if (!context.user) {
+        return <div> Loading... </div>;
+    }
+
+    const user = context.user;
+    const login = context.login;
 
     useEffect(() => {
         if (user) {
