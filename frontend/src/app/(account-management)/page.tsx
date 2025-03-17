@@ -17,18 +17,18 @@ export default function Page() {
         return <div>Loading authentication...</div>;
     }
 
-    if (context.user === null) {
-        return <div> Loading... </div>;
-    }
-
     const { user, login } = context;
 
     useEffect(() => {
         // checks if user is false (logged out)
-        if (!user) {
+        if (user === false) {
             router.push("/");
         }
-    }, [user]);
+    }, [user, router]);
+
+    if (context.user === null) {
+        return <div> Loading... </div>;
+    }
 
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Prevent form submission refresh
