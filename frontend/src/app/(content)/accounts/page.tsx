@@ -21,7 +21,7 @@ import Notifications from "@/components/AccountsComponents/Notifications";
 import { AuthContext } from "@/components/AuthContext";
 
 export default function Page() {
-    const context = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     const router = useRouter();
 
     const [roleToCreate, setRoleToCreate] = useState<Role>("student");
@@ -38,8 +38,6 @@ export default function Page() {
         Role | "" | "welcome team leader"
     >("");
 
-    const user = context.user;
-
     useEffect(() => {
         // checks if user is false
         if (!user) {
@@ -48,7 +46,6 @@ export default function Page() {
     }, [user, router]);
 
     useEffect(() => {
-        const { user } = context;
         if (!user) return;
 
         const role = user.role;
@@ -115,7 +112,7 @@ export default function Page() {
 
         fetchInvitableRoles();
         fetchSubordinates();
-    }, [context.user]); // Only depend on context.user
+    }, [user]);
 
     const onGenerateLink = async () => {
         try {
@@ -175,7 +172,7 @@ export default function Page() {
         await toggleWelcomeTeamLeader({ uid });
     };
 
-    if (context.user === null) {
+    if (user === null) {
         return <div> Loading... </div>;
     }
 

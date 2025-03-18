@@ -3,12 +3,12 @@
 import { AttendanceInfoType } from "@/types";
 import { db } from "@/utility/firebase";
 import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
-import React, { useContext, useState } from "react";
-import { AuthContext } from "../AuthContext";
+import React, { useState } from "react";
 import AttendanceToggle from "../InputComponents/AttendanceToggle";
 
 interface AttendanceProps {
     id: string;
+    showClassSlider: boolean;
     attendanceData: { [key: string]: AttendanceInfoType };
     setAttendanceData: React.Dispatch<
         React.SetStateAction<{ [key: string]: AttendanceInfoType }>
@@ -17,14 +17,10 @@ interface AttendanceProps {
 
 export default function Attendance({
     id,
+    showClassSlider,
     attendanceData,
     setAttendanceData,
 }: AttendanceProps) {
-    const { user } = useContext(AuthContext);
-    // can't be null, since user had to be logged in to access page first
-    if (!user) {
-        return null;
-    }
     const [selectedDate, setSelectedDate] = useState(
         new Date().toISOString().slice(0, 10)
     );
@@ -69,7 +65,6 @@ export default function Attendance({
         }
     };
 
-    const showClassSlider = user.role !== "student";
     return (
         <div className="flex items-center gap-4 p-4 border rounded-lg shadow-md bg-white">
             <input
