@@ -61,21 +61,13 @@ export default function Attendance({
 
     return (
         <div className="flex items-center gap-4 p-4 border rounded-lg shadow-md bg-white">
-            <div className="flex items-center gap-2">
-                <label
-                    htmlFor="attendanceDate"
-                    className="text-sm font-semibold text-gray-800"
-                >
-                    Attendance
-                </label>
-                <input
-                    type="date"
-                    id="attendanceDate"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="border rounded-md px-3 py-2 text-sm focus:ring focus:ring-blue-200"
-                />
-            </div>
+            <input
+                type="date"
+                id="attendanceDate"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="border rounded-md px-3 py-2 text-sm focus:ring focus:ring-blue-200"
+            />
 
             <div className="flex items-center gap-2">
                 <div className="relative inline-flex items-center">
@@ -108,6 +100,8 @@ export default function Attendance({
                     {isPresent ? "Present" : "Absent"}
                 </span>
             </div>
+
+            <div></div>
         </div>
     );
 }
