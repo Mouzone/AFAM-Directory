@@ -57,21 +57,53 @@ export default function Attendance({
         }
     };
 
+    const isPresent = attendanceData[selectedDate]?.sermonAttendance ?? false;
+
     return (
-        <>
-            <label> Attendance </label>
-            <input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-            />
-            <input
-                type="checkbox"
-                checked={
-                    attendanceData[selectedDate]?.sermonAttendance ?? false
-                }
-                onChange={() => toggleSelectedDateAttendance()}
-            />
-        </>
+        <div className="flex items-center gap-4 p-4 border rounded-lg shadow-md bg-white">
+            <div className="flex items-center gap-2">
+                <label
+                    htmlFor="attendanceDate"
+                    className="text-sm font-semibold text-gray-800"
+                >
+                    Attendance
+                </label>
+                <input
+                    type="date"
+                    id="attendanceDate"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className="border rounded-md px-3 py-2 text-sm focus:ring focus:ring-blue-200"
+                />
+            </div>
+
+            <div className="flex items-center gap-2">
+                <div className="relative inline-flex items-center">
+                    <input
+                        type="checkbox"
+                        id="attendanceToggle"
+                        className="sr-only peer"
+                        checked={isPresent}
+                        onChange={toggleSelectedDateAttendance}
+                    />
+                    <label
+                        htmlFor="attendanceToggle"
+                        className={`relative flex items-center p-1 cursor-pointer w-12 h-6 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 transition-colors duration-200 ${
+                            isPresent ? "bg-green-500" : "bg-red-500"
+                        }`}
+                    >
+                        <span className="inline-block w-4 h-4 bg-white rounded-full transition-transform transform translate-x-0 peer-checked:translate-x-6"></span>
+                    </label>
+                </div>
+
+                <span
+                    className={`text-sm font-medium ${
+                        isPresent ? "text-green-600" : "text-red-600"
+                    }`}
+                >
+                    {isPresent ? "Present" : "Absent"}
+                </span>
+            </div>
+        </div>
     );
 }
