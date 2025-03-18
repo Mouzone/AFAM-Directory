@@ -47,10 +47,10 @@ export default function Page() {
     };
 
     useEffect(() => {
-        if (!loading && !user) {
+        if (user === false) {
             router.push("/");
         }
-    }, [user, loading, router]);
+    }, [user, router]);
 
     useEffect(() => {
         if (!user) return; // Only fetch data if user is authenticated
