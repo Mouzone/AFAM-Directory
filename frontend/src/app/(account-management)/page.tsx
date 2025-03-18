@@ -19,8 +19,8 @@ export default function Page() {
 
     useEffect(() => {
         // checks if user is false (logged out)
-        if (user === false) {
-            router.push("/");
+        if (user) {
+            router.push("/directory");
         }
     }, [user, router]);
 
