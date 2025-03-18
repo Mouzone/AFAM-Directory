@@ -4,7 +4,7 @@ interface TableProps {
     editForm: (student: StudentGeneralInfo) => void;
 }
 
-export default function Table({filtered, editForm}: TableProps) {
+export default function Table({ filtered, editForm }: TableProps) {
     return (
         <table className="w-full border-collapse">
             <thead>

@@ -11,6 +11,7 @@ import { collection, onSnapshot, query, getDocs } from "firebase/firestore";
 import Updates from "@/components/DirectoryComponents/Updates";
 import Search from "@/components/DirectoryComponents/Search";
 import { AuthContext } from "@/components/AuthContext";
+
 export default function Page() {
     const [loading, setLoading] = useState(true); // Add loading state
     const router = useRouter(); // Initialize useRouter
@@ -171,7 +172,7 @@ export default function Page() {
         fetchTeachers();
     }, [user]); // Add user dependency
 
-    if (user === null) return <div> Loading... </div>;
+    if (user === null || loading) return <div> Loading... </div>;
     if (!user) return null; // Prevent rendering if not logged in after loading
     if (error) return <div> {error} </div>;
 
