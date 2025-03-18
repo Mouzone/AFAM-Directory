@@ -278,7 +278,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                         >
                             General
                         </div>
-                        {isEdit && (
+                        {generalData["id"] && (
                             <div
                                 onClick={() => setTab("attendance")}
                                 className={`cursor-pointer px-4 py-2 rounded-md transition-colors duration-200 ${
