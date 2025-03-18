@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
-import { StudentGeneralInfo, StudentPrivateInfo, Teacher } from "../../types";
+import {
+    AttendanceInfoType,
+    StudentGeneralInfo,
+    StudentPrivateInfo,
+    Teacher,
+} from "../../types";
 import {
     collection,
     doc,
     getDoc,
     deleteDoc,
     updateDoc,
+    getDocs,
 } from "firebase/firestore";
 import {
     ref,
@@ -21,6 +27,7 @@ import Private from "../FormComponents/Private";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "../AuthContext";
+import Attendance from "../FormComponents/Attendance";
 
 interface FormProps {
     generalState: StudentGeneralInfo;
@@ -35,7 +42,12 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     const [privateData, setPrivateData] = useState<StudentPrivateInfo>(
         studentPrivateInfoDefault
     );
-    const [tab, setTab] = useState<"general" | "private">("general");
+    const [attendanceData, setAttendanceData] = useState<{
+        [key: string]: AttendanceInfoType;
+    }>({}); // will either be empty object or object with date keys and info
+    const [tab, setTab] = useState<"general" | "attendance" | "private">(
+        "general"
+    );
     const [isEdit, setIsEdit] = useState(false);
     const [showPrivate, setShowPrivate] = useState(false);
     const [image, setImage] = useState<File | null>(null);
@@ -48,27 +60,33 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     useEffect(() => {
         if (!user) {
             router.push("/");
-        }
-    }, [user]);
-
-    useEffect(() => {
-        async function getRole() {
-            if (!user) {
-                return router.push("/error");
-            }
-            const userRole = user.role;
+        } else {
             setShowPrivate(
                 !("id" in generalData) ||
-                    ("id" in generalData && userRole != "student")
+                    ("id" in generalData && user.role != "student")
             );
         }
-
-        getRole();
-    }, [generalData, router]);
+    }, [generalData, user]);
 
     useEffect(() => {
         if (!generalData["id"]) {
             return;
+        }
+
+        async function fetchAttendance() {
+            const studentRef = doc(db, "students", generalData["id"] as string);
+            const attendanceCollectionRef = collection(
+                studentRef,
+                "attendance"
+            );
+            const attendanceDocSnapshot = await getDocs(
+                attendanceCollectionRef
+            );
+            const data: { [key: string]: AttendanceInfoType } = {};
+            attendanceDocSnapshot.docs.forEach(
+                (doc) => (data[doc.id] = doc.data() as AttendanceInfoType)
+            );
+            setAttendanceData(data);
         }
 
         async function fetchPrivateInfo() {
@@ -86,6 +104,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
         }
 
         fetchHeadshot();
+        fetchAttendance();
         fetchPrivateInfo();
     }, [generalData]);
 
@@ -167,6 +186,31 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
         onSubmit();
     };
 
+    const tabComponents = {
+        general: (
+            <General
+                disabled={disabled}
+                teachers={teachers}
+                generalData={generalData}
+                setGeneralData={setGeneralData}
+            />
+        ),
+        attendance: generalData["id"] ? (
+            <Attendance
+                id={generalData["id"]}
+                attendanceData={attendanceData}
+                setAttendanceData={setAttendanceData}
+            />
+        ) : null,
+        private: showPrivate ? (
+            <Private
+                disabled={disabled}
+                privateData={privateData}
+                setPrivateData={setPrivateData}
+            />
+        ) : null,
+    };
+
     return (
         <form
             onSubmit={handleSubmit}
@@ -234,6 +278,18 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                         >
                             General
                         </div>
+                        {isEdit && (
+                            <div
+                                onClick={() => setTab("attendance")}
+                                className={`cursor-pointer px-4 py-2 rounded-md transition-colors duration-200 ${
+                                    tab === "attendance"
+                                        ? "bg-blue-600 text-white shadow-md"
+                                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                }`}
+                            >
+                                Attendance
+                            </div>
+                        )}
                         {showPrivate && (
                             <div
                                 onClick={() => setTab("private")}
@@ -247,22 +303,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                             </div>
                         )}
                     </div>
-                    {tab == "general" ? (
-                        <General
-                            disabled={disabled}
-                            teachers={teachers}
-                            generalData={generalData}
-                            setGeneralData={setGeneralData}
-                        />
-                    ) : (
-                        showPrivate && (
-                            <Private
-                                disabled={disabled}
-                                privateData={privateData}
-                                setPrivateData={setPrivateData}
-                            />
-                        )
-                    )}
+                    {tabComponents[tab]}
                     <Buttons
                         type={!("id" in generalData) ? "add" : "view"}
                         isEdit={isEdit}

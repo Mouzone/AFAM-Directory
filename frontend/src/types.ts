@@ -94,3 +94,9 @@ export type AuthUser = {
 export type AuthProviderType = {
     user: false | null | AuthUser;
 };
+
+export type AttendanceInfoType = {
+    date: string;
+    sermonAttendance: boolean;
+    classAttendance: boolean;
+};
