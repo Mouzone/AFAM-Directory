@@ -81,6 +81,7 @@ export default function Attendance({
             />
 
             <AttendanceToggle
+                label="Sermon"
                 isPresent={attendanceState["sermonAttendance"]}
                 onChange={() =>
                     toggleSelectedDateAttendance("sermonAttendance")
@@ -89,6 +90,7 @@ export default function Attendance({
 
             {showClassSlider && (
                 <AttendanceToggle
+                    label="Class"
                     isPresent={attendanceState["classAttendance"]}
                     onChange={() =>
                         toggleSelectedDateAttendance("classAttendance")
