@@ -38,19 +38,21 @@ export default function Attendance({
               };
 
     // todo: add abort controller
-    const toggleSelectedDateAttendance = async () => {
+    const toggleSelectedDateAttendance = async (
+        key: "sermonAttendance" | "classAttendance"
+    ) => {
         const docRef = doc(db, "students", id, "attendance", selectedDate);
         const docSnapshot = await getDoc(docRef);
         if (docSnapshot.exists()) {
             await updateDoc(docRef, {
                 ...attendanceState,
-                sermonAttendance: !attendanceState["sermonAttendance"],
+                [key]: !attendanceState[key],
             });
             setAttendanceData({
                 ...attendanceData,
                 [selectedDate]: {
                     ...attendanceState,
-                    sermonAttendance: !attendanceState["sermonAttendance"],
+                    [key]: !attendanceState[key],
                 },
             });
         } else {
@@ -80,13 +82,17 @@ export default function Attendance({
 
             <AttendanceToggle
                 isPresent={attendanceState["sermonAttendance"]}
-                onChange={toggleSelectedDateAttendance}
+                onChange={() =>
+                    toggleSelectedDateAttendance("sermonAttendance")
+                }
             />
 
             {showClassSlider && (
                 <AttendanceToggle
                     isPresent={attendanceState["classAttendance"]}
-                    onChange={toggleSelectedDateAttendance}
+                    onChange={() =>
+                        toggleSelectedDateAttendance("classAttendance")
+                    }
                 />
             )}
 
