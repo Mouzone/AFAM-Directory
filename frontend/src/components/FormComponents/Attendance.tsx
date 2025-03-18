@@ -2,7 +2,7 @@
 
 import { AttendanceInfoType } from "@/types";
 import { db } from "@/utility/firebase";
-import { doc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 
 interface AttendanceProps {
@@ -25,23 +25,8 @@ export default function Attendance({
     // todo: add abort controller
     const toggleSelectedDateAttendance = async () => {
         const docRef = doc(db, "students", id, "attendance", selectedDate);
-        if (!docRef) {
-            await setDoc(docRef, {
-                date: Timestamp.fromDate(new Date(selectedDate)),
-                sermonAttendance:
-                    !attendanceData[selectedDate]["sermonAttendance"],
-                classAttendance: false,
-            });
-            setAttendanceData({
-                ...attendanceData,
-                [selectedDate]: {
-                    date: Timestamp.fromDate(new Date(selectedDate)).toString(),
-                    sermonAttendance:
-                        !attendanceData[selectedDate]["sermonAttendance"],
-                    classAttendance: false,
-                },
-            });
-        } else {
+        const docSnapshot = await getDoc(docRef);
+        if (docSnapshot.exists()) {
             await updateDoc(docRef, {
                 ...attendanceData[selectedDate],
                 sermonAttendance:
@@ -53,6 +38,20 @@ export default function Attendance({
                     ...attendanceData[selectedDate],
                     sermonAttendance:
                         !attendanceData[selectedDate]["sermonAttendance"],
+                },
+            });
+        } else {
+            await setDoc(docRef, {
+                date: Timestamp.fromDate(new Date(selectedDate)),
+                sermonAttendance: true,
+                classAttendance: false,
+            });
+            setAttendanceData({
+                ...attendanceData,
+                [selectedDate]: {
+                    date: Timestamp.fromDate(new Date(selectedDate)).toString(),
+                    sermonAttendance: true,
+                    classAttendance: false,
                 },
             });
         }
@@ -69,7 +68,7 @@ export default function Attendance({
             <input
                 type="checkbox"
                 checked={
-                    attendanceData[selectedDate]["sermonAttendance"] || false
+                    attendanceData[selectedDate]?.sermonAttendance ?? false
                 }
                 onChange={() => toggleSelectedDateAttendance()}
             />
