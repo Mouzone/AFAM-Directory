@@ -3,7 +3,9 @@
 import { AttendanceInfoType } from "@/types";
 import { db } from "@/utility/firebase";
 import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../AuthContext";
+import AttendanceToggle from "../InputComponents/AttendanceToggle";
 
 interface AttendanceProps {
     id: string;
@@ -18,9 +20,22 @@ export default function Attendance({
     attendanceData,
     setAttendanceData,
 }: AttendanceProps) {
+    const { user } = useContext(AuthContext);
+    // can't be null, since user had to be logged in to access page first
+    if (!user) {
+        return null;
+    }
     const [selectedDate, setSelectedDate] = useState(
         new Date().toISOString().slice(0, 10)
     );
+
+    const attendanceState =
+        selectedDate in attendanceData
+            ? attendanceData[selectedDate]
+            : {
+                  sermonAttendance: false,
+                  classAttendance: false,
+              };
 
     // todo: add abort controller
     const toggleSelectedDateAttendance = async () => {
@@ -28,37 +43,31 @@ export default function Attendance({
         const docSnapshot = await getDoc(docRef);
         if (docSnapshot.exists()) {
             await updateDoc(docRef, {
-                ...attendanceData[selectedDate],
-                sermonAttendance:
-                    !attendanceData[selectedDate]["sermonAttendance"],
+                ...attendanceState,
+                sermonAttendance: !attendanceState["sermonAttendance"],
             });
             setAttendanceData({
                 ...attendanceData,
                 [selectedDate]: {
-                    ...attendanceData[selectedDate],
-                    sermonAttendance:
-                        !attendanceData[selectedDate]["sermonAttendance"],
+                    ...attendanceState,
+                    sermonAttendance: !attendanceState["sermonAttendance"],
                 },
             });
         } else {
             await setDoc(docRef, {
+                ...attendanceState,
                 date: Timestamp.fromDate(new Date(selectedDate)),
-                sermonAttendance: true,
-                classAttendance: false,
             });
             setAttendanceData({
                 ...attendanceData,
                 [selectedDate]: {
-                    date: Timestamp.fromDate(new Date(selectedDate)).toString(),
-                    sermonAttendance: true,
-                    classAttendance: false,
+                    ...attendanceState,
                 },
             });
         }
     };
 
-    const isPresent = attendanceData[selectedDate]?.sermonAttendance ?? false;
-
+    const showClassSlider = user.role !== "student";
     return (
         <div className="flex items-center gap-4 p-4 border rounded-lg shadow-md bg-white">
             <input
@@ -69,37 +78,17 @@ export default function Attendance({
                 className="border rounded-md px-3 py-2 text-sm focus:ring focus:ring-blue-200"
             />
 
-            <div className="flex items-center gap-2">
-                <div className="relative inline-flex items-center">
-                    <input
-                        type="checkbox"
-                        id="attendanceToggle"
-                        className="sr-only peer"
-                        checked={isPresent}
-                        onChange={toggleSelectedDateAttendance}
-                    />
-                    <label
-                        htmlFor="attendanceToggle"
-                        className={`relative flex items-center p-1 cursor-pointer w-12 h-6 rounded-full peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 transition-colors duration-200 ${
-                            isPresent ? "bg-green-500" : "bg-red-500"
-                        }`}
-                    >
-                        <span
-                            className={`inline-block w-4 h-4 bg-white rounded-full transition-transform transform ${
-                                isPresent ? "translate-x-0" : "translate-x-6"
-                            }`}
-                        ></span>
-                    </label>
-                </div>
+            <AttendanceToggle
+                isPresent={attendanceState["sermonAttendance"]}
+                onChange={toggleSelectedDateAttendance}
+            />
 
-                <span
-                    className={`text-sm font-medium ${
-                        isPresent ? "text-green-600" : "text-red-600"
-                    }`}
-                >
-                    {isPresent ? "Present" : "Absent"}
-                </span>
-            </div>
+            {showClassSlider && (
+                <AttendanceToggle
+                    isPresent={attendanceState["classAttendance"]}
+                    onChange={toggleSelectedDateAttendance}
+                />
+            )}
 
             <div></div>
         </div>

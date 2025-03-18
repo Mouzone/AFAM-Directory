@@ -96,7 +96,7 @@ export type AuthProviderType = {
 };
 
 export type AttendanceInfoType = {
-    date: string;
+    date?: string;
     sermonAttendance: boolean;
     classAttendance: boolean;
 };
