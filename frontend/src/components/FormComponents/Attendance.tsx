@@ -92,7 +92,11 @@ export default function Attendance({
                             isPresent ? "bg-green-500" : "bg-red-500"
                         }`}
                     >
-                        <span className="inline-block w-4 h-4 bg-white rounded-full transition-transform transform translate-x-0 peer-checked:translate-x-6"></span>
+                        <span
+                            className={`inline-block w-4 h-4 bg-white rounded-full transition-transform transform ${
+                                isPresent ? "translate-x-0" : "translate-x-6"
+                            }`}
+                        ></span>
                     </label>
                 </div>
 
