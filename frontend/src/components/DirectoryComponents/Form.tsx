@@ -57,7 +57,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     const disabled = "id" in generalData && !isEdit;
 
     useEffect(() => {
-        if (!user) {
+        if (user === false) {
             router.push("/");
         }
     }, [user, router]);
@@ -180,9 +180,13 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
         onSubmit();
     };
 
+    if (!user) {
+        return null;
+    }
+
     const showPrivate =
         !("id" in generalData) ||
-        ("id" in generalData && user && user.role != "student");
+        ("id" in generalData && user.role != "student");
 
     const tabComponents = {
         general: (
