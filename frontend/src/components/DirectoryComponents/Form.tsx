@@ -49,7 +49,6 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
         "general"
     );
     const [isEdit, setIsEdit] = useState(false);
-    const [showPrivate, setShowPrivate] = useState(false);
     const [image, setImage] = useState<File | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -60,13 +59,8 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     useEffect(() => {
         if (!user) {
             router.push("/");
-        } else {
-            setShowPrivate(
-                !("id" in generalData) ||
-                    ("id" in generalData && user.role != "student")
-            );
         }
-    }, [generalData, user]);
+    }, [user, router]);
 
     useEffect(() => {
         if (!generalData["id"]) {
@@ -185,6 +179,10 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
 
         onSubmit();
     };
+
+    const showPrivate =
+        !("id" in generalData) ||
+        ("id" in generalData && user && user.role != "student");
 
     const tabComponents = {
         general: (
