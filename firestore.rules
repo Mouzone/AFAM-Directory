@@ -21,6 +21,11 @@ service cloud.firestore {
         allow create, read, update, delete: 
             if hasRequiredRole(["admin", "teacher", "pastor", "deacon"]) || request.auth.token.isWelcomeTeamLeader;
       }
+
+      match /attendance/{document=**} {
+        allow create, read, update, delete: 
+            if hasRequiredRole(["admin", "teacher", "pastor", "deacon", "student"]) || request.auth.token.isWelcomeTeamLeader
+      }
     }
 
     // Privileges collection rules
