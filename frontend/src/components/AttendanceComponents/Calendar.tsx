@@ -19,16 +19,11 @@ const generateYears = () => {
     const years = [];
     const currentYear = new Date().getFullYear();
     for (let year = currentYear; year >= 2025; year--) {
-        years.push(
-            <option key={year} value={year}>
-                {year}
-            </option>
-        );
+        years.push(year);
     }
     return years;
 };
 
-const yearsToGenerate = generateYears();
 const todaysDate = new Date();
 export default function Calendar({
     attendanceData,
@@ -43,12 +38,11 @@ export default function Calendar({
     const fillerSquares = [];
     for (let i = 0; i < fillerSquaresToGenerate; i++) {
         fillerSquares.push(
-            <div
-                key={`fillerSquare${i}`}
-                className="w-4 h-4 rounded-sm bg-white"
-            ></div>
+            <div key={i} className="w-4 h-4 rounded-sm bg-white"></div>
         );
     }
+
+    const yearsToGenerate = generateYears();
 
     return (
         <div className="p-4 justify-items-center">
@@ -73,7 +67,11 @@ export default function Calendar({
                     onChange={(e) => setYear(Number(e.target.value))}
                     className="font-bold"
                 >
-                    {yearsToGenerate}
+                    {yearsToGenerate.map((year) => (
+                        <option key={year} value={year}>
+                            {year}
+                        </option>
+                    ))}
                 </select>
             </div>
             <div className="grid grid-cols-7 gap-x-10 gap-y-2 mt-3">
