@@ -1,28 +1,28 @@
 import { AttendanceInfoType } from "@/types";
 import { useState } from "react";
 import { months } from "@/utility/consts";
-import CalendarCell from "./CalendarCell";
+// import CalendarCell from "./CalendarCell";
 
-const generateDateRange = (year: number, month: number) => {
-    const firstDay = new Date(year, month - 1, 1);
+// const generateDateRange = (year: number, month: number) => {
+//     const firstDay = new Date(year, month - 1, 1);
 
-    const lastDay = new Date(year, month, 0);
-    const dates = [];
-    for (let day = firstDay; day <= lastDay; day.setDate(day.getDate() + 1)) {
-        dates.push(day.toISOString().split("T")[0]); // Format as YYYY-MM-DD
-    }
+//     const lastDay = new Date(year, month, 0);
+//     const dates = [];
+//     for (let day = firstDay; day <= lastDay; day.setDate(day.getDate() + 1)) {
+//         dates.push(day.toISOString().split("T")[0]); // Format as YYYY-MM-DD
+//     }
 
-    return dates;
-};
+//     return dates;
+// };
 
-const generateYears = () => {
-    const years = [];
-    const currentYear = new Date().getFullYear();
-    for (let year = currentYear; year >= 2025; year--) {
-        years.push(year);
-    }
-    return years;
-};
+// const generateYears = () => {
+//     const years = [];
+//     const currentYear = new Date().getFullYear();
+//     for (let year = currentYear; year >= 2025; year--) {
+//         years.push(year);
+//     }
+//     return years;
+// };
 
 const todaysDate = new Date();
 interface CalendarProps {
