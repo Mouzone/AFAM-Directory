@@ -3,7 +3,7 @@
 import { AttendanceInfoType } from "@/types";
 import { db } from "@/utility/firebase";
 import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useState } from "react";
 import AttendanceToggle from "../InputComponents/AttendanceToggle";
 import { months } from "@/utility/consts";
 
@@ -191,7 +191,7 @@ function Calendar({
                             content = "Class Attended";
                         }
                     }
-                    return <Cell date={date} content={content} />;
+                    return <Cell key={date} date={date} content={content} />;
                 })}
             </div>
         </div>
