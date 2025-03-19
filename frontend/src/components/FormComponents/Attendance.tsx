@@ -121,6 +121,7 @@ function Calendar({
     const [month, setMonth] = useState(new Date().getMonth());
 
     const dateRange = generateDateRange(year, month + 1);
+
     const fillerSquaresToGenerate = new Date(dateRange[0]).getDay() + 1;
     const fillerSquares = [];
     for (let i = 0; i < fillerSquaresToGenerate; i++) {
@@ -180,22 +181,28 @@ function Calendar({
                             attendanceData[date];
 
                         if (sermonAttendance && classAttendance) {
-                            content = "Both Attended"; // Both sermon and class attendance
+                            content = "Both Attended";
                         } else if (sermonAttendance) {
-                            content = "Sermon Attended"; // Only sermon attendance
+                            content = "Sermon Attended";
                         } else if (classAttendance) {
-                            content = "Class Attendance"; // Only class attendance
+                            content = "Class Attended";
+                        } else {
+                            content = "Neither Attended";
                         }
                     }
                     return (
                         <div
                             key={date}
-                            className={
-                                "w-6 h-6 bg-gray-100 rounded-sm flex items-center justify-center text-sm font-semibold transition-colors duration-200"
-                            }
+                            className={`w-6 h-6 bg-gray-100 rounded-sm flex items-center justify-center text-sm font-semibold transition-colors duration-200
+                                ${
+                                    date ==
+                                    new Date().toISOString().split("T")[0]
+                                        ? "border-2 border-blue-700"
+                                        : ""
+                                }`}
                             title={`${date}: ${content}`}
                         >
-                            {content[0]}
+                            {content !== "Neither Attended" ? content[0] : ""}
                         </div>
                     );
                 })}
