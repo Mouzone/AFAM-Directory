@@ -3,7 +3,7 @@
 import { AttendanceInfoType } from "@/types";
 import { db } from "@/utility/firebase";
 import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import AttendanceToggle from "../InputComponents/AttendanceToggle";
 import { months } from "@/utility/consts";
 
@@ -114,6 +114,21 @@ const generateDateRange = (year: number, month: number) => {
     return dates;
 };
 
+const generateYears = () => {
+    const years = [];
+    const currentYear = new Date().getFullYear();
+    for (let year = currentYear; year >= 2025; year--) {
+        years.push(
+            <option key={year} value={year}>
+                {year}
+            </option>
+        );
+    }
+    return years;
+};
+
+const yearsToGenerate = generateYears();
+
 function Calendar({
     attendanceData,
 }: {
@@ -121,7 +136,6 @@ function Calendar({
 }) {
     const [year, setYear] = useState(new Date().getFullYear());
     const [month, setMonth] = useState(new Date().getMonth());
-
     const dateRange = generateDateRange(year, month + 1);
 
     const fillerSquaresToGenerate = new Date(dateRange[0]).getDay() + 1;
@@ -134,18 +148,6 @@ function Calendar({
             ></div>
         );
     }
-    const yearsToGenerate = useMemo(() => {
-        const years = [];
-        const currentYear = new Date().getFullYear();
-        for (let year = currentYear; year >= 2025; year--) {
-            years.push(
-                <option key={year} value={year}>
-                    {year}
-                </option>
-            );
-        }
-        return years;
-    }, []);
 
     return (
         <div className="p-4 justify-items-center">
