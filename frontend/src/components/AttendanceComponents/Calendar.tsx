@@ -25,24 +25,24 @@ const generateYears = () => {
 };
 
 const todaysDate = new Date();
-export default function Calendar({
-    attendanceData,
-}: {
+interface CalendarProps {
     attendanceData: { [key: string]: AttendanceInfoType };
-}) {
+}
+export default function Calendar({ attendanceData }: CalendarProps) {
     const [year, setYear] = useState(todaysDate.getFullYear());
     const [month, setMonth] = useState(todaysDate.getMonth());
-    const dateRange = generateDateRange(year, month + 1);
 
-    const fillerSquaresToGenerate = new Date(dateRange[0]).getDay() + 1;
-    const fillerSquares = [];
-    for (let i = 0; i < fillerSquaresToGenerate; i++) {
-        fillerSquares.push(
-            <div key={i} className="w-4 h-4 rounded-sm bg-white"></div>
-        );
-    }
+    // const yearsToGenerate = generateYears();
+    // const dateRange = generateDateRange(year, month + 1);
 
-    const yearsToGenerate = generateYears();
+    // const fillerSquaresToGenerate = new Date(dateRange[0]).getDay() + 1;
+    // const fillerSquares = [];
+    // for (let i = 0; i < fillerSquaresToGenerate; i++) {
+    //     fillerSquares.push(
+    //         <div key={i} className="w-4 h-4 rounded-sm bg-white"></div>
+    //     );
+    // }
+    const yearsToGenerate = [2025];
 
     return (
         <div className="p-4 justify-items-center">
@@ -74,7 +74,7 @@ export default function Calendar({
                     ))}
                 </select>
             </div>
-            <div className="grid grid-cols-7 gap-x-10 gap-y-2 mt-3">
+            {/* <div className="grid grid-cols-7 gap-x-10 gap-y-2 mt-3">
                 {fillerSquares}
                 {dateRange.map((date) => {
                     let content = "Neither Attended";
@@ -98,7 +98,7 @@ export default function Calendar({
                         />
                     );
                 })}
-            </div>
+            </div> */}
         </div>
     );
 }
