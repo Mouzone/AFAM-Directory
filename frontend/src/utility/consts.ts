@@ -34,7 +34,7 @@ export const studentPrivateInfoDefault = {
         phoneNumber: "",
         email: "",
     },
-} as StudentPrivateInfo
+} as StudentPrivateInfo;
 
 export const labels = {
     firstName: "First Name",
@@ -42,3 +42,18 @@ export const labels = {
     schoolYear: "Grade",
     teacher: "Teacher",
 } as const;
+
+export const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+];

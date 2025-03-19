@@ -3,8 +3,9 @@
 import { AttendanceInfoType } from "@/types";
 import { db } from "@/utility/firebase";
 import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import AttendanceToggle from "../InputComponents/AttendanceToggle";
+import { months } from "@/utility/consts";
 
 interface AttendanceProps {
     id: string;
@@ -100,14 +101,9 @@ export default function Attendance({
 }
 
 const generateDateRange = (year: number, month: number) => {
-    // todo: generate all the dates for the whole month
-    // Get the first day of the month
     const firstDay = new Date(year, month - 1, 1);
 
-    // Get the last day of the month
-    const lastDay = new Date(year, month, 0); // Day 0 of the next month is the last day of the current month
-
-    // Generate all dates for the month
+    const lastDay = new Date(year, month, 0);
     const dates = [];
     for (let day = firstDay; day <= lastDay; day.setDate(day.getDate() + 1)) {
         dates.push(day.toISOString().split("T")[0]); // Format as YYYY-MM-DD
@@ -125,12 +121,6 @@ function Calendar({
     const [month, setMonth] = useState(new Date().getMonth());
 
     const dateRange = generateDateRange(year, month + 1);
-    // make the onhover date pop out more
-    // change month based on an input right above
-    // gray for no attendance
-    // red for only sermon
-    // yellow for only class
-    // green for both
     const fillerSquaresToGenerate = new Date(dateRange[0]).getDay() + 1;
     const fillerSquares = [];
     for (let i = 0; i < fillerSquaresToGenerate; i++) {
@@ -141,31 +131,18 @@ function Calendar({
             ></div>
         );
     }
-    // useMemo for these
-    const yearsToGenerate: React.ReactNode[] = [];
-    for (let year = new Date().getFullYear(); year >= 2025; year--) {
-        yearsToGenerate.push(
-            <option key={year} value={year}>
-                {year}
-            </option>
-        );
-    }
-
-    // put this in constants
-    const months = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-    ];
+    const yearsToGenerate = useMemo(() => {
+        const years = [];
+        const currentYear = new Date().getFullYear();
+        for (let year = currentYear; year >= 2025; year--) {
+            years.push(
+                <option key={year} value={year}>
+                    {year}
+                </option>
+            );
+        }
+        return years;
+    }, []);
 
     return (
         <div className="p-4 justify-items-center">
