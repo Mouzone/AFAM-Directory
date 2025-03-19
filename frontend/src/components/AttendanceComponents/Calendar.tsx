@@ -43,6 +43,7 @@ export default function Calendar({ attendanceData }: CalendarProps) {
     //     );
     // }
     const yearsToGenerate = [2025];
+    console.log(attendanceData);
 
     return (
         <div className="p-4 justify-items-center">
