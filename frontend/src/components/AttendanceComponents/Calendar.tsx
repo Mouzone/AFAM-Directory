@@ -1,19 +1,19 @@
 import { AttendanceInfoType } from "@/types";
 import { useState } from "react";
 import { months } from "@/utility/consts";
-// import CalendarCell from "./CalendarCell";
+import CalendarCell from "./CalendarCell";
 
-// const generateDateRange = (year: number, month: number) => {
-//     const firstDay = new Date(year, month - 1, 1);
+const generateDateRange = (year: number, month: number) => {
+    const firstDay = new Date(year, month - 1, 1);
 
-//     const lastDay = new Date(year, month, 0);
-//     const dates = [];
-//     for (let day = firstDay; day <= lastDay; day.setDate(day.getDate() + 1)) {
-//         dates.push(day.toISOString().split("T")[0]); // Format as YYYY-MM-DD
-//     }
+    const lastDay = new Date(year, month, 0);
+    const dates = [];
+    for (let day = firstDay; day <= lastDay; day.setDate(day.getDate() + 1)) {
+        dates.push(day.toISOString().split("T")[0]); // Format as YYYY-MM-DD
+    }
 
-//     return dates;
-// };
+    return dates;
+};
 
 // const generateYears = () => {
 //     const years = [];
@@ -33,7 +33,7 @@ export default function Calendar({ attendanceData }: CalendarProps) {
     const [month, setMonth] = useState(todaysDate.getMonth());
 
     // const yearsToGenerate = generateYears();
-    // const dateRange = generateDateRange(year, month + 1);
+    const dateRange = generateDateRange(year, month + 1);
 
     // const fillerSquaresToGenerate = new Date(dateRange[0]).getDay() + 1;
     // const fillerSquares = [];
@@ -75,8 +75,8 @@ export default function Calendar({ attendanceData }: CalendarProps) {
                     ))}
                 </select>
             </div>
-            {/* <div className="grid grid-cols-7 gap-x-10 gap-y-2 mt-3">
-                {fillerSquares}
+            <div className="grid grid-cols-7 gap-x-10 gap-y-2 mt-3">
+                {/* {fillerSquares} */}
                 {dateRange.map((date) => {
                     let content = "Neither Attended";
                     if (date in attendanceData) {
@@ -99,7 +99,7 @@ export default function Calendar({ attendanceData }: CalendarProps) {
                         />
                     );
                 })}
-            </div> */}
+            </div>
         </div>
     );
 }
