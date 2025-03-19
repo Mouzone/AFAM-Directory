@@ -29,14 +29,14 @@ const generateYears = () => {
 };
 
 const yearsToGenerate = generateYears();
-
+const todaysDate = new Date();
 export default function Calendar({
     attendanceData,
 }: {
     attendanceData: { [key: string]: AttendanceInfoType };
 }) {
-    const [year, setYear] = useState(new Date().getFullYear());
-    const [month, setMonth] = useState(new Date().getMonth());
+    const [year, setYear] = useState(todaysDate.getFullYear());
+    const [month, setMonth] = useState(todaysDate.getMonth());
     const dateRange = generateDateRange(year, month + 1);
 
     const fillerSquaresToGenerate = new Date(dateRange[0]).getDay() + 1;
