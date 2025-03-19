@@ -189,23 +189,33 @@ function Calendar({
             </div>
             <div className="grid grid-cols-7 gap-1">
                 {fillerSquares}
-                {dateRange.map((date) => (
-                    <div
-                        key={date}
-                        className={`w-4 h-4 rounded-sm ${
-                            date in attendanceData &&
-                            attendanceData[date]["sermonAttendance"]
-                                ? "bg-green-500"
-                                : "bg-gray-200"
-                        }`}
-                        title={`${date}: ${
-                            date in attendanceData &&
-                            attendanceData[date]["sermonAttendance"]
-                                ? "Contribution"
-                                : "No Contribution"
-                        }`}
-                    />
-                ))}
+                {dateRange.map((date) => {
+                    let content = ""; // Default to blank
+
+                    if (date in attendanceData) {
+                        const { sermonAttendance, classAttendance } =
+                            attendanceData[date];
+
+                        if (sermonAttendance && classAttendance) {
+                            content = "Both Attended"; // Both sermon and class attendance
+                        } else if (sermonAttendance) {
+                            content = "Sermon Attended"; // Only sermon attendance
+                        } else if (classAttendance) {
+                            content = "Class Attendance"; // Only class attendance
+                        }
+                    }
+                    return (
+                        <div
+                            key={date}
+                            className={
+                                "w-5 h-5 rounded-sm bg-gray-200 text-center align-middle font-bold"
+                            }
+                            title={`${date}: ${content}`}
+                        >
+                            {content[0]}
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
