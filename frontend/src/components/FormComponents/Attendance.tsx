@@ -55,12 +55,14 @@ export default function Attendance({
         } else {
             await setDoc(docRef, {
                 ...attendanceState,
+                [key]: !attendanceState[key],
                 date: Timestamp.fromDate(new Date(selectedDate)),
             });
             setAttendanceData({
                 ...attendanceData,
                 [selectedDate]: {
                     ...attendanceState,
+                    [key]: !attendanceState[key],
                 },
             });
         }
