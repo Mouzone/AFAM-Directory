@@ -15,14 +15,14 @@ const generateDateRange = (year: number, month: number) => {
     return dates;
 };
 
-// const generateYears = () => {
-//     const years = [];
-//     const currentYear = new Date().getFullYear();
-//     for (let year = currentYear; year >= 2025; year--) {
-//         years.push(year);
-//     }
-//     return years;
-// };
+const generateYears = () => {
+    const years = [];
+    const currentYear = new Date().getFullYear();
+    for (let year = currentYear; year >= 2025; year--) {
+        years.push(year);
+    }
+    return years;
+};
 
 const todaysDate = new Date();
 interface CalendarProps {
@@ -35,8 +35,7 @@ export default function Calendar({ attendanceData }: CalendarProps) {
     // const yearsToGenerate = generateYears();
     const dateRange = generateDateRange(year, month + 1);
     const fillerSquaresToGenerate = new Date(dateRange[0]).getDay() + 1;
-    const yearsToGenerate = [2025];
-    console.log(attendanceData);
+    const yearsToGenerate = generateYears();
 
     return (
         <div className="p-4 justify-items-center">
