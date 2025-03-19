@@ -34,14 +34,7 @@ export default function Calendar({ attendanceData }: CalendarProps) {
 
     // const yearsToGenerate = generateYears();
     const dateRange = generateDateRange(year, month + 1);
-
     const fillerSquaresToGenerate = new Date(dateRange[0]).getDay() + 1;
-    const fillerSquares = [];
-    for (let i = 0; i < fillerSquaresToGenerate; i++) {
-        fillerSquares.push(
-            <div key={i} className="w-4 h-4 rounded-sm bg-white"></div>
-        );
-    }
     const yearsToGenerate = [2025];
     console.log(attendanceData);
 
@@ -76,7 +69,9 @@ export default function Calendar({ attendanceData }: CalendarProps) {
                 </select>
             </div>
             <div className="grid grid-cols-7 gap-x-10 gap-y-2 mt-3">
-                {fillerSquares}
+                {Array.from({ length: fillerSquaresToGenerate }, (_, index) => (
+                    <div key={index} className="w-4 h-4 rounded-sm bg-white" />
+                ))}
                 {dateRange.map((date) => {
                     let content = "Neither Attended";
                     if (date in attendanceData) {
