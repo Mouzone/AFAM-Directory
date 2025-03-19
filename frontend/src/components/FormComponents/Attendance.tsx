@@ -168,26 +168,32 @@ function Calendar({
     ];
 
     return (
-        <div className="p-4">
+        <div className="p-4 justify-items-center">
             <div>
-                <select
-                    value={year}
-                    onChange={(e) => setYear(Number(e.target.value))}
-                >
-                    {yearsToGenerate}
-                </select>
                 <select
                     value={month}
                     onChange={(e) => setMonth(Number(e.target.value))}
+                    className="font-bold"
                 >
                     {months.map((month, index) => (
-                        <option key={month} value={index}>
+                        <option
+                            key={month}
+                            value={index}
+                            className="text-right"
+                        >
                             {month}
                         </option>
                     ))}
                 </select>
+                <select
+                    value={year}
+                    onChange={(e) => setYear(Number(e.target.value))}
+                    className="font-bold"
+                >
+                    {yearsToGenerate}
+                </select>
             </div>
-            <div className="grid grid-cols-7 gap-1">
+            <div className="grid grid-cols-7 gap-x-10 gap-y-2 mt-3">
                 {fillerSquares}
                 {dateRange.map((date) => {
                     let content = ""; // Default to blank
@@ -208,7 +214,7 @@ function Calendar({
                         <div
                             key={date}
                             className={
-                                "w-5 h-5 rounded-sm bg-gray-200 text-center align-middle font-bold"
+                                "w-6 h-6 bg-gray-100 rounded-sm flex items-center justify-center text-sm font-semibold transition-colors duration-200"
                             }
                             title={`${date}: ${content}`}
                         >
