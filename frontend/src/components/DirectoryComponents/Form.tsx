@@ -157,7 +157,6 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     const onSubmit = async () => {
         // type "generalData["id"]" as string since, fireStore will autogenerate a new id if it doesnt exist
         const docRef = doc(db, "students", generalData["id"] as string);
-        const attendanceColRef = collection(docRef, "attendance");
         const privateColRef = collection(docRef, "private");
         const privateDocRef = doc(privateColRef, "privateInfo");
 
@@ -172,14 +171,12 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     const updateAttendance = async (attendanceData: {
         [key: string]: AttendanceInfoType;
     }) => {
+        if (generalData["id"] === undefined) {
+            return;
+        }
+        const id = generalData["id"];
         Object.entries(attendanceData).forEach(async ([date, data]) => {
-            const docRef = doc(
-                db,
-                "students",
-                generalData["id"] as string,
-                "attendance",
-                date
-            );
+            const docRef = doc(db, "students", id, "attendance", date);
             if (
                 date in prevAttendanceData.current &&
                 prevAttendanceData.current[date].sermonAttendance !=
