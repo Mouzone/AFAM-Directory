@@ -37,7 +37,7 @@ export default function Private({
     };
 
     return (
-        <div className="flex flex-col gap-4 w-4xl max-h-[250px] overflow-y-auto content-padding">
+        <div className="flex flex-col gap-4 max-h-[250px] overflow-y-auto content-padding">
             <div className="flex gap-4">
                 <PhoneInput
                     label="Phone Number:"

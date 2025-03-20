@@ -215,22 +215,17 @@ export default function Page() {
             {/* Form Modal */}
             {showForm && (
                 <div
-                    className="fixed inset-0 bg-opacity-50 backdrop-blur-sm flex justify-center items-center"
+                    className="fixed inset-0 bg-opacity-50 backdrop-blur-lg flex justify-center items-center"
                     onClick={() => {
                         setShowForm(false);
                         setProfile(studentGeneralInfoDefault);
                     }} // Close modal on outside click
                 >
-                    <div
-                        className="bg-white p-6 rounded-lg w-fit"
-                        onClick={(e) => e.stopPropagation()} // Prevent clicks inside modal from closing it
-                    >
-                        <Form
-                            generalState={profile}
-                            closeForm={closeForm}
-                            teachers={teachers}
-                        />
-                    </div>
+                    <Form
+                        generalState={profile}
+                        closeForm={closeForm}
+                        teachers={teachers}
+                    />
                 </div>
             )}
             {/* Popup that details Action: [names] that truncates*/}
