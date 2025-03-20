@@ -14,6 +14,7 @@ import {
     getDocs,
     setDoc,
     Timestamp,
+    addDoc,
 } from "firebase/firestore";
 import {
     ref,
@@ -155,16 +156,33 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
 
     // runs the same regardless of "add" or "edit" scenario
     const onSubmit = async () => {
-        // type "generalData["id"]" as string since, fireStore will autogenerate a new id if it doesnt exist
-        const docRef = doc(db, "students", generalData["id"] as string);
-        const privateColRef = collection(docRef, "private");
-        const privateDocRef = doc(privateColRef, "privateInfo");
+        if (generalData["id"] !== undefined) {
+            const docRef = doc(db, "students", generalData["id"]);
+            const privateDocRef = doc(
+                db,
+                "students",
+                docRef.id,
+                "private",
+                "privateInfo"
+            );
 
-        await updateDoc(docRef, generalData);
-        await updateDoc(privateDocRef, privateData);
-        await updateAttendance(attendanceData);
-
-        uploadImage(docRef.id);
+            await updateDoc(docRef, generalData);
+            await updateDoc(privateDocRef, privateData);
+            await updateAttendance(attendanceData);
+            uploadImage(docRef.id);
+        } else {
+            const studentsColRef = collection(db, "students");
+            const docRef = await addDoc(studentsColRef, generalData);
+            const privateDocRef = doc(
+                db,
+                "students",
+                docRef.id,
+                "private",
+                "privateInfo"
+            );
+            await setDoc(privateDocRef, privateData);
+            uploadImage(docRef.id);
+        }
         closeForm();
     };
 
