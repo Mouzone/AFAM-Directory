@@ -1,14 +1,11 @@
 "use client";
 
 import { AttendanceInfoType } from "@/types";
-import { db } from "@/utility/firebase";
-import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import AttendanceToggle from "../AttendanceComponents/AttendanceToggle";
 import Calendar from "../AttendanceComponents/Calendar";
 interface AttendanceProps {
     disabled: boolean;
-    id: string;
     showClassSlider: boolean;
     attendanceData: { [key: string]: AttendanceInfoType };
     setAttendanceData: React.Dispatch<
@@ -18,7 +15,6 @@ interface AttendanceProps {
 
 export default function Attendance({
     disabled,
-    id,
     showClassSlider,
     attendanceData,
     setAttendanceData,
@@ -39,34 +35,13 @@ export default function Attendance({
     const toggleSelectedDateAttendance = async (
         key: "sermonAttendance" | "classAttendance"
     ) => {
-        const docRef = doc(db, "students", id, "attendance", selectedDate);
-        const docSnapshot = await getDoc(docRef);
-        if (docSnapshot.exists()) {
-            await updateDoc(docRef, {
+        setAttendanceData({
+            ...attendanceData,
+            [selectedDate]: {
                 ...attendanceState,
                 [key]: !attendanceState[key],
-            });
-            setAttendanceData({
-                ...attendanceData,
-                [selectedDate]: {
-                    ...attendanceState,
-                    [key]: !attendanceState[key],
-                },
-            });
-        } else {
-            await setDoc(docRef, {
-                ...attendanceState,
-                [key]: !attendanceState[key],
-                date: Timestamp.fromDate(new Date(selectedDate)),
-            });
-            setAttendanceData({
-                ...attendanceData,
-                [selectedDate]: {
-                    ...attendanceState,
-                    [key]: !attendanceState[key],
-                },
-            });
-        }
+            },
+        });
     };
 
     return (

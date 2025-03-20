@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import {
     AttendanceInfoType,
     StudentGeneralInfo,
@@ -12,6 +12,8 @@ import {
     deleteDoc,
     updateDoc,
     getDocs,
+    setDoc,
+    Timestamp,
 } from "firebase/firestore";
 import {
     ref,
@@ -44,7 +46,10 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     );
     const [attendanceData, setAttendanceData] = useState<{
         [key: string]: AttendanceInfoType;
-    }>({}); // will either be empty object or object with date keys and info
+    }>({});
+    const prevAttendanceData = useRef<{ [key: string]: AttendanceInfoType }>(
+        {}
+    );
     const [tab, setTab] = useState<"general" | "attendance" | "private">(
         "general"
     );
@@ -81,6 +86,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                 (doc) => (data[doc.id] = doc.data() as AttendanceInfoType)
             );
             setAttendanceData(data);
+            prevAttendanceData.current = data;
         }
 
         async function fetchPrivateInfo() {
@@ -151,14 +157,46 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     const onSubmit = async () => {
         // type "generalData["id"]" as string since, fireStore will autogenerate a new id if it doesnt exist
         const docRef = doc(db, "students", generalData["id"] as string);
+        const attendanceColRef = collection(docRef, "attendance");
         const privateColRef = collection(docRef, "private");
         const privateDocRef = doc(privateColRef, "privateInfo");
 
         await updateDoc(docRef, generalData);
         await updateDoc(privateDocRef, privateData);
+        await updateAttendance(attendanceData);
 
         uploadImage(docRef.id);
         closeForm();
+    };
+
+    const updateAttendance = async (attendanceData: {
+        [key: string]: AttendanceInfoType;
+    }) => {
+        Object.entries(attendanceData).forEach(async ([date, data]) => {
+            const docRef = doc(
+                db,
+                "students",
+                generalData["id"] as string,
+                "attendance",
+                date
+            );
+            if (
+                date in prevAttendanceData.current &&
+                prevAttendanceData.current[date].sermonAttendance !=
+                    data.sermonAttendance &&
+                prevAttendanceData.current[date].classAttendance !=
+                    data.classAttendance
+            ) {
+                await updateDoc(docRef, {
+                    ...data,
+                });
+            } else {
+                await setDoc(docRef, {
+                    ...data,
+                    date: Timestamp.fromDate(new Date(date)),
+                });
+            }
+        });
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -200,7 +238,6 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
         attendance: generalData["id"] ? (
             <Attendance
                 disabled={disabled}
-                id={generalData["id"]}
                 showClassSlider={user.role != "student"}
                 attendanceData={attendanceData}
                 setAttendanceData={setAttendanceData}
