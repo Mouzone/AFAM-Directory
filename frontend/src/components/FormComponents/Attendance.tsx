@@ -4,9 +4,10 @@ import { AttendanceInfoType } from "@/types";
 import { db } from "@/utility/firebase";
 import { doc, getDoc, setDoc, Timestamp, updateDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import AttendanceToggle from "../InputComponents/AttendanceToggle";
+import AttendanceToggle from "../AttendanceComponents/AttendanceToggle";
 import Calendar from "../AttendanceComponents/Calendar";
 interface AttendanceProps {
+    disabled: boolean;
     id: string;
     showClassSlider: boolean;
     attendanceData: { [key: string]: AttendanceInfoType };
@@ -16,6 +17,7 @@ interface AttendanceProps {
 }
 
 export default function Attendance({
+    disabled,
     id,
     showClassSlider,
     attendanceData,
@@ -76,9 +78,11 @@ export default function Attendance({
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
                     className="border rounded-md px-3 py-2 text-sm focus:ring focus:ring-blue-200"
+                    disabled={disabled}
                 />
 
                 <AttendanceToggle
+                    disabled={disabled}
                     label="Sermon"
                     isPresent={attendanceState["sermonAttendance"]}
                     onChange={() =>
@@ -88,6 +92,7 @@ export default function Attendance({
 
                 {showClassSlider && (
                     <AttendanceToggle
+                        disabled={disabled}
                         label="Class"
                         isPresent={attendanceState["classAttendance"]}
                         onChange={() =>

@@ -199,6 +199,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
         ),
         attendance: generalData["id"] ? (
             <Attendance
+                disabled={disabled}
                 id={generalData["id"]}
                 showClassSlider={user.role != "student"}
                 attendanceData={attendanceData}

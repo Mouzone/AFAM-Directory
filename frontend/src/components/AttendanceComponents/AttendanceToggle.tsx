@@ -1,9 +1,11 @@
 interface AttendanceToggleProps {
+    disabled: boolean;
     label: string;
     isPresent: boolean;
     onChange: () => Promise<void>;
 }
 export default function AttendanceToggle({
+    disabled,
     label,
     isPresent,
     onChange,
@@ -19,6 +21,7 @@ export default function AttendanceToggle({
                         className="sr-only peer"
                         checked={isPresent}
                         onChange={onChange}
+                        disabled={disabled}
                     />
                     <label
                         htmlFor={`toggle-${label}`}
