@@ -146,17 +146,17 @@ export default function Page() {
                     collection(db, "organization/roles", "teacher")
                 );
                 const teachersSnapshot = await getDocs(teachersQuery);
-                const fetchedTeachers: Teacher[] = [];
-
+                const fetchedTeachers: Teacher[] = [
+                    {
+                        firstName: "Unassigned",
+                        lastName: "",
+                        id: "",
+                    },
+                ];
                 teachersSnapshot.forEach((doc) => {
                     const teacher = doc.data() as Teacher;
                     teacher.id = doc.id;
                     fetchedTeachers.push(teacher);
-                });
-                fetchedTeachers.push({
-                    firstName: "Unassigned",
-                    lastName: "",
-                    id: "",
                 });
                 setTeachers(fetchedTeachers);
             } catch (err) {
