@@ -193,8 +193,8 @@ export default function Page() {
     });
 
     return (
-        <div>
-            <div className="flex flex-col md:flex-row justify-center gap-4 mt-20 items-center">
+        <>
+            <div className="flex flex-col md:flex-row justify-center gap-4 items-center">
                 <select
                     onChange={(e) => setRoleToCreate(e.target.value as Role)}
                     value={roleToCreate}
@@ -371,6 +371,6 @@ export default function Page() {
                 setGenerated={setGenerated}
                 setCopied={setCopied}
             />
-        </div>
+        </>
     );
 }
