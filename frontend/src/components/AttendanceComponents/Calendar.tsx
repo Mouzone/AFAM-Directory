@@ -38,7 +38,7 @@ export default function Calendar({ attendanceData }: CalendarProps) {
     const yearsToGenerate = generateYears();
 
     return (
-        <div className="p-4 justify-items-center">
+        <div className="p-4 justify-items-center h-56">
             <div>
                 <select
                     value={month}

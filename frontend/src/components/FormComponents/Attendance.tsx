@@ -68,7 +68,7 @@ export default function Attendance({
     };
 
     return (
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full mb-6">
             <div className="flex items-center gap-4 p-4 border rounded-lg shadow-md bg-white">
                 <input
                     type="date"
