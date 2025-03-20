@@ -282,18 +282,6 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                         >
                             General
                         </div>
-                        {generalData["id"] && (
-                            <div
-                                onClick={() => setTab("attendance")}
-                                className={`cursor-pointer px-4 py-2 rounded-md transition-colors duration-200 ${
-                                    tab === "attendance"
-                                        ? "bg-blue-600 text-white shadow-md"
-                                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                                }`}
-                            >
-                                Attendance
-                            </div>
-                        )}
                         {showPrivate && (
                             <div
                                 onClick={() => setTab("private")}
@@ -304,6 +292,18 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                                 }`}
                             >
                                 Private
+                            </div>
+                        )}
+                        {generalData["id"] && (
+                            <div
+                                onClick={() => setTab("attendance")}
+                                className={`cursor-pointer px-4 py-2 rounded-md transition-colors duration-200 ${
+                                    tab === "attendance"
+                                        ? "bg-blue-600 text-white shadow-md"
+                                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                }`}
+                            >
+                                Attendance
                             </div>
                         )}
                     </div>
