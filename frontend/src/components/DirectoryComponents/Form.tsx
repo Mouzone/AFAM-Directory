@@ -231,7 +231,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
 
         for (const key of mandatoryGeneralDataKeys) {
             if (!generalData[key]) {
-                alert(`Please fill out ${labels[key]} in general tab`);
+                alert(`Please fill out ${labels[key]} in General tab`);
                 return false;
             }
         }
@@ -239,7 +239,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
         for (const key of mandatoryPrivateDataKeys) {
             if (!privateData[key]) {
                 // Trim whitespace and check if empty
-                alert(`Please fill out ${labels[key]} in private tab`);
+                alert(`Please fill out ${labels[key]} in Private tab`);
                 return false;
             }
         }
