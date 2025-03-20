@@ -24,7 +24,7 @@ import {
 } from "firebase/storage";
 import { db, storage } from "@/utility/firebase";
 import Buttons from "../FormComponents/Buttons";
-import { studentPrivateInfoDefault } from "@/utility/consts";
+import { labels, studentPrivateInfoDefault } from "@/utility/consts";
 import General from "../FormComponents/General";
 import Private from "../FormComponents/Private";
 import Image from "next/image";
@@ -216,18 +216,32 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (
-            !generalData.firstName ||
-            !generalData.lastName ||
-            !generalData.schoolYear ||
-            !generalData.dob ||
-            !generalData.gender ||
-            !generalData.highSchool ||
-            !privateData.phoneNumber ||
-            !privateData.email
-        ) {
-            alert("Please fill out all required fields.");
-            return;
+        const mandatoryGeneralDataKeys: (keyof StudentGeneralInfo)[] = [
+            "firstName",
+            "lastName",
+            "schoolYear",
+            "dob",
+            "gender",
+            "highSchool",
+        ];
+        const mandatoryPrivateDataKeys: (keyof StudentPrivateInfo)[] = [
+            "phoneNumber",
+            "email",
+        ];
+
+        for (const key of mandatoryGeneralDataKeys) {
+            if (!generalData[key]) {
+                alert(`Please fill out ${labels[key]} in general tab`);
+                return false;
+            }
+        }
+
+        for (const key of mandatoryPrivateDataKeys) {
+            if (!privateData[key]) {
+                // Trim whitespace and check if empty
+                alert(`Please fill out ${labels[key]} in private tab`);
+                return false;
+            }
         }
 
         onSubmit();

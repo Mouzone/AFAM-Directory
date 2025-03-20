@@ -40,6 +40,7 @@ export type StudentPrivateInfo = {
 
 export type HomeKeys = keyof StudentPrivateInfo["home"];
 export type GuardianKeys = keyof StudentPrivateInfo["guardian1"];
+export type AllKeys = keyof StudentGeneralInfo | keyof StudentPrivateInfo;
 
 export type Teacher = {
     id: string;
