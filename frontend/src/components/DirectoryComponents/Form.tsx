@@ -74,10 +74,6 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     }, [user, router]);
 
     useEffect(() => {
-        if (!generalData["id"]) {
-            return;
-        }
-
         async function fetchAttendance() {
             const studentRef = doc(db, "students", generalData["id"] as string);
             const attendanceCollectionRef = collection(
@@ -109,10 +105,12 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             setImageUrl(url);
         }
 
-        fetchHeadshot();
-        fetchAttendance();
-        fetchPrivateInfo();
-    }, [generalData]);
+        if (generalData["id"]) {
+            fetchHeadshot();
+            fetchAttendance();
+            fetchPrivateInfo();
+        }
+    }, [generalData["id"]]);
 
     const onDelete = async () => {
         await deleteStudent({ id: generalData["id"] });
