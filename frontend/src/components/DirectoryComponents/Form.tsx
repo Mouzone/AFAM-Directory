@@ -367,6 +367,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                     <Buttons
                         type={!("id" in generalData) ? "add" : "view"}
                         isEdit={isEdit}
+                        showDelete={user.role !== "student"}
                         onDelete={onDelete}
                         setIsEdit={setIsEdit}
                         closeForm={closeForm}
