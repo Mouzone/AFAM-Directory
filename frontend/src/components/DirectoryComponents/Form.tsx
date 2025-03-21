@@ -9,19 +9,13 @@ import {
     collection,
     doc,
     getDoc,
-    deleteDoc,
     updateDoc,
     getDocs,
     setDoc,
     Timestamp,
     addDoc,
 } from "firebase/firestore";
-import {
-    ref,
-    uploadBytesResumable,
-    getDownloadURL,
-    deleteObject,
-} from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { db, storage } from "@/utility/firebase";
 import Buttons from "../FormComponents/Buttons";
 import {
@@ -36,6 +30,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "../AuthContext";
 import Attendance from "../FormComponents/Attendance";
+import { deleteStudent } from "@/utility/cloud-functions";
 
 interface FormProps {
     generalState: StudentGeneralInfo;
@@ -115,12 +110,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     }, [generalData]);
 
     const onDelete = async () => {
-        const docRef = doc(db, "students", generalData["id"] as string);
-        const headshotRef = ref(storage, `images/${docRef.id}`);
-
-        await deleteDoc(docRef);
-        await deleteObject(headshotRef);
-
+        await deleteStudent({ id: generalData["id"] });
         closeForm();
     };
 

@@ -15,3 +15,4 @@ export const toggleWelcomeTeamLeader = httpsCallable(
     functions,
     "toggleWelcomeTeamLeader"
 );
+export const deleteStudent = httpsCallable(functions, "deleteStudent");
