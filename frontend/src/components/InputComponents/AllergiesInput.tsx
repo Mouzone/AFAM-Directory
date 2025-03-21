@@ -17,9 +17,11 @@ export default function AllergiesInput({
     const [input, setInput] = useState("");
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && input !== "") {
-            addAllergy(input.toLowerCase());
-            setInput("");
-            e.preventDefault();
+            if (!allergies.includes(input.toLowerCase())) {
+                addAllergy(input.toLowerCase());
+                setInput("");
+                e.preventDefault();
+            }
         }
     };
 

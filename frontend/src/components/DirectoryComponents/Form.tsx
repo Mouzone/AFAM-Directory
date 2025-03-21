@@ -281,7 +281,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
     return (
         <form
             onSubmit={handleSubmit}
-            className="space-y-4 max-h-[80vh] overflow-y-auto p-4 bg-white rounded-lg"
+            className="space-y-4 max-h-[80vh] bg-white rounded-lg"
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     e.preventDefault();
