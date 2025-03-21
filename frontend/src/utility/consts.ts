@@ -62,3 +62,16 @@ export const months = [
     "November",
     "December",
 ];
+
+export const mandatoryGeneralDataKeys: (keyof StudentGeneralInfo)[] = [
+    "firstName",
+    "lastName",
+    "schoolYear",
+    "dob",
+    "gender",
+    "highSchool",
+];
+export const mandatoryPrivateDataKeys: (keyof StudentPrivateInfo)[] = [
+    "phoneNumber",
+    "email",
+];
