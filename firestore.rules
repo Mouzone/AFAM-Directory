@@ -11,8 +11,8 @@ service cloud.firestore {
     // Students collection rules
     match /students/{studentId} {
       // Roles with full access to students
-      allow create, read: if hasRequiredRole(["student"])
-      allow create, read, update, delete: 
+      allow create, read, update: if request.auth != null
+      allow delete: 
         if hasRequiredRole(["admin", "teacher", "pastor", "deacon"]) || request.auth.token.isWelcomeTeamLeader; 
 
       // Private student data rules

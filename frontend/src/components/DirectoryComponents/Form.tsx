@@ -169,7 +169,9 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             );
 
             await updateDoc(docRef, generalData);
-            await updateDoc(privateDocRef, privateData);
+            if (user && user.role !== "student") {
+                await updateDoc(privateDocRef, privateData);
+            }
             await updateAttendance(attendanceData);
             uploadImage(docRef.id);
         } else {
@@ -182,7 +184,9 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                 "private",
                 "privateInfo"
             );
-            await setDoc(privateDocRef, privateData);
+            if (user && user.role !== "student") {
+                await updateDoc(privateDocRef, privateData);
+            }
             uploadImage(docRef.id);
         }
         closeForm();
@@ -216,7 +220,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
         });
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         for (const key of mandatoryGeneralDataKeys) {
@@ -226,14 +230,16 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             }
         }
 
-        for (const key of mandatoryPrivateDataKeys) {
-            if (!privateData[key]) {
-                alert(`Please fill out ${labels[key]} in Private tab`);
-                return false;
+        if (user && user.role !== "student") {
+            for (const key of mandatoryPrivateDataKeys) {
+                if (!privateData[key]) {
+                    alert(`Please fill out ${labels[key]} in Private tab`);
+                    return false;
+                }
             }
         }
 
-        onSubmit();
+        await onSubmit();
     };
 
     if (!user) {
