@@ -3,7 +3,6 @@ import TextInput from "../InputComponents/TextInput";
 import SelectInput from "../InputComponents/SelectInput";
 import AllergiesInput from "../InputComponents/AllergiesInput";
 import React from "react";
-import { mandatoryGeneralDataKeys } from "@/utility/consts";
 import isMandatory from "@/utility/isMandatory";
 
 interface GeneralProps {
@@ -88,7 +87,7 @@ export default function General({
                     name="schoolYear"
                     options={["9", "10", "11", "12"]}
                     onChange={handleChange}
-                    disabled={"schoolYear" in mandatoryGeneralDataKeys}
+                    disabled={disabled}
                 />
 
                 {/* Date of Birth */}

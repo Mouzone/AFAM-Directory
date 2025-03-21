@@ -1,7 +1,3 @@
-import {
-    mandatoryGeneralDataKeys,
-    mandatoryPrivateDataKeys,
-} from "@/utility/consts";
 import isMandatory from "@/utility/isMandatory";
 
 interface TextInputProps {

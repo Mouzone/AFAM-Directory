@@ -1,8 +1,3 @@
-import { StudentGeneralInfo, StudentPrivateInfo } from "@/types";
-import {
-    mandatoryGeneralDataKeys,
-    mandatoryPrivateDataKeys,
-} from "@/utility/consts";
 import isMandatory from "@/utility/isMandatory";
 
 interface SelectInputProps {
