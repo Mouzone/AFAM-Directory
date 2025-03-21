@@ -3,6 +3,7 @@ import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { onSchedule } from "firebase-functions/scheduler";
+import { getStorage } from "firebase-admin/storage";
 
 type AccountData = {
     uid?: string;
@@ -15,6 +16,7 @@ type AccountData = {
 initializeApp();
 const auth = getAuth();
 const firestore = getFirestore();
+const storage = getStorage();
 
 export const generateInviteToken = onCall(async (request) => {
     if (!request.auth) {
@@ -302,4 +304,44 @@ export const tokenCleanup = onSchedule("0 0 1 1 *", async (event) => {
     } catch (error) {
         console.error("Error during cleanup:", error);
     }
+});
+
+export const deleteStudent = onCall(async (request) => {
+    if (!request.auth) {
+        throw new HttpsError(
+            "unauthenticated",
+            "The function must be called while authenticated."
+        );
+    }
+
+    if (request.auth.token.role === "student") {
+        throw new HttpsError(
+            "permission-denied",
+            "Students cannot delete accounts"
+        );
+    }
+
+    const { id } = request.data;
+
+    if (!id) {
+        throw new HttpsError(
+            "invalid-argument",
+            "Missing required parameters."
+        );
+    }
+
+    const attendanceDocs = await firestore
+        .collection("students")
+        .doc(id)
+        .collection("accounts")
+        .listDocuments();
+    attendanceDocs.forEach((doc) => doc.delete());
+    await firestore
+        .collection("students")
+        .doc(id)
+        .collection("private")
+        .doc("privateInfo")
+        .delete();
+    await firestore.collection("students").doc(id).delete();
+    await storage.bucket().file(`images/${id}`).delete();
 });
