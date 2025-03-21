@@ -112,7 +112,6 @@ export default function Page() {
                 if (updatedStudents.length > 0) {
                     setStudents((prevStudents) => {
                         if (prevStudents.length === 0) {
-                            added.length = 0; // since it is initial load we want to clear it since no point showing that update
                             return updatedStudents;
                         } else {
                             return [...prevStudents, ...updatedStudents];
@@ -121,9 +120,8 @@ export default function Page() {
                     setLoading(false);
                 }
 
-                console.log(added);
-
-                if (added.length || modified.length || removed.length) {
+                // hasPendingWrites cover local setDoc and updateDoc, but removed is called using cloud function
+                if (snapshot.metadata.hasPendingWrites || removed.length) {
                     setUpdates({ added, modified, removed });
                     setShowUpdates(true);
                     setTimeout(() => {
