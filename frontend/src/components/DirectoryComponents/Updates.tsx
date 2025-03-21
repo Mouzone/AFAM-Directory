@@ -1,12 +1,12 @@
 interface UpdatesProps {
     updates: {
-        added: string[],
-        modified: string[], 
-        removed: string[]
-    }
+        added: string[];
+        modified: string[];
+        removed: string[];
+    };
 }
 
-export default function Updates({updates}: UpdatesProps) {
+export default function Updates({ updates }: UpdatesProps) {
     return (
         <div className="fixed w-l bottom-4 left-1/2 -translate-x-1/2 bg-gray-100 border border-gray-200 rounded-md p-4 shadow-sm z-50">
             {updates["added"].length !== 0 && (
