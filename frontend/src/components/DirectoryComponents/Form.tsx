@@ -172,7 +172,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             if (
                 user &&
                 (user.role !== "student" ||
-                    (user.role === "student" && generalData["id"]))
+                    (user.role === "student" && !generalData["id"]))
             ) {
                 await updateDoc(privateDocRef, privateData);
             }
@@ -191,7 +191,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             if (
                 user &&
                 (user.role !== "student" ||
-                    (user.role === "student" && generalData["id"]))
+                    (user.role === "student" && !generalData["id"]))
             ) {
                 await updateDoc(privateDocRef, privateData);
             }
