@@ -343,5 +343,4 @@ export const deleteStudent = onCall(async (request) => {
         .doc("privateInfo")
         .delete();
     await firestore.collection("students").doc(id).delete();
-    await storage.bucket().file(`images/${id}`).delete();
 });
