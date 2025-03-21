@@ -169,11 +169,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             );
 
             await updateDoc(docRef, generalData);
-            if (
-                user &&
-                (user.role !== "student" ||
-                    (user.role === "student" && !generalData["id"]))
-            ) {
+            if (user && user.role !== "student") {
                 await updateDoc(privateDocRef, privateData);
             }
             await updateAttendance(attendanceData);
@@ -188,13 +184,7 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                 "private",
                 "privateInfo"
             );
-            if (
-                user &&
-                (user.role !== "student" ||
-                    (user.role === "student" && !generalData["id"]))
-            ) {
-                await updateDoc(privateDocRef, privateData);
-            }
+            await setDoc(privateDocRef, privateData);
             uploadImage(docRef.id);
         }
         closeForm();
