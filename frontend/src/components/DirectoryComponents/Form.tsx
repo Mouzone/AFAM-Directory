@@ -169,7 +169,11 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             );
 
             await updateDoc(docRef, generalData);
-            if (user && user.role !== "student") {
+            if (
+                user &&
+                (user.role !== "student" ||
+                    (user.role === "student" && generalData["id"]))
+            ) {
                 await updateDoc(privateDocRef, privateData);
             }
             await updateAttendance(attendanceData);
@@ -184,7 +188,11 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                 "private",
                 "privateInfo"
             );
-            if (user && user.role !== "student") {
+            if (
+                user &&
+                (user.role !== "student" ||
+                    (user.role === "student" && generalData["id"]))
+            ) {
                 await updateDoc(privateDocRef, privateData);
             }
             uploadImage(docRef.id);
@@ -230,7 +238,11 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             }
         }
 
-        if (user && user.role !== "student") {
+        if (
+            user &&
+            (user.role !== "student" ||
+                (user.role === "student" && !generalData["id"]))
+        ) {
             for (const key of mandatoryPrivateDataKeys) {
                 if (!privateData[key]) {
                     alert(`Please fill out ${labels[key]} in Private tab`);
