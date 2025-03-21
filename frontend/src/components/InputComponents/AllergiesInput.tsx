@@ -42,7 +42,7 @@ export default function AllergiesInput({
                 className="border border-gray-300 rounded p-2"
                 disabled={disabled}
             />
-            <div className="flex flex-wrap mt-2">
+            <div className="flex flex-wrap mt-2 w-64 max-h-24 overflow-y-auto">
                 {allergies.map((allergy) => (
                     <div
                         key={allergy}
