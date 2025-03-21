@@ -3,7 +3,6 @@ import { initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { onSchedule } from "firebase-functions/scheduler";
-import { getStorage } from "firebase-admin/storage";
 
 type AccountData = {
     uid?: string;
@@ -16,7 +15,6 @@ type AccountData = {
 initializeApp();
 const auth = getAuth();
 const firestore = getFirestore();
-const storage = getStorage();
 
 export const generateInviteToken = onCall(async (request) => {
     if (!request.auth) {
