@@ -15,7 +15,12 @@ import {
     Timestamp,
     addDoc,
 } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {
+    ref,
+    uploadBytesResumable,
+    getDownloadURL,
+    deleteObject,
+} from "firebase/storage";
 import { db, storage } from "@/utility/firebase";
 import Buttons from "../FormComponents/Buttons";
 import {
@@ -111,6 +116,8 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
 
     const onDelete = async () => {
         await deleteStudent({ id: generalData["id"] });
+        const imgRef = ref(storage, `images/${generalData["id"]}`);
+        deleteObject(imgRef);
         closeForm();
     };
 
