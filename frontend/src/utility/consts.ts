@@ -1,4 +1,4 @@
-import { StudentGeneralInfo, StudentPrivateInfo } from "../types";
+import { AllKeys, StudentGeneralInfo, StudentPrivateInfo } from "../types";
 
 export const studentGeneralInfoDefault = {
     firstName: "",
@@ -34,11 +34,44 @@ export const studentPrivateInfoDefault = {
         phoneNumber: "",
         email: "",
     },
-} as StudentPrivateInfo
+} as StudentPrivateInfo;
 
-export const labels = {
+export const labels: Partial<Record<AllKeys, string>> = {
     firstName: "First Name",
     lastName: "Last Name",
     schoolYear: "Grade",
     teacher: "Teacher",
+    dob: "Birthday",
+    gender: "Gender",
+    highSchool: "High School",
+    phoneNumber: "Phone Number",
+    email: "Email",
 } as const;
+
+export const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+];
+
+export const mandatoryGeneralDataKeys: (keyof StudentGeneralInfo)[] = [
+    "firstName",
+    "lastName",
+    "schoolYear",
+    "dob",
+    "gender",
+    "highSchool",
+];
+export const mandatoryPrivateDataKeys: (keyof StudentPrivateInfo)[] = [
+    "phoneNumber",
+    "email",
+];

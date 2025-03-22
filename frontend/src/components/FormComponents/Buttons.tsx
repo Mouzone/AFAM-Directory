@@ -3,12 +3,20 @@ import { SetStateAction } from "react";
 interface ButtonsProps {
     type: "add" | "view";
     isEdit: boolean;
+    showDelete: boolean;
     onDelete: () => void;
     setIsEdit: React.Dispatch<SetStateAction<boolean>>;
     closeForm: () => void;
 }
 
-export default function Buttons({type, isEdit, onDelete, setIsEdit, closeForm}: ButtonsProps) {
+export default function Buttons({
+    type,
+    isEdit,
+    showDelete,
+    onDelete,
+    setIsEdit,
+    closeForm,
+}: ButtonsProps) {
     const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         setIsEdit(true);
@@ -32,13 +40,15 @@ export default function Buttons({type, isEdit, onDelete, setIsEdit, closeForm}: 
                     >
                         Edit
                     </button>
-                    <button
-                        type="button"
-                        onClick={onDelete}
-                        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                    >
-                        Delete
-                    </button>
+                    {showDelete && (
+                        <button
+                            type="button"
+                            onClick={onDelete}
+                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                        >
+                            Delete
+                        </button>
+                    )}
                 </>
             )}
 

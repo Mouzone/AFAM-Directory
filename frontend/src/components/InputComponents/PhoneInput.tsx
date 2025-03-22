@@ -1,3 +1,5 @@
+import isMandatory from "@/utility/isMandatory";
+
 interface PhoneInputProps {
     label: string;
     value: string;
@@ -6,7 +8,13 @@ interface PhoneInputProps {
     disabled: boolean;
 }
 
-export default function PhoneInput({label, value, name, onChange, disabled}: PhoneInputProps) {
+export default function PhoneInput({
+    label,
+    value,
+    name,
+    onChange,
+    disabled,
+}: PhoneInputProps) {
     const formatPhoneNumber = (value: string) => {
         const cleaned = value.replace(/[^0-9]/g, "");
         let formatted = "";
@@ -18,10 +26,12 @@ export default function PhoneInput({label, value, name, onChange, disabled}: Pho
         }
         return formatted;
     };
-
     return (
         <div className="flex flex-col">
-            <label className="font-bold">{label}</label>
+            <label className="font-bold">
+                {label}
+                {isMandatory(name) && <span className="text-red-400"> *</span>}
+            </label>
             <input
                 type="text"
                 name={name}

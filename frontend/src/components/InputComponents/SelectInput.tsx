@@ -1,3 +1,5 @@
+import isMandatory from "@/utility/isMandatory";
+
 interface SelectInputProps {
     label: string;
     value: string;
@@ -7,10 +9,20 @@ interface SelectInputProps {
     disabled: boolean;
 }
 
-export default function SelectInput({label, value, name, options, onChange, disabled}: SelectInputProps) {
+export default function SelectInput({
+    label,
+    value,
+    name,
+    options,
+    onChange,
+    disabled,
+}: SelectInputProps) {
     return (
         <div className="flex flex-col">
-            <label className="font-bold">{label}</label>
+            <label className="font-bold">
+                {label}
+                {isMandatory(name) && <span className="text-red-400"> *</span>}
+            </label>
             <select
                 name={name}
                 value={value}

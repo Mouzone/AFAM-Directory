@@ -1,0 +1,20 @@
+# .editorconfig
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.{js,jsx,ts,tsx,json,css,scss,less}]
+# For object-curly-spacing (no spaces inside curly braces)
+# Note: EditorConfig itself doesn't directly control object-curly-spacing.
+# You'll likely need to use a linter (like ESLint) with EditorConfig for this.
+# However, you can use EditorConfig to set up basic indentation and spacing.
+# The linter handles the more complex rules.
+indent_style = space
+indent_size = 2

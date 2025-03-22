@@ -1,3 +1,4 @@
+import { SetStateAction } from "react";
 import { labels } from "./utility/consts";
 
 export type StudentGeneralInfo = {
@@ -35,23 +36,68 @@ export type StudentPrivateInfo = {
         phoneNumber: string;
         email: string;
     };
-}
+};
 
 export type HomeKeys = keyof StudentPrivateInfo["home"];
 export type GuardianKeys = keyof StudentPrivateInfo["guardian1"];
+export type AllKeys = keyof StudentGeneralInfo | keyof StudentPrivateInfo;
 
 export type Teacher = {
     id: string;
     firstName: string;
     lastName: string;
-    grade: "9" | "10" | "11" | "12";
+    grade?: "9" | "10" | "11" | "12" | "N/A";
 };
 
 export type LabelsKey = keyof typeof labels;
 
 export type SearchValues = {
-    firstName: string,
-    lastName: string,
-    schoolYear: string,
-    teacher: string,
+    firstName: string;
+    lastName: string;
+    schoolYear: string;
+    teacher: string;
+};
+
+export type Role = "admin" | "pastor" | "teacher" | "deacon" | "student";
+
+export interface GenerateInviteResponse {
+    token: string;
 }
+
+export type Subordinate = {
+    id: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+    email: string;
+    grade?: string;
+    isWelcomeTeamLeader?: boolean;
+};
+
+export interface CreateUserWithRoleResponse {
+    status: number;
+    message?: string;
+}
+
+export type Tab = "Directory" | "Accounts";
+
+export type SidebarContextType = {
+    currentTab: Tab;
+    setCurrentTab: React.Dispatch<SetStateAction<Tab>>;
+};
+
+export type AuthUser = {
+    uid: string;
+    role: string;
+    isWelcomeTeamLeader?: boolean;
+};
+
+export type AuthProviderType = {
+    user: false | null | AuthUser;
+};
+
+export type AttendanceInfoType = {
+    date?: string;
+    sermonAttendance: boolean;
+    classAttendance: boolean;
+};

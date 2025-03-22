@@ -1,3 +1,5 @@
+import isMandatory from "@/utility/isMandatory";
+
 interface TextInputProps {
     label: string;
     value: string;
@@ -5,7 +7,13 @@ interface TextInputProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     disabled: boolean;
 }
-export default function TextInput({label, value, name, onChange, disabled}: TextInputProps) {
+export default function TextInput({
+    label,
+    value,
+    name,
+    onChange,
+    disabled,
+}: TextInputProps) {
     const formatZipCode = (value: string) => {
         const cleaned = value.replace(/[^0-9]/g, ""); // Remove non-numeric chars
         return cleaned.slice(0, 5); // Limit to 5 digits
@@ -21,7 +29,10 @@ export default function TextInput({label, value, name, onChange, disabled}: Text
 
     return (
         <div className="flex flex-col">
-            <label className="font-bold">{label}</label>
+            <label className="font-bold">
+                {label}
+                {isMandatory(name) && <span className="text-red-400"> *</span>}
+            </label>
             <input
                 type="text"
                 name={name}

@@ -1,17 +1,61 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // Helper function to check for specific roles
+    function hasRequiredRole(allowedRoles) {
+      return request.auth != null && 
+        request.auth.token.role is string && allowedRoles.hasAny([request.auth.token.role]);
+    }
+
+    // Students collection rules
     match /students/{studentId} {
-      allow read, create: if request.auth != null; // Allow read access to students
-      allow read, create, delete, update: if request.auth != null &&
-          request.auth.token.role == 'admin'
+      // Roles with full access to students
+      allow create, read, update: if request.auth != null
+      allow delete: 
+        if hasRequiredRole(["admin", "teacher", "pastor", "deacon"]) || request.auth.token.isWelcomeTeamLeader; 
+
+      // Private student data rules
       match /private/{document=**} {
-        allow read, create, delete, update: if request.auth != null &&
-          request.auth.token.role == 'admin'
+        allow create: if hasRequiredRole(["student"]);
+        allow create, read, update, delete: 
+            if hasRequiredRole(["admin", "teacher", "pastor", "deacon"]) || request.auth.token.isWelcomeTeamLeader;
+      }
+
+      match /attendance/{document=**} {
+        allow create, read, update, delete: 
+            if hasRequiredRole(["admin", "teacher", "pastor", "deacon", "student"]) || request.auth.token.isWelcomeTeamLeader
       }
     }
-    match /teachers/{teacherId} {
-      allow read: if request.auth != null; // Allow read access to teacher
+
+    // Privileges collection rules
+    match /privileges/{role} {
+      allow read: if request.auth != null;
+    }
+
+    // Organization roles rules
+    match /organization/roles/{roleId}/{document=**} {
+      // Roles with read, update, delete access
+      allow read, update, delete: if hasRequiredRole(["admin"]) ||
+                                      (hasRequiredRole(["pastor"]) && ["deacon", "teacher", "student"].hasAny([roleId])) || 
+                                      (request.auth.token.isWelcomeTeamLeader && roleId == "student");
+
+      // Only admins can create role documents
+      allow create: if hasRequiredRole(["admin"]);
+    }
+
+    // Pastor roles rules (simplified)
+    match /organization/roles/pastor/{document=**} {
+      allow read, create, update, delete: if hasRequiredRole(["admin"]);
+    }
+
+    // Organization teacher roles rules (simplified)
+    match /organization/roles/teacher/{document=**} {
+      allow read: if request.auth != null;
+    }
+
+    match /temp/{uid} {
+        allow read: if request.auth != null && request.auth.uid == uid;
     }
   }
 }

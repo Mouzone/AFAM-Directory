@@ -1,6 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { StudentGeneralInfo, StudentPrivateInfo, Teacher } from "../../types";
-import { collection, doc, getDoc, setDoc, deleteDoc } from "firebase/firestore";
+import React, { useState, useEffect, useContext, useRef } from "react";
+import {
+    AttendanceInfoType,
+    StudentGeneralInfo,
+    StudentPrivateInfo,
+    Teacher,
+} from "../../types";
+import {
+    collection,
+    doc,
+    getDoc,
+    updateDoc,
+    getDocs,
+    setDoc,
+    Timestamp,
+    addDoc,
+} from "firebase/firestore";
 import {
     ref,
     uploadBytesResumable,
@@ -9,35 +23,74 @@ import {
 } from "firebase/storage";
 import { db, storage } from "@/utility/firebase";
 import Buttons from "../FormComponents/Buttons";
-import { studentPrivateInfoDefault } from "@/utility/consts";
+import {
+    labels,
+    mandatoryGeneralDataKeys,
+    mandatoryPrivateDataKeys,
+    studentPrivateInfoDefault,
+} from "@/utility/consts";
 import General from "../FormComponents/General";
 import Private from "../FormComponents/Private";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "../AuthContext";
+import Attendance from "../FormComponents/Attendance";
+import { deleteStudent } from "@/utility/cloud-functions";
 
 interface FormProps {
     generalState: StudentGeneralInfo;
     closeForm: () => void;
-    teachers: Teacher[] | undefined;
+    teachers: Teacher[];
 }
 
 export default function Form({ generalState, closeForm, teachers }: FormProps) {
+    const { user } = useContext(AuthContext);
     const [generalData, setGeneralData] =
         useState<StudentGeneralInfo>(generalState);
     const [privateData, setPrivateData] = useState<StudentPrivateInfo>(
         studentPrivateInfoDefault
     );
-    const [tab, setTab] = useState<"general" | "private">("general");
+    const [attendanceData, setAttendanceData] = useState<{
+        [key: string]: AttendanceInfoType;
+    }>({});
+    const prevAttendanceData = useRef<{ [key: string]: AttendanceInfoType }>(
+        {}
+    );
+    const [tab, setTab] = useState<"general" | "attendance" | "private">(
+        "general"
+    );
     const [isEdit, setIsEdit] = useState(false);
-
     const [image, setImage] = useState<File | null>(null);
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
 
+    const router = useRouter();
     const disabled = "id" in generalData && !isEdit;
 
     useEffect(() => {
-        if (!generalData["id"]) {
-            return;
+        if (user === false) {
+            router.push("/");
         }
+    }, [user, router]);
+
+    useEffect(() => {
+        async function fetchAttendance() {
+            const studentRef = doc(db, "students", generalData["id"] as string);
+            const attendanceCollectionRef = collection(
+                studentRef,
+                "attendance"
+            );
+            const attendanceDocSnapshot = await getDocs(
+                attendanceCollectionRef
+            );
+            const data: { [key: string]: AttendanceInfoType } = {};
+            attendanceDocSnapshot.docs.forEach(
+                (doc) => (data[doc.id] = doc.data() as AttendanceInfoType)
+            );
+            setAttendanceData(data);
+            prevAttendanceData.current = data;
+        }
+
         async function fetchPrivateInfo() {
             const studentRef = doc(db, "students", generalData["id"] as string);
             const privateCollectionRef = collection(studentRef, "private");
@@ -52,17 +105,17 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
             setImageUrl(url);
         }
 
-        fetchHeadshot();
-        fetchPrivateInfo();
-    }, []);
+        if (generalData["id"]) {
+            fetchHeadshot();
+            fetchAttendance();
+            fetchPrivateInfo();
+        }
+    }, [generalData["id"]]);
 
     const onDelete = async () => {
-        const docRef = doc(db, "students", generalData["id"] as string);
-        const headshotRef = ref(storage, `images/${docRef.id}`);
-
-        await deleteDoc(docRef);
-        await deleteObject(headshotRef);
-
+        await deleteStudent({ id: generalData["id"] });
+        const imgRef = ref(storage, `images/${generalData["id"]}`);
+        deleteObject(imgRef);
         closeForm();
     };
 
@@ -103,46 +156,136 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
 
     // runs the same regardless of "add" or "edit" scenario
     const onSubmit = async () => {
-        // type "generalData["id"]" as string since, fireStore will autogenerate a new id if it doesnt exist
-        const docRef = doc(db, "students", generalData["id"] as string);
-        const privateColRef = collection(docRef, "private");
-        const privateDocRef = doc(privateColRef, "privateInfo");
+        if (generalData["id"] !== undefined) {
+            const docRef = doc(db, "students", generalData["id"]);
+            const privateDocRef = doc(
+                db,
+                "students",
+                docRef.id,
+                "private",
+                "privateInfo"
+            );
 
-        await setDoc(docRef, generalData, { merge: true });
-        await setDoc(privateDocRef, privateData, { merge: true });
-
-        uploadImage(docRef.id);
+            await updateDoc(docRef, generalData);
+            if (user && user.role !== "student") {
+                await updateDoc(privateDocRef, privateData);
+            }
+            await updateAttendance(attendanceData);
+            uploadImage(docRef.id);
+        } else {
+            const studentsColRef = collection(db, "students");
+            const docRef = await addDoc(studentsColRef, generalData);
+            const privateDocRef = doc(
+                db,
+                "students",
+                docRef.id,
+                "private",
+                "privateInfo"
+            );
+            await setDoc(privateDocRef, privateData);
+            uploadImage(docRef.id);
+        }
         closeForm();
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (
-            !generalData.firstName ||
-            !generalData.lastName ||
-            !generalData.schoolYear ||
-            !generalData.dob ||
-            !generalData.gender ||
-            !generalData.highSchool ||
-            !privateData.phoneNumber ||
-            !privateData.email
-        ) {
-            alert("Please fill out all required fields.");
+    const updateAttendance = async (attendanceData: {
+        [key: string]: AttendanceInfoType;
+    }) => {
+        if (generalData["id"] === undefined) {
             return;
         }
+        const id = generalData["id"];
+        Object.entries(attendanceData).forEach(async ([date, data]) => {
+            const docRef = doc(db, "students", id, "attendance", date);
+            if (
+                date in prevAttendanceData.current &&
+                prevAttendanceData.current[date].sermonAttendance !=
+                    data.sermonAttendance &&
+                prevAttendanceData.current[date].classAttendance !=
+                    data.classAttendance
+            ) {
+                await updateDoc(docRef, {
+                    ...data,
+                });
+            } else {
+                await setDoc(docRef, {
+                    ...data,
+                    date: Timestamp.fromDate(new Date(date)),
+                });
+            }
+        });
+    };
 
-        onSubmit();
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        for (const key of mandatoryGeneralDataKeys) {
+            if (!generalData[key]) {
+                alert(`Please fill out ${labels[key]} in General tab`);
+                return false;
+            }
+        }
+
+        if (
+            user &&
+            (user.role !== "student" ||
+                (user.role === "student" && !generalData["id"]))
+        ) {
+            for (const key of mandatoryPrivateDataKeys) {
+                if (!privateData[key]) {
+                    alert(`Please fill out ${labels[key]} in Private tab`);
+                    return false;
+                }
+            }
+        }
+
+        await onSubmit();
+    };
+
+    if (!user) {
+        return null;
+    }
+
+    const showPrivate =
+        !("id" in generalData) ||
+        ("id" in generalData && user.role != "student");
+
+    const tabComponents = {
+        general: (
+            <General
+                disabled={disabled}
+                teachers={teachers}
+                generalData={generalData}
+                setGeneralData={setGeneralData}
+            />
+        ),
+        attendance: generalData["id"] ? (
+            <Attendance
+                disabled={disabled}
+                showClassSlider={user.role != "student"}
+                attendanceData={attendanceData}
+                setAttendanceData={setAttendanceData}
+            />
+        ) : null,
+        private: showPrivate ? (
+            <Private
+                disabled={disabled}
+                privateData={privateData}
+                setPrivateData={setPrivateData}
+            />
+        ) : null,
     };
 
     return (
         <form
             onSubmit={handleSubmit}
-            className="space-y-4 max-h-[80vh] overflow-y-auto p-4"
+            className="space-y-4 max-h-[80vh] bg-white rounded-lg"
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     e.preventDefault();
                 }
             }}
+            onClick={(e) => e.stopPropagation()} // Prevent clicks inside modal from closing it
             noValidate
         >
             <h1 className="text-2xl font-bold mb-4">Student Form</h1>
@@ -159,14 +302,14 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                             file:bg-blue-100 file:text-blue-700
                             ${!disabled && "hover:file:bg-blue-100"}`}
                     />
-                    
                     {error && <p style={{ color: "red" }}>{error}</p>}{" "}
                     {/* Display error message */}
                     {imageUrl ? (
-                        <img
+                        <Image
                             src={imageUrl}
                             alt="Uploaded Image"
-                            style={{ maxWidth: "300px" }}
+                            height="500"
+                            width="300"
                         />
                     ) : (
                         <svg
@@ -201,34 +344,36 @@ export default function Form({ generalState, closeForm, teachers }: FormProps) {
                         >
                             General
                         </div>
-                        <div
-                            onClick={() => setTab("private")}
-                            className={`cursor-pointer px-4 py-2 rounded-md transition-colors duration-200 ${
-                                tab === "private"
-                                    ? "bg-blue-600 text-white shadow-md"
-                                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                            }`}
-                        >
-                            Private
-                        </div>
+                        {showPrivate && (
+                            <div
+                                onClick={() => setTab("private")}
+                                className={`cursor-pointer px-4 py-2 rounded-md transition-colors duration-200 ${
+                                    tab === "private"
+                                        ? "bg-blue-600 text-white shadow-md"
+                                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                }`}
+                            >
+                                Private
+                            </div>
+                        )}
+                        {generalData["id"] && (
+                            <div
+                                onClick={() => setTab("attendance")}
+                                className={`cursor-pointer px-4 py-2 rounded-md transition-colors duration-200 ${
+                                    tab === "attendance"
+                                        ? "bg-blue-600 text-white shadow-md"
+                                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                }`}
+                            >
+                                Attendance
+                            </div>
+                        )}
                     </div>
-                    {tab == "general" ? (
-                        <General
-                            disabled={disabled}
-                            teachers={teachers}
-                            generalData={generalData}
-                            setGeneralData={setGeneralData}
-                        />
-                    ) : (
-                        <Private
-                            disabled={disabled}
-                            privateData={privateData}
-                            setPrivateData={setPrivateData}
-                        />
-                    )}
+                    {tabComponents[tab]}
                     <Buttons
                         type={!("id" in generalData) ? "add" : "view"}
                         isEdit={isEdit}
+                        showDelete={user.role !== "student"}
                         onDelete={onDelete}
                         setIsEdit={setIsEdit}
                         closeForm={closeForm}

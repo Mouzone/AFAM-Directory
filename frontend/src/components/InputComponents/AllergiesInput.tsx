@@ -1,3 +1,4 @@
+import isMandatory from "@/utility/isMandatory";
 import { useState } from "react";
 
 interface AllergiesInputProps {
@@ -7,18 +8,31 @@ interface AllergiesInputProps {
     disabled: boolean;
 }
 
-export default function AllergiesInput({allergies, addAllergy, removeAllergy, disabled,}: AllergiesInputProps) {
+export default function AllergiesInput({
+    allergies,
+    addAllergy,
+    removeAllergy,
+    disabled,
+}: AllergiesInputProps) {
     const [input, setInput] = useState("");
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && input !== "") {
-            addAllergy(input.toLowerCase());
-            setInput("");
-            e.preventDefault();
+            if (!allergies.includes(input.toLowerCase())) {
+                addAllergy(input.toLowerCase());
+                setInput("");
+                e.preventDefault();
+            }
         }
     };
+
     return (
         <div className="flex flex-col">
-            <label className="font-bold">Allergies (optional):</label>
+            <label className="font-bold">
+                Allergies:{" "}
+                {isMandatory("allergies") && (
+                    <span className="text-red-400"> *</span>
+                )}
+            </label>
             <input
                 type="text"
                 name="allergies"
@@ -28,7 +42,7 @@ export default function AllergiesInput({allergies, addAllergy, removeAllergy, di
                 className="border border-gray-300 rounded p-2"
                 disabled={disabled}
             />
-            <div className="flex flex-wrap mt-2">
+            <div className="flex flex-wrap mt-2 w-64 max-h-24 overflow-y-auto">
                 {allergies.map((allergy) => (
                     <div
                         key={allergy}
