@@ -6,7 +6,7 @@ export type StudentGeneralInfo = {
     firstName: string;
     lastName: string;
     highSchool: string;
-    schoolYear: "" | "9" | "10" | "11" | "12";
+    grade: "" | "9" | "10" | "11" | "12";
     dob: string;
     gender: "" | "Male" | "Female";
     allergies: string[];
@@ -54,7 +54,7 @@ export type LabelsKey = keyof typeof labels;
 export type SearchValues = {
     firstName: string;
     lastName: string;
-    schoolYear: string;
+    grade: string;
     teacher: string;
 };
 

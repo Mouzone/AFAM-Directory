@@ -57,10 +57,8 @@ export default function General({
     };
 
     const filteredTeachers =
-        generalData.schoolYear != ""
-            ? teachers.filter(
-                  (teacher) => teacher.grade === generalData.schoolYear
-              )
+        generalData.grade != ""
+            ? teachers.filter((teacher) => teacher.grade === generalData.grade)
             : teachers;
     return (
         <div className="h-[250px]">
@@ -83,7 +81,7 @@ export default function General({
 
                 <SelectInput
                     label="School Year:"
-                    value={generalData.schoolYear}
+                    value={generalData.grade}
                     name="schoolYear"
                     options={["9", "10", "11", "12"]}
                     onChange={handleChange}

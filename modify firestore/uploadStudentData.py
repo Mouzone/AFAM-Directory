@@ -38,7 +38,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 private_info = {}
                 general_info["firstName"] = row["First Name"].strip()
                 general_info["lastName"] = row["Last Name"].strip()
-                general_info["schoolYear"] = row["Grade"].strip()
+                general_info["grade"] = row["Grade"].strip()
 
                 # to go from 1/17/2009 to 2025-02-28
                 dob_parts = row["Date of Birth (DOB)"].split("/")
