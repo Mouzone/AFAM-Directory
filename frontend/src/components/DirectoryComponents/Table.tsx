@@ -16,7 +16,7 @@ export default function Table({ filtered, editForm }: TableProps) {
                         Last Name
                     </th>
                     <th className="border border-gray-300 p-2 w-1/4">
-                        School Year
+                        Grade
                     </th>
                     <th className="border border-gray-300 p-2 w-1/4">
                         Teacher
