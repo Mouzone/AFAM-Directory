@@ -3,6 +3,7 @@ import {initializeApp} from "firebase-admin/app";
 import {getAuth} from "firebase-admin/auth";
 import {getFirestore} from "firebase-admin/firestore";
 import {onSchedule} from "firebase-functions/scheduler";
+import nodemailer from "nodemailer";
 
 initializeApp();
 const auth = getAuth();
@@ -20,8 +21,12 @@ export const generateInviteToken = onCall(async (request) => {
     const userToken = request.auth.token;
     const userRole = userToken.role;
     const isWelcomeTeamLeader = userToken.isWelcomeTeamLeader ?? false;
-    const {role: roleToCreate} = request.data;
+    const {role: roleToCreate, reciever} = request.data;
     if (!userRole) {
+      throw new HttpsError("permission-denied", "The request has no role.");
+    }
+
+    if (!reciever) {
       throw new HttpsError("permission-denied", "The request has no role.");
     }
 
@@ -52,6 +57,30 @@ export const generateInviteToken = onCall(async (request) => {
     });
 
     await firestore.collection("temp").doc().delete();
+
+    const transporter = nodemailer.createTransport({
+      service: process.env.MAIL_HOST,
+      auth: {
+        user: process.env.MAIL_USERNAME,
+        password: process.env.MAIL_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.MAIL_HOST,
+      to: reciever,
+      subject: "AFAM Directory Account Signup Link",
+      html: `<p>Account Link: <a href=https://afam-directory.vercel.app/signup?token=${token}>here</a></p>`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Error:", error);
+      } else {
+        console.log("Email was sent", info);
+      }
+    });
+    // return 200 status message, which frontend reads and puts up notification of "Email Sent to: xyz@gmail.com"
     return {token};
   } catch (error) {
     console.error("Error generating invite link:", error);

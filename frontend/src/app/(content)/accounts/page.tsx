@@ -25,12 +25,11 @@ export default function Page() {
     const router = useRouter();
 
     const [roleToCreate, setRoleToCreate] = useState<Role>("student");
-    const [token, setToken] = useState<string | null>(null);
+    const [email, setEmail] = useState("");
     const [invitableRoles, setInvitableRoles] = useState<Role[] | null>(null);
     const [subordinates, setSubordinates] = useState<Subordinate[]>([]);
 
-    const [generated, setGenerated] = useState(false);
-    const [copied, setCopied] = useState(false);
+    const [sent, setSent] = useState(false);
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -114,22 +113,15 @@ export default function Page() {
         fetchSubordinates();
     }, [user]);
 
-    const onGenerateLink = async () => {
+    const onSend = async () => {
         try {
             const response: HttpsCallableResult<GenerateInviteResponse> =
-                await generateInviteToken({ role: roleToCreate });
-            setToken(response.data.token);
-            setGenerated(true);
+                await generateInviteToken({ role: roleToCreate, email });
+            // check resposne first before setGenerate(true)
+            setSent(true);
         } catch (e) {
             console.log(e);
         }
-    };
-
-    const onCopy = () => {
-        navigator.clipboard.writeText(
-            `${window.location.origin}/signup?token=${token}`
-        );
-        setCopied(true);
     };
 
     const onDelete = async (id: string) => {
@@ -206,22 +198,17 @@ export default function Page() {
                         </option>
                     ))}
                 </select>
-                <div className="w-full md:w-60 truncate border rounded p-2 break-all bg-gray-100 text-sm">
-                    {`${window.location.origin}/signup?token=${token}`}
-                </div>
+                <input
+                    className="w-full md:w-60 truncate border rounded p-2 break-all bg-gray-100 text-sm"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
                 <button
                     type="button"
-                    onClick={onGenerateLink}
+                    onClick={onSend}
                     className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded shadow-md transition-colors duration-200"
                 >
-                    Generate
-                </button>
-                <button
-                    type="button"
-                    onClick={onCopy}
-                    className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded shadow-md transition-colors duration-200"
-                >
-                    Copy
+                    Send
                 </button>
             </div>
             <div className="mt-8 flex flex-wrap gap-4 justify-center">
@@ -365,12 +352,7 @@ export default function Page() {
                     </tbody>
                 </table>
             </div>
-            <Notifications
-                generated={generated}
-                copied={copied}
-                setGenerated={setGenerated}
-                setCopied={setCopied}
-            />
+            <Notifications email={email} sent={sent} setSent={setSent} />
         </>
     );
 }
