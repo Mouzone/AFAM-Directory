@@ -25,7 +25,7 @@ export default function Page() {
     const [searchValues, setSearchValues] = useState({
         firstName: "",
         lastName: "",
-        schoolYear: "",
+        grade: "",
         teacher: "",
     });
     const [error, setError] = useState<string | null>(null);
@@ -185,7 +185,7 @@ export default function Page() {
             entry["lastName"]
                 .toLowerCase()
                 .includes(searchValues["lastName"].toLowerCase()) &&
-            entry["schoolYear"].includes(searchValues["schoolYear"]) &&
+            entry["grade"].includes(searchValues["grade"]) &&
             (entry["teacher"]["firstName"]
                 .toLowerCase()
                 .includes(searchValues["teacher"].toLowerCase()) ||
