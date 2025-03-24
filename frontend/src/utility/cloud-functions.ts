@@ -6,10 +6,10 @@ export const createUserWithRole = httpsCallable(
     functions,
     "createUserWithRole"
 );
-export const generateInviteToken = httpsCallable<
-    { role: string },
-    GenerateInviteResponse
->(functions, "generateInviteToken");
+export const generateInviteToken = httpsCallable(
+    functions,
+    "generateInviteToken"
+);
 export const deleteUser = httpsCallable(functions, "deleteUser");
 export const toggleWelcomeTeamLeader = httpsCallable(
     functions,

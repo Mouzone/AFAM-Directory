@@ -115,8 +115,10 @@ export default function Page() {
 
     const onSend = async () => {
         try {
-            const response: HttpsCallableResult<GenerateInviteResponse> =
-                await generateInviteToken({ role: roleToCreate, email });
+            const response = await generateInviteToken({
+                role: roleToCreate,
+                email,
+            });
             // check resposne first before setGenerate(true)
             setSent(true);
         } catch (e) {
