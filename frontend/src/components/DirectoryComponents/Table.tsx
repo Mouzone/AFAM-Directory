@@ -16,7 +16,7 @@ export default function Table({ filtered, editForm }: TableProps) {
                         Last Name
                     </th>
                     <th className="border border-gray-300 p-2 w-1/4">
-                        School Year
+                        Grade
                     </th>
                     <th className="border border-gray-300 p-2 w-1/4">
                         Teacher
@@ -37,7 +37,7 @@ export default function Table({ filtered, editForm }: TableProps) {
                             {student.lastName}
                         </td>
                         <td className="border border-gray-300 p-2 w-1/4">
-                            {student.schoolYear}
+                            {student.grade}
                         </td>
                         <td className="border border-gray-300 p-2 w-1/4">
                             {`${student.teacher.firstName}${

@@ -3,7 +3,7 @@ import { AllKeys, StudentGeneralInfo, StudentPrivateInfo } from "../types";
 export const studentGeneralInfoDefault = {
     firstName: "",
     lastName: "",
-    schoolYear: "",
+    grade: "",
     dob: "",
     gender: "",
     highSchool: "",
@@ -39,7 +39,7 @@ export const studentPrivateInfoDefault = {
 export const labels: Partial<Record<AllKeys, string>> = {
     firstName: "First Name",
     lastName: "Last Name",
-    schoolYear: "Grade",
+    grade: "Grade",
     teacher: "Teacher",
     dob: "Birthday",
     gender: "Gender",
@@ -66,7 +66,7 @@ export const months = [
 export const mandatoryGeneralDataKeys: (keyof StudentGeneralInfo)[] = [
     "firstName",
     "lastName",
-    "schoolYear",
+    "grade",
     "dob",
     "gender",
     "highSchool",
