@@ -3,7 +3,7 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { db } from "@/utility/firebase";
 import { useRouter } from "next/navigation";
-import { GenerateInviteResponse, Role, Subordinate } from "@/types";
+import { Role, Subordinate } from "@/types";
 import {
     collection,
     doc,
@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore";
 import {
     deleteUser,
-    generateInviteToken,
+    sendInviteToken,
     toggleWelcomeTeamLeader,
 } from "@/utility/cloud-functions";
 import { HttpsCallableResult } from "firebase/functions";
@@ -115,7 +115,7 @@ export default function Page() {
 
     const onSend = async () => {
         try {
-            const response = await generateInviteToken({
+            const response = await sendInviteToken({
                 role: roleToCreate,
                 email,
             });

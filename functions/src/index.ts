@@ -9,7 +9,7 @@ initializeApp();
 const auth = getAuth();
 const firestore = getFirestore();
 
-export const generateInviteToken = onCall(async (request) => {
+export const sendInviteToken = onCall(async (request) => {
   if (!request.auth) {
     throw new HttpsError(
       "unauthenticated",
@@ -21,13 +21,16 @@ export const generateInviteToken = onCall(async (request) => {
     const userToken = request.auth.token;
     const userRole = userToken.role;
     const isWelcomeTeamLeader = userToken.isWelcomeTeamLeader ?? false;
-    const {role: roleToCreate, reciever} = request.data;
+    const {role: roleToCreate, email: reciever} = request.data;
     if (!userRole) {
       throw new HttpsError("permission-denied", "The request has no role.");
     }
 
     if (!reciever) {
-      throw new HttpsError("permission-denied", "The request has no role.");
+      throw new HttpsError(
+        "permission-denied",
+        "The request has no recipient."
+      );
     }
 
     const disallowedRoles = ["student", "teacher", "deacon"];

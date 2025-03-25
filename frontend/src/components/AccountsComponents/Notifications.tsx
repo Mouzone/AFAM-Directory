@@ -32,7 +32,7 @@ export default function Notifications({
                 <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-md shadow-md animate-slide-in">
                     <strong className="font-bold">Sent!</strong>
                     <span className="block sm:inline">
-                        Signup Link sent to: ${email}.
+                        Signup Link sent to: {email}.
                     </span>
                 </div>
             )}
