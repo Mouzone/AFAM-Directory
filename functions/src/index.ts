@@ -3,7 +3,7 @@ import {initializeApp} from "firebase-admin/app";
 import {getAuth} from "firebase-admin/auth";
 import {getFirestore} from "firebase-admin/firestore";
 import {onSchedule} from "firebase-functions/scheduler";
-import nodemailer from "nodemailer";
+import sgMail from "@sendgrid/mail";
 
 initializeApp();
 const auth = getAuth();
@@ -58,40 +58,24 @@ export const generateInviteToken = onCall(async (request) => {
 
     await firestore.collection("temp").doc().delete();
 
-    const transporter = nodemailer.createTransport({
-      service: process.env.MAIL_HOST,
-      auth: {
-        user: process.env.MAIL_USERNAME,
-        password: process.env.MAIL_PASSWORD,
-      },
-    });
-
-    const mailOptions = {
-      from: process.env.MAIL_HOST,
-      to: reciever,
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+    const msg = {
+      to: reciever, // Change to your recipient
+      from: process.env.SENDER as string, // Change to your verified sender
       subject: "AFAM Directory Account Signup Link",
       html: `<p>Account Link: <a href=https://afam-directory.vercel.app/signup?token=${token}>here</a></p>`,
     };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("Error:", error);
-      } else {
-        console.log("Email was sent", info);
-      }
-    });
-    // return 200 status message, which frontend reads and puts up notification of "Email Sent to: xyz@gmail.com"
-    return {token};
+    try {
+      await sgMail.send(msg);
+      console.log("Email sent");
+      return {success: true};
+    } catch (error) {
+      console.error("SendGrid Error:", error);
+      return {error: "Failed to send email", details: error};
+    }
   } catch (error) {
     console.error("Error generating invite link:", error);
-
-    if (error instanceof HttpsError) {
-      throw error; // Re-throw Firebase Functions errors as they are.
-    } else if (error instanceof Error) {
-      throw new HttpsError("internal", error.message);
-    } else {
-      throw new HttpsError("internal", "An unknown error occurred.");
-    }
+    return {error};
   }
 });
 
@@ -332,3 +316,12 @@ export const deleteStudent = onCall(async (request) => {
     .delete();
   await firestore.collection("students").doc(id).delete();
 });
+
+// run weekly for the birthdays that have passed so from Monday to current Sunday is the check
+// create a collection, and send student general info to Welcome Team Leader & Pastor
+// can cache it in the future, such that the emails are all preplanned, and each new student is simply slotted in to the group
+export const getBirthdayStudents = onSchedule("0 0 1 1 *", async () => {});
+
+// get all documents in students that a new creation date at Sunday 5 pm
+// create a collection, and send email with their info to Welcome Team Leader & Pastor
+export const getNewStudents = onSchedule("0 0 1 1 *", async () => {});
