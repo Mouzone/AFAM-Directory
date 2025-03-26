@@ -1,7 +1,7 @@
 import {onCall, HttpsError} from "firebase-functions/v2/https";
 import {initializeApp} from "firebase-admin/app";
 import {getAuth} from "firebase-admin/auth";
-import {getFirestore} from "firebase-admin/firestore";
+import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import {onSchedule} from "firebase-functions/scheduler";
 import sgMail from "@sendgrid/mail";
 
@@ -197,6 +197,7 @@ export const deleteUser = onCall(async (request) => {
   await auth.deleteUser(id);
 });
 
+// maybe toggle students? but currently can only only toggle deacons and teachers
 export const toggleWelcomeTeamLeader = onCall(async (request) => {
   if (!request.auth) {
     throw new HttpsError(
@@ -229,6 +230,22 @@ export const toggleWelcomeTeamLeader = onCall(async (request) => {
     userToggleCustomClaims.isWelcomeTeamLeader = newValue;
   } else {
     userToggleCustomClaims.isWelcomeTeamLeader = true;
+  }
+
+  if (userToggleCustomClaims.isWelcomeTeamLeader) {
+    await firestore
+      .collection("organization")
+      .doc("roles")
+      .collection("welcome team leader")
+      .doc(uid)
+      .create({role: userTogggleRole});
+  } else {
+    await firestore
+      .collection("organization")
+      .doc("roles")
+      .collection("welcome team leader")
+      .doc(uid)
+      .delete();
   }
 
   await auth.setCustomUserClaims(uid, userToggleCustomClaims);
@@ -327,17 +344,60 @@ export const deleteStudent = onCall(async (request) => {
 
 // run weekly for the birthdays that have passed so from Monday to current Sunday is the check
 // create a collection, and add student to collection and notify Welcome Team Leader & Pastor
-// can cache it in the future, such that the emails are all preplanned, and each new student is simply slotted in to the group
-export const getBirthdayStudents = onSchedule("0 0 1 1 *", async () => {});
+export const getBirthdayStudents = onSchedule("0 9 * * Sun", async () => {
+  const documentsToDelete = await firestore
+    .collection("collections")
+    .doc("general")
+    .collection("AFAM Birthdays")
+    .get();
+  documentsToDelete.forEach((document) => document.ref.delete());
+
+  const students = await firestore.collection("students").get();
+  const today = new Date();
+  const beginningOfWeek = Timestamp.fromDate(new Date(today.getDate() - 7));
+  const endOfWeek = Timestamp.fromDate(new Date(today.getHours() + 15));
+
+  students.forEach(async (student) => {
+    const dob = student.data().dob;
+    if (dob <= endOfWeek && dob >= beginningOfWeek) {
+      await firestore
+        .collection("collections")
+        .doc("general")
+        .collection("AFAM Birthdays")
+        .doc(student.id)
+        .create(student);
+    }
+  });
+});
 
 // get all documents in students that a new creation date at Sunday 5 pm
 // create a collection, and send email notifying Welcome Team Leader & Pastor
-export const getNewStudents = onSchedule("0 0 1 1 *", async () => {
+export const getNewStudents = onSchedule("0 17 * * Sun", async () => {
+  // clean "newcomers" collections from each
+  const documentsToDelete = await firestore
+    .collection("collections")
+    .doc("general")
+    .collection("AFAM Newcomers")
+    .get();
+  documentsToDelete.forEach((document) => document.ref.delete());
+
+  // add to "newcomers" collections to each
+  const today = new Date();
+  const startTime = Timestamp.fromDate(new Date(today.getHours() - 8));
   const students = await firestore.collection("students").get();
-  students.forEach((student) => {
+  const todayTimestamp = Timestamp.fromDate(today);
+  students.forEach(async (student) => {
     // between 9:00am to 5:00pm today
-    if (student.createTime) {
-      // add them to new students collection
+    if (
+      student.createTime >= startTime &&
+      student.createTime <= todayTimestamp
+    ) {
+      await firestore
+        .collection("collections")
+        .doc("general")
+        .collection("AFAM Newcomers")
+        .doc(student.id)
+        .create(student);
     }
   });
 });
