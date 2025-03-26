@@ -320,11 +320,24 @@ export const deleteStudent = onCall(async (request) => {
   await firestore.collection("students").doc(id).delete();
 });
 
+// personal_collections > `user.uid` > {collecitons} > {docs}
+// make firestore rules for welcome team leader and pastor and check for it specifically depending on user role on frontend
+// personal_collections > `general` > birthday
+// personal_collections > `general` > new comers
+
 // run weekly for the birthdays that have passed so from Monday to current Sunday is the check
-// create a collection, and send student general info to Welcome Team Leader & Pastor
+// create a collection, and add student to collection and notify Welcome Team Leader & Pastor
 // can cache it in the future, such that the emails are all preplanned, and each new student is simply slotted in to the group
 export const getBirthdayStudents = onSchedule("0 0 1 1 *", async () => {});
 
 // get all documents in students that a new creation date at Sunday 5 pm
-// create a collection, and send email with their info to Welcome Team Leader & Pastor
-export const getNewStudents = onSchedule("0 0 1 1 *", async () => {});
+// create a collection, and send email notifying Welcome Team Leader & Pastor
+export const getNewStudents = onSchedule("0 0 1 1 *", async () => {
+  const students = await firestore.collection("students").get();
+  students.forEach((student) => {
+    // between 9:00am to 5:00pm today
+    if (student.createTime) {
+      // add them to new students collection
+    }
+  });
+});
