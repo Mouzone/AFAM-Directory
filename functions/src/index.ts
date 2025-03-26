@@ -74,7 +74,7 @@ export const sendInviteToken = onCall(async (request) => {
       return {success: true};
     } catch (error) {
       console.error("SendGrid Error:", error);
-      return {error: "Failed to send email", details: error};
+      return {error};
     }
   } catch (error) {
     console.error("Error generating invite link:", error);
