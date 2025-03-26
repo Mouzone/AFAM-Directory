@@ -16,7 +16,6 @@ import {
     sendInviteToken,
     toggleWelcomeTeamLeader,
 } from "@/utility/cloud-functions";
-import { HttpsCallableResult } from "firebase/functions";
 import Notifications from "@/components/AccountsComponents/Notifications";
 import { AuthContext } from "@/components/AuthContext";
 
@@ -30,6 +29,7 @@ export default function Page() {
     const [subordinates, setSubordinates] = useState<Subordinate[]>([]);
 
     const [sent, setSent] = useState(false);
+    const [sendError, setSendError] = useState<string | null>(null);
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -119,8 +119,14 @@ export default function Page() {
                 role: roleToCreate,
                 email,
             });
-            // check resposne first before setGenerate(true)
-            setSent(true);
+
+            if (!response.data) {
+                setSendError("No data in response");
+            } else if ("error" in response.data) {
+                setSendError(response.data.error as string);
+            } else {
+                setSent(true);
+            }
         } catch (e) {
             console.log(e);
         }
@@ -354,7 +360,13 @@ export default function Page() {
                     </tbody>
                 </table>
             </div>
-            <Notifications email={email} sent={sent} setSent={setSent} />
+            <Notifications
+                email={email}
+                sent={sent}
+                setSent={setSent}
+                error={sendError}
+                setError={setSendError}
+            />
         </>
     );
 }

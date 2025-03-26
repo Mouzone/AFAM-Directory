@@ -6,21 +6,32 @@ type NotificationsProps = {
     email: string;
     sent: boolean;
     setSent: React.Dispatch<React.SetStateAction<boolean>>;
+    error: string | null;
+    setError: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 export default function Notifications({
     email,
     sent,
     setSent,
+    error,
+    setError,
 }: NotificationsProps) {
-    const [showSent, setShowSent] = useState(false);
+    const [showNotification, setShowNotification] = useState(false);
 
     useEffect(() => {
         if (sent) {
-            setShowSent(true);
+            setShowNotification(true);
             const timer = setTimeout(() => {
-                setShowSent(false);
+                setShowNotification(false);
                 setSent(false); // Reset copied state
+            }, 1000); // Hide after 3 seconds
+            return () => clearTimeout(timer);
+        } else if (error) {
+            setShowNotification(true);
+            const timer = setTimeout(() => {
+                setShowNotification(false);
+                setError(null); // Reset copied state
             }, 1000); // Hide after 3 seconds
             return () => clearTimeout(timer);
         }
@@ -28,11 +39,19 @@ export default function Notifications({
 
     return (
         <div className="fixed top-4 right-20 space-y-2 z-50">
-            {showSent && (
-                <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-md shadow-md animate-slide-in">
-                    <strong className="font-bold">Sent!</strong>
+            {showNotification && (
+                <div
+                    className={`${
+                        sent
+                            ? "bg-blue-100 border border-blue-400 text-blue-700"
+                            : "bg-red-100 border border-red-400 text-red-700"
+                    } px-4 py-3 rounded-md shadow-md animate-slide-in`}
+                >
+                    <strong className="font-bold">
+                        {sent ? "Sent! " : "Error "}
+                    </strong>
                     <span className="block sm:inline">
-                        Signup Link sent to: {email}.
+                        {sent ? `Signup Link sent to: ${email}. ` : `${error}`}
                     </span>
                 </div>
             )}
