@@ -2,9 +2,16 @@ import { StudentGeneralInfo } from "../../types";
 interface TableProps {
     filtered: StudentGeneralInfo[];
     editForm: (student: StudentGeneralInfo) => void;
+    isMultiSelect: boolean;
+    multiSelectStudents: Set<string | null>;
 }
 
-export default function Table({ filtered, editForm }: TableProps) {
+export default function Table({
+    filtered,
+    editForm,
+    isMultiSelect,
+    multiSelectStudents,
+}: TableProps) {
     return (
         <table className="w-full border-collapse">
             <thead>
@@ -15,9 +22,7 @@ export default function Table({ filtered, editForm }: TableProps) {
                     <th className="border border-gray-300 p-2 w-1/4">
                         Last Name
                     </th>
-                    <th className="border border-gray-300 p-2 w-1/4">
-                        Grade
-                    </th>
+                    <th className="border border-gray-300 p-2 w-1/4">Grade</th>
                     <th className="border border-gray-300 p-2 w-1/4">
                         Teacher
                     </th>
