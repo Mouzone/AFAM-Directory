@@ -232,22 +232,6 @@ export const toggleWelcomeTeamLeader = onCall(async (request) => {
     userToggleCustomClaims.isWelcomeTeamLeader = true;
   }
 
-  if (userToggleCustomClaims.isWelcomeTeamLeader) {
-    await firestore
-      .collection("organization")
-      .doc("roles")
-      .collection("welcome team leader")
-      .doc(uid)
-      .create({role: userTogggleRole});
-  } else {
-    await firestore
-      .collection("organization")
-      .doc("roles")
-      .collection("welcome team leader")
-      .doc(uid)
-      .delete();
-  }
-
   await auth.setCustomUserClaims(uid, userToggleCustomClaims);
   await firestore
     .collection("organization")
