@@ -331,7 +331,7 @@ export const deleteStudent = onCall(async (request) => {
 export const getBirthdayStudents = onSchedule("0 9 * * Sun", async () => {
   const documentsToDelete = await firestore
     .collection("collections")
-    .doc("AFAM Birthdays")
+    .doc("birthdays")
     .collection("data")
     .get();
   documentsToDelete.forEach((document) => document.ref.delete());
@@ -346,7 +346,7 @@ export const getBirthdayStudents = onSchedule("0 9 * * Sun", async () => {
     if (dob <= endOfWeek && dob >= beginningOfWeek) {
       await firestore
         .collection("collections")
-        .doc("AFAM Birthdays")
+        .doc("birthdays")
         .collection("data")
         .doc(student.id)
         .create(student);
@@ -360,7 +360,7 @@ export const getNewStudents = onSchedule("0 17 * * Sun", async () => {
   // clean "newcomers" collections from each
   const documentsToDelete = await firestore
     .collection("collections")
-    .doc("AFAM Newcomers")
+    .doc("newcomers")
     .collection("data")
     .get();
   documentsToDelete.forEach((document) => document.ref.delete());
@@ -378,7 +378,7 @@ export const getNewStudents = onSchedule("0 17 * * Sun", async () => {
     ) {
       await firestore
         .collection("collections")
-        .doc("AFAM Newcomers")
+        .doc("newcomers")
         .collection("data")
         .doc(student.id)
         .create(student);

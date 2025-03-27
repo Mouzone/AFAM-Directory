@@ -58,11 +58,11 @@ service cloud.firestore {
         allow read: if request.auth != null && request.auth.uid == uid;
     }
 
-    match /collections/AFAM Birthdays/data/{document} {
+    match /collections/birthdays/data/{document} {
         allow read: if hasRequiredRole(["pastor"]) || request.auth.token.isWelcomeTeamLeader
     }
 
-    match /collections/AFAM Newcomers/data/{document} {
+    match /collections/newcomers/data/{document} {
         allow read: if hasRequiredRole(["pastor"]) || request.auth.token.isWelcomeTeamLeader
     }
   }
