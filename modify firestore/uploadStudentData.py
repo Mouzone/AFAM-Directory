@@ -1,6 +1,5 @@
 import csv
 import firebase_admin
-import datetime
 from firebase_admin import firestore
 
 # Replace with your Firebase project credentials
@@ -41,9 +40,10 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 general_info["lastName"] = row["Last Name"].strip()
                 general_info["grade"] = row["Grade"].strip()
 
-                # to go from 1/17/2009 to 2025-02-28
-                general_info["dob"] = datetime.strptime(
-                    row["Date of Birth (DOB)"], "%m/%d/%Y"
+                # to go from 1/17/2009 to Timestamp
+                dob_parts = row["Date of Birth (DOB)"].split("/")
+                general_info["dob"] = (
+                    f"20{dob_parts[2]}-{dob_parts[0].zfill(2)}-{dob_parts[1].zfill(2)}"
                 )
 
                 if row["Allergies"] == "":
