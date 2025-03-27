@@ -57,5 +57,13 @@ service cloud.firestore {
     match /temp/{uid} {
         allow read: if request.auth != null && request.auth.uid == uid;
     }
+
+    match /collections/AFAM Birthdays/data/{document} {
+        allow read: if hasRequiredRole(["pastor"]) || request.auth.token.isWelcomeTeamLeader
+    }
+
+    match /collections/AFAM Newcomers/data/{document} {
+        allow read: if hasRequiredRole(["pastor"]) || request.auth.token.isWelcomeTeamLeader
+    }
   }
 }
