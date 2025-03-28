@@ -15,11 +15,7 @@ export default function Table({
     multiSelectStudents,
     setMultiSelectStudents,
 }: TableProps) {
-    const checkToggle = (
-        e: React.MouseEvent<HTMLInputElement, MouseEvent>,
-        id: string
-    ) => {
-        e.stopPropagation();
+    const checkToggle = (id: string) => {
         const newSet = new Set(multiSelectStudents);
         if (multiSelectStudents.has(id)) {
             newSet.delete(id);
@@ -59,7 +55,8 @@ export default function Table({
                                     checked={multiSelectStudents.has(
                                         student.id
                                     )}
-                                    onClick={(e) => checkToggle(e, student.id)}
+                                    onChange={(e) => checkToggle(student.id)}
+                                    onClick={(e) => e.stopPropagation()} // if you still need this
                                 />
                             </td>
                         )}
