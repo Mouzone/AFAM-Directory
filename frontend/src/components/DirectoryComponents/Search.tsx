@@ -2,16 +2,14 @@ import React, { SetStateAction } from "react";
 import { LabelsKey, SearchValues } from "../../types";
 import { labels } from "../../utility/consts";
 
-
 interface SearchProps {
-    searchValues: SearchValues,
-    setSearchValues: React.Dispatch<SetStateAction<SearchValues>>,
-    setShowForm: React.Dispatch<SetStateAction<boolean>>
+    searchValues: SearchValues;
+    setSearchValues: React.Dispatch<SetStateAction<SearchValues>>;
 }
 
-export default function Search({searchValues, setSearchValues, setShowForm,}: SearchProps) {
+export default function Search({ searchValues, setSearchValues }: SearchProps) {
     return (
-        <div className="flex gap-4 mb-5 items-center">
+        <>
             {Object.entries(searchValues).map(([key, value]) => (
                 <div key={key} className="flex flex-col">
                     <label className="font-bold">
@@ -29,13 +27,6 @@ export default function Search({searchValues, setSearchValues, setShowForm,}: Se
                     />
                 </div>
             ))}
-            {/* Add Button */}
-            <button
-                className=" bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                onClick={() => setShowForm(true)}
-            >
-                Add Student
-            </button>
-        </div>
+        </>
     );
 }

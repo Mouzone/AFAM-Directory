@@ -208,11 +208,19 @@ export default function Page() {
                     }`}
                 >
                     {/* Search Inputs */}
-                    <Search
-                        searchValues={searchValues}
-                        setSearchValues={setSearchValues}
-                        setShowForm={setShowForm}
-                    />
+                    <div className="flex gap-4 mb-5 items-center">
+                        <Search
+                            searchValues={searchValues}
+                            setSearchValues={setSearchValues}
+                        />
+                        {/* Add Button */}
+                        <button
+                            className=" bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                            onClick={() => setShowForm(true)}
+                        >
+                            Add Student
+                        </button>
+                    </div>
 
                     <Table
                         filtered={filtered}
