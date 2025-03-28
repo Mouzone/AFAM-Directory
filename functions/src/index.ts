@@ -309,7 +309,7 @@ export const deleteStudent = onCall(async (request) => {
   const attendanceDocs = await firestore
     .collection("students")
     .doc(id)
-    .collection("accounts")
+    .collection("attendance")
     .listDocuments();
   attendanceDocs.forEach((doc) => doc.delete());
   await firestore
