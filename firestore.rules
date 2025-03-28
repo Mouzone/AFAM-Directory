@@ -58,12 +58,12 @@ service cloud.firestore {
         allow read: if request.auth != null && request.auth.uid == uid;
     }
 
-    match /collections/birthdays/data/{document} {
-        allow read: if hasRequiredRole(["pastor"]) || request.auth.token.isWelcomeTeamLeader
-    }
-
-    match /collections/newcomers/data/{document} {
-        allow read: if hasRequiredRole(["pastor"]) || request.auth.token.isWelcomeTeamLeader
+    match /collections/{collection} {
+        allow create: if hasRequiredRole(["admin", "pastor", "deacon", "teacher"]) || request.auth.token.isWelcomeTeamLeader
+        
+        match /data/{data} {
+            allow create: if hasRequiredRole(["admin", "pastor", "deacon", "teacher"]) || request.auth.token.isWelcomeTeamLeader
+        }
     }
   }
 }
