@@ -1,9 +1,11 @@
+import React from "react";
 import { StudentGeneralInfo } from "../../types";
 interface TableProps {
     filtered: StudentGeneralInfo[];
     editForm: (student: StudentGeneralInfo) => void;
     isMultiSelect: boolean;
-    multiSelectStudents: Set<string | null>;
+    multiSelectStudents: Set<string>;
+    setMultiSelectStudents: React.Dispatch<React.SetStateAction<Set<string>>>;
 }
 
 export default function Table({
@@ -11,11 +13,26 @@ export default function Table({
     editForm,
     isMultiSelect,
     multiSelectStudents,
+    setMultiSelectStudents,
 }: TableProps) {
+    const checkToggle = (
+        e: React.MouseEvent<HTMLInputElement, MouseEvent>,
+        id: string
+    ) => {
+        e.stopPropagation();
+        const newSet = new Set(multiSelectStudents);
+        if (multiSelectStudents.has(id)) {
+            newSet.delete(id);
+        } else {
+            newSet.add(id);
+        }
+        setMultiSelectStudents(newSet);
+    };
     return (
         <table className="w-full border-collapse">
             <thead>
                 <tr className="bg-gray-200">
+                    {isMultiSelect && <th> </th>}
                     <th className="border border-gray-300 p-2 w-1/4">
                         First Name
                     </th>
@@ -35,6 +52,17 @@ export default function Table({
                         onClick={() => editForm(student)}
                         className="hover:bg-gray-100"
                     >
+                        {isMultiSelect && (
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    checked={multiSelectStudents.has(
+                                        student.id
+                                    )}
+                                    onClick={(e) => checkToggle(e, student.id)}
+                                />
+                            </td>
+                        )}
                         <td className="border border-gray-300 p-2 w-1/4">
                             {student.firstName}
                         </td>

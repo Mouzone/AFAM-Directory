@@ -36,10 +36,10 @@ export default function Page() {
     }>({ added: [], modified: [], removed: [] });
     const [showUpdates, setShowUpdates] = useState<boolean>(false);
     const { user } = useContext(AuthContext);
-    const [isMultiSelect, setIsMultiSelect] = useState(true);
-    const [multiSelectStudents, setMultiSelectStudents] = useState<
-        Set<string | null>
-    >(new Set());
+    const [isMultiSelect, setIsMultiSelect] = useState(false);
+    const [multiSelectStudents, setMultiSelectStudents] = useState<Set<string>>(
+        new Set()
+    );
 
     const closeForm = () => {
         setProfile(studentGeneralInfoDefault);
@@ -219,6 +219,7 @@ export default function Page() {
                         editForm={editForm}
                         isMultiSelect={isMultiSelect}
                         multiSelectStudents={multiSelectStudents}
+                        setMultiSelectStudents={setMultiSelectStudents}
                     />
                 </div>
             </div>

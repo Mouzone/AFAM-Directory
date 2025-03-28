@@ -2,7 +2,7 @@ import { SetStateAction } from "react";
 import { labels } from "./utility/consts";
 
 export type StudentGeneralInfo = {
-    id?: string;
+    id: string;
     firstName: string;
     lastName: string;
     highSchool: string;
