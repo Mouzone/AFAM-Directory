@@ -62,6 +62,17 @@ function SidebarNav() {
                     Accounts
                 </Link>
             )}
+            {user.role !== "student" && (
+                <Link
+                    href="/collections"
+                    className={`justify-end ${
+                        currentTab === "Collections" ? "font-bold" : ""
+                    }`}
+                    onClick={() => setCurrentTab("Collections")}
+                >
+                    Collections
+                </Link>
+            )}
             <button
                 type="button"
                 onClick={() => signOut(auth)}

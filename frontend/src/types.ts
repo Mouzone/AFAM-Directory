@@ -79,7 +79,7 @@ export interface CreateUserWithRoleResponse {
     message?: string;
 }
 
-export type Tab = "Directory" | "Accounts";
+export type Tab = "Directory" | "Accounts" | "Collections";
 
 export type SidebarContextType = {
     currentTab: Tab;
