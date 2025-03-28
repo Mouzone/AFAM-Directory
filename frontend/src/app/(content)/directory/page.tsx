@@ -71,9 +71,7 @@ export default function Page() {
             time: new Date(),
         });
 
-        const studentIds = Array.from(multiSelectStudents); // Convert Set to Array
-
-        const promises = studentIds.map(async (studentId) => {
+        const promises = multiSelectStudents.map(async (studentId) => {
             const dataRef = doc(
                 collection(db, "collections", docRef.id, "data"),
                 studentId
