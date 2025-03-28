@@ -7,6 +7,7 @@ interface TableProps {
     setIsMultiSelect: React.Dispatch<React.SetStateAction<boolean>>;
     multiSelectStudents: Set<string>;
     setMultiSelectStudents: React.Dispatch<React.SetStateAction<Set<string>>>;
+    createCollection: () => void;
 }
 
 export default function Table({
@@ -16,6 +17,7 @@ export default function Table({
     setIsMultiSelect,
     multiSelectStudents,
     setMultiSelectStudents,
+    createCollection,
 }: TableProps) {
     const checkToggle = (id: string) => {
         const newSet = new Set(multiSelectStudents);
@@ -26,7 +28,6 @@ export default function Table({
         }
         setMultiSelectStudents(newSet);
     };
-    function createCollection() {}
 
     function exitMultiSelect() {
         setIsMultiSelect(false);

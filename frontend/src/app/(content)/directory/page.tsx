@@ -7,7 +7,15 @@ import Form from "@/components/DirectoryComponents/Form";
 import Table from "@/components/DirectoryComponents/Table";
 import { StudentGeneralInfo, Teacher } from "@/types";
 import { studentGeneralInfoDefault } from "@/utility/consts";
-import { collection, onSnapshot, query, getDocs } from "firebase/firestore";
+import {
+    collection,
+    onSnapshot,
+    query,
+    getDocs,
+    addDoc,
+    setDoc,
+    doc,
+} from "firebase/firestore";
 import Updates from "@/components/DirectoryComponents/Updates";
 import Search from "@/components/DirectoryComponents/Search";
 import { AuthContext } from "@/components/AuthContext";
@@ -51,6 +59,30 @@ export default function Page() {
         setProfile(student);
         setShowForm(true);
     };
+
+    async function createCollection() {
+        if (!user) {
+            return;
+        }
+
+        const colRef = collection(db, "collections");
+        const docRef = await addDoc(colRef, {
+            owner: user.uid,
+            time: new Date(),
+        });
+
+        const studentIds = Array.from(multiSelectStudents); // Convert Set to Array
+
+        const promises = studentIds.map(async (studentId) => {
+            const dataRef = doc(
+                collection(db, "collections", docRef.id, "data"),
+                studentId
+            );
+            await setDoc(dataRef, { docRef: studentId });
+        });
+
+        await Promise.all(promises);
+    }
 
     useEffect(() => {
         if (user === false) {
@@ -228,6 +260,7 @@ export default function Page() {
                         setIsMultiSelect={setIsMultiSelect}
                         multiSelectStudents={multiSelectStudents}
                         setMultiSelectStudents={setMultiSelectStudents}
+                        createCollection={createCollection}
                     />
                 </div>
             </div>
