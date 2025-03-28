@@ -46,8 +46,8 @@ export default function Page() {
     const [showUpdates, setShowUpdates] = useState<boolean>(false);
     const { user } = useContext(AuthContext);
     const [isMultiSelect, setIsMultiSelect] = useState(false);
-    const [multiSelectStudents, setMultiSelectStudents] = useState<Set<string>>(
-        new Set()
+    const [multiSelectStudents, setMultiSelectStudents] = useState<string[]>(
+        []
     );
 
     const closeForm = () => {

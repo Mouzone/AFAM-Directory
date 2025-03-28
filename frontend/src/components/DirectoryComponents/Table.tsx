@@ -5,8 +5,8 @@ interface TableProps {
     editForm: (student: StudentGeneralInfo) => void;
     isMultiSelect: boolean;
     setIsMultiSelect: React.Dispatch<React.SetStateAction<boolean>>;
-    multiSelectStudents: Set<string>;
-    setMultiSelectStudents: React.Dispatch<React.SetStateAction<Set<string>>>;
+    multiSelectStudents: string[];
+    setMultiSelectStudents: React.Dispatch<React.SetStateAction<string[]>>;
     createCollection: () => void;
 }
 
@@ -20,18 +20,15 @@ export default function Table({
     createCollection,
 }: TableProps) {
     const checkToggle = (id: string) => {
-        const newSet = new Set(multiSelectStudents);
-        if (multiSelectStudents.has(id)) {
-            newSet.delete(id);
-        } else {
-            newSet.add(id);
-        }
-        setMultiSelectStudents(newSet);
+        const newList = multiSelectStudents.includes(id)
+            ? multiSelectStudents.filter((curr_id) => curr_id !== id)
+            : [...multiSelectStudents, id];
+        setMultiSelectStudents(newList);
     };
 
     function exitMultiSelect() {
         setIsMultiSelect(false);
-        setMultiSelectStudents(new Set());
+        setMultiSelectStudents([]);
     }
 
     return (
@@ -65,7 +62,7 @@ export default function Table({
                                 <td>
                                     <input
                                         type="checkbox"
-                                        checked={multiSelectStudents.has(
+                                        checked={multiSelectStudents.includes(
                                             student.id
                                         )}
                                         onChange={(e) =>
