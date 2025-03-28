@@ -11,6 +11,7 @@ import { collection, onSnapshot, query, getDocs } from "firebase/firestore";
 import Updates from "@/components/DirectoryComponents/Updates";
 import Search from "@/components/DirectoryComponents/Search";
 import { AuthContext } from "@/components/AuthContext";
+import Options from "@/components/DirectoryComponents/Options";
 
 export default function Page() {
     const [loading, setLoading] = useState(true); // Add loading state
@@ -214,12 +215,10 @@ export default function Page() {
                             setSearchValues={setSearchValues}
                         />
                         {/* Add Button */}
-                        <button
-                            className=" bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                            onClick={() => setShowForm(true)}
-                        >
-                            Add Student
-                        </button>
+                        <Options
+                            setIsMultiSelect={setIsMultiSelect}
+                            setShowForm={setShowForm}
+                        />
                     </div>
 
                     <Table
