@@ -225,6 +225,7 @@ export default function Page() {
                         filtered={filtered}
                         editForm={editForm}
                         isMultiSelect={isMultiSelect}
+                        setIsMultiSelect={setIsMultiSelect}
                         multiSelectStudents={multiSelectStudents}
                         setMultiSelectStudents={setMultiSelectStudents}
                     />
