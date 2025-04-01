@@ -5,6 +5,7 @@ import { auth } from "../utility/firebase";
 import { User } from "firebase/auth";
 
 export const AuthContext = createContext<User | false | null>(null);
+
 type AuthProviderProps = {
     children: ReactNode;
 };
