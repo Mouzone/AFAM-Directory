@@ -19,22 +19,21 @@ export default function Page() {
     const mutation = useMutation({
         mutationFn: login,
         onSuccess: (data) => {
+            // todo: provide indicator login was succesful
             console.log("Login successful:", data);
         },
         onError: (error) => {
-            console.error("Login error:", error);
             setError(error);
         },
     });
 
-    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        mutation.mutate({ email, password });
-    };
     return (
         <form
             className="w-screen h-screen flex justify-center items-center"
-            onSubmit={onSubmit}
+            onSubmit={(e) => {
+                e.preventDefault();
+                mutation.mutate({ email, password });
+            }}
         >
             <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
                 <legend className="fieldset-legend">Login</legend>
