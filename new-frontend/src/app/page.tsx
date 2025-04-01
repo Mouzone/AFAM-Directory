@@ -1,18 +1,21 @@
 "use client";
+
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "./utility/login";
+import { useRouter } from "next/navigation";
 
 // todo: add redirect if user is already logged in
 export default function Page() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState<Error | null>(null);
+    const router = useRouter();
     const mutation = useMutation({
         mutationFn: login,
         onSuccess: (data) => {
-            // todo: provide indicator login was succesful
-            console.log("Login successful:", data);
+            // todo: provide indicator login was succesful or loading...
+            router.push("/directory");
         },
         onError: (error) => {
             setError(error);
