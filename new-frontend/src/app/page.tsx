@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "./utility/login";
 
+// todo: add redirect if user is already logged in
 export default function Page() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
