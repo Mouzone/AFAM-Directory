@@ -1,16 +1,7 @@
 "use client";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { FormEvent, useState } from "react";
-import { auth } from "./utility/firebase";
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-
-const login = (credentials: { email: string; password: string }) => {
-    return signInWithEmailAndPassword(
-        auth,
-        credentials.email,
-        credentials.password
-    );
-};
+import { login } from "./utility/login";
 
 export default function Page() {
     const [email, setEmail] = useState("");
