@@ -11,8 +11,11 @@ import {
 } from "../utility/types";
 
 export const AuthContext = createContext<
-    LoadingUser | LoadedUser | LoggedOutUser | {}
->({});
+    LoadingUser | LoadedUser | LoggedOutUser
+>({
+    user: null,
+    directories: null,
+});
 
 type AuthProviderProps = {
     children: ReactNode;
