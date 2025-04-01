@@ -10,7 +10,7 @@ const getStudents = async (selectedDirectory: string) => {
     const studentDocs = await getDocs(
         collection(db, "directories", selectedDirectory, "students")
     );
-    const students = studentDocs.docs.map((studentDoc) => {
+    return studentDocs.docs.map((studentDoc) => {
         return { ...studentDoc.data(), id: studentDoc.id };
     });
 };
@@ -22,7 +22,11 @@ export default function Page() {
 
     // get students from first directory of the list
     // on directory change refetch students
-    const { isLoading, data, error } = useQuery({
+    const {
+        isLoading,
+        data: students,
+        error,
+    } = useQuery({
         queryKey: [selectedDirectory, "students"],
         queryFn: () => getStudents(selectedDirectory),
     });
@@ -31,7 +35,7 @@ export default function Page() {
         return <></>;
     }
 
-    // onSubmit handles pure typing
+    // onSubmit handles typing input
     // options onClick handles clicking and selecting option
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
