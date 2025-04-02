@@ -9,6 +9,44 @@ initializeApp();
 const auth = getAuth();
 const firestore = getFirestore();
 
+export const createDirectory = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
+
+  const {name, csvFile} = request;
+
+  const directoriesWithSameName = await firestore
+    .collection("users")
+    .doc(request.auth.uid)
+    .collection("directories")
+    .where("owner", "==", request.auth.uid)
+    .where("name", "==", name)
+    .count()
+    .get();
+  const count = directoriesWithSameName.data().count;
+  if (count == 0) {
+    const newDirectory = await firestore.collection("directories").add({name});
+    // add docRef to it in Users directory
+    await firestore
+      .collection("users")
+      .doc(request.auth.uid)
+      .collection("directories")
+      .doc(newDirectory.id)
+      .create({name, owner: request.auth.uid});
+  } else {
+    return {error: "Directory with same name already exists"};
+  }
+
+  if (!csvFile) {
+    return newDirectory;
+  } else {
+  }
+});
+
 export const sendInviteToken = onCall(async (request) => {
   if (!request.auth) {
     throw new HttpsError(

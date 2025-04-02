@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { addDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -9,6 +10,7 @@ type CreateDirectoryInput = {
 const createDirectory = ({ directoryName, csvFile }: CreateDirectoryInput) => {
     if (!csvFile) {
         // create document Firestore style
+        const docId = addDoc();
     } else {
         // send to cloud function to parse csvFile, then create directory and upload all the data
     }
@@ -24,7 +26,7 @@ export default function CreateDirectoryModal() {
         mutationFn: createDirectory,
         onSuccess: (data) => {
             // redirect to the new generated uid,
-            router.push("/home");
+            router.push(`/directory/${data.directoryId}`);
         },
         onError: (error) => {
             setError(error);
