@@ -47,29 +47,44 @@ export default function Page() {
         }
     };
 
+    console.log(students);
     return (
-        <form onSubmit={onSubmit}>
-            <input
-                type="text"
-                className="input"
-                list="directories"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-            />
-            <datalist id="directories">
-                {directories.map((directory) => (
-                    <option
-                        key={directory.id}
-                        value={directory.id}
-                        onClick={() => {
-                            setInput(directory.name);
-                            setSelectedDirectory(directory.id);
-                        }}
-                    >
-                        {directory.name}
-                    </option>
-                ))}
-            </datalist>
+        <form
+            onSubmit={onSubmit}
+            className="flex w-screen h-screen items-center justify-center"
+        >
+            <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+                <input
+                    type="text"
+                    className="input"
+                    list="directories"
+                    placeholder="Navigate to..."
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                />
+                <datalist id="directories">
+                    {directories.map((directory) => (
+                        <option
+                            key={directory.id}
+                            value={directory.id}
+                            onClick={() => {
+                                setInput(directory.name);
+                                setSelectedDirectory(directory.id);
+                            }}
+                        >
+                            {directory.name}
+                        </option>
+                    ))}
+                </datalist>
+                <div className="relative flex py-1 items-center">
+                    <div className="flex-grow border-t border-gray-400"></div>
+                    <span className="flex-shrink mx-4">or</span>
+                    <div className="flex-grow border-t border-gray-400"></div>
+                </div>
+                <button type="button" className="btn btn-soft">
+                    Create New
+                </button>
+            </fieldset>
         </form>
     );
 }
