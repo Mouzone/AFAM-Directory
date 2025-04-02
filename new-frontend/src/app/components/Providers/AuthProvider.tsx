@@ -1,14 +1,14 @@
 "use client";
 
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { auth, db } from "../utility/firebase";
+import { auth, db } from "../../utility/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import {
     Directory,
     LoadedUser,
     LoadingUser,
     LoggedOutUser,
-} from "../utility/types";
+} from "../../utility/types";
 
 export const AuthContext = createContext<
     LoadingUser | LoadedUser | LoggedOutUser

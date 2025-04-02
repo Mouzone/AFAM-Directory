@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import QueryProvider from "./components/QueryProvider";
-import { AuthProvider } from "./components/AuthProvider";
+import QueryProvider from "./components/Providers/QueryProvider";
+import { AuthProvider } from "./components/Providers/AuthProvider";
 
 export const metadata: Metadata = {
     title: "",
