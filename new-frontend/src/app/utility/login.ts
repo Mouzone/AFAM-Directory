@@ -1,10 +1,10 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./firebase";
 
-export const login = (credentials: { email: string; password: string }) => {
-    return signInWithEmailAndPassword(
-        auth,
-        credentials.email,
-        credentials.password
-    );
+type LoginInputs = {
+    email: string;
+    password: string;
+};
+export const login = ({ email, password }: LoginInputs) => {
+    return signInWithEmailAndPassword(auth, email, password);
 };
