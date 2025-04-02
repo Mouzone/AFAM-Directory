@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export default function CreateDirectoryModal() {
     const [directoryName, setDirectoryName] = useState("");
-    const [csvFile, setCSVFile] = useState(null);
+    const [csvFile, setCSVFile] = useState<File | null>(null);
 
     const onSubmit = async () => {};
 
@@ -19,7 +19,11 @@ export default function CreateDirectoryModal() {
                     value={directoryName}
                     onChange={(e) => setDirectoryName(e.target.value)}
                 />
-                <input type="file" className="file-input-sm file-input" />
+                <input
+                    type="file"
+                    className="file-input-sm file-input"
+                    onChange={(e) => setCSVFile(e.target?.files?.[0] ?? null)}
+                />
                 <button type="submit" className="btn btn-neutral">
                     Submit
                 </button>
