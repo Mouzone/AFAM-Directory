@@ -15,7 +15,7 @@ export default function Page() {
         mutationFn: login,
         onSuccess: (data) => {
             // todo: provide indicator login was succesful or loading...
-            router.push("/directory");
+            router.push("/home");
         },
         onError: (error) => {
             setError(error);
