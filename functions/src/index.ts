@@ -44,6 +44,7 @@ export const createDirectory = onCall(async (request) => {
   if (!csvFile) {
     return newDirectory;
   } else {
+    // go to NewDirectory reference and make student docs
   }
 });
 
