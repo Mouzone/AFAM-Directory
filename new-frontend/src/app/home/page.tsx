@@ -67,11 +67,12 @@ export default function Page() {
                     <button
                         type="button"
                         className="btn btn-neutral"
-                        onClick={() =>
-                            document
-                                ?.getElementById("CreateDirectoryModal")
-                                ?.showModal()
-                        }
+                        onClick={() => {
+                            const modal = document?.getElementById(
+                                "CreateDirectoryModal"
+                            ) as HTMLDialogElement | null;
+                            modal?.showModal();
+                        }}
                     >
                         Create Directory
                     </button>
