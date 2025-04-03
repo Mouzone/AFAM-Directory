@@ -1,20 +1,7 @@
+import { createDirectory } from "@/app/utility/cloudFunctions";
 import { useMutation } from "@tanstack/react-query";
-import { addDoc, setDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-type CreateDirectoryInput = {
-    directoryName: string;
-    csvFile: File | null;
-};
-const createDirectory = ({ directoryName, csvFile }: CreateDirectoryInput) => {
-    if (!csvFile) {
-        // create document Firestore style
-        const docId = addDoc();
-    } else {
-        // send to cloud function to parse csvFile, then create directory and upload all the data
-    }
-};
 
 export default function CreateDirectoryModal() {
     const [directoryName, setDirectoryName] = useState("");
