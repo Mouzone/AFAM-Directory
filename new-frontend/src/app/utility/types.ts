@@ -2,20 +2,21 @@ import { User } from "firebase/auth";
 
 export type Directory = {
     id: string;
-    name: string;
+    directoryName: string;
+    owner: string;
 };
 
-export type LoadingUser = {
-    user: null;
-    directories: null;
-};
-
-export type LoadedUser = {
-    user: User;
-    directories: Directory[];
-};
-
-export type LoggedOutUser = {
-    user: false;
-    directories: null;
-};
+// loading, loaded, logged out / error
+export type AuthUser =
+    | {
+          user: null;
+          directories: null;
+      }
+    | {
+          user: User;
+          directories: Directory[];
+      }
+    | {
+          user: false;
+          directories: null;
+      };
