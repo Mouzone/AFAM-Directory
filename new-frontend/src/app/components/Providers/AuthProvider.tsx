@@ -2,17 +2,10 @@
 
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { auth, db } from "../../utility/firebase";
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
-import {
-    Directory,
-    LoadedUser,
-    LoadingUser,
-    LoggedOutUser,
-} from "../../utility/types";
+import { collection, onSnapshot } from "firebase/firestore";
+import { Directory, AuthUser } from "../../utility/types";
 
-export const AuthContext = createContext<
-    LoadingUser | LoadedUser | LoggedOutUser
->({
+export const AuthContext = createContext<AuthUser>({
     user: null,
     directories: null,
 });
@@ -21,7 +14,7 @@ type AuthProviderProps = {
     children: ReactNode;
 };
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [user, setUser] = useState<LoadingUser | LoadedUser | LoggedOutUser>({
+    const [user, setUser] = useState<AuthUser>({
         user: null,
         directories: null,
     });
