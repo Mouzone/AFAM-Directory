@@ -67,8 +67,8 @@ export default function Page() {
                         className="btn btn-neutral"
                         onClick={() =>
                             document
-                                .getElementById("CreateDirectoryModal")
-                                .showModal()
+                                ?.getElementById("CreateDirectoryModal")
+                                ?.showModal()
                         }
                     >
                         open modal
