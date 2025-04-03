@@ -12,7 +12,7 @@ export default function CreateDirectoryModal({
     const [directoryName, setDirectoryName] = useState("");
     const [csvFile, setCSVFile] = useState<File | null>(null);
     const [error, setError] = useState<Error | null>(null);
-    const [directoryNameTaken, setDirectoryNameTaken] = useState(true);
+    const [directoryNameError, setDirectoryNameError] = useState<string>("");
     const router = useRouter();
 
     const mutation = useMutation({
@@ -47,7 +47,7 @@ export default function CreateDirectoryModal({
                         });
                     }}
                 >
-                    <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box gap-4">
+                    <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
                         <legend className="fieldset-legend">
                             Create New Directory
                         </legend>
@@ -62,27 +62,30 @@ export default function CreateDirectoryModal({
                                 value={directoryName}
                                 onChange={(e) => {
                                     setDirectoryName(e.target.value);
-                                    setDirectoryNameTaken(
+                                    if (
                                         directories.find(
                                             (directory) =>
                                                 directory.directoryName ===
                                                 e.target.value
-                                        ) || e.target.value === ""
-                                            ? true
-                                            : false
-                                    );
+                                        )
+                                    ) {
+                                        setDirectoryNameError(
+                                            "Directory name already in use"
+                                        );
+                                    } else if (e.target.value === "") {
+                                        setDirectoryNameError(
+                                            "Name must be filled"
+                                        );
+                                    } else if (directoryNameError) {
+                                        setDirectoryNameError("");
+                                    }
                                 }}
                             />
-                            {directoryNameTaken && (
-                                <label className="fieldset-label text-red-400 font-bold">
-                                    * Directory name already in use
-                                </label>
-                            )}
                         </div>
 
                         <div>
                             <legend className="fieldset-legend">
-                                Upload a CSV file
+                                Upload a CSV file (Optional)
                             </legend>
                             <input
                                 type="file"
@@ -93,17 +96,20 @@ export default function CreateDirectoryModal({
                                 accept=".csv"
                             />
                         </div>
-
                         {error && (
-                            <p className="text-center bg-red-200 text-red-400 rounded-2xl p-2 my-2">
+                            <p className="text-center bg-red-300 text-red-600 rounded-xl p-2">
                                 {error?.message}
+                            </p>
+                        )}
+                        {directoryNameError && (
+                            <p className="text-center bg-red-300 text-red-600 rounded-xl p-2">
+                                {directoryNameError}
                             </p>
                         )}
                         <button
                             type="submit"
                             className="btn btn-neutral"
-                            disabled={directoryNameTaken}
-                            // disabled={error === "Directory name already taken"}
+                            disabled={directoryNameError !== ""}
                         >
                             Submit
                         </button>
