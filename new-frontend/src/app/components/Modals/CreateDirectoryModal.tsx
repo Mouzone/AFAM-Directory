@@ -1,12 +1,18 @@
 import { createDirectory } from "@/app/utility/cloudFunctions";
+import { Directory } from "@/app/utility/types";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function CreateDirectoryModal() {
+type CreateDirectoryModalProps = { directories: Directory[] };
+
+export default function CreateDirectoryModal({
+    directories,
+}: CreateDirectoryModalProps) {
     const [directoryName, setDirectoryName] = useState("");
     const [csvFile, setCSVFile] = useState<File | null>(null);
     const [error, setError] = useState<Error | null>(null);
+    const [directoryNameTaken, setDirectoryNameTaken] = useState(true);
     const router = useRouter();
 
     const mutation = useMutation({
@@ -45,26 +51,60 @@ export default function CreateDirectoryModal() {
                         <legend className="fieldset-legend">
                             Create New Directory
                         </legend>
-                        <input
-                            type="text"
-                            placeholder="Directory Name"
-                            className="input input-sm"
-                            value={directoryName}
-                            onChange={(e) => setDirectoryName(e.target.value)}
-                        />
-                        <input
-                            type="file"
-                            className="file-input-sm file-input"
-                            onChange={(e) =>
-                                setCSVFile(e.target?.files?.[0] ?? null)
-                            }
-                        />
+                        <div>
+                            <legend className="fieldset-legend">
+                                Directory Name
+                            </legend>
+                            <input
+                                type="text"
+                                placeholder="Directory Name"
+                                className="input input-sm"
+                                value={directoryName}
+                                onChange={(e) => {
+                                    setDirectoryName(e.target.value);
+                                    setDirectoryNameTaken(
+                                        directories.find(
+                                            (directory) =>
+                                                directory.directoryName ===
+                                                e.target.value
+                                        ) || e.target.value === ""
+                                            ? true
+                                            : false
+                                    );
+                                }}
+                            />
+                            {directoryNameTaken && (
+                                <label className="fieldset-label text-red-400 font-bold">
+                                    * Directory name already in use
+                                </label>
+                            )}
+                        </div>
+
+                        <div>
+                            <legend className="fieldset-legend">
+                                Upload a CSV file
+                            </legend>
+                            <input
+                                type="file"
+                                className="file-input-sm file-input"
+                                onChange={(e) =>
+                                    setCSVFile(e.target?.files?.[0] ?? null)
+                                }
+                                accept=".csv"
+                            />
+                        </div>
+
                         {error && (
                             <p className="text-center bg-red-200 text-red-400 rounded-2xl p-2 my-2">
                                 {error?.message}
                             </p>
                         )}
-                        <button type="submit" className="btn btn-neutral">
+                        <button
+                            type="submit"
+                            className="btn btn-neutral"
+                            disabled={directoryNameTaken}
+                            // disabled={error === "Directory name already taken"}
+                        >
                             Submit
                         </button>
                     </fieldset>

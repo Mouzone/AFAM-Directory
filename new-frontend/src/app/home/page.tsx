@@ -9,7 +9,7 @@ import { Directory } from "../utility/types";
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
     const [selectedDirectory, setSelectedDirectory] =
-        useState<Directory | null>(null); // this will be the id of the directgory
+        useState<Directory | null>(null); // this will be the id of the directory
     const router = useRouter();
 
     if (!user) {
@@ -26,7 +26,7 @@ export default function Page() {
 
     return (
         <>
-            <CreateDirectoryModal />
+            <CreateDirectoryModal directories={directories} />
             <form
                 onSubmit={onSubmit}
                 className="flex w-screen h-screen items-center justify-center"
@@ -73,7 +73,7 @@ export default function Page() {
                                 ?.showModal()
                         }
                     >
-                        open modal
+                        Create Directory
                     </button>
                 </fieldset>
             </form>
