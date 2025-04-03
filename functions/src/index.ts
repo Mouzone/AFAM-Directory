@@ -59,7 +59,6 @@ export const createDirectory = onCall(async (request) => {
     .set({
       directoryName,
       owner: request.auth.uid,
-      directoryRef: newDirectoryRef, // reference to the main directory
     });
 
   if (!csvFile) {
