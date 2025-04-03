@@ -4,6 +4,7 @@ import {getAuth} from "firebase-admin/auth";
 import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import {onSchedule} from "firebase-functions/scheduler";
 import sgMail from "@sendgrid/mail";
+import {parse} from "csv-parse";
 
 initializeApp();
 const auth = getAuth();
@@ -17,34 +18,82 @@ export const createDirectory = onCall(async (request) => {
     );
   }
 
-  const {name, csvFile} = request;
+  const {name, csvFile} = request.data;
 
+  if (!name) {
+    throw new HttpsError(
+      "invalid-argument",
+      "The request has no name for new directory."
+    );
+  }
+
+  // Check for existing directory with same name for this user
   const directoriesWithSameName = await firestore
     .collection("users")
     .doc(request.auth.uid)
     .collection("directories")
-    .where("owner", "==", request.auth.uid)
     .where("name", "==", name)
     .count()
     .get();
+
   const count = directoriesWithSameName.data().count;
-  if (count == 0) {
-    const newDirectory = await firestore.collection("directories").add({name});
-    // add docRef to it in Users directory
-    await firestore
-      .collection("users")
-      .doc(request.auth.uid)
-      .collection("directories")
-      .doc(newDirectory.id)
-      .create({name, owner: request.auth.uid});
-  } else {
-    return {error: "Directory with same name already exists"};
+  if (count > 0) {
+    throw new HttpsError(
+      "already-exists",
+      "Directory with same name already exists"
+    );
   }
 
+  // Create new directory
+  const newDirectoryRef = await firestore.collection("directories").add({
+    name,
+    owner: request.auth.uid,
+  });
+
+  // Add reference to user's directories
+  await firestore
+    .collection("users")
+    .doc(request.auth.uid)
+    .collection("directories")
+    .doc(newDirectoryRef.id)
+    .set({
+      name,
+      owner: request.auth.uid,
+      directoryRef: newDirectoryRef, // reference to the main directory
+    });
+
   if (!csvFile) {
-    return newDirectory;
-  } else {
-    // go to NewDirectory reference and make student docs
+    return {directoryId: newDirectoryRef.id};
+  }
+
+  // Process CSV file if provided
+  try {
+    // Convert base64 CSV to buffer if needed, or handle file upload appropriately
+    const csvData = Buffer.from(csvFile, "base64").toString("utf-8");
+    const results = [];
+
+    // Parse CSV
+    const parser = parse(csvData, {columns: true});
+
+    for await (const record of parser) {
+      const personRef = await newDirectoryRef.collection("people").add({
+        ...record,
+      });
+      results.push(personRef.id);
+    }
+
+    return {
+      directoryId: newDirectoryRef.id,
+      addedRecords: results.length,
+    };
+  } catch (error) {
+    console.error("CSV processing error:", error);
+
+    // Even if CSV fails, the directory was created, so we return its ID
+    return {
+      directoryId: newDirectoryRef.id,
+      warning: "Directory created but CSV processing failed",
+    };
   }
 });
 
