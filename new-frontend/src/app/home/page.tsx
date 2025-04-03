@@ -28,7 +28,7 @@ export default function Page() {
 
     return (
         <>
-            {showCreateDirectoryModal && <CreateDirectoryModal />}
+            <CreateDirectoryModal />
             <form
                 onSubmit={onSubmit}
                 className="flex w-screen h-screen items-center justify-center"
@@ -65,12 +65,13 @@ export default function Page() {
                     <button
                         type="button"
                         className="btn btn-neutral"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setShowCreateDirectoryModal(true);
-                        }}
+                        onClick={() =>
+                            document
+                                .getElementById("CreateDirectoryModal")
+                                .showModal()
+                        }
                     >
-                        Create New
+                        open modal
                     </button>
                 </fieldset>
             </form>
