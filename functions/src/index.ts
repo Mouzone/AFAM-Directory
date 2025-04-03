@@ -68,12 +68,10 @@ export const createDirectory = onCall(async (request) => {
 
   // Process CSV file if provided
   try {
-    // Convert base64 CSV to buffer if needed, or handle file upload appropriately
-    const csvData = Buffer.from(csvFile, "base64").toString("utf-8");
     const results = [];
 
     // Parse CSV
-    const parser = parse(csvData, {columns: true});
+    const parser = parse(csvFile, {columns: true});
 
     for await (const record of parser) {
       const personRef = await newDirectoryRef.collection("people").add({

@@ -22,9 +22,12 @@ export default function CreateDirectoryModal() {
 
     return (
         <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
                 e.preventDefault();
-                mutation.mutate({ directoryName, csvFile });
+                mutation.mutate({
+                    directoryName,
+                    csvFile: csvFile ? await csvFile.text() : null,
+                });
             }}
         >
             <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box gap-4">
