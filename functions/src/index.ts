@@ -18,9 +18,9 @@ export const createDirectory = onCall(async (request) => {
     );
   }
 
-  const {name, csvFile} = request.data;
+  const {directoryName, csvFile} = request.data;
 
-  if (!name) {
+  if (!directoryName) {
     throw new HttpsError(
       "invalid-argument",
       "The request has no name for new directory."
@@ -32,7 +32,7 @@ export const createDirectory = onCall(async (request) => {
     .collection("users")
     .doc(request.auth.uid)
     .collection("directories")
-    .where("name", "==", name)
+    .where("name", "==", directoryName)
     .count()
     .get();
 
@@ -46,7 +46,7 @@ export const createDirectory = onCall(async (request) => {
 
   // Create new directory
   const newDirectoryRef = await firestore.collection("directories").add({
-    name,
+    directoryName,
     owner: request.auth.uid,
   });
 
@@ -57,7 +57,7 @@ export const createDirectory = onCall(async (request) => {
     .collection("directories")
     .doc(newDirectoryRef.id)
     .set({
-      name,
+      directoryName,
       owner: request.auth.uid,
       directoryRef: newDirectoryRef, // reference to the main directory
     });
