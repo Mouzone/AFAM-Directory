@@ -11,9 +11,9 @@ export default function CreateDirectoryModal() {
 
     const mutation = useMutation({
         mutationFn: createDirectory,
-        onSuccess: (data) => {
+        onSuccess: (response) => {
             // redirect to the new generated uid,
-            router.push(`/directory/${data.directoryId}`);
+            router.push(`/directory/${response.data.directoryId}`);
         },
         onError: (error) => {
             setError(error);
