@@ -10,8 +10,6 @@ export default function Page() {
     const { user, directories } = useContext(AuthContext);
     const [selectedDirectory, setSelectedDirectory] =
         useState<Directory | null>(null); // this will be the id of the directgory
-    const [showCreateDirectoryModal, setShowCreateDirectoryModal] =
-        useState(false);
     const router = useRouter();
 
     if (!user) {
@@ -39,15 +37,19 @@ export default function Page() {
                             defaultValue="Select a Directory"
                             className="select"
                             value={selectedDirectory?.directoryName}
+                            onChange={(e) =>
+                                setSelectedDirectory(
+                                    directories.find(
+                                        (directory) =>
+                                            directory.directoryName ===
+                                            e.target.value
+                                    ) ?? null // use null since find returns either Directory or undefined
+                                )
+                            }
                         >
                             <option disabled={true}>Select a Directory</option>
                             {directories.map((directory) => (
-                                <option
-                                    key={directory.id}
-                                    onClick={() => {
-                                        setSelectedDirectory(directory);
-                                    }}
-                                >
+                                <option key={directory.id}>
                                     {directory.directoryName}
                                 </option>
                             ))}
