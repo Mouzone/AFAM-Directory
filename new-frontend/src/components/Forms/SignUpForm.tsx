@@ -2,15 +2,14 @@
 
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { login } from "../../utility/login";
 import { useRouter } from "next/navigation";
 import { signUp } from "@/utility/signUp";
+import { updateProfile } from "firebase/auth";
 
 // todo: add redirect if user is already logged in
 export default function SignUpForm() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -19,8 +18,12 @@ export default function SignUpForm() {
     const router = useRouter();
     const mutation = useMutation({
         mutationFn: signUp,
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             // todo: provide indicator login was succesful or loading...
+            const user = data.user;
+            await updateProfile(user, {
+                displayName: `${firstName} ${lastName}`,
+            });
             router.push("/home");
         },
         onError: (error) => {
@@ -36,9 +39,6 @@ export default function SignUpForm() {
                     setInputError("Password does not match");
                 }
                 mutation.mutate({
-                    firstName,
-                    lastName,
-                    username,
                     email,
                     password,
                 });
@@ -74,15 +74,6 @@ export default function SignUpForm() {
                     onChange={(e) => setEmail(e.target.value)}
                 />
 
-                <label className="fieldset-label">Username</label>
-                <input
-                    type="text"
-                    className="input"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-
                 <label className="fieldset-label">Password</label>
                 <input
                     type="password"
@@ -116,7 +107,6 @@ export default function SignUpForm() {
                         firstName === "" ||
                         lastName === "" ||
                         email === "" ||
-                        username === "" ||
                         password === ""
                     }
                 >
