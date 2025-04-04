@@ -81,8 +81,8 @@ export default function Page() {
                                         />
                                     </td>
                                 )}
-                                {Object.values(person).map((value) => (
-                                    <td>{value}</td>
+                                {Object.entries(person).map(([key, value]) => (
+                                    <td key={key}>{value}</td>
                                 ))}
                             </tr>
                         ))}
