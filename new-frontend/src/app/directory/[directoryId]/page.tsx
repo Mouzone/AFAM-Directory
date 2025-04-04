@@ -8,6 +8,7 @@ import { getDirectory } from "../../../utility/getStudents";
 import Table from "@/components/Table";
 import Options from "@/components/Options";
 import Modal from "@/components/Modal";
+import AddStudentForm from "@/components/Forms/AddStudentForm";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
