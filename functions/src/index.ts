@@ -73,14 +73,7 @@ export const createDirectory = onCall(async (request) => {
     let rows_iterated = 0;
     for await (const record of parser) {
       if (rows_iterated === 0) {
-        const schema = Object.keys(record);
-        await newDirectoryRef.update({schema});
-        firestore
-          .collection("users")
-          .doc(request.auth.uid)
-          .collection("directories")
-          .doc(newDirectoryRef.id)
-          .update({schema});
+        await newDirectoryRef.update({schema: Object.keys(record)});
       }
 
       await newDirectoryRef.collection("people").add({
