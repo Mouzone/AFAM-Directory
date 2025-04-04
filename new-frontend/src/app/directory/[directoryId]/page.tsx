@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { getDirectory } from "../../../utility/getStudents";
 import optionsIcon from "../../../../public/svgs/options.svg";
 import Image from "next/image";
+import Table from "@/components/Table";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
