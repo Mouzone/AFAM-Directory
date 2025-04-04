@@ -5,19 +5,14 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../components/Providers/AuthProvider";
 import { usePathname } from "next/navigation";
 import { getDirectory } from "../../../utility/getStudents";
-import optionsIcon from "../../../../public/svgs/options.svg";
-import Image from "next/image";
 import Table from "@/components/Table";
 import Options from "@/components/Options";
-import AddStudentModal from "@/components/Modals/AddStudentModal";
+import Modal from "@/components/Modal";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
     const pathname = usePathname();
     const [directoryId, setDirectoryId] = useState("");
-
-    const [isMultiselect, setIsMultiSelect] = useState(false);
-    const [selected, setSelected] = useState<string[]>([]);
 
     const [isAddStudent, setIsAddStudent] = useState(false);
 
@@ -49,15 +44,27 @@ export default function Page() {
         return <></>;
     }
     return (
-        <div className="p-4">
-            <Options setIsAddStudent={setIsAddStudent} />
-            <Table
-                schema={directory["metadata"]["schema"]}
-                data={directory["data"]}
-            />
+        <>
+            <Modal>
+                <AddStudentForm fields={directory["metadata"]["schema"]/>
+            </Modal>
+            <div className="p-4">
+                <Options
+                    showAddStudent={() => {
+                        const modal = document?.getElementById(
+                            "Modal"
+                        ) as HTMLDialogElement | null;
+                        modal?.showModal();
+                    }}
+                />
+                <Table
+                    schema={directory["metadata"]["schema"]}
+                    data={directory["data"]}
+                />
 
-            {isAddStudent && <AddStudentModal />}
-            <p> {error?.message} </p>
-        </div>
+                {isAddStudent && <AddStudentModal />}
+                <p> {error?.message} </p>
+            </div>
+        </>
     );
 }

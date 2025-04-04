@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 export default function Modal({ children }) {
     return (
         <dialog id="Modal" className="modal modal-middle">
