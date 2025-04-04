@@ -13,7 +13,6 @@ export default function Table({ schema, data }) {
             id: field,
             cell: (info) => <i>{info.getValue()}</i>,
             header: () => <span>{field}</span>,
-            footer: (info) => info.column.id,
         })
     );
     const table = useReactTable({
