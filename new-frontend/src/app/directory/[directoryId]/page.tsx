@@ -36,19 +36,20 @@ export default function Page() {
 
     return (
         <>
-            <div className="dropdown dropdown-end dropdown-hover">
-                <div tabIndex={0} role="button" className="btn m-1">
+            <div className="flex justify-end">
+                <div className="dropdown dropdown-end dropdown-hover">
                     <Image priority src={optionsIcon} alt="menu" />
+                    <ul
+                        tabIndex={0}
+                        className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                    >
+                        <li>Add Person</li>
+                        <li>Filter</li>
+                        <li>Multiselect</li>
+                    </ul>
                 </div>
-                <ul
-                    tabIndex={0}
-                    className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
-                >
-                    <li>Add Person</li>
-                    <li>Filter</li>
-                    <li>Multiselect</li>
-                </ul>
             </div>
+
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}
