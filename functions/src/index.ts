@@ -67,21 +67,28 @@ export const createDirectory = onCall(async (request) => {
 
   // Process CSV file if provided
   try {
-    const results = [];
-
     // Parse CSV
     const parser = parse(csvFile, {columns: true});
 
+    let rows_iterated = 0;
     for await (const record of parser) {
-      const personRef = await newDirectoryRef.collection("people").add({
-        ...record,
-      });
-      results.push(personRef.id);
+      if (rows_iterated === 0) {
+        await newDirectoryRef
+          .collection("people")
+          .doc("schema")
+          .set({...record});
+        rows_iterated += 1;
+      } else {
+        await newDirectoryRef.collection("people").add({
+          ...record,
+        });
+        rows_iterated += 1;
+      }
     }
 
     return {
       directoryId: newDirectoryRef.id,
-      addedRecords: results.length,
+      addedRecords: rows_iterated,
     };
   } catch (error) {
     console.error("CSV processing error:", error);
