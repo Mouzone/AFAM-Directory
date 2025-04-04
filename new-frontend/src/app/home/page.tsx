@@ -55,7 +55,7 @@ export default function Page() {
                             ))}
                         </select>
                         <button type="submit" className="btn btn-neutral">
-                            Submit
+                            Go
                         </button>
                     </div>
 
