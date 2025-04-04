@@ -7,12 +7,7 @@ import { usePathname } from "next/navigation";
 import { getDirectory } from "../../../utility/getStudents";
 import optionsIcon from "../../../../public/svgs/options.svg";
 import Image from "next/image";
-import {
-    createColumnHelper,
-    flexRender,
-    getCoreRowModel,
-    useReactTable,
-} from "@tanstack/react-table";
+import Table from "@/components/Table";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
@@ -42,22 +37,6 @@ export default function Page() {
         enabled: directoryId != "",
     });
 
-    const columnHelper = createColumnHelper();
-
-    const columns = directory["metadata"]["schema"].map((field) =>
-        columnHelper.accessor(field, {
-            id: field,
-            cell: (info) => <i>{info.getValue()}</i>,
-            header: () => <span>{field}</span>,
-            footer: (info) => info.column.id,
-        })
-    );
-
-    const table = useReactTable({
-        data: directory["data"],
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-    });
     if (!user) {
         return <></>;
     }
@@ -79,60 +58,11 @@ export default function Page() {
                     </ul>
                 </div>
             </div>
+            <Table
+                schema={directory["metadata"]["schema"]}
+                data={directory["data"]}
+            />
 
-            <div className="overflow-x-auto p-2">
-                <table className="table">
-                    <thead>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <tr key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => (
-                                    <th key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                  header.column.columnDef
-                                                      .header,
-                                                  header.getContext()
-                                              )}
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody>
-                        {table.getRowModel().rows.map((row) => (
-                            <tr key={row.id}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <td key={cell.id}>
-                                        {flexRender(
-                                            cell.column.columnDef.cell,
-                                            cell.getContext()
-                                        )}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-                    <tfoot>
-                        {table.getFooterGroups().map((footerGroup) => (
-                            <tr key={footerGroup.id}>
-                                {footerGroup.headers.map((header) => (
-                                    <th key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                  header.column.columnDef
-                                                      .footer,
-                                                  header.getContext()
-                                              )}
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </tfoot>
-                </table>
-                <div className="h-4" />
-            </div>
             <p> {error?.message} </p>
         </>
     );
