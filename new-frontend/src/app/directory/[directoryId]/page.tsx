@@ -46,8 +46,9 @@ export default function Page() {
     return (
         <>
             <Modal>
-                <AddStudentForm fields={directory["metadata"]["schema"]/>
+                <AddStudentForm fields={directory["metadata"]["schema"]} />
             </Modal>
+
             <div className="p-4">
                 <Options
                     showAddStudent={() => {
