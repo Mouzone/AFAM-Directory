@@ -2,9 +2,10 @@
 
 import { FormEvent, useContext, useState } from "react";
 import { AuthContext } from "../../components/Providers/AuthProvider";
-import CreateDirectoryModal from "../../components/Modals/CreateDirectoryModal";
 import { useRouter } from "next/navigation";
 import { Directory } from "../../utility/types";
+import Modal from "../../components/Modal";
+import CreateDirectoryForm from "@/components/Forms/CreateDirectoryForm";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
@@ -26,7 +27,9 @@ export default function Page() {
 
     return (
         <>
-            <CreateDirectoryModal directories={directories} />
+            <Modal>
+                <CreateDirectoryForm directories={directories} />
+            </Modal>
             <form
                 onSubmit={onSubmit}
                 className="flex w-screen h-screen items-center justify-center"
@@ -69,7 +72,7 @@ export default function Page() {
                         className="btn btn-neutral"
                         onClick={() => {
                             const modal = document?.getElementById(
-                                "CreateDirectoryModal"
+                                "Modal"
                             ) as HTMLDialogElement | null;
                             modal?.showModal();
                         }}
