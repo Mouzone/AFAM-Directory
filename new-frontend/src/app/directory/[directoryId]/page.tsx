@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../components/Providers/AuthProvider";
 import { usePathname } from "next/navigation";
-import { getStudents } from "../../../utility/getStudents";
+import { getDirectory } from "../../../utility/getStudents";
 import optionsIcon from "../../../../public/svgs/options.svg";
 import Image from "next/image";
 
@@ -26,14 +26,20 @@ export default function Page() {
         }
     }, [pathname]);
 
-    const { isLoading, data, error } = useQuery({
+    const {
+        isLoading,
+        data: directory,
+        error,
+    } = useQuery({
         queryKey: [directoryId, "students"],
-        queryFn: () => getStudents(directoryId),
+        queryFn: () => getDirectory(directoryId),
     });
     if (!user) {
         return <></>;
     }
-
+    if (!directory) {
+        return <></>;
+    }
     return (
         <>
             <div className="flex justify-end">
@@ -55,13 +61,13 @@ export default function Page() {
                     {/* head */}
                     <thead>
                         <tr>
-                            {Object.keys(data[0]).map((field) => (
+                            {directory["metadata"]["schema"].map((field) => (
                                 <th key={field}> {field} </th>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((person) => (
+                        {directory["data"].map((person) => (
                             <tr key={person.id} className="hover:bg-base-300">
                                 {isMultiselect && (
                                     <td>
@@ -82,9 +88,11 @@ export default function Page() {
                                         />
                                     </td>
                                 )}
-                                {Object.entries(person).map(([key, value]) => (
-                                    <td key={key}>{value}</td>
-                                ))}
+                                {directory["metadata"]["schema"].map(
+                                    (field) => (
+                                        <td key={field}>{person[field]}</td>
+                                    )
+                                )}
                             </tr>
                         ))}
                     </tbody>
