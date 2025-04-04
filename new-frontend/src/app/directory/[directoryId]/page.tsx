@@ -8,6 +8,8 @@ import { getDirectory } from "../../../utility/getStudents";
 import optionsIcon from "../../../../public/svgs/options.svg";
 import Image from "next/image";
 import Table from "@/components/Table";
+import Options from "@/components/Options";
+import AddStudentModal from "@/components/Modals/AddStudentModal";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
@@ -48,24 +50,13 @@ export default function Page() {
     }
     return (
         <div className="p-4">
-            <div className="flex justify-end pb-4">
-                <div className="dropdown dropdown-end dropdown-hover">
-                    <Image priority src={optionsIcon} alt="menu" />
-                    <ul
-                        tabIndex={0}
-                        className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
-                    >
-                        <li>Add Person</li>
-                        <li>Filter</li>
-                        <li>Multiselect</li>
-                    </ul>
-                </div>
-            </div>
+            <Options setIsAddStudent={setIsAddStudent} />
             <Table
                 schema={directory["metadata"]["schema"]}
                 data={directory["data"]}
             />
 
+            {isAddStudent && <AddStudentModal />}
             <p> {error?.message} </p>
         </div>
     );

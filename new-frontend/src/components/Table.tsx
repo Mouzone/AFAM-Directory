@@ -5,15 +5,15 @@ export default function Table({ schema, data }) {
                 <thead>
                     <tr>
                         {schema.map((field) => (
-                            <th>{field}</th>
+                            <th key={field}>{field}</th>
                         ))}
                     </tr>
                 </thead>
                 <tbody>
                     {data.map((person) => (
-                        <tr>
+                        <tr key={person.id}>
                             {schema.map((field) => (
-                                <td>{person[field]}</td>
+                                <td key={field}>{person[field]}</td>
                             ))}
                         </tr>
                     ))}
