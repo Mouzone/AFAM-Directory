@@ -110,7 +110,7 @@ export default function SignUpForm() {
                         password === ""
                     }
                 >
-                    Login
+                    Sign Up
                 </button>
             </fieldset>
         </form>
