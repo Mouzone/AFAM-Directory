@@ -1,68 +1,12 @@
-"use client";
+import LoginForm from "@/components/Forms/LoginForm";
+import SignUpForm from "@/components/Forms/SignUpForm";
 
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { login } from "../utility/login";
-import { useRouter } from "next/navigation";
-
-// todo: add redirect if user is already logged in
 export default function Page() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState<Error | null>(null);
-    const router = useRouter();
-    const mutation = useMutation({
-        mutationFn: login,
-        onSuccess: (data) => {
-            // todo: provide indicator login was succesful or loading...
-            router.push("/home");
-        },
-        onError: (error) => {
-            setError(error);
-        },
-    });
-
     return (
-        <form
-            className="w-screen h-screen flex justify-center items-center"
-            onSubmit={(e) => {
-                e.preventDefault();
-                mutation.mutate({ email, password });
-            }}
-        >
-            <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
-                <legend className="fieldset-legend">Login</legend>
-
-                <label className="fieldset-label">Email</label>
-                <input
-                    type="email"
-                    className="input"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-
-                <label className="fieldset-label">Password</label>
-                <input
-                    type="password"
-                    className="input"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                {error && (
-                    <p className="text-center bg-red-200 text-red-400 rounded-2xl p-2 my-2">
-                        {error?.message}
-                    </p>
-                )}
-                <button
-                    type="submit"
-                    className="btn btn-neutral"
-                    disabled={email === "" || password === ""}
-                >
-                    Login
-                </button>
-            </fieldset>
-        </form>
+        <div className="w-screen h-screen flex flex-col lg:flex-row justify-center items-center">
+            <LoginForm />
+            <div className="divider lg:divider-horizontal">OR</div>
+            <SignUpForm />
+        </div>
     );
 }

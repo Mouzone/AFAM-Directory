@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 import { getDirectory } from "../../../utility/getStudents";
 import optionsIcon from "../../../../public/svgs/options.svg";
 import Image from "next/image";
-import Table from "@/components/Table";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
@@ -17,6 +16,9 @@ export default function Page() {
     const [isMultiselect, setIsMultiSelect] = useState(false);
     const [selected, setSelected] = useState<string[]>([]);
 
+    const [isAddStudent, setIsAddStudent] = useState(false);
+
+    const [isSearch, setIsSearch] = useState(false);
     // todo: add pagination
     // todo: add redirect if no directory id
     // todo: if data is null, it is either the directory DNE or just no students, cover both casses
