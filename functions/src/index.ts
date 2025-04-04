@@ -73,17 +73,13 @@ export const createDirectory = onCall(async (request) => {
     let rows_iterated = 0;
     for await (const record of parser) {
       if (rows_iterated === 0) {
-        await newDirectoryRef
-          .collection("people")
-          .doc("schema")
-          .set({...record});
-        rows_iterated += 1;
-      } else {
-        await newDirectoryRef.collection("people").add({
-          ...record,
-        });
-        rows_iterated += 1;
+        await newDirectoryRef.update({schema: Object.keys(record)});
       }
+
+      await newDirectoryRef.collection("people").add({
+        ...record,
+      });
+      rows_iterated += 1;
     }
 
     return {
