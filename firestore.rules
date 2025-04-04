@@ -4,5 +4,8 @@ service cloud.firestore {
         match /users/{documents=**} {
             allow read: if request.auth != null;
         }
+        match /directories/{directoryId}/people/{documents=**} {
+            allow read: if request.auth != null;
+        }
     }
 }
