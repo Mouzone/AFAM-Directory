@@ -1,10 +1,10 @@
 "use client";
 
 import { FormEvent, useContext, useState } from "react";
-import { AuthContext } from "../components/Providers/AuthProvider";
-import CreateDirectoryModal from "../components/Modals/CreateDirectoryModal";
+import { AuthContext } from "../../components/Providers/AuthProvider";
+import CreateDirectoryModal from "../../components/Modals/CreateDirectoryModal";
 import { useRouter } from "next/navigation";
-import { Directory } from "../utility/types";
+import { Directory } from "../../utility/types";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);

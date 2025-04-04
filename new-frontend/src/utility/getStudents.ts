@@ -1,5 +1,5 @@
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../utility/firebase";
+import { db } from "./firebase";
 
 export const getStudents = async (selectedDirectory: string) => {
     const studentDocs = await getDocs(

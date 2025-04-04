@@ -2,9 +2,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../components/Providers/AuthProvider";
+import { AuthContext } from "../../../components/Providers/AuthProvider";
 import { usePathname } from "next/navigation";
-import { getStudents } from "../../utility/getStudents";
+import { getStudents } from "../../../utility/getStudents";
+import OptionSVG from "@/svgs/options";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
@@ -33,6 +34,19 @@ export default function Page() {
 
     return (
         <>
+            <div className="dropdown dropdown-end dropdown-hover">
+                <div tabIndex={0} role="button" className="btn m-1">
+                    <OptionSVG />
+                </div>
+                <ul
+                    tabIndex={0}
+                    className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+                >
+                    <li>Add Person</li>
+                    <li>Filter</li>
+                    <li>Multiselect</li>
+                </ul>
+            </div>
             <div className="overflow-x-auto">
                 <table className="table">
                     {/* head */}

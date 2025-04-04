@@ -1,5 +1,5 @@
-import { createDirectory } from "@/app/utility/cloudFunctions";
-import { Directory } from "@/app/utility/types";
+import { createDirectory } from "@/utility/cloudFunctions";
+import { Directory } from "@/utility/types";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
