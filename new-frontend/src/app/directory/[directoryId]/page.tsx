@@ -44,8 +44,8 @@ export default function Page() {
         return <></>;
     }
     return (
-        <>
-            <div className="flex justify-end">
+        <div className="p-4">
+            <div className="flex justify-end pb-4">
                 <div className="dropdown dropdown-end dropdown-hover">
                     <Image priority src={optionsIcon} alt="menu" />
                     <ul
@@ -64,6 +64,6 @@ export default function Page() {
             />
 
             <p> {error?.message} </p>
-        </>
+        </div>
     );
 }

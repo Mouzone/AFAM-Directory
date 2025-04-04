@@ -21,9 +21,9 @@ export default function Table({ schema, data }) {
         getCoreRowModel: getCoreRowModel(),
     });
     return (
-        <div className="overflow-x-auto p-2">
+        <div className="overflow-x-auto">
             <table className="table">
-                <thead>
+                <thead className="bg-black text-white">
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
                             {headerGroup.headers.map((header) => (
@@ -41,7 +41,7 @@ export default function Table({ schema, data }) {
                 </thead>
                 <tbody>
                     {table.getRowModel().rows.map((row) => (
-                        <tr key={row.id}>
+                        <tr className="hover:bg-base-300" key={row.id}>
                             {row.getVisibleCells().map((cell) => (
                                 <td key={cell.id}>
                                     {flexRender(
