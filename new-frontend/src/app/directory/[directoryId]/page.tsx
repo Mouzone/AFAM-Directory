@@ -5,7 +5,8 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../components/Providers/AuthProvider";
 import { usePathname } from "next/navigation";
 import { getStudents } from "../../../utility/getStudents";
-import OptionSVG from "@/svgs/options";
+import optionsIcon from "../../../../public/svgs/options.svg";
+import Image from "next/image";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
@@ -17,6 +18,7 @@ export default function Page() {
 
     // todo: add pagination
     // todo: add redirect if no directory id
+    // todo: if data is null, it is either the directory DNE or just no students, cover both casses
     useEffect(() => {
         if (pathname) {
             const segments = pathname.split("/");
@@ -36,7 +38,7 @@ export default function Page() {
         <>
             <div className="dropdown dropdown-end dropdown-hover">
                 <div tabIndex={0} role="button" className="btn m-1">
-                    <OptionSVG />
+                    <Image priority src={optionsIcon} alt="menu" />
                 </div>
                 <ul
                     tabIndex={0}

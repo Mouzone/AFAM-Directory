@@ -1,9 +1,9 @@
 "use client";
 
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { auth, db } from "../../app/utility/firebase";
+import { auth, db } from "../../utility/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
-import { Directory, AuthUser } from "../../app/utility/types";
+import { Directory, AuthUser } from "../../utility/types";
 
 export const AuthContext = createContext<AuthUser>({
     user: null,
