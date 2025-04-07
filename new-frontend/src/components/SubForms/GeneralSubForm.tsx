@@ -14,7 +14,7 @@ export default function GeneralSubForm() {
                 </div>
                 <div className="flex flex-col">
                     <label className="fieldset-label">Gender</label>
-                    <select>
+                    <select className="select">
                         <option>M</option>
                         <option>F</option>
                     </select>
@@ -32,7 +32,7 @@ export default function GeneralSubForm() {
                 </div>
                 <div className="flex flex-col">
                     <label className="fieldset-label">Grade</label>
-                    <select>
+                    <select className="select">
                         <option>9</option>
                         <option>10</option>
                         <option>11</option>
@@ -43,7 +43,7 @@ export default function GeneralSubForm() {
                     <label className="fieldset-label">
                         Bible Study Teacher
                     </label>
-                    <select>
+                    <select className="select">
                         <option>Anna Kwon</option>
                         <option>Chloe Han</option>
                         <option>Diane Song</option>

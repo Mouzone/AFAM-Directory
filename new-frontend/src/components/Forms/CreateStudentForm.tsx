@@ -17,7 +17,7 @@ export default function CreateStudentForm() {
                     className="tab"
                     aria-label="General"
                     checked={tab === "general"}
-                    onClick={() => setTab("general")}
+                    onChange={() => setTab("general")}
                 />
                 <div className="tab-content bg-base-100 border-base-300 p-6">
                     <GeneralSubForm />
@@ -28,7 +28,7 @@ export default function CreateStudentForm() {
                     className="tab"
                     aria-label="Private"
                     checked={tab === "private"}
-                    onClick={() => setTab("private")}
+                    onChange={() => setTab("private")}
                 />
                 <div className="tab-content bg-base-100 border-base-300 p-6">
                     <PrivateSubForm />
