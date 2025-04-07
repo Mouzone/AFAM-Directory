@@ -8,14 +8,12 @@ import { getDirectory } from "../../../utility/getStudents";
 import Table from "@/components/Table";
 import Options from "@/components/Options";
 import Modal from "@/components/Modal";
-import AddStudentForm from "@/components/Forms/AddStudentForm";
+import CreateStudentForm from "@/components/Forms/CreateStudentForm";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
     const pathname = usePathname();
     const [directoryId, setDirectoryId] = useState("");
-
-    const [isAddStudent, setIsAddStudent] = useState(false);
 
     const [isSearch, setIsSearch] = useState(false);
     // todo: add pagination
@@ -47,7 +45,7 @@ export default function Page() {
     return (
         <>
             <Modal>
-                <AddStudentForm fields={directory["metadata"]["schema"]} />
+                <CreateStudentForm />
             </Modal>
 
             <div className="p-4">
@@ -64,7 +62,6 @@ export default function Page() {
                     data={directory["data"]}
                 />
 
-                {isAddStudent && <AddStudentModal />}
                 <p> {error?.message} </p>
             </div>
         </>
