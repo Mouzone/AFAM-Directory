@@ -6,7 +6,11 @@ export default function CreateStudentForm() {
     // state has both public and contact fields
     // state has tab to be selected
     // onSubmit write to fireStore
+    const [generalFormData, setGeneralFormData] = useState({});
+    const [privateFormData, setPrivateFormData] = useState({});
+
     const [tab, setTab] = useState("general");
+
     return (
         <form>
             {/* headshot */}
@@ -20,7 +24,15 @@ export default function CreateStudentForm() {
                     onChange={() => setTab("general")}
                 />
                 <div className="tab-content bg-base-100 border-base-300 p-6">
-                    <GeneralSubForm />
+                    <GeneralSubForm
+                        data={generalFormData}
+                        changeData={(field, e) =>
+                            setGeneralFormData({
+                                ...generalFormData,
+                                [field]: e.target.value,
+                            })
+                        }
+                    />
                 </div>
                 <input
                     type="radio"
@@ -31,7 +43,10 @@ export default function CreateStudentForm() {
                     onChange={() => setTab("private")}
                 />
                 <div className="tab-content bg-base-100 border-base-300 p-6">
-                    <PrivateSubForm />
+                    <PrivateSubForm
+                        data={privateFormData}
+                        changeData={setPrivateFormData}
+                    />
                 </div>
             </div>
             {/* submit + cancel */}
