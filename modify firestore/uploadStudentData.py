@@ -3,7 +3,7 @@ import firebase_admin
 from firebase_admin import firestore
 
 # Replace with your Firebase project credentials
-COLLECTION_NAME = "students"  # The Firestore collection to store data in
+COLLECTION_NAME = "directory/afam/student"  # The Firestore collection to store data in
 BATCH_SIZE = 500
 
 
@@ -87,7 +87,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 private_doc_ref = (
                     collection_ref.document(general_doc_ref.id)
                     .collection("private")
-                    .document("privateInfo")
+                    .document("data")
                 )
                 batch.set(private_doc_ref, private_info)
                 batch_count += 1

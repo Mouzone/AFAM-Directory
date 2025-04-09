@@ -7,7 +7,7 @@ import {
     generalFormDataDefault,
     privateFormDataDefault,
 } from "@/utility/consts";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc } from "firebase/firestore";
 import { db } from "@/utility/firebase";
 
 export default function CreateStudentForm() {
@@ -33,13 +33,14 @@ export default function CreateStudentForm() {
         );
         const doc = await addDoc(generalDataDocRef, generalFormData);
 
-        const privateDataDocRef = collection(
+        const privateDataDocRef = doc(
             db,
             "directories",
             "afam",
             "students",
             doc.id,
-            "private"
+            "private",
+            "data"
         );
         await addDoc(privateDataDocRef, privateFormData);
 

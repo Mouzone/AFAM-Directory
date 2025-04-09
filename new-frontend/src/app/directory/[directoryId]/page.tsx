@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../components/Providers/AuthProvider";
 import { usePathname } from "next/navigation";
-import { getDirectory } from "../../../utility/getStudents";
+import { getDirectory } from "../../../utility/getDirectory";
 import Table from "@/components/Table";
 import Options from "@/components/Options";
 import Modal from "@/components/Modal";
@@ -27,8 +27,12 @@ export default function Page() {
         }
     }, [pathname]);
 
-    const { isLoading, data, error } = useQuery({
-        queryKey: [directoryId, "students"],
+    const {
+        isLoading,
+        data: directory,
+        error,
+    } = useQuery({
+        queryKey: [directoryId, "student"],
         queryFn: () => getDirectory(directoryId),
         enabled: directoryId != "",
     });
@@ -36,7 +40,7 @@ export default function Page() {
     if (!user) {
         return <></>;
     }
-    if (!data) {
+    if (!directory) {
         return <></>;
     }
     return (
@@ -47,7 +51,7 @@ export default function Page() {
 
             <div className="p-4">
                 <Options showAddStudent={() => showModal()} />
-                <Table data={data} />
+                <Table data={directory} />
 
                 <p> {error?.message} </p>
             </div>

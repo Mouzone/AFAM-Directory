@@ -4,8 +4,8 @@ import { FormEvent, useContext, useState } from "react";
 import { AuthContext } from "../../components/Providers/AuthProvider";
 import { useRouter } from "next/navigation";
 import { Directory } from "../../utility/types";
-import Modal from "../../components/Modal";
-import CreateDirectoryForm from "@/components/Forms/CreateDirectoryForm";
+// import Modal from "../../components/Modal";
+// import CreateDirectoryForm from "@/components/Forms/CreateDirectoryForm";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
@@ -39,13 +39,12 @@ export default function Page() {
                         <select
                             defaultValue="Select a Directory"
                             className="select"
-                            value={selectedDirectory?.directoryName}
+                            value={selectedDirectory?.name}
                             onChange={(e) =>
                                 setSelectedDirectory(
                                     directories.find(
                                         (directory) =>
-                                            directory.directoryName ===
-                                            e.target.value
+                                            directory.name === e.target.value
                                     ) ?? null // use null since find returns either Directory or undefined
                                 )
                             }
@@ -53,7 +52,7 @@ export default function Page() {
                             <option disabled={true}>Select a Directory</option>
                             {directories.map((directory) => (
                                 <option key={directory.id}>
-                                    {directory.directoryName}
+                                    {directory.name}
                                 </option>
                             ))}
                         </select>

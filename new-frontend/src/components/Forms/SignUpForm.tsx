@@ -5,6 +5,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { signUp } from "@/utility/signUp";
 import { updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { db } from "@/utility/firebase";
 
 // todo: add redirect if user is already logged in
 export default function SignUpForm() {
@@ -24,6 +26,8 @@ export default function SignUpForm() {
             await updateProfile(user, {
                 displayName: `${firstName} ${lastName}`,
             });
+            const docRef = doc(db, "user", user.uid);
+            await setDoc(docRef, {});
             router.push("/home");
         },
         onError: (error) => {

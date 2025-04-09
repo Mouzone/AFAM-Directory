@@ -2,7 +2,7 @@ import { User } from "firebase/auth";
 
 export type Directory = {
     id: string;
-    directoryName: string;
+    name: string;
     owner: string;
 };
 

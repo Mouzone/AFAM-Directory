@@ -29,9 +29,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
             if (user) {
                 const directoriesRef = collection(
                     db,
-                    "users",
+                    "user",
                     user.uid,
-                    "directories"
+                    "directory"
                 );
                 unsubscribeDirectories = onSnapshot(
                     directoriesRef,
