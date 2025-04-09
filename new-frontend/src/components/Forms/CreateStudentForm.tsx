@@ -122,10 +122,12 @@ export default function CreateStudentForm() {
                     <button
                         className="btn btn-neutral"
                         type="submit"
-                        disabled={validateCreateStudentForm(
-                            generalFormData,
-                            privateFormData
-                        )}
+                        disabled={
+                            !validateCreateStudentForm(
+                                generalFormData,
+                                privateFormData
+                            )
+                        }
                     >
                         Submit
                     </button>
