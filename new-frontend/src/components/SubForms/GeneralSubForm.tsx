@@ -43,30 +43,6 @@ export default function GeneralSubForm({
 
             <div className="flex gap-4">
                 <div className="flex flex-col">
-                    <label className="fieldset-label">Gender</label>
-                    <select
-                        className="select"
-                        value={data["gender"]}
-                        onChange={(e) => changeData("gender", e.target.value)}
-                    >
-                        <option>M</option>
-                        <option>F</option>
-                    </select>
-                </div>
-
-                <div className="flex flex-col">
-                    <label className="fieldset-label">Birthday</label>
-                    <input
-                        type="date"
-                        className="input"
-                        value={data["birthday"]}
-                        onChange={(e) => changeData("birthday", e.target.value)}
-                    />
-                </div>
-            </div>
-
-            <div className="flex gap-4">
-                <div className="flex flex-col">
                     <label className="fieldset-label">High School</label>
                     <input
                         type="text"
@@ -111,6 +87,29 @@ export default function GeneralSubForm({
                         <option>Shany Park</option>
                         <option>Sol Park</option>
                     </select>
+                </div>
+            </div>
+            <div className="flex gap-4">
+                <div className="flex flex-col">
+                    <label className="fieldset-label">Gender</label>
+                    <select
+                        className="select"
+                        value={data["gender"]}
+                        onChange={(e) => changeData("gender", e.target.value)}
+                    >
+                        <option>M</option>
+                        <option>F</option>
+                    </select>
+                </div>
+
+                <div className="flex flex-col">
+                    <label className="fieldset-label">Birthday</label>
+                    <input
+                        type="date"
+                        className="input"
+                        value={data["birthday"]}
+                        onChange={(e) => changeData("birthday", e.target.value)}
+                    />
                 </div>
             </div>
         </fieldset>
