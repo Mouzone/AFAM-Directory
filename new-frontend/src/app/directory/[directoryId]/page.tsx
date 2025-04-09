@@ -27,11 +27,7 @@ export default function Page() {
         }
     }, [pathname]);
 
-    const {
-        isLoading,
-        data: directory,
-        error,
-    } = useQuery({
+    const { isLoading, data, error } = useQuery({
         queryKey: [directoryId, "students"],
         queryFn: () => getDirectory(directoryId),
         enabled: directoryId != "",
@@ -40,7 +36,7 @@ export default function Page() {
     if (!user) {
         return <></>;
     }
-    if (!directory) {
+    if (!data) {
         return <></>;
     }
     return (
@@ -51,10 +47,7 @@ export default function Page() {
 
             <div className="p-4">
                 <Options showAddStudent={() => showModal()} />
-                <Table
-                    schema={directory["metadata"]["schema"]}
-                    data={directory["data"]}
-                />
+                <Table data={data} />
 
                 <p> {error?.message} </p>
             </div>

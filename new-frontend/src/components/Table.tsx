@@ -1,4 +1,6 @@
-export default function Table({ schema, data }) {
+import { schema } from "@/utility/consts";
+
+export default function Table({ data }) {
     return (
         <div className="overflow-x-auto">
             <table className="table">

@@ -19,3 +19,13 @@ export const privateFormDataDefault = {
     guardian1: { firstName: "", lastName: "", phone: "", email: "" },
     guardian2: { firstName: "", lastName: "", phone: "", email: "" },
 };
+
+export const schema = [
+    "First Name",
+    "Last Name",
+    "Gender",
+    "Birthday",
+    "High School",
+    "Grade",
+    "Teacher",
+];

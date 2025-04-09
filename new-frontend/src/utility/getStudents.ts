@@ -2,17 +2,11 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
 
 export const getDirectory = async (selectedDirectory: string) => {
-    const directoryMetaData = await getDoc(
-        doc(db, "directories", selectedDirectory)
-    );
     const studentDocs = await getDocs(
-        collection(db, "directories", selectedDirectory, "people")
+        collection(db, "directories", selectedDirectory, "students")
     );
 
-    return {
-        metadata: directoryMetaData.data(),
-        data: studentDocs.docs.map((studentDoc) => {
-            return { ...studentDoc.data(), id: studentDoc.id };
-        }),
-    };
+    return studentDocs.docs.map((studentDoc) => {
+        return { ...studentDoc.data(), id: studentDoc.id };
+    });
 };
