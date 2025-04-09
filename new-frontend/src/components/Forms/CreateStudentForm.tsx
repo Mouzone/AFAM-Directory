@@ -80,7 +80,11 @@ export default function CreateStudentForm() {
                     />
                 </div>
             </div>
-            <div className="flex justify-end gap-4 mt-4">
+            <div
+                className={`flex justify-end gap-4 mt-4 ${
+                    tab === "private" ? "pb-6" : ""
+                }`}
+            >
                 <button
                     className="btn btn-neutral"
                     type="submit"
