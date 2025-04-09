@@ -6,7 +6,15 @@ export default function CreateStudentForm() {
     // state has both public and contact fields
     // state has tab to be selected
     // onSubmit write to fireStore
-    const [generalFormData, setGeneralFormData] = useState({});
+    const [generalFormData, setGeneralFormData] = useState({
+        firstName: "",
+        lastName: "",
+        gender: "",
+        birthday: new Date().toISOString().split("T")[0],
+        highSchool: "",
+        grade: "",
+        teacher: "",
+    });
     const [privateFormData, setPrivateFormData] = useState({});
 
     const [tab, setTab] = useState("general");
@@ -26,10 +34,10 @@ export default function CreateStudentForm() {
                 <div className="tab-content bg-base-100 border-base-300 p-6">
                     <GeneralSubForm
                         data={generalFormData}
-                        changeData={(field, e) =>
+                        changeData={(field: string, value: string) =>
                             setGeneralFormData({
                                 ...generalFormData,
-                                [field]: e.target.value,
+                                [field]: value,
                             })
                         }
                     />
