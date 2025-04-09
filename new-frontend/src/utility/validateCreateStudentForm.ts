@@ -9,9 +9,9 @@ export default function validateCreateStudentForm(
     console.log(privateFormData);
     return (
         noEmptyStrings(generalFormData) &&
-        noEmptyStrings(privateFormData["personal"]) &&
-        (noEmptyStrings(privateFormData["guardian1"]) ||
-            noEmptyStrings(privateFormData["guardian2"]))
+        noEmptyStrings(privateFormData["Personal"]) &&
+        (noEmptyStrings(privateFormData["Guardian 1"]) ||
+            noEmptyStrings(privateFormData["Guardian 2"]))
     );
 }
 
