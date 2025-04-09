@@ -42,7 +42,7 @@ export default function CreateStudentForm() {
             "private",
             "data"
         );
-        await addDoc(privateDataDocRef, { ...privateFormData["Personal"] });
+        await addDoc(privateDataDocRef, privateFormData);
 
         resetState();
     };
