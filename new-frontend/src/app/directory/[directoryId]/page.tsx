@@ -9,6 +9,7 @@ import Table from "@/components/Table";
 import Options from "@/components/Options";
 import Modal from "@/components/Modal";
 import CreateStudentForm from "@/components/Forms/CreateStudentForm";
+import showModal from "@/utility/showModal";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
@@ -49,14 +50,7 @@ export default function Page() {
             </Modal>
 
             <div className="p-4">
-                <Options
-                    showAddStudent={() => {
-                        const modal = document?.getElementById(
-                            "Modal"
-                        ) as HTMLDialogElement | null;
-                        modal?.showModal();
-                    }}
-                />
+                <Options showAddStudent={() => showModal()} />
                 <Table
                     schema={directory["metadata"]["schema"]}
                     data={directory["data"]}

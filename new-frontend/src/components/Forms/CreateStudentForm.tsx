@@ -2,11 +2,9 @@ import { useState } from "react";
 import GeneralSubForm from "../SubForms/GeneralSubForm";
 import PrivateSubForm from "../SubForms/PrivateSubForm";
 import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
+import closeModal from "@/utility/closeModal";
 
 export default function CreateStudentForm() {
-    // state has both public and contact fields
-    // state has tab to be selected
-    // onSubmit write to fireStore
     const [generalFormData, setGeneralFormData] = useState({
         firstName: "",
         lastName: "",
@@ -85,6 +83,7 @@ export default function CreateStudentForm() {
             <div className="flex justify-end gap-4 mt-4">
                 <button
                     className="btn btn-neutral"
+                    type="submit"
                     disabled={validateCreateStudentForm(
                         generalFormData,
                         privateFormData
@@ -92,7 +91,13 @@ export default function CreateStudentForm() {
                 >
                     Submit
                 </button>
-                <button className="btn">Cancel</button>
+                <button
+                    type="button"
+                    className="btn"
+                    onClick={() => closeModal()}
+                >
+                    Cancel
+                </button>
             </div>
         </form>
     );
