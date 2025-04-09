@@ -27,9 +27,9 @@ export default function Page() {
 
     return (
         <>
-            <Modal>
+            {/* <Modal>
                 <CreateDirectoryForm directories={directories} />
-            </Modal>
+            </Modal> */}
             <form
                 onSubmit={onSubmit}
                 className="flex w-screen h-screen items-center justify-center"
@@ -62,12 +62,12 @@ export default function Page() {
                         </button>
                     </div>
 
-                    <div className="relative flex py-1 items-center">
+                    {/* <div className="relative flex py-1 items-center">
                         <div className="flex-grow border-t border-gray-400"></div>
                         <span className="flex-shrink mx-4">or</span>
                         <div className="flex-grow border-t border-gray-400"></div>
-                    </div>
-                    <button
+                    </div> */}
+                    {/* <button
                         type="button"
                         className="btn btn-neutral"
                         onClick={() => {
@@ -78,7 +78,7 @@ export default function Page() {
                         }}
                     >
                         Create Directory
-                    </button>
+                    </button> */}
                 </fieldset>
             </form>
         </>
