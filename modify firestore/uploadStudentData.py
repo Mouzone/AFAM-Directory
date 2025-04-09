@@ -55,35 +55,33 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 general_info["Gender"] = row["Gender"].strip()[0]
                 general_info["High School"] = row["High School"].strip()
 
-                private_info["Email"] = row["Personal Email Address"].strip()
-                private_info["Phone Number"] = row["Personal Phone Number"].strip()
-                private_info["Home"] = {
-                    "City": row["City"].strip(),
-                    "Street Address": row["Street Address"].strip(),
-                    "Zip Code": row["Postal Code"].strip(),
-                }
-
-                private_info["Guardian 1"] = {
-                    "Email": row["Parent 1 Email Address"].strip(),
-                    "First Name": row["Parent 1 First Name"].strip(),
-                    "Last Name": row["Parent 1 Last Name"].strip(),
-                    "Phone": row["Parent 1 Phone Number"].strip(),
-                }
-                private_info["Guardian 2"] = {
-                    "Email": row["Parent 2 Email Address"].strip(),
-                    "First Name": row["Parent 2 First Name"].strip(),
-                    "Last Name": row["Parent 2 Last Name"].strip(),
-                    "Phone": row["Parent 2 Phone Number"].strip(),
-                }
                 # from 10A Sunny Liu to {Sunny, Liu}
                 teacher_parts = row["Small Group Class"].split(" ")
                 if len(teacher_parts) == 3:
                     general_info["Teacher"] = (
                         f"{teacher_parts[1].strip()} {teacher_parts[2].strip()}"
                     )
-
                 else:
                     general_info["Teacher"] = "None"
+
+                private_info["Email"] = row["Personal Email Address"].strip()
+                private_info["Phone Number"] = row["Personal Phone Number"].strip()
+                private_info["City"] = row["City"].strip()
+                private_info["Street Address"] = row["Street Address"].strip()
+                private_info["Zip Code"] = row["Postal Code"].strip()
+
+                private_info["Guardian 1"] = {
+                    "First Name": row["Parent 1 First Name"].strip(),
+                    "Last Name": row["Parent 1 Last Name"].strip(),
+                    "Phone": row["Parent 1 Phone Number"].strip(),
+                    "Email": row["Parent 1 Email Address"].strip(),
+                }
+                private_info["Guardian 2"] = {
+                    "First Name": row["Parent 2 First Name"].strip(),
+                    "Last Name": row["Parent 2 Last Name"].strip(),
+                    "Phone": row["Parent 2 Phone Number"].strip(),
+                    "Email": row["Parent 2 Email Address"].strip(),
+                }
 
                 batch.set(general_doc_ref, general_info)
                 private_doc_ref = (
