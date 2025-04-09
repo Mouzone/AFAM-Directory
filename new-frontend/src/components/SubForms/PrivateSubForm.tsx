@@ -1,31 +1,32 @@
 type PrivateSubFormProps = {
     data: {
-        personal: {
-            streetAddress: string;
-            city: string;
-            zipCode: string;
-            phone: string;
-            email: string;
+        Personal: {
+            "Street Address": string;
+            City: string;
+            "Zip Code": string;
+            Phone: string;
+            Email: string;
         };
-        guardian1: {
-            firstName: string;
-            lastName: string;
-            phone: string;
-            email: string;
+        "Guardian 1": {
+            "First Name": string;
+            "Last Name": string;
+            Phone: string;
+            Email: string;
         };
-        guardian2: {
-            firstName: string;
-            lastName: string;
-            phone: string;
-            email: string;
+        "Guardian 2": {
+            "First Name": string;
+            "Last Name": string;
+            Phone: string;
+            Email: string;
         };
     };
     changeData: (
-        person: "personal" | "guardian1" | "guardian2",
+        person: "Personal" | "Guardian 1" | "Guardian 2",
         field: string,
         value: string
     ) => void;
 };
+
 export default function PrivateSubForm({
     data,
     changeData,
@@ -40,11 +41,11 @@ export default function PrivateSubForm({
                     <input
                         type="text"
                         className="input"
-                        value={data["personal"]["streetAddress"]}
+                        value={data["Personal"]["Street Address"]}
                         onChange={(e) =>
                             changeData(
-                                "personal",
-                                "streetAddress",
+                                "Personal",
+                                "Street Address",
                                 e.target.value
                             )
                         }
@@ -56,9 +57,9 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["personal"]["city"]}
+                            value={data["Personal"]["City"]}
                             onChange={(e) =>
-                                changeData("personal", "city", e.target.value)
+                                changeData("Personal", "City", e.target.value)
                             }
                         />
                     </div>
@@ -68,11 +69,11 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["personal"]["zipCode"]}
+                            value={data["Personal"]["Zip Code"]}
                             onChange={(e) =>
                                 changeData(
-                                    "personal",
-                                    "zipCode",
+                                    "Personal",
+                                    "Zip Code",
                                     e.target.value
                                 )
                             }
@@ -91,9 +92,9 @@ export default function PrivateSubForm({
                     <input
                         type="text"
                         className="input"
-                        value={data["personal"]["phone"]}
+                        value={data["Personal"]["Phone"]}
                         onChange={(e) =>
-                            changeData("personal", "phone", e.target.value)
+                            changeData("Personal", "Phone", e.target.value)
                         }
                     />
                 </div>
@@ -103,9 +104,9 @@ export default function PrivateSubForm({
                     <input
                         type="text"
                         className="input"
-                        value={data["personal"]["email"]}
+                        value={data["Personal"]["Email"]}
                         onChange={(e) =>
-                            changeData("personal", "email", e.target.value)
+                            changeData("Personal", "Email", e.target.value)
                         }
                     />
                 </div>
@@ -122,11 +123,11 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["guardian1"]["firstName"]}
+                            value={data["Guardian 1"]["First Name"]}
                             onChange={(e) =>
                                 changeData(
-                                    "guardian1",
-                                    "firstName",
+                                    "Guardian 1",
+                                    "First Name",
                                     e.target.value
                                 )
                             }
@@ -137,11 +138,11 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["guardian1"]["lastName"]}
+                            value={data["Guardian 1"]["Last Name"]}
                             onChange={(e) =>
                                 changeData(
-                                    "guardian1",
-                                    "lastName",
+                                    "Guardian 1",
+                                    "Last Name",
                                     e.target.value
                                 )
                             }
@@ -154,9 +155,13 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["guardian1"]["phone"]}
+                            value={data["Guardian 1"]["Phone"]}
                             onChange={(e) =>
-                                changeData("guardian1", "phone", e.target.value)
+                                changeData(
+                                    "Guardian 1",
+                                    "Phone",
+                                    e.target.value
+                                )
                             }
                         />
                     </div>
@@ -165,9 +170,13 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["guardian1"]["email"]}
+                            value={data["Guardian 1"]["Email"]}
                             onChange={(e) =>
-                                changeData("guardian1", "email", e.target.value)
+                                changeData(
+                                    "Guardian 1",
+                                    "Email",
+                                    e.target.value
+                                )
                             }
                         />
                     </div>
@@ -185,11 +194,11 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["guardian2"]["firstName"]}
+                            value={data["Guardian 2"]["First Name"]}
                             onChange={(e) =>
                                 changeData(
-                                    "guardian2",
-                                    "firstName",
+                                    "Guardian 2",
+                                    "First Name",
                                     e.target.value
                                 )
                             }
@@ -200,11 +209,11 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["guardian2"]["lastName"]}
+                            value={data["Guardian 2"]["Last Name"]}
                             onChange={(e) =>
                                 changeData(
-                                    "guardian2",
-                                    "lastName",
+                                    "Guardian 2",
+                                    "Last Name",
                                     e.target.value
                                 )
                             }
@@ -217,9 +226,13 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["guardian2"]["phone"]}
+                            value={data["Guardian 2"]["Phone"]}
                             onChange={(e) =>
-                                changeData("guardian2", "phone", e.target.value)
+                                changeData(
+                                    "Guardian 2",
+                                    "Phone",
+                                    e.target.value
+                                )
                             }
                         />
                     </div>
@@ -228,9 +241,13 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["guardian2"]["email"]}
+                            value={data["Guardian 2"]["Email"]}
                             onChange={(e) =>
-                                changeData("guardian2", "email", e.target.value)
+                                changeData(
+                                    "Guardian 2",
+                                    "Email",
+                                    e.target.value
+                                )
                             }
                         />
                     </div>

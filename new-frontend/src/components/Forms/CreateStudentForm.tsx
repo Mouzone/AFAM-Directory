@@ -27,22 +27,22 @@ export default function CreateStudentForm() {
         e.preventDefault();
         const generalDataDocRef = collection(
             db,
-            "directories",
+            "directory",
             "afam",
-            "students"
+            "student"
         );
         const doc = await addDoc(generalDataDocRef, generalFormData);
 
         const privateDataDocRef = doc(
             db,
-            "directories",
+            "directory",
             "afam",
-            "students",
+            "student",
             doc.id,
             "private",
             "data"
         );
-        await addDoc(privateDataDocRef, privateFormData);
+        await addDoc(privateDataDocRef, { ...privateFormData["Personal"] });
 
         resetState();
     };
@@ -91,19 +91,22 @@ export default function CreateStudentForm() {
                         <PrivateSubForm
                             data={privateFormData}
                             changeData={(
-                                person: "personal" | "guardian1" | "guardian2",
+                                person:
+                                    | "Personal"
+                                    | "Guardian 1"
+                                    | "Guardian 2",
                                 field: string,
                                 value: string
                             ) =>
                                 setPrivateFormData({
-                                    personal: {
-                                        ...privateFormData["personal"],
+                                    Personal: {
+                                        ...privateFormData["Personal"],
                                     },
-                                    guardian1: {
-                                        ...privateFormData["guardian1"],
+                                    "Guardian 1": {
+                                        ...privateFormData["Guardian 1"],
                                     },
-                                    guardian2: {
-                                        ...privateFormData["guardian2"],
+                                    "Guardian 2": {
+                                        ...privateFormData["Guardian 2"],
                                     },
                                     [person]: {
                                         ...privateFormData[person],

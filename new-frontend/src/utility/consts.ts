@@ -1,23 +1,23 @@
 export const generalFormDataDefault = {
-    firstName: "",
-    lastName: "",
-    gender: "M",
-    birthday: new Date().toISOString().split("T")[0],
-    highSchool: "",
-    grade: "9",
-    teacher: "None",
+    "First Name": "",
+    "Last Name": "",
+    Gender: "M",
+    Birthday: new Date().toISOString().split("T")[0],
+    "High School": "",
+    Grade: "9",
+    Teacher: "None",
 };
 
 export const privateFormDataDefault = {
-    personal: {
-        streetAddress: "",
-        city: "",
-        zipCode: "",
-        phone: "",
-        email: "",
+    Personal: {
+        "Street Address": "",
+        City: "",
+        "Zip Code": "",
+        Phone: "",
+        Email: "",
     },
-    guardian1: { firstName: "", lastName: "", phone: "", email: "" },
-    guardian2: { firstName: "", lastName: "", phone: "", email: "" },
+    "Guardian 1": { "First Name": "", "Last Name": "", Phone: "", Email: "" },
+    "Guardian 2": { "First Name": "", "Last Name": "", Phone: "", Email: "" },
 };
 
 export const schema = [

@@ -1,12 +1,12 @@
 type GeneralSubFormProps = {
     data: {
-        firstName: string;
-        lastName: string;
-        gender: string;
-        birthday: string;
-        highSchool: string;
-        grade: string;
-        teacher: string;
+        "First Name": string;
+        "Last Name": string;
+        Gender: string;
+        Birthday: string;
+        "High School": string;
+        Grade: string;
+        Teacher: string;
     };
     changeData: (field: string, value: string) => void;
 };
@@ -24,9 +24,9 @@ export default function GeneralSubForm({
                     <input
                         type="text"
                         className="input"
-                        value={data["firstName"]}
+                        value={data["First Name"]}
                         onChange={(e) =>
-                            changeData("firstName", e.target.value)
+                            changeData("First Name", e.target.value)
                         }
                     />
                 </div>
@@ -35,8 +35,10 @@ export default function GeneralSubForm({
                     <input
                         type="text"
                         className="input"
-                        value={data["lastName"]}
-                        onChange={(e) => changeData("lastName", e.target.value)}
+                        value={data["Last Name"]}
+                        onChange={(e) =>
+                            changeData("Last Name", e.target.value)
+                        }
                     />
                 </div>
             </div>
@@ -47,9 +49,9 @@ export default function GeneralSubForm({
                     <input
                         type="text"
                         className="input"
-                        value={data["highSchool"]}
+                        value={data["High School"]}
                         onChange={(e) =>
-                            changeData("highSchool", e.target.value)
+                            changeData("High School", e.target.value)
                         }
                     />
                 </div>
@@ -57,8 +59,8 @@ export default function GeneralSubForm({
                     <label className="fieldset-label">Grade</label>
                     <select
                         className="select"
-                        value={data["grade"]}
-                        onChange={(e) => changeData("grade", e.target.value)}
+                        value={data["Grade"]}
+                        onChange={(e) => changeData("Grade", e.target.value)}
                     >
                         <option>9</option>
                         <option>10</option>
@@ -72,8 +74,8 @@ export default function GeneralSubForm({
                     </label>
                     <select
                         className="select"
-                        value={data["teacher"]}
-                        onChange={(e) => changeData("teacher", e.target.value)}
+                        value={data["Teacher"]}
+                        onChange={(e) => changeData("Teacher", e.target.value)}
                     >
                         <option>Anna Kwon</option>
                         <option>Chloe Han</option>
@@ -96,8 +98,8 @@ export default function GeneralSubForm({
                     <label className="fieldset-label">Gender</label>
                     <select
                         className="select"
-                        value={data["gender"]}
-                        onChange={(e) => changeData("gender", e.target.value)}
+                        value={data["Gender"]}
+                        onChange={(e) => changeData("Gender", e.target.value)}
                     >
                         <option>Male</option>
                         <option>Female</option>
@@ -109,8 +111,8 @@ export default function GeneralSubForm({
                     <input
                         type="date"
                         className="input"
-                        value={data["birthday"]}
-                        onChange={(e) => changeData("birthday", e.target.value)}
+                        value={data["Birthday"]}
+                        onChange={(e) => changeData("Birthday", e.target.value)}
                     />
                 </div>
             </div>
