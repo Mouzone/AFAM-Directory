@@ -1,11 +1,11 @@
 export const generalFormDataDefault = {
     firstName: "",
     lastName: "",
-    gender: "",
+    gender: "M",
     birthday: new Date().toISOString().split("T")[0],
     highSchool: "",
-    grade: "",
-    teacher: "",
+    grade: "9",
+    teacher: "None",
 };
 
 export const privateFormDataDefault = {
