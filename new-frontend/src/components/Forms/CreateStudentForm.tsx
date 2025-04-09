@@ -1,35 +1,53 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import GeneralSubForm from "../SubForms/GeneralSubForm";
 import PrivateSubForm from "../SubForms/PrivateSubForm";
 import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
 import closeModal from "@/utility/closeModal";
+import {
+    generalFormDataDefault,
+    privateFormDataDefault,
+} from "@/utility/consts";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { db } from "@/utility/firebase";
 
 export default function CreateStudentForm() {
-    const [generalFormData, setGeneralFormData] = useState({
-        firstName: "",
-        lastName: "",
-        gender: "",
-        birthday: new Date().toISOString().split("T")[0],
-        highSchool: "",
-        grade: "",
-        teacher: "",
-    });
-    const [privateFormData, setPrivateFormData] = useState({
-        personal: {
-            streetAddress: "",
-            city: "",
-            zipCode: "",
-            phone: "",
-            email: "",
-        },
-        guardian1: { firstName: "", lastName: "", phone: "", email: "" },
-        guardian2: { firstName: "", lastName: "", phone: "", email: "" },
-    });
-
+    const [generalFormData, setGeneralFormData] = useState(
+        generalFormDataDefault
+    );
+    const [privateFormData, setPrivateFormData] = useState(
+        privateFormDataDefault
+    );
     const [tab, setTab] = useState("general");
 
+    const resetState = () => {
+        setGeneralFormData(generalFormDataDefault);
+        setPrivateFormData(privateFormDataDefault);
+    };
+    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const generalDataDocRef = collection(
+            db,
+            "directories",
+            "afam",
+            "students"
+        );
+        const doc = await addDoc(generalDataDocRef, generalFormData);
+
+        const privateDataDocRef = collection(
+            db,
+            "directories",
+            "afam",
+            "students",
+            doc.id,
+            "private"
+        );
+        await addDoc(privateDataDocRef, privateFormData);
+
+        resetState();
+    };
+
     return (
-        <form>
+        <form onSubmit={(e) => onSubmit(e)}>
             {/* headshot */}
             <div className="tabs tabs-lift">
                 <input
@@ -98,7 +116,10 @@ export default function CreateStudentForm() {
                 <button
                     type="button"
                     className="btn"
-                    onClick={() => closeModal()}
+                    onClick={() => {
+                        closeModal();
+                        resetState();
+                    }}
                 >
                     Cancel
                 </button>
