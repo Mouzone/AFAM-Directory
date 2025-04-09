@@ -1,6 +1,7 @@
 import { useState } from "react";
 import GeneralSubForm from "../SubForms/GeneralSubForm";
 import PrivateSubForm from "../SubForms/PrivateSubForm";
+import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
 
 export default function CreateStudentForm() {
     // state has both public and contact fields
@@ -82,7 +83,15 @@ export default function CreateStudentForm() {
                 </div>
             </div>
             <div className="flex justify-end gap-4 mt-4">
-                <button className="btn btn-neutral">Submit</button>
+                <button
+                    className="btn btn-neutral"
+                    disabled={validateCreateStudentForm(
+                        generalFormData,
+                        privateFormData
+                    )}
+                >
+                    Submit
+                </button>
                 <button className="btn">Cancel</button>
             </div>
         </form>
