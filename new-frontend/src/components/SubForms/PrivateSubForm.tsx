@@ -32,7 +32,7 @@ export default function PrivateSubForm({
 }: PrivateSubFormProps) {
     return (
         <>
-            <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex">
+            <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex flex-col">
                 <legend className="fieldset-legend">Address</legend>
 
                 <div className="flex flex-col">
@@ -50,35 +50,40 @@ export default function PrivateSubForm({
                         }
                     />
                 </div>
+                <div className="flex gap-4">
+                    <div className="flex flex-col">
+                        <label className="fieldset-label">City</label>
+                        <input
+                            type="text"
+                            className="input"
+                            value={data["personal"]["city"]}
+                            onChange={(e) =>
+                                changeData("personal", "city", e.target.value)
+                            }
+                        />
+                    </div>
 
-                <div className="flex flex-col">
-                    <label className="fieldset-label">City</label>
-                    <input
-                        type="text"
-                        className="input"
-                        value={data["personal"]["city"]}
-                        onChange={(e) =>
-                            changeData("personal", "city", e.target.value)
-                        }
-                    />
-                </div>
-
-                <div className="flex flex-col">
-                    <label className="fieldset-label">Zip Code</label>
-                    <input
-                        type="text"
-                        className="input"
-                        value={data["personal"]["zipCode"]}
-                        onChange={(e) =>
-                            changeData("personal", "zipCode", e.target.value)
-                        }
-                    />
+                    <div className="flex flex-col">
+                        <label className="fieldset-label">Zip Code</label>
+                        <input
+                            type="text"
+                            className="input"
+                            value={data["personal"]["zipCode"]}
+                            onChange={(e) =>
+                                changeData(
+                                    "personal",
+                                    "zipCode",
+                                    e.target.value
+                                )
+                            }
+                        />
+                    </div>
                 </div>
             </fieldset>
 
-            <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box flex">
+            <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex gap-4">
                 <legend className="fieldset-legend">
-                    Personal Contact Info{" "}
+                    Personal Contact Info
                 </legend>
 
                 <div className="flex flex-col">
@@ -106,12 +111,12 @@ export default function PrivateSubForm({
                 </div>
             </fieldset>
 
-            <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+            <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
                 <legend className="fieldset-legend">
                     Parent 1 Contact Info
                 </legend>
 
-                <div className="flex">
+                <div className="flex gap-4">
                     <div className="flex flex-col">
                         <label className="fieldset-label">First Name</label>
                         <input
@@ -143,7 +148,7 @@ export default function PrivateSubForm({
                         />
                     </div>
                 </div>
-                <div className="flex">
+                <div className="flex gap-4">
                     <div className="flex flex-col">
                         <label className="fieldset-label">Phone</label>
                         <input
@@ -169,12 +174,12 @@ export default function PrivateSubForm({
                 </div>
             </fieldset>
 
-            <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+            <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
                 <legend className="fieldset-legend">
                     Parent 2 Contact Info
                 </legend>
 
-                <div className="flex">
+                <div className="flex gap-4">
                     <div className="flex flex-col">
                         <label className="fieldset-label">First Name</label>
                         <input
@@ -206,7 +211,7 @@ export default function PrivateSubForm({
                         />
                     </div>
                 </div>
-                <div className="flex">
+                <div className="flex gap-4">
                     <div className="flex flex-col">
                         <label className="fieldset-label">Phone</label>
                         <input
