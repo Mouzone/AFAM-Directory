@@ -15,10 +15,10 @@ export default function GeneralSubForm({
     changeData,
 }: GeneralSubFormProps) {
     return (
-        <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
+        <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
             <legend className="fieldset-legend">General</legend>
 
-            <div className="flex">
+            <div className="flex gap-4">
                 <div className="flex flex-col">
                     <label className="fieldset-label">First Name</label>
                     <input
@@ -39,6 +39,9 @@ export default function GeneralSubForm({
                         onChange={(e) => changeData("lastName", e.target.value)}
                     />
                 </div>
+            </div>
+
+            <div className="flex gap-4">
                 <div className="flex flex-col">
                     <label className="fieldset-label">Gender</label>
                     <select
@@ -61,7 +64,8 @@ export default function GeneralSubForm({
                     />
                 </div>
             </div>
-            <div className="flex">
+
+            <div className="flex gap-4">
                 <div className="flex flex-col">
                     <label className="fieldset-label">High School</label>
                     <input

@@ -1,7 +1,7 @@
 export default function PrivateSubForm() {
     return (
         <>
-            <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box flex">
+            <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex">
                 <legend className="fieldset-legend">Address</legend>
 
                 <div className="flex flex-col">
