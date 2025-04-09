@@ -10,7 +10,7 @@ import {
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { db } from "@/utility/firebase";
 
-export default function CreateStudentForm() {
+export default function StudentForm() {
     const [generalFormData, setGeneralFormData] = useState(
         generalFormDataDefault
     );
@@ -54,7 +54,7 @@ export default function CreateStudentForm() {
             <form method="dialog">
                 <button
                     className="btn btn-md btn-circle btn-ghost absolute right-2 top-2"
-                    onClick={() => resetState()}
+                    onClick={() => exit()}
                 >
                     ✕
                 </button>

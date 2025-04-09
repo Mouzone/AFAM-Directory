@@ -1,6 +1,6 @@
 import { schema } from "@/utility/consts";
 
-export default function Table({ data }) {
+export default function Table({ data, showEditStudent }) {
     return (
         <div className="overflow-x-auto">
             <table className="table">

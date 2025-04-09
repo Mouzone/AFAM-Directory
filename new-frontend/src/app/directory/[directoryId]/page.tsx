@@ -8,18 +8,15 @@ import { getDirectory } from "../../../utility/getDirectory";
 import Table from "@/components/Table";
 import Options from "@/components/Options";
 import Modal from "@/components/Modal";
-import CreateStudentForm from "@/components/Forms/CreateStudentForm";
 import showModal from "@/utility/showModal";
-import EditStudentForm from "@/components/Forms/EditStudentForm";
+import StudentForm from "@/components/Forms/studentForm";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
     const pathname = usePathname();
     const [directoryId, setDirectoryId] = useState("");
     const [selectedModalForm, setSelectedModalForm] = useState("create");
-    // todo: add pagination
-    // todo: add redirect if no directory id
-    // todo: if data is null, it is either the directory DNE or just no students, cover both casses
+
     useEffect(() => {
         if (pathname) {
             const segments = pathname.split("/");
@@ -46,8 +43,8 @@ export default function Page() {
     return (
         <>
             <Modal>
-                {selectedModalForm === "create" && <CreateStudentForm />}
-                {selectedModalForm === "edit" && <EditStudentForm />}
+                {/* pass in start state for generalState, run it and if missing then don't fetch private */}
+                <StudentForm />
             </Modal>
 
             <div className="p-4">
@@ -56,12 +53,13 @@ export default function Page() {
                         setSelectedModalForm("create");
                         showModal();
                     }}
+                />
+                <Table
+                    data={directory}
                     showEditStudent={() => {
                         setSelectedModalForm("edit");
-                        showModal();
                     }}
                 />
-                <Table data={directory} />
 
                 <p> {error?.message} </p>
             </div>
