@@ -19,10 +19,12 @@ export default function CreateStudentForm() {
     );
     const [tab, setTab] = useState("general");
 
-    const resetState = () => {
+    const exit = () => {
         setGeneralFormData(generalFormDataDefault);
         setPrivateFormData(privateFormDataDefault);
+        closeModal();
     };
+
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const generalDataDocRef = collection(
@@ -44,7 +46,7 @@ export default function CreateStudentForm() {
         );
         await setDoc(privateDataDocRef, privateFormData);
 
-        resetState();
+        exit();
     };
 
     return (
@@ -137,10 +139,7 @@ export default function CreateStudentForm() {
                     <button
                         type="button"
                         className="btn"
-                        onClick={() => {
-                            closeModal();
-                            resetState();
-                        }}
+                        onClick={() => exit()}
                     >
                         Cancel
                     </button>
