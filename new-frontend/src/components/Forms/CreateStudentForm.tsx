@@ -81,7 +81,10 @@ export default function CreateStudentForm() {
                     />
                 </div>
             </div>
-            {/* submit + cancel */}
+            <div className="flex justify-end gap-4 mt-4">
+                <button className="btn btn-neutral">Submit</button>
+                <button className="btn">Cancel</button>
+            </div>
         </form>
     );
 }
