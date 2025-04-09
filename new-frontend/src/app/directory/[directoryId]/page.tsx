@@ -10,13 +10,13 @@ import Options from "@/components/Options";
 import Modal from "@/components/Modal";
 import CreateStudentForm from "@/components/Forms/CreateStudentForm";
 import showModal from "@/utility/showModal";
+import EditStudentForm from "@/components/Forms/EditStudentForm";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
     const pathname = usePathname();
     const [directoryId, setDirectoryId] = useState("");
-
-    const [isSearch, setIsSearch] = useState(false);
+    const [selectedModalForm, setSelectedModalForm] = useState("create");
     // todo: add pagination
     // todo: add redirect if no directory id
     // todo: if data is null, it is either the directory DNE or just no students, cover both casses
@@ -46,11 +46,21 @@ export default function Page() {
     return (
         <>
             <Modal>
-                <CreateStudentForm />
+                {selectedModalForm === "create" && <CreateStudentForm />}
+                {selectedModalForm === "edit" && <EditStudentForm />}
             </Modal>
 
             <div className="p-4">
-                <Options showAddStudent={() => showModal()} />
+                <Options
+                    showAddStudent={() => {
+                        setSelectedModalForm("create");
+                        showModal();
+                    }}
+                    showEditStudent={() => {
+                        setSelectedModalForm("edit");
+                        showModal();
+                    }}
+                />
                 <Table data={directory} />
 
                 <p> {error?.message} </p>
