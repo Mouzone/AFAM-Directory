@@ -15,7 +15,17 @@ export default function CreateStudentForm() {
         grade: "",
         teacher: "",
     });
-    const [privateFormData, setPrivateFormData] = useState({});
+    const [privateFormData, setPrivateFormData] = useState({
+        personal: {
+            streetAddress: "",
+            city: "",
+            zipCode: "",
+            phone: "",
+            email: "",
+        },
+        guardian1: { firstName: "", lastName: "", phone: "", email: "" },
+        guardian2: { firstName: "", lastName: "", phone: "", email: "" },
+    });
 
     const [tab, setTab] = useState("general");
 
@@ -53,7 +63,21 @@ export default function CreateStudentForm() {
                 <div className="tab-content bg-base-100 border-base-300 p-6">
                     <PrivateSubForm
                         data={privateFormData}
-                        changeData={setPrivateFormData}
+                        changeData={(
+                            person: "personal" | "guardian1" | "guardian2",
+                            field: string,
+                            value: string
+                        ) =>
+                            setPrivateFormData({
+                                personal: { ...privateFormData["personal"] },
+                                guardian1: { ...privateFormData["guardian1"] },
+                                guardian2: { ...privateFormData["guardian2"] },
+                                [person]: {
+                                    ...privateFormData[person],
+                                    [field]: value,
+                                },
+                            })
+                        }
                     />
                 </div>
             </div>
