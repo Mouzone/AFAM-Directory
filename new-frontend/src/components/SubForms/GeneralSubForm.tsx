@@ -41,8 +41,8 @@ export default function GeneralSubForm({
                 </div>
             </div>
 
-            <div className="flex gap-4">
-                <div className="flex flex-col">
+            <div className="flex flex-wrap gap-4">
+                <div className="flex flex-col flex-1 min-w-[calc(50%-0.5rem)]">
                     <label className="fieldset-label">High School</label>
                     <input
                         type="text"
@@ -53,7 +53,7 @@ export default function GeneralSubForm({
                         }
                     />
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col flex-1 min-w-[calc(50%-0.5rem)]">
                     <label className="fieldset-label">Grade</label>
                     <select
                         className="select"
@@ -66,7 +66,7 @@ export default function GeneralSubForm({
                         <option>12</option>
                     </select>
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col flex-1 min-w-full">
                     <label className="fieldset-label">
                         Bible Study Teacher
                     </label>
@@ -90,6 +90,7 @@ export default function GeneralSubForm({
                     </select>
                 </div>
             </div>
+
             <div className="flex gap-4">
                 <div className="flex flex-col">
                     <label className="fieldset-label">Gender</label>
@@ -98,8 +99,8 @@ export default function GeneralSubForm({
                         value={data["gender"]}
                         onChange={(e) => changeData("gender", e.target.value)}
                     >
-                        <option>M</option>
-                        <option>F</option>
+                        <option>Male</option>
+                        <option>Female</option>
                     </select>
                 </div>
 
