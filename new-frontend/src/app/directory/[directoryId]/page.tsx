@@ -9,13 +9,15 @@ import Table from "@/components/Table";
 import Options from "@/components/Options";
 import Modal from "@/components/Modal";
 import showModal from "@/utility/showModal";
-import StudentForm from "@/components/Forms/studentForm";
+import StudentForm from "@/components/Forms/StudentForm";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
     const pathname = usePathname();
     const [directoryId, setDirectoryId] = useState("");
-    const [selectedModalForm, setSelectedModalForm] = useState("create");
+    const [studentFormState, setStudentFormState] = useState<number | null>(
+        null
+    );
 
     useEffect(() => {
         if (pathname) {
@@ -50,14 +52,14 @@ export default function Page() {
             <div className="p-4">
                 <Options
                     showAddStudent={() => {
-                        setSelectedModalForm("create");
+                        setStudentFormState(null);
                         showModal();
                     }}
                 />
                 <Table
                     data={directory}
-                    showEditStudent={() => {
-                        setSelectedModalForm("edit");
+                    showEditStudent={(studentId) => {
+                        setStudentFormState(studentId);
                     }}
                 />
 
