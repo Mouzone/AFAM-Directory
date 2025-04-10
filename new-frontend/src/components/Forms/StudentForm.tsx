@@ -7,13 +7,22 @@ import {
     generalFormDataDefault,
     privateFormDataDefault,
 } from "@/utility/consts";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/utility/firebase";
 
-export default function StudentForm({ generalFormState, privateFormState }) {
+export default function StudentForm({
+    studentIdState,
+    generalFormState,
+    privateFormState,
+}) {
+    const [studentId, setStudentId] = useState(studentIdState);
     const [generalFormData, setGeneralFormData] = useState(generalFormState);
     const [privateFormData, setPrivateFormData] = useState(privateFormState);
     const [tab, setTab] = useState("general");
+
+    useEffect(() => {
+        setStudentId(studentId);
+    }, [studentIdState]);
 
     useEffect(() => {
         setGeneralFormData(generalFormState);
@@ -32,24 +41,51 @@ export default function StudentForm({ generalFormState, privateFormState }) {
 
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const generalDataDocRef = collection(
-            db,
-            "directory",
-            "afam",
-            "student"
-        );
-        const generalDataDoc = await addDoc(generalDataDocRef, generalFormData);
+        if (studentId) {
+            // edit
+            const generalDataDocRef = doc(
+                db,
+                "directory",
+                "afam",
+                "student",
+                studentId
+            );
+            await updateDoc(generalDataDocRef, generalFormData);
 
-        const privateDataDocRef = doc(
-            db,
-            "directory",
-            "afam",
-            "student",
-            generalDataDoc.id,
-            "private",
-            "data"
-        );
-        await setDoc(privateDataDocRef, privateFormData);
+            const privateDataDocRef = doc(
+                db,
+                "directory",
+                "afam",
+                "student",
+                studentId,
+                "private",
+                "data"
+            );
+            await updateDoc(privateDataDocRef, privateFormData);
+        } else {
+            // create
+            const generalDataDocRef = collection(
+                db,
+                "directory",
+                "afam",
+                "student"
+            );
+            const generalDataDoc = await addDoc(
+                generalDataDocRef,
+                generalFormData
+            );
+
+            const privateDataDocRef = doc(
+                db,
+                "directory",
+                "afam",
+                "student",
+                generalDataDoc.id,
+                "private",
+                "data"
+            );
+            await setDoc(privateDataDocRef, privateFormData);
+        }
 
         exit();
     };

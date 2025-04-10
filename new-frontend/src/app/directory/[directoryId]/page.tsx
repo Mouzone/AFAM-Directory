@@ -52,6 +52,7 @@ export default function Page() {
             <Modal>
                 {/* pass in start state for generalState, run it and if missing then don't fetch private */}
                 <StudentForm
+                    studentIdState={studentFormState}
                     generalFormState={
                         studentFormState
                             ? directory[studentFormState]["General"]
