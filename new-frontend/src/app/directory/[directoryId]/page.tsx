@@ -53,12 +53,14 @@ export default function Page() {
                 {/* pass in start state for generalState, run it and if missing then don't fetch private */}
                 <StudentForm
                     generalFormState={
-                        directory[studentFormState]["General"] ??
-                        generalFormDataDefault
+                        studentFormState
+                            ? directory[studentFormState]["General"]
+                            : generalFormDataDefault
                     }
                     privateFormState={
-                        directory[studentFormState]["Private"] ??
-                        privateFormDataDefault
+                        studentFormState
+                            ? directory[studentFormState]["Private"]
+                            : privateFormDataDefault
                     }
                 />
             </Modal>

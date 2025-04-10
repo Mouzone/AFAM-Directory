@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import GeneralSubForm from "../SubForms/GeneralSubForm";
 import PrivateSubForm from "../SubForms/PrivateSubForm";
 import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
@@ -15,7 +15,16 @@ export default function StudentForm({ generalFormState, privateFormState }) {
     const [privateFormData, setPrivateFormData] = useState(privateFormState);
     const [tab, setTab] = useState("general");
 
+    useEffect(() => {
+        setGeneralFormData(generalFormState);
+    }, [generalFormState]);
+
+    useEffect(() => {
+        setPrivateFormData(privateFormState);
+    }, [privateFormState]);
+
     const exit = () => {
+        setTab("general");
         setGeneralFormData(generalFormDataDefault);
         setPrivateFormData(privateFormDataDefault);
         closeModal();
