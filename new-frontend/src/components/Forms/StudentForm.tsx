@@ -10,13 +10,9 @@ import {
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { db } from "@/utility/firebase";
 
-export default function StudentForm() {
-    const [generalFormData, setGeneralFormData] = useState(
-        generalFormDataDefault
-    );
-    const [privateFormData, setPrivateFormData] = useState(
-        privateFormDataDefault
-    );
+export default function StudentForm({ generalFormState, privateFormState }) {
+    const [generalFormData, setGeneralFormData] = useState(generalFormState);
+    const [privateFormData, setPrivateFormData] = useState(privateFormState);
     const [tab, setTab] = useState("general");
 
     const exit = () => {

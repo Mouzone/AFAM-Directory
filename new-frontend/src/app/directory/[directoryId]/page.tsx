@@ -10,6 +10,10 @@ import Options from "@/components/Options";
 import Modal from "@/components/Modal";
 import showModal from "@/utility/showModal";
 import StudentForm from "@/components/Forms/StudentForm";
+import {
+    generalFormDataDefault,
+    privateFormDataDefault,
+} from "@/utility/consts";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
@@ -47,7 +51,16 @@ export default function Page() {
         <>
             <Modal>
                 {/* pass in start state for generalState, run it and if missing then don't fetch private */}
-                <StudentForm />
+                <StudentForm
+                    generalFormState={
+                        directory[studentFormState]["General"] ??
+                        generalFormDataDefault
+                    }
+                    privateFormState={
+                        directory[studentFormState]["Private"] ??
+                        privateFormDataDefault
+                    }
+                />
             </Modal>
 
             <div className="p-4">
@@ -61,6 +74,7 @@ export default function Page() {
                     data={directory}
                     showEditStudent={(studentId) => {
                         setStudentFormState(studentId);
+                        showModal();
                     }}
                 />
 
