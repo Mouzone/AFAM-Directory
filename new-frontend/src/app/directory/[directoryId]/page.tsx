@@ -58,7 +58,7 @@ export default function Page() {
                     }}
                 />
                 <Table
-                    data={directory["General"]}
+                    data={directory}
                     showEditStudent={(studentId) => {
                         setStudentFormState(studentId);
                     }}

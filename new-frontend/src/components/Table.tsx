@@ -15,7 +15,7 @@ export default function Table({ data, showEditStudent }) {
                     {Object.entries(data).map(([key, value]) => (
                         <tr key={key}>
                             {schema.map((field) => (
-                                <td key={field}>{value[field]}</td>
+                                <td key={field}>{value["General"][field]}</td>
                             ))}
                         </tr>
                     ))}
