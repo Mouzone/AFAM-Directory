@@ -65,7 +65,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                     general_info["Teacher"] = "None"
                 private_info["Personal"] = {
                     "Email": row["Personal Email Address"].strip(),
-                    "Phone Number": row["Personal Phone Number"].strip(),
+                    "Phone": row["Personal Phone Number"].strip(),
                     "City": row["City"].strip(),
                     "Street Address": row["Street Address"].strip(),
                     "Zip Code": row["Postal Code"].strip(),
