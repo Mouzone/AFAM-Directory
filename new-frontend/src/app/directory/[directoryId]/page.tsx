@@ -76,6 +76,7 @@ export default function Page() {
                 <Table
                     data={directory}
                     showEditStudent={(studentId) => {
+                        console.log(studentId);
                         setStudentFormState(studentId);
                         showModal();
                     }}

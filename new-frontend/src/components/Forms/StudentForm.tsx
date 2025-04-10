@@ -34,8 +34,7 @@ export default function StudentForm({
 
     const exit = () => {
         setTab("general");
-        setGeneralFormData(generalFormDataDefault);
-        setPrivateFormData(privateFormDataDefault);
+        setStudentId(null);
         closeModal();
     };
 
