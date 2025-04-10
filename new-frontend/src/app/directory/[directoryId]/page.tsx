@@ -22,6 +22,7 @@ export default function Page() {
     const [studentFormState, setStudentFormState] = useState<number | null>(
         null
     );
+    const [directory, setDirectory] = useState(null);
 
     useEffect(() => {
         if (pathname) {
@@ -30,15 +31,17 @@ export default function Page() {
         }
     }, [pathname]);
 
-    const {
-        isLoading,
-        data: directory,
-        error,
-    } = useQuery({
+    const { isLoading, data, error } = useQuery({
         queryKey: [directoryId, "student"],
         queryFn: () => getDirectory(directoryId),
         enabled: directoryId != "",
     });
+
+    useEffect(() => {
+        if (data) {
+            setDirectory(data);
+        }
+    }, [data]);
 
     if (!user) {
         return <></>;
@@ -63,6 +66,7 @@ export default function Page() {
                             ? directory[studentFormState]["Private"]
                             : privateFormDataDefault
                     }
+                    setDirectory={setDirectory}
                 />
             </Modal>
 

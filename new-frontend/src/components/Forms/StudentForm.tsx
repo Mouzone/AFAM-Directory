@@ -10,6 +10,7 @@ export default function StudentForm({
     studentId,
     generalFormState,
     privateFormState,
+    setDirectory,
 }) {
     const [generalFormData, setGeneralFormData] = useState(generalFormState);
     const [privateFormData, setPrivateFormData] = useState(privateFormState);
@@ -46,6 +47,13 @@ export default function StudentForm({
                 updateDoc(studentRef, generalFormData),
                 updateDoc(doc(studentRef, "private", "data"), privateFormData),
             ]);
+            setDirectory((prev) => ({
+                ...prev,
+                [studentId]: {
+                    General: generalFormData,
+                    Private: privateFormData,
+                },
+            }));
         } else {
             // Create new student
             const newStudentRef = await addDoc(
@@ -56,6 +64,13 @@ export default function StudentForm({
                 doc(newStudentRef, "private", "data"),
                 privateFormData
             );
+            setDirectory((prev) => ({
+                ...prev,
+                [newStudentRef.id]: {
+                    General: generalFormData,
+                    Private: privateFormData,
+                },
+            }));
         }
 
         exit();
