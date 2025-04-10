@@ -2,23 +2,19 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
 
 export const getDirectory = async (selectedDirectory: string) => {
-    const studentDocs = await getDocs(
-        collection(db, "directory", selectedDirectory, "student")
+    const directoryRef = collection(
+        db,
+        "directory",
+        selectedDirectory,
+        "student"
     );
+    const studentDocs = await getDocs(directoryRef);
 
     const allStudentData = {};
 
     for (const studentDoc of studentDocs.docs) {
         const studentId = studentDoc.id;
-        const privateDataRef = doc(
-            db,
-            "directory",
-            selectedDirectory,
-            "student",
-            studentId,
-            "private",
-            "data"
-        );
+        const privateDataRef = doc(directoryRef, studentId, "private", "data");
         const privateDataDoc = await getDoc(privateDataRef);
 
         allStudentData[studentId] = {
