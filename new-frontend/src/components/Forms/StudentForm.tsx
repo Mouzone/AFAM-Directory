@@ -5,6 +5,8 @@ import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
 import closeModal from "@/utility/closeModal";
 import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/utility/firebase";
+import { getPrivateData } from "@/utility/getPrivateData";
+import { useQuery } from "@tanstack/react-query";
 
 export default function StudentForm({
     studentId,
@@ -15,14 +17,21 @@ export default function StudentForm({
     const [generalFormData, setGeneralFormData] = useState(generalFormState);
     const [privateFormData, setPrivateFormData] = useState(privateFormState);
     const [tab, setTab] = useState("general");
+    const { isLoading, data, error } = useQuery({
+        queryKey: [studentId, "privateData"],
+        queryFn: () => getPrivateData(studentId),
+        enabled: studentId !== null,
+    });
 
     useEffect(() => {
         setGeneralFormData(generalFormState);
     }, [generalFormState]);
 
     useEffect(() => {
-        setPrivateFormData(privateFormState);
-    }, [privateFormState]);
+        if (data) {
+            setPrivateFormData(data);
+        }
+    }, [studentId]);
 
     const exit = () => {
         setTab("general");
@@ -76,6 +85,7 @@ export default function StudentForm({
         exit();
     };
 
+    console.log(generalFormData, privateFormData);
     return (
         <>
             <form method="dialog">

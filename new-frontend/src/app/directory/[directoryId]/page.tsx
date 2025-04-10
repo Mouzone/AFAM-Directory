@@ -58,14 +58,10 @@ export default function Page() {
                     studentId={studentFormState}
                     generalFormState={
                         studentFormState
-                            ? directory[studentFormState]["General"]
+                            ? directory[studentFormState]
                             : generalFormDataDefault
                     }
-                    privateFormState={
-                        studentFormState
-                            ? directory[studentFormState]["Private"]
-                            : privateFormDataDefault
-                    }
+                    privateFormState={privateFormDataDefault}
                     setDirectory={setDirectory}
                 />
             </Modal>

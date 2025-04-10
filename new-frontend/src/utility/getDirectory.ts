@@ -10,18 +10,10 @@ export const getDirectory = async (selectedDirectory: string) => {
     );
     const studentDocs = await getDocs(directoryRef);
 
-    const allStudentData = {};
+    const directory = {};
+    studentDocs.docs.forEach(
+        (studentDoc) => (directory[studentDoc.id] = studentDoc.data())
+    );
 
-    for (const studentDoc of studentDocs.docs) {
-        const studentId = studentDoc.id;
-        const privateDataRef = doc(directoryRef, studentId, "private", "data");
-        const privateDataDoc = await getDoc(privateDataRef);
-
-        allStudentData[studentId] = {
-            General: { ...studentDoc.data() },
-            Private: { ...privateDataDoc.data() },
-        };
-    }
-
-    return allStudentData;
+    return directory;
 };

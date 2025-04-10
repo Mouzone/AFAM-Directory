@@ -19,7 +19,7 @@ export default function Table({ data, showEditStudent }) {
                             onClick={() => showEditStudent(key)}
                         >
                             {schema.map((field) => (
-                                <td key={field}>{value["General"][field]}</td>
+                                <td key={field}>{value[field]}</td>
                             ))}
                         </tr>
                     ))}
