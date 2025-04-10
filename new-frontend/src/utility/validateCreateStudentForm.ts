@@ -5,8 +5,6 @@ export default function validateCreateStudentForm(
     // make sure all fields of generalFormData are filled
     // make sure all fields of personal in privateFormData are filled
     // make sure all fields of either guardian1 or guardian2 are filled
-    console.log(generalFormData);
-    console.log(privateFormData);
     return (
         noEmptyStrings(generalFormData) &&
         noEmptyStrings(privateFormData["Personal"]) &&

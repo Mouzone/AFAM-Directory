@@ -12,10 +12,10 @@ export default function Table({ data, showEditStudent }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map((person) => (
-                        <tr key={person.id}>
+                    {Object.entries(data).map(([key, value]) => (
+                        <tr key={key}>
                             {schema.map((field) => (
-                                <td key={field}>{person[field]}</td>
+                                <td key={field}>{value[field]}</td>
                             ))}
                         </tr>
                     ))}

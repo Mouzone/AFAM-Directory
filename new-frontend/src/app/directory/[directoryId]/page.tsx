@@ -42,6 +42,7 @@ export default function Page() {
     if (!directory) {
         return <></>;
     }
+
     return (
         <>
             <Modal>
@@ -57,7 +58,7 @@ export default function Page() {
                     }}
                 />
                 <Table
-                    data={directory}
+                    data={directory["General"]}
                     showEditStudent={(studentId) => {
                         setStudentFormState(studentId);
                     }}
