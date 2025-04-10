@@ -41,50 +41,30 @@ export default function StudentForm({
 
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
         if (studentId) {
-            // edit
-            const generalDataDocRef = doc(
+            // Edit existing student
+            const studentRef = doc(
                 db,
                 "directory",
                 "afam",
                 "student",
                 studentId
             );
-            await updateDoc(generalDataDocRef, generalFormData);
-
-            const privateDataDocRef = doc(
-                db,
-                "directory",
-                "afam",
-                "student",
-                studentId,
-                "private",
-                "data"
-            );
-            await updateDoc(privateDataDocRef, privateFormData);
+            await Promise.all([
+                updateDoc(studentRef, generalFormData),
+                updateDoc(doc(studentRef, "private", "data"), privateFormData),
+            ]);
         } else {
-            // create
-            const generalDataDocRef = collection(
-                db,
-                "directory",
-                "afam",
-                "student"
-            );
-            const generalDataDoc = await addDoc(
-                generalDataDocRef,
+            // Create new student
+            const newStudentRef = await addDoc(
+                collection(db, "directory", "afam", "student"),
                 generalFormData
             );
-
-            const privateDataDocRef = doc(
-                db,
-                "directory",
-                "afam",
-                "student",
-                generalDataDoc.id,
-                "private",
-                "data"
+            await setDoc(
+                doc(newStudentRef, "private", "data"),
+                privateFormData
             );
-            await setDoc(privateDataDocRef, privateFormData);
         }
 
         exit();
