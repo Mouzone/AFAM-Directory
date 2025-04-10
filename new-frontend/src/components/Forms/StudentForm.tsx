@@ -3,26 +3,17 @@ import GeneralSubForm from "../SubForms/GeneralSubForm";
 import PrivateSubForm from "../SubForms/PrivateSubForm";
 import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
 import closeModal from "@/utility/closeModal";
-import {
-    generalFormDataDefault,
-    privateFormDataDefault,
-} from "@/utility/consts";
 import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/utility/firebase";
 
 export default function StudentForm({
-    studentIdState,
+    studentId,
     generalFormState,
     privateFormState,
 }) {
-    const [studentId, setStudentId] = useState(studentIdState);
     const [generalFormData, setGeneralFormData] = useState(generalFormState);
     const [privateFormData, setPrivateFormData] = useState(privateFormState);
     const [tab, setTab] = useState("general");
-
-    useEffect(() => {
-        setStudentId(studentId);
-    }, [studentIdState]);
 
     useEffect(() => {
         setGeneralFormData(generalFormState);
@@ -34,13 +25,14 @@ export default function StudentForm({
 
     const exit = () => {
         setTab("general");
-        setStudentId(null);
         closeModal();
     };
 
-    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (
+        studentId: string,
+        e: FormEvent<HTMLFormElement>
+    ) => {
         e.preventDefault();
-
         if (studentId) {
             // Edit existing student
             const studentRef = doc(
@@ -79,7 +71,7 @@ export default function StudentForm({
                     ✕
                 </button>
             </form>
-            <form onSubmit={(e) => onSubmit(e)}>
+            <form onSubmit={(e) => onSubmit(studentId, e)}>
                 {/* headshot */}
                 <div className="tabs tabs-lift">
                     <input

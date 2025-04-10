@@ -52,7 +52,7 @@ export default function Page() {
             <Modal>
                 {/* pass in start state for generalState, run it and if missing then don't fetch private */}
                 <StudentForm
-                    studentIdState={studentFormState}
+                    studentId={studentFormState}
                     generalFormState={
                         studentFormState
                             ? directory[studentFormState]["General"]
@@ -76,7 +76,6 @@ export default function Page() {
                 <Table
                     data={directory}
                     showEditStudent={(studentId) => {
-                        console.log(studentId);
                         setStudentFormState(studentId);
                         showModal();
                     }}
