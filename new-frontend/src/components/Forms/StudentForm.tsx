@@ -87,7 +87,6 @@ export default function StudentForm({
         exit();
     };
 
-    // console.log(generalFormData, privateFormData);
     return (
         <>
             <form method="dialog">
