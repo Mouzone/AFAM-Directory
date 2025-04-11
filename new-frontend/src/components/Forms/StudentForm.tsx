@@ -11,7 +11,7 @@ import {
     updateDoc,
     writeBatch,
 } from "firebase/firestore";
-import { db } from "@/utility/firebase";
+import { db, storage } from "@/utility/firebase";
 import { getPrivateData } from "@/utility/getters/getPrivateData";
 import { useQuery } from "@tanstack/react-query";
 import Tab from "../Tab";
@@ -19,6 +19,7 @@ import AttendanceSubForm from "../SubForms/AttendanceSubForm";
 import { getAttendanceData } from "@/utility/getters/getAttendanceData";
 import { privateFormDataDefault } from "@/utility/consts";
 import { getHeadshot } from "@/utility/getters/getHeadshot";
+import { ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
 
 export default function StudentForm({
     studentId,
@@ -33,7 +34,8 @@ export default function StudentForm({
         privateFormDataDefault
     );
     const [attendanceFormData, setAttendanceFormData] = useState({});
-    const [headshotURL, setHeadshotURL] = useState(null);
+    const [headshotURL, setHeadshotURL] = useState("");
+    const [file, setFile] = useState<File | null>(null);
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 
     const {
@@ -108,6 +110,12 @@ export default function StudentForm({
                 "student",
                 studentId
             );
+
+            if (file) {
+                const storageRef = ref(storage, `images/${studentId}`);
+                await uploadBytes(storageRef, file);
+            }
+
             await Promise.all([
                 updateDoc(studentRef, generalFormData),
                 updateDoc(doc(studentRef, "private", "data"), privateFormData),
@@ -136,6 +144,12 @@ export default function StudentForm({
                 doc(newStudentRef, "private", "data"),
                 privateFormData
             );
+
+            if (file) {
+                const storageRef = ref(storage, `images/${newStudentRef.id}`);
+                await uploadBytes(storageRef, file);
+            }
+
             setDirectory((prev) => ({
                 ...prev,
                 [newStudentRef.id]: generalFormData,
@@ -161,6 +175,8 @@ export default function StudentForm({
                         <GeneralSubForm
                             data={generalFormData}
                             setGeneralFormData={setGeneralFormData}
+                            headshotURL={headshotURL}
+                            setFile={setFile}
                         />
                     </Tab>
                     <Tab currTab={tab} value="private" setTab={setTab}>

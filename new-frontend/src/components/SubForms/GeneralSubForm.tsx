@@ -1,4 +1,5 @@
-import { SetStateAction } from "react";
+import Image from "next/image";
+import React, { SetStateAction } from "react";
 
 type GeneralSubFormProps = {
     data: {
@@ -11,10 +12,14 @@ type GeneralSubFormProps = {
         Teacher: string;
     };
     setGeneralFormData: React.Dispatch<SetStateAction<any>>;
+    headshotURL: string;
+    setFile: React.Dispatch<SetStateAction<File | null>>;
 };
 export default function GeneralSubForm({
     data,
     setGeneralFormData,
+    headshotURL,
+    setFile,
 }: GeneralSubFormProps) {
     const changeData = (field: string, value: string) =>
         setGeneralFormData((prev) => {
@@ -27,7 +32,19 @@ export default function GeneralSubForm({
         <>
             <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex justify-center">
                 <legend className="fieldset-legend">Image</legend>
-                <input type="file" className="file-input file-input-sm" />
+                <input
+                    type="file"
+                    className="file-input file-input-sm"
+                    onChange={(e) => setFile(e.target.files[0])}
+                />
+                {headshotURL !== "" && (
+                    <Image
+                        src={headshotURL}
+                        alt="image"
+                        width={800}
+                        height={500}
+                    />
+                )}
             </fieldset>
             <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
                 <legend className="fieldset-legend">General</legend>
