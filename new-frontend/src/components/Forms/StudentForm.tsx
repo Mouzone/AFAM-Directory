@@ -3,7 +3,14 @@ import GeneralSubForm from "../SubForms/GeneralSubForm";
 import PrivateSubForm from "../SubForms/PrivateSubForm";
 import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
 import closeModal from "@/utility/closeModal";
-import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
+import {
+    addDoc,
+    collection,
+    doc,
+    setDoc,
+    updateDoc,
+    writeBatch,
+} from "firebase/firestore";
 import { db } from "@/utility/firebase";
 import { getPrivateData } from "@/utility/getters/getPrivateData";
 import { useQuery } from "@tanstack/react-query";
@@ -84,6 +91,16 @@ export default function StudentForm({
                 updateDoc(studentRef, generalFormData),
                 updateDoc(doc(studentRef, "private", "data"), privateFormData),
             ]);
+
+            const batch = writeBatch(db);
+
+            // Add each document to the batch
+            Object.entries(attendanceFormData).forEach(([date, attendance]) => {
+                const docRef = doc(studentRef, "attendance", date);
+                batch.set(docRef, attendance);
+            });
+
+            await batch.commit();
             setDirectory((prev) => ({
                 ...prev,
                 [studentId]: generalFormData,
