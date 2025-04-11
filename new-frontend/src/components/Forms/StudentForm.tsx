@@ -8,8 +8,8 @@ import { db } from "@/utility/firebase";
 import { getPrivateData } from "@/utility/getters/getPrivateData";
 import { useQuery } from "@tanstack/react-query";
 import Tab from "../Tab";
-import AttendanceForm from "./AttendanceSubForm";
-import AttendanceSubForm from "./AttendanceSubForm";
+import AttendanceForm from "../SubForms/AttendanceSubForm";
+import AttendanceSubForm from "../SubForms/AttendanceSubForm";
 import { getAttendanceData } from "@/utility/getters/getAttendanceData";
 
 export default function StudentForm({
