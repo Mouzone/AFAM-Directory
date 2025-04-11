@@ -33,7 +33,9 @@ export default function StudentForm({
         privateFormDataDefault
     );
     const [attendanceFormData, setAttendanceFormData] = useState({});
-    const [imageDisplayedURL, setImageDisplayedURL] = useState("");
+    const [imageDisplayedURL, setImageDisplayedURL] = useState(
+        generalFormState["Headshot URL"]
+    );
     const [file, setFile] = useState<File | null>(null);
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 
