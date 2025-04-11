@@ -2,9 +2,12 @@ import { useState } from "react";
 
 export default function AttendanceSubForm({ data, setAttendanceFormData }) {
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-    const [attendance, setAttendance] = useState(
-        data[date] ?? { "Sermon Attendance": false, "Class Attendance": false }
-    );
+    const attendance = data[date] ?? {
+        "Sermon Attendance": false,
+        "Class Attendance": false,
+    };
+
+    console.log(attendance);
 
     return (
         <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
@@ -25,10 +28,13 @@ export default function AttendanceSubForm({ data, setAttendanceFormData }) {
                         type="checkbox"
                         checked={attendance["Sermon Attendance"]}
                         onChange={() =>
-                            setAttendance({
-                                ...attendance,
-                                "Sermon Attendance":
-                                    !attendance["Sermon Attendance"]!,
+                            setAttendanceFormData({
+                                ...data,
+                                [date]: {
+                                    ...attendance,
+                                    "Sermon Attendance":
+                                        !attendance["Sermon Attendance"],
+                                },
                             })
                         }
                         className="toggle checked:bg-green-400 checked:text-green-800 checked:border-green-500 "
@@ -40,10 +46,13 @@ export default function AttendanceSubForm({ data, setAttendanceFormData }) {
                         type="checkbox"
                         checked={attendance["Class Attendance"]}
                         onChange={() =>
-                            setAttendance({
-                                ...attendance,
-                                "Class Attendance":
-                                    !attendance["Class Attendance"]!,
+                            setAttendanceFormData({
+                                ...data,
+                                [date]: {
+                                    ...attendance,
+                                    "Class Attendance":
+                                        !attendance["Class Attendance"],
+                                },
                             })
                         }
                         className="toggle checked:bg-green-400 checked:text-green-800 checked:border-green-500 "
