@@ -37,6 +37,7 @@ export default function GeneralSubForm({
                         type="file"
                         className="file-input file-input-sm"
                         onChange={(e) => setFile(e.target.files[0])}
+                        accept="image/*"
                     />
                 </div>
 
