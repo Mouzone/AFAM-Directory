@@ -12,5 +12,5 @@ export const getPrivateData = async (studentId: string) => {
         "data"
     );
     const privateDoc = await getDoc(privateDocRef);
-    return privateDoc.data();
+    return { ...privateDoc.data() };
 };

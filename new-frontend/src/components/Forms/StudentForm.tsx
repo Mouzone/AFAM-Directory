@@ -69,6 +69,10 @@ export default function StudentForm({
         }
     }, [studentId, attendanceData]);
 
+    useEffect(() => {
+        if (){}
+    }, [studentId, ])
+
     const exit = () => {
         setTab("general");
         setDate(new Date().toISOString().split("T")[0]);
