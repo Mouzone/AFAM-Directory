@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../components/Providers/AuthProvider";
 import { usePathname } from "next/navigation";
-import { getDirectory } from "../../../utility/getDirectory";
+import { getDirectory } from "../../../utility/getters/getDirectory";
 import Table from "@/components/Table";
 import Options from "@/components/Options";
 import Modal from "@/components/Modal";
@@ -49,7 +49,6 @@ export default function Page() {
     if (!directory) {
         return <></>;
     }
-    console.log(directory);
     return (
         <>
             <Modal>
@@ -61,7 +60,7 @@ export default function Page() {
                             ? directory[studentFormState]
                             : generalFormDataDefault
                     }
-                    privateFormState={privateFormDataDefault}
+                    privateFormState={privateFormDataDefault} // leave for now when I want to add caching and pass it in
                     setDirectory={setDirectory}
                     resetState={() => setStudentFormState(null)}
                 />

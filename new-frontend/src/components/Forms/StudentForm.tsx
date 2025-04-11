@@ -5,9 +5,12 @@ import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
 import closeModal from "@/utility/closeModal";
 import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/utility/firebase";
-import { getPrivateData } from "@/utility/getPrivateData";
+import { getPrivateData } from "@/utility/getters/getPrivateData";
 import { useQuery } from "@tanstack/react-query";
 import Tab from "../Tab";
+import AttendanceForm from "./AttendanceSubForm";
+import AttendanceSubForm from "./AttendanceSubForm";
+import { getAttendanceData } from "@/utility/getters/getAttendanceData";
 
 export default function StudentForm({
     studentId,
@@ -16,12 +19,28 @@ export default function StudentForm({
     setDirectory,
     resetState,
 }) {
+    const [tab, setTab] = useState("general");
+
     const [generalFormData, setGeneralFormData] = useState(generalFormState);
     const [privateFormData, setPrivateFormData] = useState(privateFormState);
-    const [tab, setTab] = useState("general");
-    const { isLoading, data, error } = useQuery({
+    const [attendanceFormData, setAttendanceFormData] = useState({});
+
+    const {
+        isLoading: privateIsLoading,
+        data: privateData,
+        error: privateError,
+    } = useQuery({
         queryKey: [studentId, "privateData"],
         queryFn: () => getPrivateData(studentId),
+        enabled: studentId !== null,
+    });
+    const {
+        isLoading: attendanceIsLoading,
+        data: attendanceData,
+        error: attendanceError,
+    } = useQuery({
+        queryKey: [studentId, "attendanceData"],
+        queryFn: () => getAttendanceData(studentId),
         enabled: studentId !== null,
     });
 
@@ -30,10 +49,16 @@ export default function StudentForm({
     }, [generalFormState]);
 
     useEffect(() => {
-        if (data) {
-            setPrivateFormData(data);
+        if (privateData) {
+            setPrivateFormData(privateData);
         }
-    }, [studentId, data]);
+    }, [studentId, privateData]);
+
+    useEffect(() => {
+        if (attendanceData) {
+            setAttendanceFormData(attendanceData);
+        }
+    }, [studentId, attendanceData]);
 
     const exit = () => {
         setTab("general");
@@ -105,6 +130,12 @@ export default function StudentForm({
                         <PrivateSubForm
                             data={privateFormData}
                             setPrivateFormData={setPrivateFormData}
+                        />
+                    </Tab>
+                    <Tab currTab={tab} value="attendance" setTab={setTab}>
+                        <AttendanceSubForm
+                            data={attendanceFormData}
+                            setAttendanceFormData={setAttendanceFormData}
                         />
                     </Tab>
                 </div>

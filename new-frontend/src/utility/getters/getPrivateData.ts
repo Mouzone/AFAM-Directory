@@ -1,7 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "./firebase";
+import { db } from "../firebase";
 
-export const getPrivateData = async (studentId) => {
+export const getPrivateData = async (studentId: string) => {
     const privateDocRef = doc(
         db,
         "directory",
