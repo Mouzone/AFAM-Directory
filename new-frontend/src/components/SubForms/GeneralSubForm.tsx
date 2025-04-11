@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { SetStateAction } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 
 type GeneralSubFormProps = {
     data: {
@@ -13,12 +13,14 @@ type GeneralSubFormProps = {
     };
     setGeneralFormData: React.Dispatch<SetStateAction<any>>;
     headshotURL: string;
+    setHeadshotURL: React.Dispatch<SetStateAction<string>>;
     setFile: React.Dispatch<SetStateAction<File | null>>;
 };
 export default function GeneralSubForm({
     data,
     setGeneralFormData,
     headshotURL,
+    setHeadshotURL,
     setFile,
 }: GeneralSubFormProps) {
     const changeData = (field: string, value: string) =>
@@ -36,7 +38,17 @@ export default function GeneralSubForm({
                     <input
                         type="file"
                         className="file-input file-input-sm"
-                        onChange={(e) => setFile(e.target.files[0])}
+                        onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                                setFile(file);
+                                const reader = new FileReader();
+                                reader.onload = (event) => {
+                                    setHeadshotURL(event.target.result);
+                                };
+                                reader.readAsDataURL(file);
+                            }
+                        }}
                         accept="image/*"
                     />
                 </div>

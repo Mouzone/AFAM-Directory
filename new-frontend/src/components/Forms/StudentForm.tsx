@@ -179,6 +179,7 @@ export default function StudentForm({
                             setGeneralFormData={setGeneralFormData}
                             headshotURL={headshotURL}
                             setFile={setFile}
+                            setHeadshotURL={setHeadshotURL}
                         />
                     </Tab>
                     <Tab currTab={tab} value="private" setTab={setTab}>
