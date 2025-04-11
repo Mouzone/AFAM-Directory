@@ -30,13 +30,16 @@ export default function GeneralSubForm({
         });
     return (
         <>
-            <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex justify-center">
+            <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex flex-col">
                 <legend className="fieldset-legend">Image</legend>
-                <input
-                    type="file"
-                    className="file-input file-input-sm"
-                    onChange={(e) => setFile(e.target.files[0])}
-                />
+                <div className="flex justify-center">
+                    <input
+                        type="file"
+                        className="file-input file-input-sm"
+                        onChange={(e) => setFile(e.target.files[0])}
+                    />
+                </div>
+
                 {headshotURL !== "" && (
                     <Image
                         src={headshotURL}

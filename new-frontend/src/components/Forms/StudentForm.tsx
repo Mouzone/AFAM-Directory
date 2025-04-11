@@ -92,6 +92,8 @@ export default function StudentForm({
     const exit = () => {
         setTab("general");
         setDate(new Date().toISOString().split("T")[0]);
+        setFile(null);
+        setHeadshotURL("");
         resetState();
         closeModal();
     };
@@ -198,7 +200,7 @@ export default function StudentForm({
                 </div>
                 <div
                     className={`flex justify-end gap-4 mt-4 ${
-                        tab === "private" ? "pb-6" : ""
+                        tab !== "attendance" ? "pb-6" : ""
                     }`}
                 >
                     <button
