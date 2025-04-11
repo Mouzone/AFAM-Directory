@@ -138,7 +138,6 @@ export default function StudentForm({
                 </button>
             </form>
             <form onSubmit={(e) => onSubmit(studentId, e)}>
-                {/* headshot */}
                 <div className="tabs tabs-lift">
                     <Tab currTab={tab} value="general" setTab={setTab}>
                         <GeneralSubForm
