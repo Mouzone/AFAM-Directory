@@ -60,10 +60,7 @@ export default function StudentForm({
             ]);
             setDirectory((prev) => ({
                 ...prev,
-                [studentId]: {
-                    General: generalFormData,
-                    Private: privateFormData,
-                },
+                [studentId]: generalFormData,
             }));
         } else {
             // Create new student
@@ -77,10 +74,7 @@ export default function StudentForm({
             );
             setDirectory((prev) => ({
                 ...prev,
-                [newStudentRef.id]: {
-                    General: generalFormData,
-                    Private: privateFormData,
-                },
+                [newStudentRef.id]: generalFormData,
             }));
         }
 

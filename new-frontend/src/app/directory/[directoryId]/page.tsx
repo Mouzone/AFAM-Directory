@@ -49,7 +49,7 @@ export default function Page() {
     if (!directory) {
         return <></>;
     }
-
+    console.log(directory);
     return (
         <>
             <Modal>
