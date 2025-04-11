@@ -18,6 +18,7 @@ import Tab from "../Tab";
 import AttendanceSubForm from "../SubForms/AttendanceSubForm";
 import { getAttendanceData } from "@/utility/getters/getAttendanceData";
 import { privateFormDataDefault } from "@/utility/consts";
+import { getHeadshot } from "@/utility/getters/getHeadshot";
 
 export default function StudentForm({
     studentId,
@@ -32,6 +33,7 @@ export default function StudentForm({
         privateFormDataDefault
     );
     const [attendanceFormData, setAttendanceFormData] = useState({});
+    const [headshotURL, setHeadshotURL] = useState(null);
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 
     const {
@@ -53,6 +55,16 @@ export default function StudentForm({
         enabled: studentId !== null,
     });
 
+    const {
+        isLoading: headshotIsLoading,
+        data: headshotData,
+        error: headshotError,
+    } = useQuery({
+        queryKey: [studentId, "headshot"],
+        queryFn: () => getHeadshot(studentId),
+        enabled: studentId !== null,
+    });
+
     useEffect(() => {
         setGeneralFormData(generalFormState);
     }, [generalFormState]);
@@ -70,8 +82,10 @@ export default function StudentForm({
     }, [studentId, attendanceData]);
 
     useEffect(() => {
-        if (){}
-    }, [studentId, ])
+        if (headshotData) {
+            setHeadshotURL(headshotData);
+        }
+    }, [studentId, headshotData]);
 
     const exit = () => {
         setTab("general");
