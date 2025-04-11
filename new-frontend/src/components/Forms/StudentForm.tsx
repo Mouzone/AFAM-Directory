@@ -7,6 +7,7 @@ import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/utility/firebase";
 import { getPrivateData } from "@/utility/getPrivateData";
 import { useQuery } from "@tanstack/react-query";
+import Tab from "../Tab";
 
 export default function StudentForm({
     studentId,
@@ -94,15 +95,7 @@ export default function StudentForm({
             <form onSubmit={(e) => onSubmit(studentId, e)}>
                 {/* headshot */}
                 <div className="tabs tabs-lift">
-                    <input
-                        type="radio"
-                        name="general"
-                        className="tab"
-                        aria-label="General"
-                        checked={tab === "general"}
-                        onChange={() => setTab("general")}
-                    />
-                    <div className="tab-content bg-base-100 border-base-300 p-6">
+                    <Tab currTab={tab} value="general" setTab={setTab}>
                         <GeneralSubForm
                             data={generalFormData}
                             changeData={(field: string, value: string) =>
@@ -112,16 +105,8 @@ export default function StudentForm({
                                 })
                             }
                         />
-                    </div>
-                    <input
-                        type="radio"
-                        name="private"
-                        className="tab"
-                        aria-label="Private"
-                        checked={tab === "private"}
-                        onChange={() => setTab("private")}
-                    />
-                    <div className="tab-content bg-base-100 border-base-300 p-6">
+                    </Tab>
+                    <Tab currTab={tab} value="private" setTab={setTab}>
                         <PrivateSubForm
                             data={privateFormData}
                             changeData={(
@@ -149,7 +134,7 @@ export default function StudentForm({
                                 })
                             }
                         />
-                    </div>
+                    </Tab>
                 </div>
                 <div
                     className={`flex justify-end gap-4 mt-4 ${
