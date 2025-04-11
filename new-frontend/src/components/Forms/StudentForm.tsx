@@ -34,7 +34,7 @@ export default function StudentForm({
     );
     const [attendanceFormData, setAttendanceFormData] = useState({});
     const [imageDisplayedURL, setImageDisplayedURL] = useState(
-        generalFormState["Headshot URL"]
+        generalFormState["Headshot URL"] ?? ""
     );
     const [file, setFile] = useState<File | null>(null);
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
@@ -73,6 +73,10 @@ export default function StudentForm({
             setAttendanceFormData(attendanceData);
         }
     }, [studentId, attendanceData]);
+
+    useEffect(() => {
+        setImageDisplayedURL(generalFormData["Headshot URL"] ?? "");
+    }, [studentId, generalFormData]);
 
     const exit = () => {
         setTab("general");
