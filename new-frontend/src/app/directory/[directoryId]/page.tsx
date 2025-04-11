@@ -63,6 +63,7 @@ export default function Page() {
                     }
                     privateFormState={privateFormDataDefault}
                     setDirectory={setDirectory}
+                    resetState={() => setStudentFormState(null)}
                 />
             </Modal>
 

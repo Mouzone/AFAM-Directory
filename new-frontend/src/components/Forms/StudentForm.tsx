@@ -13,6 +13,7 @@ export default function StudentForm({
     generalFormState,
     privateFormState,
     setDirectory,
+    resetState,
 }) {
     const [generalFormData, setGeneralFormData] = useState(generalFormState);
     const [privateFormData, setPrivateFormData] = useState(privateFormState);
@@ -31,10 +32,11 @@ export default function StudentForm({
         if (data) {
             setPrivateFormData(data);
         }
-    }, [studentId]);
+    }, [studentId, data]);
 
     const exit = () => {
         setTab("general");
+        resetState();
         closeModal();
     };
 
@@ -85,7 +87,7 @@ export default function StudentForm({
         exit();
     };
 
-    console.log(generalFormData, privateFormData);
+    // console.log(generalFormData, privateFormData);
     return (
         <>
             <form method="dialog">
