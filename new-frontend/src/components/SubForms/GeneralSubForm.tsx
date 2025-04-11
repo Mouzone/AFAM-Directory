@@ -12,16 +12,16 @@ type GeneralSubFormProps = {
         Teacher: string;
     };
     setGeneralFormData: React.Dispatch<SetStateAction<any>>;
-    headshotURL: string;
-    setHeadshotURL: React.Dispatch<SetStateAction<string>>;
     setFile: React.Dispatch<SetStateAction<File | null>>;
+    imageDisplayedURL: string;
+    setImageDisplayedURL: React.Dispatch<SetStateAction<string>>;
 };
 export default function GeneralSubForm({
     data,
     setGeneralFormData,
-    headshotURL,
-    setHeadshotURL,
     setFile,
+    imageDisplayedURL,
+    setImageDisplayedURL,
 }: GeneralSubFormProps) {
     const changeData = (field: string, value: string) =>
         setGeneralFormData((prev) => {
@@ -44,7 +44,7 @@ export default function GeneralSubForm({
                                 setFile(file);
                                 const reader = new FileReader();
                                 reader.onload = (event) => {
-                                    setHeadshotURL(event.target.result);
+                                    setImageDisplayedURL(event.target.result);
                                 };
                                 reader.readAsDataURL(file);
                             }
@@ -53,9 +53,9 @@ export default function GeneralSubForm({
                     />
                 </div>
 
-                {headshotURL !== "" && (
+                {imageDisplayedURL !== "" && (
                     <Image
-                        src={headshotURL}
+                        src={imageDisplayedURL}
                         alt="image"
                         width={800}
                         height={500}

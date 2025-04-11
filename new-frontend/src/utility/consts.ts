@@ -1,4 +1,5 @@
 export const generalFormDataDefault = {
+    "Headshot URL": "",
     "First Name": "",
     "Last Name": "",
     Gender: "M",

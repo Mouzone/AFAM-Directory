@@ -18,7 +18,6 @@ import Tab from "../Tab";
 import AttendanceSubForm from "../SubForms/AttendanceSubForm";
 import { getAttendanceData } from "@/utility/getters/getAttendanceData";
 import { privateFormDataDefault } from "@/utility/consts";
-import { getHeadshot } from "@/utility/getters/getHeadshot";
 import { ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
 
 export default function StudentForm({
@@ -34,7 +33,7 @@ export default function StudentForm({
         privateFormDataDefault
     );
     const [attendanceFormData, setAttendanceFormData] = useState({});
-    const [headshotURL, setHeadshotURL] = useState("");
+    const [imageDisplayedURL, setImageDisplayedURL] = useState("");
     const [file, setFile] = useState<File | null>(null);
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 
@@ -57,16 +56,6 @@ export default function StudentForm({
         enabled: studentId !== null,
     });
 
-    const {
-        isLoading: headshotIsLoading,
-        data: headshotData,
-        error: headshotError,
-    } = useQuery({
-        queryKey: [studentId, "headshot"],
-        queryFn: () => getHeadshot(studentId),
-        enabled: studentId !== null,
-    });
-
     useEffect(() => {
         setGeneralFormData(generalFormState);
     }, [generalFormState]);
@@ -83,17 +72,10 @@ export default function StudentForm({
         }
     }, [studentId, attendanceData]);
 
-    useEffect(() => {
-        if (headshotData) {
-            setHeadshotURL(headshotData);
-        }
-    }, [studentId, headshotData]);
-
     const exit = () => {
         setTab("general");
         setDate(new Date().toISOString().split("T")[0]);
         setFile(null);
-        setHeadshotURL("");
         resetState();
         closeModal();
     };
@@ -115,7 +97,8 @@ export default function StudentForm({
 
             if (file) {
                 const storageRef = ref(storage, `images/${studentId}`);
-                await uploadBytes(storageRef, file);
+                const uploadTask = await uploadBytes(storageRef, file);
+                generalFormData["Headshot URL"] = uploadTask.ref.toString();
             }
 
             await Promise.all([
@@ -138,6 +121,7 @@ export default function StudentForm({
             }));
         } else {
             // Create new student
+
             const newStudentRef = await addDoc(
                 collection(db, "directory", "afam", "student"),
                 generalFormData
@@ -149,7 +133,11 @@ export default function StudentForm({
 
             if (file) {
                 const storageRef = ref(storage, `images/${newStudentRef.id}`);
-                await uploadBytes(storageRef, file);
+                const uploadTask = await uploadBytes(storageRef, file);
+                generalFormData["Headshot URL"] = uploadTask.ref.toString();
+                await updateDoc(newStudentRef, {
+                    "Headshot URL": uploadTask.ref.toString(),
+                });
             }
 
             setDirectory((prev) => ({
@@ -177,9 +165,9 @@ export default function StudentForm({
                         <GeneralSubForm
                             data={generalFormData}
                             setGeneralFormData={setGeneralFormData}
-                            headshotURL={headshotURL}
                             setFile={setFile}
-                            setHeadshotURL={setHeadshotURL}
+                            imageDisplayedURL={imageDisplayedURL}
+                            setImageDisplayedURL={setImageDisplayedURL}
                         />
                     </Tab>
                     <Tab currTab={tab} value="private" setTab={setTab}>
