@@ -98,41 +98,13 @@ export default function StudentForm({
                     <Tab currTab={tab} value="general" setTab={setTab}>
                         <GeneralSubForm
                             data={generalFormData}
-                            changeData={(field: string, value: string) =>
-                                setGeneralFormData({
-                                    ...generalFormData,
-                                    [field]: value,
-                                })
-                            }
+                            setGeneralFormData={setGeneralFormData}
                         />
                     </Tab>
                     <Tab currTab={tab} value="private" setTab={setTab}>
                         <PrivateSubForm
                             data={privateFormData}
-                            changeData={(
-                                person:
-                                    | "Personal"
-                                    | "Guardian 1"
-                                    | "Guardian 2",
-                                field: string,
-                                value: string
-                            ) =>
-                                setPrivateFormData({
-                                    Personal: {
-                                        ...privateFormData["Personal"],
-                                    },
-                                    "Guardian 1": {
-                                        ...privateFormData["Guardian 1"],
-                                    },
-                                    "Guardian 2": {
-                                        ...privateFormData["Guardian 2"],
-                                    },
-                                    [person]: {
-                                        ...privateFormData[person],
-                                        [field]: value,
-                                    },
-                                })
-                            }
+                            setPrivateFormData={setPrivateFormData}
                         />
                     </Tab>
                 </div>

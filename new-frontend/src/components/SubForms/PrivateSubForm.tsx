@@ -1,3 +1,5 @@
+import React, { SetStateAction } from "react";
+
 type PrivateSubFormProps = {
     data: {
         Personal: {
@@ -20,17 +22,36 @@ type PrivateSubFormProps = {
             Email: string;
         };
     };
-    changeData: (
-        person: "Personal" | "Guardian 1" | "Guardian 2",
-        field: string,
-        value: string
-    ) => void;
+    setPrivateFormData: React.Dispatch<SetStateAction<any>>;
 };
 
 export default function PrivateSubForm({
     data,
-    changeData,
+    setPrivateFormData,
 }: PrivateSubFormProps) {
+    const changeData = (
+        person: "Personal" | "Guardian 1" | "Guardian 2",
+        field: string,
+        value: string
+    ) => {
+        setPrivateFormData((prev) => {
+            return {
+                Personal: {
+                    ...prev["Personal"],
+                },
+                "Guardian 1": {
+                    ...prev["Guardian 1"],
+                },
+                "Guardian 2": {
+                    ...prev["Guardian 2"],
+                },
+                [person]: {
+                    ...prev[person],
+                    [field]: value,
+                },
+            };
+        });
+    };
     return (
         <>
             <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex flex-col">

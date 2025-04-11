@@ -1,3 +1,5 @@
+import { SetStateAction } from "react";
+
 type GeneralSubFormProps = {
     data: {
         "First Name": string;
@@ -8,12 +10,19 @@ type GeneralSubFormProps = {
         Grade: string;
         Teacher: string;
     };
-    changeData: (field: string, value: string) => void;
+    setGeneralFormData: React.Dispatch<SetStateAction<any>>;
 };
 export default function GeneralSubForm({
     data,
-    changeData,
+    setGeneralFormData,
 }: GeneralSubFormProps) {
+    const changeData = (field: string, value: string) =>
+        setGeneralFormData((prev) => {
+            return {
+                ...prev,
+                [field]: value,
+            };
+        });
     return (
         <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
             <legend className="fieldset-legend">General</legend>
