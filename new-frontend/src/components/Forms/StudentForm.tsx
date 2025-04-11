@@ -15,22 +15,24 @@ import { db } from "@/utility/firebase";
 import { getPrivateData } from "@/utility/getters/getPrivateData";
 import { useQuery } from "@tanstack/react-query";
 import Tab from "../Tab";
-import AttendanceForm from "../SubForms/AttendanceSubForm";
 import AttendanceSubForm from "../SubForms/AttendanceSubForm";
 import { getAttendanceData } from "@/utility/getters/getAttendanceData";
+import { privateFormDataDefault } from "@/utility/consts";
 
 export default function StudentForm({
     studentId,
     generalFormState,
-    privateFormState,
     setDirectory,
     resetState,
 }) {
     const [tab, setTab] = useState("general");
 
     const [generalFormData, setGeneralFormData] = useState(generalFormState);
-    const [privateFormData, setPrivateFormData] = useState(privateFormState);
+    const [privateFormData, setPrivateFormData] = useState(
+        privateFormDataDefault
+    );
     const [attendanceFormData, setAttendanceFormData] = useState({});
+    const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 
     const {
         isLoading: privateIsLoading,
@@ -69,6 +71,7 @@ export default function StudentForm({
 
     const exit = () => {
         setTab("general");
+        setDate(new Date().toISOString().split("T")[0]);
         resetState();
         closeModal();
     };
@@ -151,6 +154,8 @@ export default function StudentForm({
                     </Tab>
                     <Tab currTab={tab} value="attendance" setTab={setTab}>
                         <AttendanceSubForm
+                            date={date}
+                            setDate={setDate}
                             data={attendanceFormData}
                             setAttendanceFormData={setAttendanceFormData}
                         />

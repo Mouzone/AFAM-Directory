@@ -1,13 +1,15 @@
 import { useState } from "react";
 
-export default function AttendanceSubForm({ data, setAttendanceFormData }) {
-    const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+export default function AttendanceSubForm({
+    date,
+    setDate,
+    data,
+    setAttendanceFormData,
+}) {
     const attendance = data[date] ?? {
         "Sermon Attendance": false,
         "Class Attendance": false,
     };
-
-    console.log(attendance);
 
     return (
         <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">

@@ -10,10 +10,7 @@ import Options from "@/components/Options";
 import Modal from "@/components/Modal";
 import showModal from "@/utility/showModal";
 import StudentForm from "@/components/Forms/StudentForm";
-import {
-    generalFormDataDefault,
-    privateFormDataDefault,
-} from "@/utility/consts";
+import { generalFormDataDefault } from "@/utility/consts";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
@@ -60,7 +57,6 @@ export default function Page() {
                             ? directory[studentFormState]
                             : generalFormDataDefault
                     }
-                    privateFormState={privateFormDataDefault} // leave for now when I want to add caching and pass it in
                     setDirectory={setDirectory}
                     resetState={() => setStudentFormState(null)}
                 />
