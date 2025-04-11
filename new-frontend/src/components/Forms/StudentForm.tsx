@@ -152,14 +152,16 @@ export default function StudentForm({
                             setPrivateFormData={setPrivateFormData}
                         />
                     </Tab>
-                    <Tab currTab={tab} value="attendance" setTab={setTab}>
-                        <AttendanceSubForm
-                            date={date}
-                            setDate={setDate}
-                            data={attendanceFormData}
-                            setAttendanceFormData={setAttendanceFormData}
-                        />
-                    </Tab>
+                    {studentId && (
+                        <Tab currTab={tab} value="attendance" setTab={setTab}>
+                            <AttendanceSubForm
+                                date={date}
+                                setDate={setDate}
+                                data={attendanceFormData}
+                                setAttendanceFormData={setAttendanceFormData}
+                            />
+                        </Tab>
+                    )}
                 </div>
                 <div
                     className={`flex justify-end gap-4 mt-4 ${
