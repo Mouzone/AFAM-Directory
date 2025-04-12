@@ -29,7 +29,7 @@ export default function InviteSubForm({ email, setEmail, setStaff }) {
         const result = querySnapshot.docs[0];
         const newStaffDoc = doc(db, "directory", "afam", "staff", result.id);
         const staffData = {
-            ...result.data,
+            ...result.data(),
             Private: false,
             "Manage Accounts": false,
         };
