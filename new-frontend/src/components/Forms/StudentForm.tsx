@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import GeneralSubForm from "../SubForms/GeneralSubForm";
 import PrivateSubForm from "../SubForms/PrivateSubForm";
 import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
@@ -18,7 +18,12 @@ import Tab from "../Tab";
 import AttendanceSubForm from "../SubForms/AttendanceSubForm";
 import { getAttendanceData } from "@/utility/getters/getAttendanceData";
 import { privateFormDataDefault } from "@/utility/consts";
-import { ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
+import {
+    getDownloadURL,
+    ref,
+    uploadBytes,
+    uploadBytesResumable,
+} from "firebase/storage";
 
 export default function StudentForm({
     studentId,
@@ -33,9 +38,6 @@ export default function StudentForm({
         privateFormDataDefault
     );
     const [attendanceFormData, setAttendanceFormData] = useState({});
-    const [imageDisplayedURL, setImageDisplayedURL] = useState(
-        generalFormState["Headshot URL"] ?? ""
-    );
     const [file, setFile] = useState<File | null>(null);
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 
@@ -74,10 +76,6 @@ export default function StudentForm({
         }
     }, [studentId, attendanceData]);
 
-    useEffect(() => {
-        setImageDisplayedURL(generalFormData["Headshot URL"] ?? "");
-    }, [studentId, generalFormData]);
-
     const exit = () => {
         setTab("general");
         setDate(new Date().toISOString().split("T")[0]);
@@ -103,8 +101,29 @@ export default function StudentForm({
 
             if (file) {
                 const storageRef = ref(storage, `images/${studentId}`);
-                const uploadTask = await uploadBytes(storageRef, file);
-                generalFormData["Headshot URL"] = uploadTask.ref.toString();
+                const uploadTask = uploadBytesResumable(storageRef, file);
+                uploadTask.on(
+                    "state_changed",
+                    (snapshot) => {
+                        // Track upload progress (optional)
+                        const progress =
+                            (snapshot.bytesTransferred / snapshot.totalBytes) *
+                            100;
+                        console.log(`Upload progress: ${progress}%`);
+                    },
+                    (error) => {
+                        console.error("Upload failed:", error);
+                    },
+                    async () => {
+                        // Upload completed: Get the public URL
+                        const downloadURL = await getDownloadURL(
+                            uploadTask.snapshot.ref
+                        );
+
+                        // Store the URL in your form data
+                        generalFormData["Headshot URL"] = downloadURL;
+                    }
+                );
             }
 
             await Promise.all([
@@ -139,11 +158,32 @@ export default function StudentForm({
 
             if (file) {
                 const storageRef = ref(storage, `images/${newStudentRef.id}`);
-                const uploadTask = await uploadBytes(storageRef, file);
-                generalFormData["Headshot URL"] = uploadTask.ref.toString();
-                await updateDoc(newStudentRef, {
-                    "Headshot URL": uploadTask.ref.toString(),
-                });
+                const uploadTask = uploadBytesResumable(storageRef, file);
+                uploadTask.on(
+                    "state_changed",
+                    (snapshot) => {
+                        // Track upload progress (optional)
+                        const progress =
+                            (snapshot.bytesTransferred / snapshot.totalBytes) *
+                            100;
+                        console.log(`Upload progress: ${progress}%`);
+                    },
+                    (error) => {
+                        console.error("Upload failed:", error);
+                    },
+                    async () => {
+                        // Upload completed: Get the public URL
+                        const downloadURL = await getDownloadURL(
+                            uploadTask.snapshot.ref
+                        );
+
+                        // Store the URL in your form data
+                        generalFormData["Headshot URL"] = downloadURL;
+                        await updateDoc(newStudentRef, {
+                            "Headshot URL": downloadURL,
+                        });
+                    }
+                );
             }
 
             setDirectory((prev) => ({
@@ -172,8 +212,6 @@ export default function StudentForm({
                             data={generalFormData}
                             setGeneralFormData={setGeneralFormData}
                             setFile={setFile}
-                            imageDisplayedURL={imageDisplayedURL}
-                            setImageDisplayedURL={setImageDisplayedURL}
                         />
                     </Tab>
                     <Tab currTab={tab} value="private" setTab={setTab}>

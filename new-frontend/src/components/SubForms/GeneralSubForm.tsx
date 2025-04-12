@@ -3,6 +3,7 @@ import React, { SetStateAction, useEffect, useState } from "react";
 
 type GeneralSubFormProps = {
     data: {
+        "Headshot URL": string;
         "First Name": string;
         "Last Name": string;
         Gender: string;
@@ -13,15 +14,11 @@ type GeneralSubFormProps = {
     };
     setGeneralFormData: React.Dispatch<SetStateAction<any>>;
     setFile: React.Dispatch<SetStateAction<File | null>>;
-    imageDisplayedURL: string;
-    setImageDisplayedURL: React.Dispatch<SetStateAction<string>>;
 };
 export default function GeneralSubForm({
     data,
     setGeneralFormData,
     setFile,
-    imageDisplayedURL,
-    setImageDisplayedURL,
 }: GeneralSubFormProps) {
     const changeData = (field: string, value: string) =>
         setGeneralFormData((prev) => {
@@ -30,7 +27,6 @@ export default function GeneralSubForm({
                 [field]: value,
             };
         });
-    console.log(imageDisplayedURL);
     return (
         <>
             <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex flex-col">
@@ -45,7 +41,10 @@ export default function GeneralSubForm({
                                 setFile(file);
                                 const reader = new FileReader();
                                 reader.onload = (event) => {
-                                    setImageDisplayedURL(event.target.result);
+                                    changeData(
+                                        "Headshot URL",
+                                        event.target?.result ?? ""
+                                    );
                                 };
                                 reader.readAsDataURL(file);
                             }
@@ -54,9 +53,9 @@ export default function GeneralSubForm({
                     />
                 </div>
 
-                {imageDisplayedURL !== "" && (
+                {data["Headshot URL"] !== "" && (
                     <Image
-                        src={imageDisplayedURL}
+                        src={data["Headshot URL"]}
                         alt="image"
                         width={800}
                         height={500}
