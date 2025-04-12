@@ -8,6 +8,7 @@ export default function Options({
     addStudentOnClick,
     manageAccountsOnClick,
     showDeleteStudentsOnClick,
+    showDeleteStudents,
 }) {
     return (
         <div className="join">
@@ -20,12 +21,14 @@ export default function Options({
                 <span> Add Student</span>
             </button>
             <button
-                className="btn join-item"
+                className={`btn join-item ${
+                    showDeleteStudents ? "bg-gray-300" : ""
+                }`}
                 type="button"
                 onClick={showDeleteStudentsOnClick}
             >
                 <Image src={minus} alt="delete" />
-                <span> Delete Students </span>
+                <span>Delete Students</span>
             </button>
             {showManageAccounts && (
                 <button

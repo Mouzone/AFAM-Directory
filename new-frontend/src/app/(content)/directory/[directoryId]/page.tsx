@@ -127,6 +127,7 @@ export default function Page() {
             <div className="p-4">
                 <Options
                     showManageAccounts={permissions["Manage Accounts"]}
+                    showDeleteStudents={showDeleteStudents}
                     addStudentOnClick={() => {
                         setStudentFormState(null);
                         showModal();
