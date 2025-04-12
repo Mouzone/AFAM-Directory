@@ -215,7 +215,7 @@ export default function StudentForm({
                             fileInputRef={fileInputRef}
                         />
                     </Tab>
-                    {studentId && !showPrivate && (
+                    {(!studentId || showPrivate) && (
                         <Tab currTab={tab} value="private" setTab={setTab}>
                             <PrivateSubForm
                                 data={privateFormData}

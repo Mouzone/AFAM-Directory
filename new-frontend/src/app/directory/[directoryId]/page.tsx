@@ -33,13 +33,15 @@ export default function Page() {
             const segments = pathname.split("/");
             setDirectoryId(segments[segments.length - 1]);
             setPermissions(
-                directories?.filter(
-                    (directory) =>
-                        directory.name === segments[segments.length - 1]
-                )[0]
+                directories
+                    ?.filter(
+                        (directory) =>
+                            directory.name === segments[segments.length - 1]
+                    )
+                    .at(0)
             );
         }
-    }, [pathname]);
+    }, [pathname, directories]);
 
     const {
         isLoading: studentsDataIsLoading,
@@ -82,6 +84,10 @@ export default function Page() {
     }
 
     if (!staff) {
+        return <></>;
+    }
+
+    if (!permissions) {
         return <></>;
     }
     return (
