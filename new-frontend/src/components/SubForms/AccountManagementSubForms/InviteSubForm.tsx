@@ -48,7 +48,11 @@ export default function InviteSubForm({ email, setEmail, setStaff }) {
 
         // add directory to user's available directories
         const directoryRef = doc(db, "user", result.id, "directory", "afam");
-        await setDoc(directoryRef, { name: "afam" });
+        await setDoc(directoryRef, {
+            name: "afam",
+            Private: false,
+            "Manage Accounts": false,
+        });
 
         setStaff((prev) => {
             return {

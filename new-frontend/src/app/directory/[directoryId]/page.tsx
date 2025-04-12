@@ -23,6 +23,7 @@ export default function Page() {
     );
     const [students, setStudents] = useState(null);
     const [staff, setStaff] = useState(null);
+    const [userInfo, setUserInfo] = useState(null);
 
     useEffect(() => {
         if (pathname) {
