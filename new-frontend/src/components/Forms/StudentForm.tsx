@@ -24,7 +24,6 @@ export default function StudentForm({
     studentId,
     generalFormState,
     setDirectory,
-    resetState,
 }) {
     const [tab, setTab] = useState("general");
 
@@ -55,6 +54,9 @@ export default function StudentForm({
         queryFn: () => getAttendanceData(studentId),
         enabled: studentId !== null,
     });
+    useEffect(() => {
+        setTab("general");
+    }, [studentId]);
 
     useEffect(() => {
         setGeneralFormData(generalFormState);
@@ -74,13 +76,11 @@ export default function StudentForm({
 
     const exit = () => {
         closeModal();
-        setTab("general");
         setDate(new Date().toISOString().split("T")[0]);
         if (fileInputRef.current) {
             fileInputRef.current.value = ""; // This clears the selected file
         }
         setFile(null);
-        resetState();
     };
 
     const onSubmit = async (

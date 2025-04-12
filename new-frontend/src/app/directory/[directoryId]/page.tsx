@@ -58,7 +58,6 @@ export default function Page() {
                             : generalFormDataDefault
                     }
                     setDirectory={setDirectory}
-                    resetState={() => setStudentFormState(null)}
                 />
             </Modal>
 
