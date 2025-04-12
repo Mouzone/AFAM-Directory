@@ -2,9 +2,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../../components/Providers/AuthProvider";
+import { AuthContext } from "../../../../components/Providers/AuthProvider";
 import { usePathname } from "next/navigation";
-import { getStudents } from "../../../utility/getters/getStudents";
+import { getStudents } from "../../../../utility/getters/getStudents";
 import Table from "@/components/Table";
 import Options from "@/components/Options";
 import Modal from "@/components/Modal";

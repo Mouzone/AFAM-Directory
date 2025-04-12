@@ -1,9 +1,9 @@
 "use client";
 
 import { FormEvent, useContext, useState } from "react";
-import { AuthContext } from "../../components/Providers/AuthProvider";
+import { AuthContext } from "../../../components/Providers/AuthProvider";
 import { useRouter } from "next/navigation";
-import { Directory } from "../../utility/types";
+import { Directory } from "../../../utility/types";
 // import Modal from "../../components/Modal";
 // import CreateDirectoryForm from "@/components/Forms/CreateDirectoryForm";
 
@@ -32,7 +32,7 @@ export default function Page() {
             </Modal> */}
             <form
                 onSubmit={onSubmit}
-                className="flex w-screen h-screen items-center justify-center"
+                className="flex h-full items-center justify-center"
             >
                 <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
                     <div className="flex gap-4">
