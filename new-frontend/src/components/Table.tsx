@@ -1,6 +1,37 @@
 import { schema } from "@/utility/consts";
+import { db } from "@/utility/firebase";
+import {
+    collection,
+    deleteDoc,
+    doc,
+    getDocs,
+    writeBatch,
+} from "firebase/firestore";
 
-export default function Table({ data, showEditStudent }) {
+export default function Table({ data, showEditStudent, showDeleteStudents }) {
+    const deleteStudent = async (studentId) => {
+        const studentDocRef = doc(
+            db,
+            "directory",
+            "afam",
+            "student",
+            studentId
+        );
+        const [privateDocs, attendanceDocs] = await Promise.all([
+            getDocs(collection(studentDocRef, "private")),
+            getDocs(collection(studentDocRef, "attendance")),
+        ]);
+
+        const batch = writeBatch(db);
+
+        // Add all deletes to batch
+        privateDocs.forEach((doc) => batch.delete(doc.ref));
+        attendanceDocs.forEach((doc) => batch.delete(doc.ref));
+        batch.delete(studentDocRef);
+        await batch.commit();
+
+        await deleteDoc(studentDocRef);
+    };
     return (
         <div className="overflow-x-auto">
             <table className="table">
@@ -12,14 +43,22 @@ export default function Table({ data, showEditStudent }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {Object.entries(data).map(([key, value]) => (
+                    {Object.entries(data).map(([studentId, studentData]) => (
                         <tr
                             className="hover:bg-base-300"
-                            key={key}
-                            onClick={() => showEditStudent(key)}
+                            key={studentId}
+                            onClick={() => showEditStudent(studentId)}
                         >
+                            {showDeleteStudents && (
+                                <td
+                                    className="text-red-400"
+                                    onClick={() => deleteStudent(studentId)}
+                                >
+                                    Delete
+                                </td>
+                            )}
                             {schema.map((field) => (
-                                <td key={field}>{value[field]}</td>
+                                <td key={field}>{studentData[field]}</td>
                             ))}
                         </tr>
                     ))}
