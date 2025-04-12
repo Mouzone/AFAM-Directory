@@ -1,3 +1,3 @@
-export default function InviteSubForm() {
+export default function InviteSubForm({ setStaff }) {
     return <></>;
 }

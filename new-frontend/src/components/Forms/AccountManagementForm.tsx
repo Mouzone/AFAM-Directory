@@ -5,12 +5,7 @@ import InviteSubForm from "../SubForms/AccountManagementSubForms/InviteSubForm";
 import Tab from "../Tab";
 
 export default function AccountManagementForm({ staff, setStaff }) {
-    const [staffFormState, setStaffFormState] = useState(staff);
     const [tab, setTab] = useState("permissions");
-    // actually log the changes to firestore and update local state
-    const onSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-    };
 
     return (
         <>
@@ -22,18 +17,18 @@ export default function AccountManagementForm({ staff, setStaff }) {
                     ✕
                 </button>
             </form>
-            <form onSubmit={(e) => onSubmit(e)}>
+            <div>
                 {/* pass in setState to change permissions */}
                 {/* pass in setState to add another if valid */}
                 <div className="tabs tabs-lift">
                     <Tab currTab={tab} value="permissions" setTab={setTab}>
-                        <PermissionsSubForm />
+                        <PermissionsSubForm staff={staff} setStaff={setStaff} />
                     </Tab>
                     <Tab currTab={tab} value="permissions" setTab={setTab}>
-                        <InviteSubForm />
+                        <InviteSubForm setStaff={setStaff} />
                     </Tab>
                 </div>
-            </form>
+            </div>
         </>
     );
 }

@@ -1,4 +1,4 @@
-export default function PermissionsSubForm() {
+export default function PermissionsSubForm({ staff, setStaff }) {
     return (
         <>
             <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
