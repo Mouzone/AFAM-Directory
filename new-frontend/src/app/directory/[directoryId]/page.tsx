@@ -73,7 +73,7 @@ export default function Page() {
         if (staffData) {
             setStaff(staffData);
         }
-    }, [staffData]);
+    }, [staffData, user]);
 
     if (!user) {
         return <></>;
@@ -90,11 +90,17 @@ export default function Page() {
     if (!permissions) {
         return <></>;
     }
+
+    const { [user.uid]: omitted, ...staffOmitSelf } = staff;
+
     return (
         <>
             <Modal>
                 {studentFormState === "accounts" ? (
-                    <AccountManagementForm staff={staff} setStaff={setStaff} />
+                    <AccountManagementForm
+                        staff={staffOmitSelf}
+                        setStaff={setStaff}
+                    />
                 ) : (
                     <StudentForm
                         studentId={studentFormState}
