@@ -1,10 +1,11 @@
 import closeModal from "@/utility/closeModal";
 import { db } from "@/utility/firebase";
 import { doc, writeBatch, WriteBatch } from "firebase/firestore";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 export default function PermissionsSubForm({ staff, setStaff }) {
     const [tempStaff, setTempStaff] = useState(staff);
+
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const batch = writeBatch(db);
@@ -16,6 +17,7 @@ export default function PermissionsSubForm({ staff, setStaff }) {
         setStaff(tempStaff);
         closeModal();
     };
+
     return (
         <form onSubmit={(e) => onSubmit(e)}>
             <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
@@ -56,13 +58,16 @@ export default function PermissionsSubForm({ staff, setStaff }) {
                                 <input
                                     type="checkbox"
                                     className="toggle"
-                                    checked={staffData["Invite"]}
+                                    checked={staffData["Manage Accounts"]}
                                     onChange={() =>
                                         setTempStaff({
                                             ...staff,
                                             [staffId]: {
                                                 ...staffData,
-                                                Invite: !staffData["Invite"],
+                                                "Manage Accounts":
+                                                    !staffData[
+                                                        "Manage Accounts"
+                                                    ],
                                             },
                                         })
                                     }
@@ -79,7 +84,10 @@ export default function PermissionsSubForm({ staff, setStaff }) {
                 <button
                     type="button"
                     className="btn"
-                    onClick={() => closeModal()}
+                    onClick={() => {
+                        setTempStaff(staff);
+                        closeModal();
+                    }}
                 >
                     Cancel
                 </button>
