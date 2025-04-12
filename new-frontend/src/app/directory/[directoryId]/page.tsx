@@ -66,13 +66,14 @@ export default function Page() {
     if (!user) {
         return <></>;
     }
+
     if (!students) {
         return <></>;
     }
 
-    // if (!staff) {
-    //     return <></>;
-    // }
+    if (!staff) {
+        return <></>;
+    }
 
     return (
         <>

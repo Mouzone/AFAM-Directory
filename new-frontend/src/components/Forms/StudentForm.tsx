@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
-import GeneralSubForm from "../SubForms/GeneralSubForm";
-import PrivateSubForm from "../SubForms/PrivateSubForm";
+import GeneralSubForm from "../SubForms/StudentSubForms/GeneralSubForm";
+import PrivateSubForm from "../SubForms/StudentSubForms/PrivateSubForm";
 import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
 import closeModal from "@/utility/closeModal";
 import {
@@ -15,7 +15,7 @@ import { db, storage } from "@/utility/firebase";
 import { getPrivateData } from "@/utility/getters/getPrivateData";
 import { useQuery } from "@tanstack/react-query";
 import Tab from "../Tab";
-import AttendanceSubForm from "../SubForms/AttendanceSubForm";
+import AttendanceSubForm from "../SubForms/StudentSubForms/AttendanceSubForm";
 import { getAttendanceData } from "@/utility/getters/getAttendanceData";
 import { privateFormDataDefault } from "@/utility/consts";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
