@@ -1,9 +1,12 @@
 import closeModal from "@/utility/closeModal";
 import { FormEvent, useState } from "react";
+import PermissionsSubForm from "../SubForms/AccountManagementSubForms/PermissionsSubForm";
+import InviteSubForm from "../SubForms/AccountManagementSubForms/InviteSubForm";
 
-export default function AccountManagementForm({ staff }) {
-    // actually log the changes to firestore, else do nothing
+export default function AccountManagementForm({ staff, setStaff }) {
     const [staffFormState, setStaffFormState] = useState(staff);
+
+    // actually log the changes to firestore and update local state
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     };
