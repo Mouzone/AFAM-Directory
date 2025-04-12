@@ -18,12 +18,7 @@ import Tab from "../Tab";
 import AttendanceSubForm from "../SubForms/AttendanceSubForm";
 import { getAttendanceData } from "@/utility/getters/getAttendanceData";
 import { privateFormDataDefault } from "@/utility/consts";
-import {
-    getDownloadURL,
-    ref,
-    uploadBytes,
-    uploadBytesResumable,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 export default function StudentForm({
     studentId,
@@ -40,6 +35,7 @@ export default function StudentForm({
     const [attendanceFormData, setAttendanceFormData] = useState({});
     const [file, setFile] = useState<File | null>(null);
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const {
         isLoading: privateIsLoading,
@@ -79,6 +75,9 @@ export default function StudentForm({
     const exit = () => {
         setTab("general");
         setDate(new Date().toISOString().split("T")[0]);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = ""; // This clears the selected file
+        }
         setFile(null);
         resetState();
         closeModal();
@@ -212,6 +211,7 @@ export default function StudentForm({
                             data={generalFormData}
                             setGeneralFormData={setGeneralFormData}
                             setFile={setFile}
+                            fileInputRef={fileInputRef}
                         />
                     </Tab>
                     <Tab currTab={tab} value="private" setTab={setTab}>

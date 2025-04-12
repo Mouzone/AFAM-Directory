@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { SetStateAction, useEffect, useState } from "react";
+import React, { RefObject, SetStateAction, useEffect, useState } from "react";
 
 type GeneralSubFormProps = {
     data: {
@@ -14,11 +14,13 @@ type GeneralSubFormProps = {
     };
     setGeneralFormData: React.Dispatch<SetStateAction<any>>;
     setFile: React.Dispatch<SetStateAction<File | null>>;
+    fileInputRef: RefObject<null | HTMLInputElement>;
 };
 export default function GeneralSubForm({
     data,
     setGeneralFormData,
     setFile,
+    fileInputRef,
 }: GeneralSubFormProps) {
     const changeData = (field: string, value: string) =>
         setGeneralFormData((prev) => {
@@ -33,6 +35,7 @@ export default function GeneralSubForm({
                 <legend className="fieldset-legend">Image</legend>
                 <div className="flex justify-center">
                     <input
+                        ref={fileInputRef}
                         type="file"
                         className="file-input file-input-sm"
                         onChange={(e) => {
