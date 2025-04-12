@@ -22,7 +22,7 @@ export default function AccountManagementForm({ staff, setStaff }) {
                     <Tab currTab={tab} value="permissions" setTab={setTab}>
                         <PermissionsSubForm staff={staff} setStaff={setStaff} />
                     </Tab>
-                    <Tab currTab={tab} value="permissions" setTab={setTab}>
+                    <Tab currTab={tab} value="invite" setTab={setTab}>
                         <InviteSubForm setStaff={setStaff} />
                     </Tab>
                 </div>
