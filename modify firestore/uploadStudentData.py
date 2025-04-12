@@ -54,7 +54,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                     ]
                 general_info["Gender"] = row["Gender"].strip()[0]
                 general_info["High School"] = row["High School"].strip()
-
+                general_info["Headshot URL"] = ""
                 # from 10A Sunny Liu to {Sunny, Liu}
                 teacher_parts = row["Small Group Class"].split(" ")
                 if len(teacher_parts) == 3:
