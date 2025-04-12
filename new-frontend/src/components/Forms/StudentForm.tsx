@@ -126,10 +126,19 @@ export default function StudentForm({
                 );
             }
 
-            await Promise.all([
-                updateDoc(studentRef, generalFormData),
-                updateDoc(doc(studentRef, "private", "data"), privateFormData),
-            ]);
+            const promises = [updateDoc(studentRef, generalFormData)];
+
+            // conditionally set private data, if edit mode and no private, will overwrite all private fields to ""
+            if (showPrivate) {
+                promises.push(
+                    updateDoc(
+                        doc(studentRef, "private", "data"),
+                        privateFormData
+                    )
+                );
+            }
+
+            await Promise.all([promises]);
 
             const batch = writeBatch(db);
 
