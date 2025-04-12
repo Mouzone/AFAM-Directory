@@ -1,7 +1,7 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 
-export const getDirectory = async (selectedDirectory: string) => {
+export const getStudents = async (selectedDirectory: string) => {
     const directoryRef = collection(
         db,
         "directory",

@@ -23,7 +23,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 export default function StudentForm({
     studentId,
     generalFormState,
-    setDirectory,
+    setStudents,
 }) {
     const [tab, setTab] = useState("general");
 
@@ -139,7 +139,7 @@ export default function StudentForm({
             });
 
             await batch.commit();
-            setDirectory((prev) => ({
+            setStudents((prev) => ({
                 ...prev,
                 [studentId]: generalFormData,
             }));

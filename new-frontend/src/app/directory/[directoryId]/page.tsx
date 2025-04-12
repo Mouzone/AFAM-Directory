@@ -4,22 +4,25 @@ import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../components/Providers/AuthProvider";
 import { usePathname } from "next/navigation";
-import { getDirectory } from "../../../utility/getters/getDirectory";
+import { getStudents } from "../../../utility/getters/getStudents";
 import Table from "@/components/Table";
 import Options from "@/components/Options";
 import Modal from "@/components/Modal";
 import showModal from "@/utility/showModal";
 import StudentForm from "@/components/Forms/StudentForm";
 import { generalFormDataDefault } from "@/utility/consts";
+import AccountManagementForm from "@/components/Forms/AccountManagementForm";
+import { getStaff } from "@/utility/getters/getStaff";
 
 export default function Page() {
-    const { user, directories } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     const pathname = usePathname();
     const [directoryId, setDirectoryId] = useState("");
-    const [studentFormState, setStudentFormState] = useState<number | null>(
+    const [studentFormState, setStudentFormState] = useState<string | null>(
         null
     );
-    const [directory, setDirectory] = useState(null);
+    const [students, setStudents] = useState(null);
+    const [staff, setStaff] = useState(null);
 
     useEffect(() => {
         if (pathname) {
@@ -28,37 +31,65 @@ export default function Page() {
         }
     }, [pathname]);
 
-    const { isLoading, data, error } = useQuery({
+    const {
+        isLoading: studentsDataIsLoading,
+        data: studentsData,
+        error: studentsDataError,
+    } = useQuery({
         queryKey: [directoryId, "student"],
-        queryFn: () => getDirectory(directoryId),
+        queryFn: () => getStudents(directoryId),
+        enabled: directoryId != "",
+    });
+
+    const {
+        isLoading: staffDataIsLoading,
+        data: staffData,
+        error: staffDataError,
+    } = useQuery({
+        queryKey: [directoryId, "staff"],
+        queryFn: () => getStaff(directoryId),
         enabled: directoryId != "",
     });
 
     useEffect(() => {
-        if (data) {
-            setDirectory(data);
+        if (studentsData) {
+            setStudents(studentsData);
         }
-    }, [data]);
+    }, [studentsData]);
+
+    useEffect(() => {
+        if (staffData) {
+            setStaff(staffData);
+        }
+    }, [staffData]);
 
     if (!user) {
         return <></>;
     }
-    if (!directory) {
+    if (!students) {
         return <></>;
     }
+
+    // if (!staff) {
+    //     return <></>;
+    // }
+
     return (
         <>
             <Modal>
-                {/* pass in start state for generalState, run it and if missing then don't fetch private */}
-                <StudentForm
-                    studentId={studentFormState}
-                    generalFormState={
-                        studentFormState
-                            ? directory[studentFormState]
-                            : generalFormDataDefault
-                    }
-                    setDirectory={setDirectory}
-                />
+                {studentFormState === "accounts" ? (
+                    <AccountManagementForm staff={staff} />
+                ) : (
+                    <StudentForm
+                        studentId={studentFormState}
+                        generalFormState={
+                            studentFormState
+                                ? students[studentFormState]
+                                : generalFormDataDefault
+                        }
+                        setStudents={setStudents}
+                    />
+                )}
             </Modal>
 
             <div className="p-4">
@@ -67,16 +98,18 @@ export default function Page() {
                         setStudentFormState(null);
                         showModal();
                     }}
+                    showAccounts={() => {
+                        setStudentFormState("accounts");
+                        showModal();
+                    }}
                 />
                 <Table
-                    data={directory}
+                    data={students}
                     showEditStudent={(studentId) => {
                         setStudentFormState(studentId);
                         showModal();
                     }}
                 />
-
-                <p> {error?.message} </p>
             </div>
         </>
     );
