@@ -16,6 +16,17 @@ export default function InviteSubForm({ email, setEmail, setStaff }) {
             return;
         }
 
+        // if already in staff, do nothing
+        const existsInStaffQuery = query(
+            collection(db, "directory", "afam", "staff"),
+            where("Email", "==", email)
+        );
+        const existsInStaffSnapshot = await getDocs(existsInStaffQuery);
+        if (existsInStaffSnapshot.docs.length === 1) {
+            console.log("already exists");
+            return;
+        }
+
         // search through users for the email
         // copy info and add it to staff with `Private` and `Manage Accounts` permissions
         const q = query(collection(db, "user"), where("Email", "==", email));

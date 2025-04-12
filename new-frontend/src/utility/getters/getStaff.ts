@@ -14,6 +14,5 @@ export const getStaff = async (directoryId: string) => {
     staffDocs.docs.forEach(
         (staffDoc) => (staff[staffDoc.id] = staffDoc.data())
     );
-    console.log(staff);
     return staff;
 };
