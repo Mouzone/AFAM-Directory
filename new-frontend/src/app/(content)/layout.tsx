@@ -12,9 +12,14 @@ export default function SignedInLayout({ children }) {
     if (!user) {
         return <></>;
     }
+
     return (
         <>
             <div className="flex justify-end">
+                {/* <DirectoryNavigation
+                    directories={directories}
+                    router={router}
+                /> */}
                 <div className="avatar avatar-placeholder dropdown dropdown-hover dropdown-end p-4">
                     <div className="bg-neutral text-neutral-content w-8 rounded-full">
                         <span className="text-2xl">
@@ -27,6 +32,9 @@ export default function SignedInLayout({ children }) {
                     >
                         <li>
                             <div>{user.displayName}</div>
+                        </li>
+                        <li>
+                            <div>{user.email}</div>
                         </li>
                         <li>
                             <a

@@ -14,6 +14,7 @@ import { generalFormDataDefault } from "@/utility/consts";
 import AccountManagementForm from "@/components/Forms/AccountManagementForm";
 import { getStaff } from "@/utility/getters/getStaff";
 import { Directory } from "@/utility/types";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
     const { user, directories } = useContext(AuthContext);
@@ -27,7 +28,9 @@ export default function Page() {
     const [permissions, setPermissions] = useState<Directory | undefined>(
         undefined
     );
+    const router = useRouter();
 
+    console.log(user);
     useEffect(() => {
         if (pathname) {
             const segments = pathname.split("/");
@@ -75,7 +78,7 @@ export default function Page() {
         }
     }, [staffData, user]);
 
-    if (!user) {
+    if (user === null) {
         return <></>;
     }
 
@@ -89,6 +92,10 @@ export default function Page() {
 
     if (!permissions) {
         return <></>;
+    }
+
+    if (!user) {
+        router.push("/");
     }
 
     const { [user.uid]: omitted, ...staffOmitSelf } = staff;

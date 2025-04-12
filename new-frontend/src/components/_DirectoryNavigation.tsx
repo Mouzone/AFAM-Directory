@@ -7,15 +7,9 @@ import { Directory } from "../utility/types";
 // import Modal from "../../components/Modal";
 // import CreateDirectoryForm from "@/components/Forms/CreateDirectoryForm";
 
-export default function DirectoryNavigation() {
-    const { user, directories } = useContext(AuthContext);
+export default function DirectoryNavigation({ directories, router }) {
     const [selectedDirectory, setSelectedDirectory] =
         useState<Directory | null>(null); // this will be the id of the directory
-    const router = useRouter();
-
-    if (!user) {
-        return <></>;
-    }
 
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -38,7 +32,7 @@ export default function DirectoryNavigation() {
                     <div className="flex gap-4">
                         <select
                             defaultValue="Select a Directory"
-                            className="select"
+                            className="select select-sm"
                             value={selectedDirectory?.name}
                             onChange={(e) =>
                                 setSelectedDirectory(
@@ -56,7 +50,10 @@ export default function DirectoryNavigation() {
                                 </option>
                             ))}
                         </select>
-                        <button type="submit" className="btn btn-neutral">
+                        <button
+                            type="submit"
+                            className="btn btn-neutral btn-sm"
+                        >
                             Go
                         </button>
                     </div>
