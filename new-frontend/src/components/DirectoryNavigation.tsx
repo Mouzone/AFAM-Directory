@@ -1,13 +1,13 @@
 "use client";
 
 import { FormEvent, useContext, useState } from "react";
-import { AuthContext } from "../../../components/Providers/AuthProvider";
+import { AuthContext } from "./Providers/AuthProvider";
 import { useRouter } from "next/navigation";
-import { Directory } from "../../../utility/types";
+import { Directory } from "../utility/types";
 // import Modal from "../../components/Modal";
 // import CreateDirectoryForm from "@/components/Forms/CreateDirectoryForm";
 
-export default function Page() {
+export default function DirectoryNavigation() {
     const { user, directories } = useContext(AuthContext);
     const [selectedDirectory, setSelectedDirectory] =
         useState<Directory | null>(null); // this will be the id of the directory

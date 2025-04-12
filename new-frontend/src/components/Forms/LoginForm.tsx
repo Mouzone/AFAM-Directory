@@ -15,7 +15,7 @@ export default function LoginForm() {
         mutationFn: login,
         onSuccess: (data) => {
             // todo: provide indicator login was succesful or loading...
-            router.push("/home");
+            router.push("/directory/afam");
         },
         onError: (error) => {
             setError(error);

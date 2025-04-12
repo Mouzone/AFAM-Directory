@@ -32,7 +32,7 @@ export default function SignUpForm() {
                 "Last Name": lastName,
                 Email: email,
             });
-            router.push("/home");
+            router.push("/directory");
         },
         onError: (error) => {
             setError(error);
