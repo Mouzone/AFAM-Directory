@@ -17,20 +17,22 @@ import { Directory } from "@/utility/types";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
-    const { user, directories } = useContext(AuthContext);
     const pathname = usePathname();
+
+    const { user, directories } = useContext(AuthContext);
+    const [permissions, setPermissions] = useState<Directory | undefined>(
+        undefined
+    );
     const [directoryId, setDirectoryId] = useState("");
     const [studentFormState, setStudentFormState] = useState<string | null>(
         null
     );
     const [students, setStudents] = useState(null);
     const [staff, setStaff] = useState(null);
-    const [permissions, setPermissions] = useState<Directory | undefined>(
-        undefined
-    );
+    const [showDeleteStudents, setShowDeleteStudents] = useState(false);
+
     const router = useRouter();
 
-    console.log(user);
     useEffect(() => {
         if (pathname) {
             const segments = pathname.split("/");
@@ -133,6 +135,9 @@ export default function Page() {
                         setStudentFormState("accounts");
                         showModal();
                     }}
+                    showDeleteStudentsOnClick={() => {
+                        setShowDeleteStudents((prev) => !prev);
+                    }}
                 />
                 <Table
                     data={students}
@@ -140,6 +145,7 @@ export default function Page() {
                         setStudentFormState(studentId);
                         showModal();
                     }}
+                    showDeleteStudents={showDeleteStudents}
                 />
             </div>
         </>
