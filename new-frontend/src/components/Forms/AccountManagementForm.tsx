@@ -18,8 +18,6 @@ export default function AccountManagementForm({ staff, setStaff }) {
                 </button>
             </form>
             <div>
-                {/* pass in setState to change permissions */}
-                {/* pass in setState to add another if valid */}
                 <div className="tabs tabs-lift">
                     <Tab currTab={tab} value="permissions" setTab={setTab}>
                         <PermissionsSubForm staff={staff} setStaff={setStaff} />
