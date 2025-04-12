@@ -38,10 +38,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     (snapshot) => {
                         const directories = snapshot.docs.map(
                             (doc) =>
-                                ({
-                                    id: doc.id,
-                                    ...doc.data(),
-                                } as Directory)
+                                ({ ...doc.data(), id: doc.id } as Directory)
                         );
 
                         setUser({

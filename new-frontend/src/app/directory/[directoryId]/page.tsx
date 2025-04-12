@@ -13,9 +13,10 @@ import StudentForm from "@/components/Forms/StudentForm";
 import { generalFormDataDefault } from "@/utility/consts";
 import AccountManagementForm from "@/components/Forms/AccountManagementForm";
 import { getStaff } from "@/utility/getters/getStaff";
+import { Directory } from "@/utility/types";
 
 export default function Page() {
-    const { user } = useContext(AuthContext);
+    const { user, directories } = useContext(AuthContext);
     const pathname = usePathname();
     const [directoryId, setDirectoryId] = useState("");
     const [studentFormState, setStudentFormState] = useState<string | null>(
@@ -23,12 +24,20 @@ export default function Page() {
     );
     const [students, setStudents] = useState(null);
     const [staff, setStaff] = useState(null);
-    const [userInfo, setUserInfo] = useState(null);
+    const [permissions, setPermissions] = useState<Directory | undefined>(
+        undefined
+    );
 
     useEffect(() => {
         if (pathname) {
             const segments = pathname.split("/");
             setDirectoryId(segments[segments.length - 1]);
+            setPermissions(
+                directories?.filter(
+                    (directory) =>
+                        directory.name === segments[segments.length - 1]
+                )[0]
+            );
         }
     }, [pathname]);
 
@@ -75,7 +84,6 @@ export default function Page() {
     if (!staff) {
         return <></>;
     }
-
     return (
         <>
             <Modal>
@@ -90,17 +98,19 @@ export default function Page() {
                                 : generalFormDataDefault
                         }
                         setStudents={setStudents}
+                        showPrivate={permissions["Private"]}
                     />
                 )}
             </Modal>
 
             <div className="p-4">
                 <Options
-                    showAddStudent={() => {
+                    showManageAccounts={permissions["Manage Accounts"]}
+                    addStudentOnClick={() => {
                         setStudentFormState(null);
                         showModal();
                     }}
-                    showAccounts={() => {
+                    manageAccountsOnClick={() => {
                         setStudentFormState("accounts");
                         showModal();
                     }}

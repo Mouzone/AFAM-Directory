@@ -3,7 +3,8 @@ import { User } from "firebase/auth";
 export type Directory = {
     id: string;
     name: string;
-    owner: string;
+    Private: boolean;
+    "Manage Accounts": boolean;
 };
 
 // loading, loaded, logged out / error

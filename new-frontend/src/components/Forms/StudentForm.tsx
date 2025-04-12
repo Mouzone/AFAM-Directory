@@ -24,6 +24,7 @@ export default function StudentForm({
     studentId,
     generalFormState,
     setStudents,
+    showPrivate,
 }) {
     const [tab, setTab] = useState("general");
 
@@ -185,7 +186,7 @@ export default function StudentForm({
                 );
             }
 
-            setDirectory((prev) => ({
+            setStudents((prev) => ({
                 ...prev,
                 [newStudentRef.id]: generalFormData,
             }));
@@ -214,12 +215,14 @@ export default function StudentForm({
                             fileInputRef={fileInputRef}
                         />
                     </Tab>
-                    <Tab currTab={tab} value="private" setTab={setTab}>
-                        <PrivateSubForm
-                            data={privateFormData}
-                            setPrivateFormData={setPrivateFormData}
-                        />
-                    </Tab>
+                    {studentId && !showPrivate && (
+                        <Tab currTab={tab} value="private" setTab={setTab}>
+                            <PrivateSubForm
+                                data={privateFormData}
+                                setPrivateFormData={setPrivateFormData}
+                            />
+                        </Tab>
+                    )}
                     {studentId && (
                         <Tab currTab={tab} value="attendance" setTab={setTab}>
                             <AttendanceSubForm
