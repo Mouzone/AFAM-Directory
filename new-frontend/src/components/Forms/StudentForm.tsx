@@ -73,6 +73,7 @@ export default function StudentForm({
     }, [studentId, attendanceData]);
 
     const exit = () => {
+        closeModal();
         setTab("general");
         setDate(new Date().toISOString().split("T")[0]);
         if (fileInputRef.current) {
@@ -80,7 +81,6 @@ export default function StudentForm({
         }
         setFile(null);
         resetState();
-        closeModal();
     };
 
     const onSubmit = async (
