@@ -27,7 +27,11 @@ export default function SignUpForm() {
                 displayName: `${firstName} ${lastName}`,
             });
             const docRef = doc(db, "user", user.uid);
-            await setDoc(docRef, {});
+            await setDoc(docRef, {
+                "First Name": firstName,
+                "Last Name": lastName,
+                Email: email,
+            });
             router.push("/home");
         },
         onError: (error) => {
