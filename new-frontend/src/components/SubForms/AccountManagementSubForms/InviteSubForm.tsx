@@ -25,6 +25,7 @@ export default function InviteSubForm({ email, setEmail, setStaff }) {
             return;
         }
 
+        // add user to staff
         const result = querySnapshot.docs[0];
         const newStaffDoc = doc(db, "directory", "afam", "staff", result.id);
         const staffData = {
@@ -33,6 +34,11 @@ export default function InviteSubForm({ email, setEmail, setStaff }) {
             "Manage Accounts": false,
         };
         await setDoc(newStaffDoc, staffData);
+
+        // add directory to user's available directories
+        const directoryRef = doc(db, "user", result.id, "directory", "afam");
+        await setDoc(directoryRef, { name: "afam" });
+
         setStaff((prev) => {
             return {
                 ...prev,
