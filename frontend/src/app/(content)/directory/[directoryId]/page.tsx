@@ -10,11 +10,12 @@ import Options from "@/components/Options";
 import Modal from "@/components/Modal";
 import showModal from "@/utility/showModal";
 import StudentForm from "@/components/Forms/StudentForm";
-import { generalFormDataDefault } from "@/utility/consts";
+import { generalFormDataDefault, searchTermsState } from "@/utility/consts";
 import AccountManagementForm from "@/components/Forms/AccountManagementForm";
 import { getStaff } from "@/utility/getters/getStaff";
 import {
     Directory,
+    SearchTerms,
     StaffObject,
     StudentGeneralInfo,
     StudentGeneralInfoObject,
@@ -33,14 +34,8 @@ export default function Page() {
     const [students, setStudents] = useState<StudentGeneralInfoObject>({});
     const [staff, setStaff] = useState<StaffObject>({});
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
-    const [searchTerms, setSearchTerms] = useState({
-        "First Name": "",
-        "Last Name": "",
-        Gender: "M",
-        "High School": "",
-        Grade: "9",
-        Teacher: "None",
-    });
+    const [searchTerms, setSearchTerms] =
+        useState<SearchTerms>(searchTermsState);
     useEffect(() => {
         if (pathname) {
             const segments = pathname.split("/");

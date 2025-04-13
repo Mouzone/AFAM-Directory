@@ -73,3 +73,12 @@ export type Staff = {
 };
 
 export type StaffObject = { [key: string]: Staff };
+
+export type SearchTerms = {
+    "First Name": string;
+    "Last Name": string;
+    Gender: "M" | "F";
+    "High School": string;
+    Grade: "9" | "10" | "11" | "!2";
+    Teacher: "None" | string;
+};

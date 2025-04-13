@@ -1,6 +1,15 @@
 import closeModal from "@/utility/closeModal";
+import { SearchTerms } from "@/utility/types";
+import { Dispatch, SetStateAction } from "react";
 
-export default function SearchForm({ searchTerms, setSearchTerms }) {
+type SearchFormProps = {
+    searchTerms: SearchTerms;
+    setSearchTerms: Dispatch<SetStateAction<SearchTerms>>;
+};
+export default function SearchForm({
+    searchTerms,
+    setSearchTerms,
+}: SearchFormProps) {
     return (
         <>
             <form method="dialog">
