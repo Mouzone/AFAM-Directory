@@ -27,7 +27,6 @@ import { getAttendanceData } from "@/utility/getters/getAttendanceData";
 import { privateFormDataDefault } from "@/utility/consts";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import {
-    Attendance,
     AttendanceObject,
     StudentGeneralInfo,
     StudentGeneralInfoObject,

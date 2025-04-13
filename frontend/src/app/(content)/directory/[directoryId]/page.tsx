@@ -18,7 +18,6 @@ import {
     StaffObject,
     StudentGeneralInfoObject,
 } from "@/utility/types";
-import { useRouter } from "next/navigation";
 
 export default function Page() {
     const pathname = usePathname();
@@ -32,8 +31,6 @@ export default function Page() {
     const [students, setStudents] = useState<StudentGeneralInfoObject>({});
     const [staff, setStaff] = useState<StaffObject>({});
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
-
-    const router = useRouter();
 
     useEffect(() => {
         if (pathname) {
@@ -50,21 +47,13 @@ export default function Page() {
         }
     }, [pathname, directories]);
 
-    const {
-        isLoading: studentsDataIsLoading,
-        data: studentsData,
-        error: studentsDataError,
-    } = useQuery({
+    const { data: studentsData } = useQuery({
         queryKey: [directoryId, "student"],
         queryFn: () => getStudents(directoryId),
         enabled: directoryId != "",
     });
 
-    const {
-        isLoading: staffDataIsLoading,
-        data: staffData,
-        error: staffDataError,
-    } = useQuery({
+    const { data: staffData } = useQuery({
         queryKey: [directoryId, "staff"],
         queryFn: () => getStaff(directoryId),
         enabled: directoryId != "",
@@ -98,7 +87,7 @@ export default function Page() {
         return <></>;
     }
 
-    const { [user.uid]: omitted, ...staffOmitSelf } = staff;
+    const { [user.uid]: _, ...staffOmitSelf } = staff;
 
     return (
         <>
