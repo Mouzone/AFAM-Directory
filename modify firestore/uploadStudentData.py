@@ -3,7 +3,7 @@ import firebase_admin
 from firebase_admin import firestore
 
 # Replace with your Firebase project credentials
-COLLECTION_NAME = "students"  # The Firestore collection to store data in
+COLLECTION_NAME = "directory/afam/student"  # The Firestore collection to store data in
 BATCH_SIZE = 500
 
 
@@ -26,7 +26,6 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
             batch = db.batch()
 
             for i, row in enumerate(reader):
-                print(row)
                 if row["First Name"] == "":
                     break
                 general_doc_ref = (
@@ -36,64 +35,60 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 # Convert all values to appropriate types.  Critical for Firestore!
                 general_info = {}
                 private_info = {}
-                general_info["firstName"] = row["First Name"].strip()
-                general_info["lastName"] = row["Last Name"].strip()
-                general_info["grade"] = row["Grade"].strip()
+                general_info["First Name"] = row["First Name"].strip()
+                general_info["Last Name"] = row["Last Name"].strip()
+                general_info["Grade"] = row["Grade"].strip()
 
-                # to go from 1/17/2009 to 2025-02-28
+                # to go from 1/17/2009 to Timestamp
                 dob_parts = row["Date of Birth (DOB)"].split("/")
-                general_info["dob"] = (
+                general_info["Birthday"] = (
                     f"20{dob_parts[2]}-{dob_parts[0].zfill(2)}-{dob_parts[1].zfill(2)}"
                 )
 
                 if row["Allergies"] == "":
-                    general_info["allergies"] = []
+                    general_info["Allergies"] = []
                 else:
-                    general_info["allergies"] = [
+                    general_info["Allergies"] = [
                         allergy.strip().lower()
                         for allergy in row.get("Allergies", "").split(",")
                     ]
-                general_info["gender"] = row["Gender"].strip()
-                general_info["highSchool"] = row["High School"].strip()
-
-                private_info["email"] = row["Personal Email Address"].strip()
-                private_info["phoneNumber"] = row["Personal Phone Number"].strip()
-                private_info["home"] = {
-                    "city": row["City"].strip(),
-                    "streetAddress": row["Street Address"].strip(),
-                    "zipCode": row["Postal Code"].strip(),
-                }
-
-                private_info["guardian1"] = {
-                    "email": row["Parent 1 Email Address"].strip(),
-                    "firstName": row["Parent 1 First Name"].strip(),
-                    "lastName": row["Parent 1 Last Name"].strip(),
-                    "phoneNumber": row["Parent 1 Phone Number"].strip(),
-                }
-                private_info["guardian2"] = {
-                    "email": row["Parent 2 Email Address"].strip(),
-                    "firstName": row["Parent 2 First Name"].strip(),
-                    "lastName": row["Parent 2 Last Name"].strip(),
-                    "phoneNumber": row["Parent 2 Phone Number"].strip(),
-                }
+                general_info["Gender"] = row["Gender"].strip()[0]
+                general_info["High School"] = row["High School"].strip()
+                general_info["Headshot URL"] = ""
                 # from 10A Sunny Liu to {Sunny, Liu}
                 teacher_parts = row["Small Group Class"].split(" ")
                 if len(teacher_parts) == 3:
-                    general_info["teacher"] = {
-                        "firstName": teacher_parts[1].strip(),
-                        "lastName": teacher_parts[2].strip(),
-                    }
+                    general_info["Teacher"] = (
+                        f"{teacher_parts[1].strip()} {teacher_parts[2].strip()}"
+                    )
                 else:
-                    general_info["teacher"] = {
-                        "firstName": "Unassigned",
-                        "lastName": "",
-                    }
+                    general_info["Teacher"] = "None"
+                private_info["Personal"] = {
+                    "Email": row["Personal Email Address"].strip(),
+                    "Phone": row["Personal Phone Number"].strip(),
+                    "City": row["City"].strip(),
+                    "Street Address": row["Street Address"].strip(),
+                    "Zip Code": row["Postal Code"].strip(),
+                }
+
+                private_info["Guardian 1"] = {
+                    "First Name": row["Parent 1 First Name"].strip(),
+                    "Last Name": row["Parent 1 Last Name"].strip(),
+                    "Phone": row["Parent 1 Phone Number"].strip(),
+                    "Email": row["Parent 1 Email Address"].strip(),
+                }
+                private_info["Guardian 2"] = {
+                    "First Name": row["Parent 2 First Name"].strip(),
+                    "Last Name": row["Parent 2 Last Name"].strip(),
+                    "Phone": row["Parent 2 Phone Number"].strip(),
+                    "Email": row["Parent 2 Email Address"].strip(),
+                }
 
                 batch.set(general_doc_ref, general_info)
                 private_doc_ref = (
                     collection_ref.document(general_doc_ref.id)
                     .collection("private")
-                    .document("privateInfo")
+                    .document("data")
                 )
                 batch.set(private_doc_ref, private_info)
                 batch_count += 1

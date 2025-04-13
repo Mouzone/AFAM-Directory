@@ -1,14 +1,103 @@
 import {onCall, HttpsError} from "firebase-functions/v2/https";
 import {initializeApp} from "firebase-admin/app";
 import {getAuth} from "firebase-admin/auth";
-import {getFirestore} from "firebase-admin/firestore";
+import {getFirestore, Timestamp} from "firebase-admin/firestore";
 import {onSchedule} from "firebase-functions/scheduler";
+import sgMail from "@sendgrid/mail";
+import {parse} from "csv-parse";
 
 initializeApp();
 const auth = getAuth();
 const firestore = getFirestore();
 
-export const generateInviteToken = onCall(async (request) => {
+export const createDirectory = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
+
+  const {directoryName, csvFile} = request.data;
+
+  if (!directoryName) {
+    throw new HttpsError(
+      "invalid-argument",
+      "The request has no name for new directory."
+    );
+  }
+
+  // Check for existing directory with same name for this user
+  const directoriesWithSameName = await firestore
+    .collection("users")
+    .doc(request.auth.uid)
+    .collection("directories")
+    .where("name", "==", directoryName)
+    .count()
+    .get();
+
+  const count = directoriesWithSameName.data().count;
+  if (count > 0) {
+    throw new HttpsError(
+      "already-exists",
+      "Directory with same name already exists"
+    );
+  }
+
+  // Create new directory
+  const newDirectoryRef = await firestore.collection("directories").add({
+    directoryName,
+    owner: request.auth.uid,
+  });
+
+  // Add reference to user's directories
+  await firestore
+    .collection("users")
+    .doc(request.auth.uid)
+    .collection("directories")
+    .doc(newDirectoryRef.id)
+    .set({
+      directoryName,
+      owner: request.auth.uid,
+    });
+
+  if (!csvFile) {
+    return {directoryId: newDirectoryRef.id};
+  }
+
+  // Process CSV file if provided
+  try {
+    // Parse CSV
+    const parser = parse(csvFile, {columns: true});
+
+    let rows_iterated = 0;
+    for await (const record of parser) {
+      if (rows_iterated === 0) {
+        await newDirectoryRef.update({schema: Object.keys(record)});
+      }
+
+      await newDirectoryRef.collection("people").add({
+        ...record,
+      });
+      rows_iterated += 1;
+    }
+
+    return {
+      directoryId: newDirectoryRef.id,
+      addedRecords: rows_iterated,
+    };
+  } catch (error) {
+    console.error("CSV processing error:", error);
+
+    // Even if CSV fails, the directory was created, so we return its ID
+    return {
+      directoryId: newDirectoryRef.id,
+      warning: "Directory created but CSV processing failed",
+    };
+  }
+});
+
+export const sendInviteToken = onCall(async (request) => {
   if (!request.auth) {
     throw new HttpsError(
       "unauthenticated",
@@ -20,9 +109,16 @@ export const generateInviteToken = onCall(async (request) => {
     const userToken = request.auth.token;
     const userRole = userToken.role;
     const isWelcomeTeamLeader = userToken.isWelcomeTeamLeader ?? false;
-    const {role: roleToCreate} = request.data;
+    const {role: roleToCreate, email: reciever} = request.data;
     if (!userRole) {
       throw new HttpsError("permission-denied", "The request has no role.");
+    }
+
+    if (!reciever) {
+      throw new HttpsError(
+        "permission-denied",
+        "The request has no recipient."
+      );
     }
 
     const disallowedRoles = ["student", "teacher", "deacon"];
@@ -52,17 +148,25 @@ export const generateInviteToken = onCall(async (request) => {
     });
 
     await firestore.collection("temp").doc().delete();
-    return {token};
+
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
+    const msg = {
+      to: reciever, // Change to your recipient
+      from: process.env.SENDER as string, // Change to your verified sender
+      subject: "AFAM Directory Account Signup Link",
+      html: `<p>Account Link: <a href=https://afam-directory.vercel.app/signup?token=${token}>here</a></p>`,
+    };
+    try {
+      await sgMail.send(msg);
+      console.log("Email sent");
+      return {success: true};
+    } catch (error) {
+      console.error("SendGrid Error:", error);
+      return {error};
+    }
   } catch (error) {
     console.error("Error generating invite link:", error);
-
-    if (error instanceof HttpsError) {
-      throw error; // Re-throw Firebase Functions errors as they are.
-    } else if (error instanceof Error) {
-      throw new HttpsError("internal", error.message);
-    } else {
-      throw new HttpsError("internal", "An unknown error occurred.");
-    }
+    return {error};
   }
 });
 
@@ -181,6 +285,7 @@ export const deleteUser = onCall(async (request) => {
   await auth.deleteUser(id);
 });
 
+// maybe toggle students? but currently can only only toggle deacons and teachers
 export const toggleWelcomeTeamLeader = onCall(async (request) => {
   if (!request.auth) {
     throw new HttpsError(
@@ -292,7 +397,7 @@ export const deleteStudent = onCall(async (request) => {
   const attendanceDocs = await firestore
     .collection("students")
     .doc(id)
-    .collection("accounts")
+    .collection("attendance")
     .listDocuments();
   attendanceDocs.forEach((doc) => doc.delete());
   await firestore
@@ -302,4 +407,69 @@ export const deleteStudent = onCall(async (request) => {
     .doc("privateInfo")
     .delete();
   await firestore.collection("students").doc(id).delete();
+});
+
+// personal_collections > `user.uid` > {collecitons} > {docs}
+// make firestore rules for welcome team leader and pastor and check for it specifically depending on user role on frontend
+// personal_collections > `general` > birthday
+// personal_collections > `general` > new comers
+
+// run weekly for the birthdays that have passed so from Monday to current Sunday is the check
+// create a collection, and add student to collection and notify Welcome Team Leader & Pastor
+export const getBirthdayStudents = onSchedule("0 9 * * Sun", async () => {
+  const documentsToDelete = await firestore
+    .collection("collections")
+    .doc("birthdays")
+    .collection("data")
+    .get();
+  documentsToDelete.forEach((document) => document.ref.delete());
+
+  const students = await firestore.collection("students").get();
+  const today = new Date();
+  const beginningOfWeek = Timestamp.fromDate(new Date(today.getDate() - 7));
+  const endOfWeek = Timestamp.fromDate(new Date(today.getHours() + 15));
+
+  students.forEach(async (student) => {
+    const dob = student.data().dob;
+    if (dob <= endOfWeek && dob >= beginningOfWeek) {
+      await firestore
+        .collection("collections")
+        .doc("birthdays")
+        .collection("data")
+        .doc(student.id)
+        .create(student);
+    }
+  });
+});
+
+// get all documents in students that a new creation date at Sunday 5 pm
+// create a collection, and send email notifying Welcome Team Leader & Pastor
+export const getNewStudents = onSchedule("0 17 * * Sun", async () => {
+  // clean "newcomers" collections from each
+  const documentsToDelete = await firestore
+    .collection("collections")
+    .doc("newcomers")
+    .collection("data")
+    .get();
+  documentsToDelete.forEach((document) => document.ref.delete());
+
+  // add to "newcomers" collections to each
+  const today = new Date();
+  const startTime = Timestamp.fromDate(new Date(today.getHours() - 8));
+  const students = await firestore.collection("students").get();
+  const todayTimestamp = Timestamp.fromDate(today);
+  students.forEach(async (student) => {
+    // between 9:00am to 5:00pm today
+    if (
+      student.createTime >= startTime &&
+      student.createTime <= todayTimestamp
+    ) {
+      await firestore
+        .collection("collections")
+        .doc("newcomers")
+        .collection("data")
+        .doc(student.id)
+        .create(student);
+    }
+  });
 });
