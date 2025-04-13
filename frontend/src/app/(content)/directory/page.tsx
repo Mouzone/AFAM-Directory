@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
 export default function Page() {
-    const { user, directories } = useContext(AuthContext);
+    const { directories } = useContext(AuthContext);
     const router = useRouter();
 
     useEffect(() => {
