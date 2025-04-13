@@ -11,7 +11,7 @@ export default function Options({
     showDeleteStudents,
 }) {
     return (
-        <div className="join">
+        <div className="join w-screen overflow-y-scroll">
             <button
                 className="btn join-item"
                 type="button"

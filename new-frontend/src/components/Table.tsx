@@ -44,6 +44,7 @@ export default function Table({
             <table className="table">
                 <thead>
                     <tr>
+                        {showDeleteStudents && <th></th>}
                         {schema.map((field) => (
                             <th key={field}>{field}</th>
                         ))}
