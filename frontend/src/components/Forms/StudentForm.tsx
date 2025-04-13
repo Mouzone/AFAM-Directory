@@ -58,20 +58,12 @@ export default function StudentForm({
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    const {
-        isLoading: privateIsLoading,
-        data: privateData,
-        error: privateError,
-    } = useQuery({
+    const { data: privateData } = useQuery({
         queryKey: [studentId, "privateData"],
         queryFn: () => getPrivateData(studentId),
         enabled: studentId !== "",
     });
-    const {
-        isLoading: attendanceIsLoading,
-        data: attendanceData,
-        error: attendanceError,
-    } = useQuery({
+    const { data: attendanceData } = useQuery({
         queryKey: [studentId, "attendanceData"],
         queryFn: () => getAttendanceData(studentId),
         enabled: studentId !== "",

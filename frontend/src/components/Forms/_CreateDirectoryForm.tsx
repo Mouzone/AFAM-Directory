@@ -17,9 +17,9 @@ export default function CreateDirectoryForm({
 
     const mutation = useMutation({
         mutationFn: createDirectory,
-        onSuccess: (response) => {
+        onSuccess: () => {
             // redirect to the new generated uid,
-            // router.push(`/directory/${response.data.directoryId}`);
+            router.push(`/directory/`);
         },
         onError: (error) => {
             setError(error);

@@ -13,7 +13,7 @@ export default function LoginForm() {
     const router = useRouter();
     const mutation = useMutation({
         mutationFn: login,
-        onSuccess: (data) => {
+        onSuccess: () => {
             // todo: provide indicator login was succesful or loading...
             router.push("/directory/afam");
         },
