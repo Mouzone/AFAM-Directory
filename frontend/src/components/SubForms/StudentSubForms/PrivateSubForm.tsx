@@ -1,4 +1,4 @@
-import { StudentGeneralInfo, StudentPrivateInfo } from "@/utility/types";
+import { StudentPrivateInfo } from "@/utility/types";
 import React, { SetStateAction } from "react";
 
 type PrivateSubFormProps = {

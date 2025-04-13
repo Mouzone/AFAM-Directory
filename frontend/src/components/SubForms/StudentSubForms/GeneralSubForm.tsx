@@ -1,6 +1,6 @@
-import { StudentGeneralInfo, StudentGeneralInfoObject } from "@/utility/types";
+import { StudentGeneralInfo } from "@/utility/types";
 import Image from "next/image";
-import React, { RefObject, SetStateAction, useEffect, useState } from "react";
+import React, { RefObject, SetStateAction } from "react";
 
 type GeneralSubFormProps = {
     data: StudentGeneralInfo;

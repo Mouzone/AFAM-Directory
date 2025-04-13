@@ -44,7 +44,7 @@ export default function Table({
         await batch.commit();
 
         await deleteDoc(studentDocRef);
-        const { [studentId]: omitted, ...studentsAfterDelete } = data;
+        const { [studentId]: _omitted, ...studentsAfterDelete } = data;
         setData(studentsAfterDelete);
     };
     return (

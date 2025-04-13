@@ -3,7 +3,6 @@ import { Staff, StaffObject } from "@/utility/types";
 import {
     collection,
     doc,
-    getDoc,
     getDocs,
     query,
     setDoc,
