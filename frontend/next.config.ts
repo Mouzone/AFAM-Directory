@@ -8,7 +8,10 @@ const nextConfig: NextConfig = {
                 hostname: "127.0.0.1",
             },
         ],
-        domains: ["firebasestorage.googleapis.com"],
+        domains: [
+            "firebasestorage.googleapis.com",
+            "afam-directory.firebasestorage.app",
+        ],
     },
 };
 

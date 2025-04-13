@@ -1,77 +1,28 @@
-import { AllKeys, StudentGeneralInfo, StudentPrivateInfo } from "../types";
+import { StudentGeneralInfo } from "./types";
 
-export const studentGeneralInfoDefault = {
-    firstName: "",
-    lastName: "",
-    grade: "",
-    dob: "",
-    gender: "",
-    highSchool: "",
-    allergies: [],
-    teacher: {
-        firstName: "",
-        lastName: "",
-    },
+export const generalFormDataDefault = {
+    "Headshot URL": "",
+    "First Name": "",
+    "Last Name": "",
+    Gender: "M",
+    Birthday: new Date().toISOString().split("T")[0],
+    "High School": "",
+    Grade: "9",
+    Teacher: "None",
 } as StudentGeneralInfo;
 
-export const studentPrivateInfoDefault = {
-    phoneNumber: "",
-    email: "",
-    home: {
-        streetAddress: "",
-        city: "",
-        zipCode: "",
+export const privateFormDataDefault = {
+    Personal: {
+        "Street Address": "",
+        City: "",
+        "Zip Code": "",
+        Phone: "",
+        Email: "",
     },
-    guardian1: {
-        firstName: "",
-        lastName: "",
-        phoneNumber: "",
-        email: "",
-    },
-    guardian2: {
-        firstName: "",
-        lastName: "",
-        phoneNumber: "",
-        email: "",
-    },
-} as StudentPrivateInfo;
+    "Guardian 1": { "First Name": "", "Last Name": "", Phone: "", Email: "" },
+    "Guardian 2": { "First Name": "", "Last Name": "", Phone: "", Email: "" },
+};
 
-export const labels: Partial<Record<AllKeys, string>> = {
-    firstName: "First Name",
-    lastName: "Last Name",
-    grade: "Grade",
-    teacher: "Teacher",
-    dob: "Birthday",
-    gender: "Gender",
-    highSchool: "High School",
-    phoneNumber: "Phone Number",
-    email: "Email",
-} as const;
-
-export const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-];
-
-export const mandatoryGeneralDataKeys: (keyof StudentGeneralInfo)[] = [
-    "firstName",
-    "lastName",
-    "grade",
-    "dob",
-    "gender",
-    "highSchool",
-];
-export const mandatoryPrivateDataKeys: (keyof StudentPrivateInfo)[] = [
-    "phoneNumber",
-    "email",
-];
+export const schema = Object.keys(generalFormDataDefault).filter(
+    (key) => key !== "Headshot URL"
+) as (keyof StudentGeneralInfo)[];
