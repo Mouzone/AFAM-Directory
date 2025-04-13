@@ -34,3 +34,13 @@ export type Student = {
 };
 
 export type StudentObject = { [key: string]: Student };
+
+export type Staff = {
+    "First Name": string;
+    "Last Name": string;
+    Email: string;
+    Private: boolean;
+    "Manage Accounts": boolean;
+};
+
+export type StaffObject = { [key: string]: Staff };

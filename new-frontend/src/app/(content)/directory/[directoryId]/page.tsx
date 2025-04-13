@@ -13,7 +13,7 @@ import StudentForm from "@/components/Forms/StudentForm";
 import { generalFormDataDefault } from "@/utility/consts";
 import AccountManagementForm from "@/components/Forms/AccountManagementForm";
 import { getStaff } from "@/utility/getters/getStaff";
-import { Directory, StudentObject } from "@/utility/types";
+import { Directory, StaffObject, StudentObject } from "@/utility/types";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
@@ -28,7 +28,7 @@ export default function Page() {
         null
     );
     const [students, setStudents] = useState<StudentObject | null>(null);
-    const [staff, setStaff] = useState(null);
+    const [staff, setStaff] = useState<StaffObject | null>(null);
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
 
     const router = useRouter();
@@ -80,7 +80,7 @@ export default function Page() {
         }
     }, [staffData, user]);
 
-    if (user === null) {
+    if (!user) {
         return <></>;
     }
 
@@ -94,10 +94,6 @@ export default function Page() {
 
     if (!permissions) {
         return <></>;
-    }
-
-    if (!user) {
-        router.push("/");
     }
 
     const { [user.uid]: omitted, ...staffOmitSelf } = staff;
@@ -143,7 +139,7 @@ export default function Page() {
                 <Table
                     data={students}
                     setData={setStudents}
-                    showEditStudent={(studentId) => {
+                    showEditStudent={(studentId: string) => {
                         setStudentFormState(studentId);
                         showModal();
                     }}
