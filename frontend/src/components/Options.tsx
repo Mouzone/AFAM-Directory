@@ -2,6 +2,7 @@ import Image from "next/image";
 import plus from "../../public/svgs/plus.svg";
 import account from "../../public/svgs/account.svg";
 import minus from "../../public/svgs/minus.svg";
+import search from "../../public/svgs/search.svg";
 
 type OptionsProps = {
     showManageAccounts: boolean;
@@ -9,6 +10,7 @@ type OptionsProps = {
     manageAccountsOnClick: () => void;
     showDeleteStudentsOnClick: () => void;
     showDeleteStudents: boolean;
+    searchOnClick: () => void;
 };
 export default function Options({
     showManageAccounts,
@@ -16,9 +18,18 @@ export default function Options({
     manageAccountsOnClick,
     showDeleteStudentsOnClick,
     showDeleteStudents,
+    searchOnClick,
 }: OptionsProps) {
     return (
         <div className="join w-screen overflow-y-scroll">
+            <button
+                className="btn join-item"
+                type="button"
+                onClick={searchOnClick}
+            >
+                <Image src={search} alt="search" />
+                <span> Search Student</span>
+            </button>
             <button
                 className="btn join-item"
                 type="button"
