@@ -26,7 +26,13 @@ import AttendanceSubForm from "../SubForms/StudentSubForms/AttendanceSubForm";
 import { getAttendanceData } from "@/utility/getters/getAttendanceData";
 import { privateFormDataDefault } from "@/utility/consts";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { StudentGeneralInfo, StudentGeneralInfoObject } from "@/utility/types";
+import {
+    Attendance,
+    AttendanceObject,
+    StudentGeneralInfo,
+    StudentGeneralInfoObject,
+    StudentPrivateInfo,
+} from "@/utility/types";
 
 type StudentFormProps = {
     studentId: string;
@@ -43,10 +49,11 @@ export default function StudentForm({
     const [tab, setTab] = useState("general");
 
     const [generalFormData, setGeneralFormData] = useState(generalFormState);
-    const [privateFormData, setPrivateFormData] = useState(
+    const [privateFormData, setPrivateFormData] = useState<StudentPrivateInfo>(
         privateFormDataDefault
     );
-    const [attendanceFormData, setAttendanceFormData] = useState({});
+    const [attendanceFormData, setAttendanceFormData] =
+        useState<AttendanceObject>({});
     const [file, setFile] = useState<File | null>(null);
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
     const fileInputRef = useRef<HTMLInputElement | null>(null);

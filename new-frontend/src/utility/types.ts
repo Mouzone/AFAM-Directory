@@ -37,15 +37,32 @@ export type StudentGeneralInfoObject = { [key: string]: StudentGeneralInfo };
 
 export type StudentPrivateInfo = {
     Personal: {
-        "Street Address": "";
-        City: "";
-        "Zip Code": "";
-        Phone: "";
-        Email: "";
+        "Street Address": string;
+        City: string;
+        "Zip Code": string;
+        Phone: string;
+        Email: string;
     };
-    "Guardian 1": { "First Name": ""; "Last Name": ""; Phone: ""; Email: "" };
-    "Guardian 2": { "First Name": ""; "Last Name": ""; Phone: ""; Email: "" };
+    "Guardian 1": {
+        "First Name": string;
+        "Last Name": string;
+        Phone: string;
+        Email: string;
+    };
+    "Guardian 2": {
+        "First Name": string;
+        "Last Name": string;
+        Phone: string;
+        Email: string;
+    };
 };
+
+export type Attendance = {
+    "Sermon Attendance": boolean;
+    "Class Attendance": boolean;
+};
+
+export type AttendanceObject = { [key: string]: Attendance };
 
 export type Staff = {
     "First Name": string;

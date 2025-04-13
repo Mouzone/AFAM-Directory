@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { AttendanceObject } from "@/utility/types";
+import { Dispatch, SetStateAction } from "react";
 
+type AttendanceSubFormProps = {
+    date: string;
+    setDate: Dispatch<SetStateAction<string>>;
+    data: AttendanceObject;
+    setAttendanceFormData: Dispatch<SetStateAction<AttendanceObject>>;
+};
 export default function AttendanceSubForm({
     date,
     setDate,
     data,
     setAttendanceFormData,
-}) {
+}: AttendanceSubFormProps) {
     const attendance = data[date] ?? {
         "Sermon Attendance": false,
         "Class Attendance": false,

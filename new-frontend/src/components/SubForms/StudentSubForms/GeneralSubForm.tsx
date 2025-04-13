@@ -1,18 +1,10 @@
+import { StudentGeneralInfo, StudentGeneralInfoObject } from "@/utility/types";
 import Image from "next/image";
 import React, { RefObject, SetStateAction, useEffect, useState } from "react";
 
 type GeneralSubFormProps = {
-    data: {
-        "Headshot URL": string;
-        "First Name": string;
-        "Last Name": string;
-        Gender: string;
-        Birthday: string;
-        "High School": string;
-        Grade: string;
-        Teacher: string;
-    };
-    setGeneralFormData: React.Dispatch<SetStateAction<any>>;
+    data: StudentGeneralInfo;
+    setGeneralFormData: React.Dispatch<SetStateAction<StudentGeneralInfo>>;
     setFile: React.Dispatch<SetStateAction<File | null>>;
     fileInputRef: RefObject<null | HTMLInputElement>;
 };
@@ -22,7 +14,7 @@ export default function GeneralSubForm({
     setFile,
     fileInputRef,
 }: GeneralSubFormProps) {
-    const changeData = (field: string, value: string) =>
+    const changeData = (field: keyof StudentGeneralInfo, value: string) =>
         setGeneralFormData((prev) => {
             return {
                 ...prev,
@@ -39,15 +31,13 @@ export default function GeneralSubForm({
                         type="file"
                         className="file-input file-input-sm"
                         onChange={(e) => {
-                            const file = e.target.files[0];
+                            const file = e.target?.files?.[0];
                             if (file) {
                                 setFile(file);
                                 const reader = new FileReader();
                                 reader.onload = (event) => {
-                                    changeData(
-                                        "Headshot URL",
-                                        event.target?.result ?? ""
-                                    );
+                                    const url = event.target?.result ?? "";
+                                    changeData("Headshot URL", url as string);
                                 };
                                 reader.readAsDataURL(file);
                             }
