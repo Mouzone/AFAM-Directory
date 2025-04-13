@@ -1,4 +1,11 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import {
+    Dispatch,
+    FormEvent,
+    SetStateAction,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import GeneralSubForm from "../SubForms/StudentSubForms/GeneralSubForm";
 import PrivateSubForm from "../SubForms/StudentSubForms/PrivateSubForm";
 import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
@@ -19,13 +26,20 @@ import AttendanceSubForm from "../SubForms/StudentSubForms/AttendanceSubForm";
 import { getAttendanceData } from "@/utility/getters/getAttendanceData";
 import { privateFormDataDefault } from "@/utility/consts";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { StudentGeneralInfo, StudentGeneralInfoObject } from "@/utility/types";
 
+type StudentFormProps = {
+    studentId: string;
+    generalFormState: StudentGeneralInfo;
+    setStudents: Dispatch<SetStateAction<StudentGeneralInfoObject>>;
+    showPrivate: boolean;
+};
 export default function StudentForm({
     studentId,
     generalFormState,
     setStudents,
     showPrivate,
-}) {
+}: StudentFormProps) {
     const [tab, setTab] = useState("general");
 
     const [generalFormData, setGeneralFormData] = useState(generalFormState);
@@ -44,7 +58,7 @@ export default function StudentForm({
     } = useQuery({
         queryKey: [studentId, "privateData"],
         queryFn: () => getPrivateData(studentId),
-        enabled: studentId !== null,
+        enabled: studentId !== "",
     });
     const {
         isLoading: attendanceIsLoading,
@@ -53,7 +67,7 @@ export default function StudentForm({
     } = useQuery({
         queryKey: [studentId, "attendanceData"],
         queryFn: () => getAttendanceData(studentId),
-        enabled: studentId !== null,
+        enabled: studentId !== "",
     });
     useEffect(() => {
         setTab("general");
@@ -89,7 +103,7 @@ export default function StudentForm({
         e: FormEvent<HTMLFormElement>
     ) => {
         e.preventDefault();
-        if (studentId) {
+        if (studentId !== "") {
             // Edit existing student
             const studentRef = doc(
                 db,
@@ -224,7 +238,7 @@ export default function StudentForm({
                             fileInputRef={fileInputRef}
                         />
                     </Tab>
-                    {(!studentId || showPrivate) && (
+                    {(studentId === "" || showPrivate) && (
                         <Tab currTab={tab} value="private" setTab={setTab}>
                             <PrivateSubForm
                                 data={privateFormData}
@@ -232,7 +246,7 @@ export default function StudentForm({
                             />
                         </Tab>
                     )}
-                    {studentId && (
+                    {studentId !== "" && (
                         <Tab currTab={tab} value="attendance" setTab={setTab}>
                             <AttendanceSubForm
                                 date={date}

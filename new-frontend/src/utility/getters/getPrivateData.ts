@@ -1,5 +1,6 @@
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { StudentPrivateInfo } from "../types";
 
 export const getPrivateData = async (studentId: string) => {
     const privateDocRef = doc(
@@ -12,5 +13,5 @@ export const getPrivateData = async (studentId: string) => {
         "data"
     );
     const privateDoc = await getDoc(privateDocRef);
-    return { ...privateDoc.data() };
+    return privateDoc.data() as StudentPrivateInfo;
 };

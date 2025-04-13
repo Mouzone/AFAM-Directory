@@ -33,7 +33,19 @@ export type StudentGeneralInfo = {
     Teacher: "None" | string;
 };
 
-export type StudentGenderalInfoObject = { [key: string]: StudentGeneralInfo };
+export type StudentGeneralInfoObject = { [key: string]: StudentGeneralInfo };
+
+export type StudentPrivateInfo = {
+    Personal: {
+        "Street Address": "";
+        City: "";
+        "Zip Code": "";
+        Phone: "";
+        Email: "";
+    };
+    "Guardian 1": { "First Name": ""; "Last Name": ""; Phone: ""; Email: "" };
+    "Guardian 2": { "First Name": ""; "Last Name": ""; Phone: ""; Email: "" };
+};
 
 export type Staff = {
     "First Name": string;

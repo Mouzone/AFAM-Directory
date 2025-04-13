@@ -16,7 +16,7 @@ import { getStaff } from "@/utility/getters/getStaff";
 import {
     Directory,
     StaffObject,
-    StudentGenderalInfoObject,
+    StudentGeneralInfoObject,
 } from "@/utility/types";
 import { useRouter } from "next/navigation";
 
@@ -28,10 +28,8 @@ export default function Page() {
         undefined
     );
     const [directoryId, setDirectoryId] = useState("");
-    const [studentFormState, setStudentFormState] = useState<string | null>(
-        null
-    );
-    const [students, setStudents] = useState<StudentGenderalInfoObject>({});
+    const [studentFormState, setStudentFormState] = useState<string>("");
+    const [students, setStudents] = useState<StudentGeneralInfoObject>({});
     const [staff, setStaff] = useState<StaffObject>({});
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
 
@@ -129,7 +127,7 @@ export default function Page() {
                     showManageAccounts={permissions["Manage Accounts"]}
                     showDeleteStudents={showDeleteStudents}
                     addStudentOnClick={() => {
-                        setStudentFormState(null);
+                        setStudentFormState("");
                         showModal();
                     }}
                     manageAccountsOnClick={() => {
