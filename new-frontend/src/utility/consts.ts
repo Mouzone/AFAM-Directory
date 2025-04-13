@@ -1,3 +1,5 @@
+import { StudentGeneralInfo } from "./types";
+
 export const generalFormDataDefault = {
     "Headshot URL": "",
     "First Name": "",
@@ -7,7 +9,7 @@ export const generalFormDataDefault = {
     "High School": "",
     Grade: "9",
     Teacher: "None",
-};
+} as StudentGeneralInfo;
 
 export const privateFormDataDefault = {
     Personal: {

@@ -22,7 +22,7 @@ export type AuthUser =
           directories: null;
       };
 
-export type Student = {
+export type StudentGeneralInfo = {
     "Headshot URL": string;
     "First Name": string;
     "Last Name": string;
@@ -33,7 +33,7 @@ export type Student = {
     Teacher: "None" | string;
 };
 
-export type StudentObject = { [key: string]: Student };
+export type StudentGenderalInfoObject = { [key: string]: StudentGeneralInfo };
 
 export type Staff = {
     "First Name": string;

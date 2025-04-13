@@ -13,7 +13,11 @@ import StudentForm from "@/components/Forms/StudentForm";
 import { generalFormDataDefault } from "@/utility/consts";
 import AccountManagementForm from "@/components/Forms/AccountManagementForm";
 import { getStaff } from "@/utility/getters/getStaff";
-import { Directory, StaffObject, StudentObject } from "@/utility/types";
+import {
+    Directory,
+    StaffObject,
+    StudentGenderalInfoObject,
+} from "@/utility/types";
 import { useRouter } from "next/navigation";
 
 export default function Page() {
@@ -27,7 +31,9 @@ export default function Page() {
     const [studentFormState, setStudentFormState] = useState<string | null>(
         null
     );
-    const [students, setStudents] = useState<StudentObject | null>(null);
+    const [students, setStudents] = useState<StudentGenderalInfoObject | null>(
+        null
+    );
     const [staff, setStaff] = useState<StaffObject | null>(null);
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
 
