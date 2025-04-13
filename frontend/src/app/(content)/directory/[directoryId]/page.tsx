@@ -32,7 +32,6 @@ export default function Page() {
     const [staff, setStaff] = useState<StaffObject>({});
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
 
-    console.log(directories);
     useEffect(() => {
         if (pathname) {
             const segments = pathname.split("/");
@@ -73,22 +72,18 @@ export default function Page() {
     }, [staffData, user]);
 
     if (!user) {
-        console.log("no user");
         return <></>;
     }
 
     if (!students) {
-        console.log("no students");
         return <></>;
     }
 
     if (!staff) {
-        console.log("no staff");
         return <></>;
     }
 
     if (!permissions) {
-        console.log("no permissions");
         return <></>;
     }
 
