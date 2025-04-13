@@ -8,7 +8,12 @@ import {
     writeBatch,
 } from "firebase/firestore";
 
-export default function Table({ data, showEditStudent, showDeleteStudents }) {
+export default function Table({
+    data,
+    showEditStudent,
+    showDeleteStudents,
+    setData,
+}) {
     const deleteStudent = async (studentId) => {
         const studentDocRef = doc(
             db,
@@ -31,6 +36,8 @@ export default function Table({ data, showEditStudent, showDeleteStudents }) {
         await batch.commit();
 
         await deleteDoc(studentDocRef);
+        const { [studentId]: omitted, ...studentsAfterDelete } = data;
+        setData(studentsAfterDelete);
     };
     return (
         <div className="overflow-x-auto">
@@ -52,7 +59,10 @@ export default function Table({ data, showEditStudent, showDeleteStudents }) {
                             {showDeleteStudents && (
                                 <td
                                     className="text-red-400"
-                                    onClick={() => deleteStudent(studentId)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteStudent(studentId);
+                                    }}
                                 >
                                     Delete
                                 </td>

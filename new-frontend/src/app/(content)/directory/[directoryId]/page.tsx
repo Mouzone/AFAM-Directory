@@ -142,6 +142,7 @@ export default function Page() {
                 />
                 <Table
                     data={students}
+                    setData={setStudents}
                     showEditStudent={(studentId) => {
                         setStudentFormState(studentId);
                         showModal();
