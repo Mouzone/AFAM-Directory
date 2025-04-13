@@ -31,10 +31,8 @@ export default function Page() {
     const [studentFormState, setStudentFormState] = useState<string | null>(
         null
     );
-    const [students, setStudents] = useState<StudentGenderalInfoObject | null>(
-        null
-    );
-    const [staff, setStaff] = useState<StaffObject | null>(null);
+    const [students, setStudents] = useState<StudentGenderalInfoObject>({});
+    const [staff, setStaff] = useState<StaffObject>({});
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
 
     const router = useRouter();

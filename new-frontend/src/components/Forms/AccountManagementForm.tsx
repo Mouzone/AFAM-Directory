@@ -7,7 +7,7 @@ import { StaffObject } from "@/utility/types";
 
 type AccountManagementFormProps = {
     staff: StaffObject;
-    setStaff: Dispatch<SetStateAction<StaffObject | null>>;
+    setStaff: Dispatch<SetStateAction<StaffObject>>;
 };
 export default function AccountManagementForm({
     staff,

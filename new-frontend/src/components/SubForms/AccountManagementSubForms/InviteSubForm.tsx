@@ -1,4 +1,5 @@
 import { db } from "@/utility/firebase";
+import { Staff, StaffObject } from "@/utility/types";
 import {
     collection,
     doc,
@@ -8,9 +9,17 @@ import {
     setDoc,
     where,
 } from "firebase/firestore";
-
-// todo: add permissions panel here to add for when user is invited, but for now by default set to False and False
-export default function InviteSubForm({ email, setEmail, setStaff }) {
+import { Dispatch, SetStateAction } from "react";
+type InviteSubFormProps = {
+    email: string;
+    setEmail: Dispatch<SetStateAction<string>>;
+    setStaff: Dispatch<SetStateAction<StaffObject>>;
+};
+export default function InviteSubForm({
+    email,
+    setEmail,
+    setStaff,
+}: InviteSubFormProps) {
     const onClick = async () => {
         if (email === "") {
             return;
@@ -40,7 +49,7 @@ export default function InviteSubForm({ email, setEmail, setStaff }) {
         const result = querySnapshot.docs[0];
         const newStaffDoc = doc(db, "directory", "afam", "staff", result.id);
         const staffData = {
-            ...result.data(),
+            ...(result.data() as Staff),
             Private: false,
             "Manage Accounts": false,
         };

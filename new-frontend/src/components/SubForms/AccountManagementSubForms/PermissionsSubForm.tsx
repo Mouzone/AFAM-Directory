@@ -1,9 +1,18 @@
 import closeModal from "@/utility/closeModal";
 import { db } from "@/utility/firebase";
-import { doc, writeBatch, WriteBatch } from "firebase/firestore";
-import { FormEvent, useEffect, useState } from "react";
+import { StaffObject } from "@/utility/types";
+import { doc, writeBatch } from "firebase/firestore";
+import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 
-export default function PermissionsSubForm({ staff, setStaff }) {
+type PermissionSubFormProps = {
+    staff: StaffObject;
+    setStaff: Dispatch<SetStateAction<StaffObject>>;
+};
+
+export default function PermissionsSubForm({
+    staff,
+    setStaff,
+}: PermissionSubFormProps) {
     const [tempStaff, setTempStaff] = useState(staff);
 
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
