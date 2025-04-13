@@ -3,13 +3,20 @@ import plus from "../../public/svgs/plus.svg";
 import account from "../../public/svgs/account.svg";
 import minus from "../../public/svgs/minus.svg";
 
+type OptionsProps = {
+    showManageAccounts: boolean;
+    addStudentOnClick: () => void;
+    manageAccountsOnClick: () => void;
+    showDeleteStudentsOnClick: () => void;
+    showDeleteStudents: boolean;
+};
 export default function Options({
     showManageAccounts,
     addStudentOnClick,
     manageAccountsOnClick,
     showDeleteStudentsOnClick,
     showDeleteStudents,
-}) {
+}: OptionsProps) {
     return (
         <div className="join w-screen overflow-y-scroll">
             <button

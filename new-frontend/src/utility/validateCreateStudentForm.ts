@@ -1,6 +1,8 @@
+import { StudentGeneralInfo, StudentPrivateInfo } from "./types";
+
 export default function validateCreateStudentForm(
-    generalFormData,
-    privateFormData
+    generalFormData: StudentGeneralInfo,
+    privateFormData: StudentPrivateInfo
 ) {
     // make sure all fields of generalFormData are filled
     // make sure all fields of personal in privateFormData are filled
@@ -13,7 +15,7 @@ export default function validateCreateStudentForm(
     );
 }
 
-function noEmptyStrings(obj) {
+function noEmptyStrings(obj: { [key: string]: string }) {
     for (const value of Object.values(obj)) {
         if (value === "") {
             return false;

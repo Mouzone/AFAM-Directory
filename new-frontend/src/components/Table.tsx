@@ -1,5 +1,6 @@
 import { schema } from "@/utility/consts";
 import { db } from "@/utility/firebase";
+import { StudentGeneralInfoObject } from "@/utility/types";
 import {
     collection,
     deleteDoc,
@@ -7,14 +8,21 @@ import {
     getDocs,
     writeBatch,
 } from "firebase/firestore";
+import { Dispatch, SetStateAction } from "react";
 
+type TableProps = {
+    data: StudentGeneralInfoObject;
+    showEditStudent: (studentId: string) => void;
+    showDeleteStudents: boolean;
+    setData: Dispatch<SetStateAction<StudentGeneralInfoObject>>;
+};
 export default function Table({
     data,
     showEditStudent,
     showDeleteStudents,
     setData,
-}) {
-    const deleteStudent = async (studentId) => {
+}: TableProps) {
+    const deleteStudent = async (studentId: string) => {
         const studentDocRef = doc(
             db,
             "directory",

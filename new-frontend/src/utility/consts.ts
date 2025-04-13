@@ -23,12 +23,6 @@ export const privateFormDataDefault = {
     "Guardian 2": { "First Name": "", "Last Name": "", Phone: "", Email: "" },
 };
 
-export const schema = [
-    "First Name",
-    "Last Name",
-    "Gender",
-    "Birthday",
-    "High School",
-    "Grade",
-    "Teacher",
-];
+export const schema = Object.keys(generalFormDataDefault).filter(
+    (key) => key !== "Headshot URL"
+) as (keyof StudentGeneralInfo)[];

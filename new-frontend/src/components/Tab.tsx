@@ -1,4 +1,12 @@
-export default function Tab({ currTab, value, setTab, children }) {
+import { Dispatch, ReactNode, SetStateAction } from "react";
+
+type TabProps = {
+    currTab: string;
+    value: string;
+    setTab: Dispatch<SetStateAction<string>>;
+    children: ReactNode;
+};
+export default function Tab({ currTab, value, setTab, children }: TabProps) {
     return (
         <>
             <input
