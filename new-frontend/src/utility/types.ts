@@ -21,3 +21,16 @@ export type AuthUser =
           user: false;
           directories: null;
       };
+
+export type Student = {
+    "Headshot URL": string;
+    "First Name": string;
+    "Last Name": string;
+    Gender: "M" | "F";
+    Birthday: string;
+    "High School": string;
+    Grade: "9" | "10" | "11" | "12";
+    Teacher: "None" | string;
+};
+
+export type StudentObject = { [key: string]: Student };

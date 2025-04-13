@@ -4,9 +4,9 @@ import { AuthContext } from "@/components/Providers/AuthProvider";
 import { auth } from "@/utility/firebase";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { useContext } from "react";
+import { ReactNode, useContext } from "react";
 
-export default function SignedInLayout({ children }) {
+export default function SignedInLayout({ children }: { children: ReactNode }) {
     const { user } = useContext(AuthContext);
     const router = useRouter();
     if (!user) {
@@ -23,7 +23,7 @@ export default function SignedInLayout({ children }) {
                 <div className="avatar avatar-placeholder dropdown dropdown-hover dropdown-end p-4">
                     <div className="bg-neutral text-neutral-content w-8 rounded-full">
                         <span className="text-2xl">
-                            {user.displayName.at(0)}
+                            {user.displayName?.at(0)}
                         </span>
                     </div>
                     <ul
