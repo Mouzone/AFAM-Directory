@@ -87,16 +87,12 @@ export default function Page() {
         return <></>;
     }
 
-    const { [user.uid]: _, ...staffOmitSelf } = staff;
-
+    delete staff[user.uid];
     return (
         <>
             <Modal>
                 {studentFormState === "accounts" ? (
-                    <AccountManagementForm
-                        staff={staffOmitSelf}
-                        setStaff={setStaff}
-                    />
+                    <AccountManagementForm staff={staff} setStaff={setStaff} />
                 ) : (
                     <StudentForm
                         studentId={studentFormState}
