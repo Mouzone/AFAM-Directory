@@ -4,7 +4,7 @@ import QueryProvider from "../components/Providers/QueryProvider";
 import { AuthProvider } from "../components/Providers/AuthProvider";
 
 export const metadata: Metadata = {
-    title: "",
+    title: "Directory",
     description: "",
 };
 
