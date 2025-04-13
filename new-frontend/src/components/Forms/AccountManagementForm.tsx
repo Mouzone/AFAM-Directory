@@ -1,10 +1,18 @@
 import closeModal from "@/utility/closeModal";
-import { FormEvent, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import PermissionsSubForm from "../SubForms/AccountManagementSubForms/PermissionsSubForm";
 import InviteSubForm from "../SubForms/AccountManagementSubForms/InviteSubForm";
 import Tab from "../Tab";
+import { StaffObject } from "@/utility/types";
 
-export default function AccountManagementForm({ staff, setStaff }) {
+type AccountManagementFormProps = {
+    staff: StaffObject;
+    setStaff: Dispatch<SetStateAction<StaffObject | null>>;
+};
+export default function AccountManagementForm({
+    staff,
+    setStaff,
+}: AccountManagementFormProps) {
     const [tab, setTab] = useState("permissions");
     const [email, setEmail] = useState("");
 

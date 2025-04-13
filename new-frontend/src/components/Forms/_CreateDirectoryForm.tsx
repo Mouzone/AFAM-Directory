@@ -19,7 +19,7 @@ export default function CreateDirectoryForm({
         mutationFn: createDirectory,
         onSuccess: (response) => {
             // redirect to the new generated uid,
-            router.push(`/directory/${response.data.directoryId}`);
+            // router.push(`/directory/${response.data.directoryId}`);
         },
         onError: (error) => {
             setError(error);
@@ -52,8 +52,7 @@ export default function CreateDirectoryForm({
                             if (
                                 directories.find(
                                     (directory) =>
-                                        directory.directoryName ===
-                                        e.target.value
+                                        directory.name === e.target.value
                                 )
                             ) {
                                 setDirectoryNameError(
