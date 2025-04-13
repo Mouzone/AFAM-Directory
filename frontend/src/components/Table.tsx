@@ -44,8 +44,8 @@ export default function Table({
         await batch.commit();
 
         await deleteDoc(studentDocRef);
-        delete data[studentId];
-        setData(data);
+        const { [studentId]: _, ...studentsAfterDelete } = data;
+        setData(studentsAfterDelete);
     };
     return (
         <div className="overflow-x-auto">
