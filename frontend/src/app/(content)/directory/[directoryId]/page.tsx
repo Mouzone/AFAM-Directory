@@ -32,7 +32,7 @@ export default function Page() {
     const [staff, setStaff] = useState<StaffObject>({});
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
 
-    console.log("directories");
+    console.log(directories);
     useEffect(() => {
         if (pathname) {
             const segments = pathname.split("/");
