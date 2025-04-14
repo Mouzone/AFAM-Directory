@@ -30,7 +30,7 @@ export default function Table({
 }: TableProps) {
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 10,
+        pageSize: 12,
     });
     const deleteStudent = async (studentId: string) => {
         const studentDocRef = doc(
@@ -95,7 +95,7 @@ export default function Table({
     });
 
     return (
-        <div className="p-2">
+        <div className="flex flex-col p-2">
             <table className="table">
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
@@ -144,19 +144,24 @@ export default function Table({
                     ))}
                 </tbody>
             </table>
-            <div className="flex">
+            <div className="join justify-center mt-4">
                 <button
+                    className="join-item btn"
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                 >
-                    {"<"}
+                    «
                 </button>
-                <div> {pagination["pageIndex"]} </div>
+                <div className="join-item btn">
+                    {" "}
+                    {pagination["pageIndex"] + 1}{" "}
+                </div>
                 <button
+                    className="join-item btn"
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >
-                    {">"}
+                    »
                 </button>
             </div>
         </div>
