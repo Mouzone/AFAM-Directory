@@ -23,6 +23,7 @@ export type AuthUser =
       };
 
 export type StudentGeneralInfo = {
+    Id: string;
     "Headshot URL": string;
     "First Name": string;
     "Last Name": string;
@@ -32,8 +33,6 @@ export type StudentGeneralInfo = {
     Grade: "9" | "10" | "11" | "12";
     Teacher: "None" | string;
 };
-
-export type StudentGeneralInfoObject = { [key: string]: StudentGeneralInfo };
 
 export type StudentPrivateInfo = {
     Personal: {

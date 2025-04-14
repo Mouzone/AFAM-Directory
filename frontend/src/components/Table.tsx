@@ -1,7 +1,11 @@
-import { schema } from "@/utility/consts";
 import { db } from "@/utility/firebase";
-import { StudentGeneralInfo, StudentGeneralInfoObject } from "@/utility/types";
-import { createColumnHelper, flexRender } from "@tanstack/react-table";
+import { StudentGeneralInfo } from "@/utility/types";
+import {
+    createColumnHelper,
+    flexRender,
+    getCoreRowModel,
+    useReactTable,
+} from "@tanstack/react-table";
 import {
     collection,
     deleteDoc,
@@ -12,10 +16,10 @@ import {
 import { Dispatch, SetStateAction } from "react";
 
 type TableProps = {
-    data: StudentGeneralInfoObject;
-    showEditStudent: (studentId: string) => void;
+    data: StudentGeneralInfo[];
+    showEditStudent: (student: StudentGeneralInfo) => void;
     showDeleteStudents: boolean;
-    setData: Dispatch<SetStateAction<StudentGeneralInfoObject>>;
+    setData: Dispatch<SetStateAction<StudentGeneralInfo[]>>;
 };
 export default function Table({
     data,
@@ -45,8 +49,7 @@ export default function Table({
         await batch.commit();
 
         await deleteDoc(studentDocRef);
-        delete data[studentId];
-        setData({ ...data });
+        setData(data.filter((student) => student["Id"] !== studentId));
     };
 
     const columnHelper = createColumnHelper<StudentGeneralInfo>();

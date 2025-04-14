@@ -29,18 +29,15 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import {
     AttendanceObject,
     StudentGeneralInfo,
-    StudentGeneralInfoObject,
     StudentPrivateInfo,
 } from "@/utility/types";
 
 type StudentFormProps = {
-    studentId: string;
     generalFormState: StudentGeneralInfo;
-    setStudents: Dispatch<SetStateAction<StudentGeneralInfoObject>>;
+    setStudents: Dispatch<SetStateAction<StudentGeneralInfo[]>>;
     showPrivate: boolean;
 };
 export default function StudentForm({
-    studentId,
     generalFormState,
     setStudents,
     showPrivate,
@@ -57,6 +54,7 @@ export default function StudentForm({
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+    const studentId = generalFormState["Id"];
     const { data: privateData } = useQuery({
         queryKey: [studentId, "privateData"],
         queryFn: () => getPrivateData(studentId),
@@ -161,10 +159,11 @@ export default function StudentForm({
             });
 
             await batch.commit();
-            setStudents((prev) => ({
-                ...prev,
-                [studentId]: generalFormData,
-            }));
+            setStudents((prev) =>
+                prev.map((student) =>
+                    student["Id"] === studentId ? generalFormData : student
+                )
+            );
         } else {
             // Create new student
 
@@ -207,10 +206,10 @@ export default function StudentForm({
                 );
             }
 
-            setStudents((prev) => ({
+            setStudents((prev) => [
                 ...prev,
-                [newStudentRef.id]: generalFormData,
-            }));
+                { id: studentId, ...generalFormData },
+            ]);
         }
 
         exit();

@@ -18,7 +18,6 @@ import {
     SearchTerms,
     StaffObject,
     StudentGeneralInfo,
-    StudentGeneralInfoObject,
 } from "@/utility/types";
 import SearchForm from "@/components/Forms/SearchForm";
 
@@ -30,8 +29,10 @@ export default function Page() {
         undefined
     );
     const [directoryId, setDirectoryId] = useState("");
-    const [studentFormState, setStudentFormState] = useState<string>("");
-    const [students, setStudents] = useState<StudentGeneralInfoObject>({});
+    const [studentFormState, setStudentFormState] =
+        useState<StudentGeneralInfo>(generalFormDataDefault);
+    const [formToShow, setFormToShow] = useState("student");
+    const [students, setStudents] = useState<StudentGeneralInfo[]>([]);
     const [staff, setStaff] = useState<StaffObject>({});
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
     const [searchTerms, setSearchTerms] =
@@ -93,51 +94,41 @@ export default function Page() {
 
     delete staff[user.uid];
 
-    const filtered: StudentGeneralInfoObject = Object.entries(students).reduce(
-        (acc, [key, value]) => {
-            const firstNameMatch =
-                searchTerms["First Name"] === "" ||
-                value["First Name"]
-                    .toLowerCase()
-                    .includes(searchTerms["First Name"].toLowerCase());
+    const filtered = students.filter((student) => {
+        const firstNameMatch =
+            searchTerms["First Name"] === "" ||
+            student["First Name"]
+                .toLowerCase()
+                .includes(searchTerms["First Name"].toLowerCase());
 
-            const lastNameMatch =
-                searchTerms["Last Name"] === "" ||
-                value["Last Name"]
-                    .toLowerCase()
-                    .includes(searchTerms["Last Name"].toLowerCase());
+        const lastNameMatch =
+            searchTerms["Last Name"] === "" ||
+            student["Last Name"]
+                .toLowerCase()
+                .includes(searchTerms["Last Name"].toLowerCase());
 
-            const highSchoolMatch =
-                searchTerms["High School"] === "" ||
-                value["High School"]
-                    .toLowerCase()
-                    .includes(searchTerms["High School"].toLowerCase());
+        const highSchoolMatch =
+            searchTerms["High School"] === "" ||
+            student["High School"]
+                .toLowerCase()
+                .includes(searchTerms["High School"].toLowerCase());
 
-            if (firstNameMatch && lastNameMatch && highSchoolMatch) {
-                acc[key] = value as StudentGeneralInfo;
-            }
-            return acc;
-        },
-        {} as StudentGeneralInfoObject
-    );
+        return firstNameMatch && lastNameMatch && highSchoolMatch;
+    });
+
     return (
         <>
             <Modal>
-                {studentFormState === "accounts" ? (
+                {formToShow === "accounts" ? (
                     <AccountManagementForm staff={staff} setStaff={setStaff} />
-                ) : studentFormState === "search" ? (
+                ) : formToShow === "search" ? (
                     <SearchForm
                         searchTerms={searchTerms}
                         setSearchTerms={setSearchTerms}
                     />
                 ) : (
                     <StudentForm
-                        studentId={studentFormState}
-                        generalFormState={
-                            studentFormState
-                                ? students[studentFormState]
-                                : generalFormDataDefault
-                        }
+                        generalFormState={studentFormState}
                         setStudents={setStudents}
                         showPrivate={permissions["Private"]}
                     />
@@ -148,16 +139,17 @@ export default function Page() {
                 <Options
                     showManageAccounts={permissions["Manage Accounts"]}
                     showDeleteStudents={showDeleteStudents}
-                    addStudentOnClick={() => {
-                        setStudentFormState("");
+                    addStudentOnClick={(student: StudentGeneralInfo) => {
+                        setStudentFormState(student);
+                        setFormToShow("student");
                         showModal();
                     }}
                     manageAccountsOnClick={() => {
-                        setStudentFormState("accounts");
+                        setFormToShow("accounts");
                         showModal();
                     }}
                     searchOnClick={() => {
-                        setStudentFormState("search");
+                        setFormToShow("search");
                         showModal();
                     }}
                     showDeleteStudentsOnClick={() => {
@@ -167,8 +159,9 @@ export default function Page() {
                 <Table
                     data={filtered}
                     setData={setStudents}
-                    showEditStudent={(studentId: string) => {
-                        setStudentFormState(studentId);
+                    showEditStudent={(student: StudentGeneralInfo) => {
+                        setStudentFormState(student);
+                        setFormToShow("student");
                         showModal();
                     }}
                     showDeleteStudents={showDeleteStudents}

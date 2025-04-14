@@ -1,6 +1,7 @@
 import { SearchTerms, StudentGeneralInfo } from "./types";
 
 export const generalFormDataDefault = {
+    Id: "",
     "Headshot URL": "",
     "First Name": "",
     "Last Name": "",
