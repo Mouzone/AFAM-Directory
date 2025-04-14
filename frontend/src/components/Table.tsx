@@ -1,6 +1,7 @@
 import { db } from "@/utility/firebase";
 import { StudentGeneralInfo } from "@/utility/types";
 import {
+    Column,
     ColumnFiltersState,
     createColumnHelper,
     flexRender,
@@ -18,7 +19,7 @@ import {
     getDocs,
     writeBatch,
 } from "firebase/firestore";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type TableProps = {
     data: StudentGeneralInfo[];
@@ -88,12 +89,15 @@ export default function Table({
             cell: (info) => info.getValue(),
             filterFn: "equalsString",
             sortingFn: "alphanumeric",
+            meta: {
+                filterVariant: "select",
+            },
         }),
         columnHelper.accessor((row) => row["Teacher"], {
             id: "Teacher",
             header: () => "Teacher",
             cell: (info) => info.getValue(),
-            filterFn: "equalsString",
+            filterFn: "includesString",
             sortingFn: "alphanumeric",
         }),
     ];
@@ -135,28 +139,26 @@ export default function Table({
                                     key={header.id}
                                     onClick={header.column.getToggleSortingHandler()}
                                 >
-                                    {header.isPlaceholder
-                                        ? null
-                                        : flexRender(
-                                              header.column.columnDef.header,
-                                              header.getContext()
-                                          )}
+                                    <div
+                                        className="cursor-pointer select-none"
+                                        onClick={header.column.getToggleSortingHandler()}
+                                    >
+                                        {flexRender(
+                                            header.column.columnDef.header,
+                                            header.getContext()
+                                        )}
+                                    </div>
+                                    {header.column.getCanFilter() ? (
+                                        <div>
+                                            <Filter column={header.column} />
+                                        </div>
+                                    ) : null}
                                 </th>
                             ))}
                         </tr>
                     ))}
                 </thead>
                 <tbody>
-                    {/* for grade and teacher make it a select option */}
-                    <tr>
-                        {showDeleteStudents && <td></td>}
-                        <td>
-                            <input></input>
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
                     {table.getRowModel().rows.map((row) => (
                         <tr
                             className="hover:bg-base-300"
@@ -207,5 +209,66 @@ export default function Table({
                 </button>
             </div>
         </div>
+    );
+}
+
+function Filter({ column }: { column: Column<any, unknown> }) {
+    const columnFilterValue = column.getFilterValue();
+    const { filterVariant } = column.columnDef.meta ?? {};
+
+    return filterVariant === "select" ? (
+        <select
+            onChange={(e) => column.setFilterValue(e.target.value)}
+            value={columnFilterValue?.toString()}
+        >
+            {/* See faceted column filters example for dynamic select options */}
+            <option value="">Any</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select>
+    ) : (
+        <DebouncedInput
+            className="w-36 border shadow rounded"
+            onChange={(value) => column.setFilterValue(value)}
+            placeholder={`Search...`}
+            type="text"
+            value={(columnFilterValue ?? "") as string}
+        />
+    );
+}
+
+// A typical debounced input react component
+function DebouncedInput({
+    value: initialValue,
+    onChange,
+    debounce = 200,
+    ...props
+}: {
+    value: string | number;
+    onChange: (value: string | number) => void;
+    debounce?: number;
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange">) {
+    const [value, setValue] = useState(initialValue);
+
+    useEffect(() => {
+        setValue(initialValue);
+    }, [initialValue]);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            onChange(value);
+        }, debounce);
+
+        return () => clearTimeout(timeout);
+    }, [value]);
+
+    return (
+        <input
+            {...props}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+        />
     );
 }
