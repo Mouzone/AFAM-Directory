@@ -1,9 +1,11 @@
 import { db } from "@/utility/firebase";
 import { StudentGeneralInfo } from "@/utility/types";
 import {
+    ColumnFiltersState,
     createColumnHelper,
     flexRender,
     getCoreRowModel,
+    getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
     SortingState,
@@ -37,6 +39,7 @@ export default function Table({
     const [sorting, setSorting] = useState<SortingState>([
         { id: "First Name", desc: false },
     ]);
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const deleteStudent = async (studentId: string) => {
         const studentDocRef = doc(
             db,
@@ -69,24 +72,28 @@ export default function Table({
             id: "First Name",
             header: () => "First Name",
             cell: (info) => info.getValue(),
+            filterFn: "includesString",
             sortingFn: "alphanumeric",
         }),
         columnHelper.accessor((row) => row["Last Name"], {
             id: "Last Name",
             header: () => "Last Name",
             cell: (info) => info.getValue(),
+            filterFn: "includesString",
             sortingFn: "alphanumeric",
         }),
         columnHelper.accessor((row) => row["Grade"], {
             id: "Grade",
             header: () => "Grade",
             cell: (info) => info.getValue(),
+            filterFn: "equalsString",
             sortingFn: "alphanumeric",
         }),
         columnHelper.accessor((row) => row["Teacher"], {
             id: "Teacher",
             header: () => "Teacher",
             cell: (info) => info.getValue(),
+            filterFn: "equalsString",
             sortingFn: "alphanumeric",
         }),
     ];
@@ -97,14 +104,17 @@ export default function Table({
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
-        autoResetPageIndex: false,
+        getFilteredRowModel: getFilteredRowModel(),
         onPaginationChange: setPagination,
         onSortingChange: setSorting,
-        enableMultiSort: false,
+        onColumnFiltersChange: setColumnFilters,
         state: {
             sorting,
             pagination,
+            columnFilters,
         },
+        autoResetPageIndex: false,
+        enableMultiSort: false,
         enableSortingRemoval: false,
     });
 
@@ -119,7 +129,7 @@ export default function Table({
                                 <th
                                     className={
                                         header.column.getIsSorted()
-                                            ? "bg-gray-200"
+                                            ? "bg-gray-300"
                                             : ""
                                     }
                                     key={header.id}
@@ -137,6 +147,16 @@ export default function Table({
                     ))}
                 </thead>
                 <tbody>
+                    {/* for grade and teacher make it a select option */}
+                    <tr>
+                        {showDeleteStudents && <td></td>}
+                        <td>
+                            <input></input>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
                     {table.getRowModel().rows.map((row) => (
                         <tr
                             className="hover:bg-base-300"
