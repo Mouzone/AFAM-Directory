@@ -29,6 +29,7 @@ export default function Page() {
     const [students, setStudents] = useState<StudentGeneralInfo[]>([]);
     const [staff, setStaff] = useState<StaffObject>({});
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
+
     useEffect(() => {
         if (pathname) {
             const segments = pathname.split("/");

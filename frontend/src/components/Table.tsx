@@ -2,6 +2,7 @@ import { db } from "@/utility/firebase";
 import { StudentGeneralInfo } from "@/utility/types";
 import {
     Column,
+    ColumnDef,
     ColumnFiltersState,
     createColumnHelper,
     flexRender,
@@ -19,7 +20,7 @@ import {
     getDocs,
     writeBatch,
 } from "firebase/firestore";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 
 type TableProps = {
     data: StudentGeneralInfo[];
@@ -68,39 +69,42 @@ export default function Table({
 
     const columnHelper = createColumnHelper<StudentGeneralInfo>();
 
-    const columns = [
-        columnHelper.accessor((row) => row["First Name"], {
-            id: "First Name",
-            header: () => "First Name",
-            cell: (info) => info.getValue(),
-            filterFn: "includesString",
-            sortingFn: "alphanumeric",
-        }),
-        columnHelper.accessor((row) => row["Last Name"], {
-            id: "Last Name",
-            header: () => "Last Name",
-            cell: (info) => info.getValue(),
-            filterFn: "includesString",
-            sortingFn: "alphanumeric",
-        }),
-        columnHelper.accessor((row) => row["Grade"], {
-            id: "Grade",
-            header: () => "Grade",
-            cell: (info) => info.getValue(),
-            filterFn: "equalsString",
-            sortingFn: "alphanumeric",
-            meta: {
-                filterVariant: "select",
-            },
-        }),
-        columnHelper.accessor((row) => row["Teacher"], {
-            id: "Teacher",
-            header: () => "Teacher",
-            cell: (info) => info.getValue(),
-            filterFn: "includesString",
-            sortingFn: "alphanumeric",
-        }),
-    ];
+    const columns = useMemo<ColumnDef<StudentGeneralInfo, any>[]>(
+        () => [
+            columnHelper.accessor((row) => row["First Name"], {
+                id: "First Name",
+                header: () => "First Name",
+                cell: (info) => info.getValue(),
+                filterFn: "includesString",
+                sortingFn: "alphanumeric",
+            }),
+            columnHelper.accessor((row) => row["Last Name"], {
+                id: "Last Name",
+                header: () => "Last Name",
+                cell: (info) => info.getValue(),
+                filterFn: "includesString",
+                sortingFn: "alphanumeric",
+            }),
+            columnHelper.accessor((row) => row["Grade"], {
+                id: "Grade",
+                header: () => "Grade",
+                cell: (info) => info.getValue(),
+                filterFn: "equalsString",
+                sortingFn: "alphanumeric",
+                meta: {
+                    filterVariant: "select",
+                },
+            }),
+            columnHelper.accessor((row) => row["Teacher"], {
+                id: "Teacher",
+                header: () => "Teacher",
+                cell: (info) => info.getValue(),
+                filterFn: "includesString",
+                sortingFn: "alphanumeric",
+            }),
+        ],
+        []
+    );
 
     const table = useReactTable({
         data,
@@ -218,6 +222,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
 
     return filterVariant === "select" ? (
         <select
+            onClick={(e) => e.stopPropagation()}
             onChange={(e) => column.setFilterValue(e.target.value)}
             value={columnFilterValue?.toString()}
         >
@@ -230,7 +235,8 @@ function Filter({ column }: { column: Column<any, unknown> }) {
         </select>
     ) : (
         <DebouncedInput
-            className="w-36 border shadow rounded"
+            onClick={(e) => e.stopPropagation()}
+            className="w-36 border shadow rounded p-2"
             onChange={(value) => column.setFilterValue(value)}
             placeholder={`Search...`}
             type="text"
