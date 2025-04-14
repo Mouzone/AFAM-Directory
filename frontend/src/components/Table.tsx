@@ -1,6 +1,7 @@
 import { schema } from "@/utility/consts";
 import { db } from "@/utility/firebase";
-import { StudentGeneralInfoObject } from "@/utility/types";
+import { StudentGeneralInfo, StudentGeneralInfoObject } from "@/utility/types";
+import { createColumnHelper, flexRender } from "@tanstack/react-table";
 import {
     collection,
     deleteDoc,
@@ -47,42 +48,125 @@ export default function Table({
         delete data[studentId];
         setData({ ...data });
     };
+
+    const columnHelper = createColumnHelper<StudentGeneralInfo>();
+
+    const columns = [
+        columnHelper.accessor((row) => row["First Name"], {
+            id: "First Name",
+            header: () => "First Name",
+            cell: (info) => info.getValue(),
+        }),
+        columnHelper.accessor((row) => row["Last Name"], {
+            id: "Last Name",
+            header: () => <span>Last Name</span>,
+            cell: (info) => <i>{info.getValue()}</i>,
+        }),
+        columnHelper.accessor((row) => row["Grade"], {
+            id: "Grade",
+            header: () => <span>Last Name</span>,
+            cell: (info) => <i>{info.getValue()}</i>,
+        }),
+        columnHelper.accessor((row) => row["Teacher"], {
+            id: "Teacher",
+            header: () => <span>Last Name</span>,
+            cell: (info) => <i>{info.getValue()}</i>,
+        }),
+    ];
+
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    });
+
     return (
-        <div className="overflow-x-auto">
-            <table className="table">
+        <div className="p-2">
+            <table>
                 <thead>
-                    <tr>
-                        {showDeleteStudents && <th></th>}
-                        {schema.map((field) => (
-                            <th key={field}>{field}</th>
-                        ))}
-                    </tr>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                        <tr key={headerGroup.id}>
+                            {headerGroup.headers.map((header) => (
+                                <th key={header.id}>
+                                    {header.isPlaceholder
+                                        ? null
+                                        : flexRender(
+                                              header.column.columnDef.header,
+                                              header.getContext()
+                                          )}
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
                 </thead>
                 <tbody>
-                    {Object.entries(data).map(([studentId, studentData]) => (
-                        <tr
-                            className="hover:bg-base-300"
-                            key={studentId}
-                            onClick={() => showEditStudent(studentId)}
-                        >
-                            {showDeleteStudents && (
-                                <td
-                                    className="text-red-400"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        deleteStudent(studentId);
-                                    }}
-                                >
-                                    Delete
+                    {table.getRowModel().rows.map((row) => (
+                        <tr key={row.id}>
+                            {row.getVisibleCells().map((cell) => (
+                                <td key={cell.id}>
+                                    {flexRender(
+                                        cell.column.columnDef.cell,
+                                        cell.getContext()
+                                    )}
                                 </td>
-                            )}
-                            {schema.map((field) => (
-                                <td key={field}>{studentData[field]}</td>
                             ))}
                         </tr>
                     ))}
                 </tbody>
+                <tfoot>
+                    {table.getFooterGroups().map((footerGroup) => (
+                        <tr key={footerGroup.id}>
+                            {footerGroup.headers.map((header) => (
+                                <th key={header.id}>
+                                    {header.isPlaceholder
+                                        ? null
+                                        : flexRender(
+                                              header.column.columnDef.footer,
+                                              header.getContext()
+                                          )}
+                                </th>
+                            ))}
+                        </tr>
+                    ))}
+                </tfoot>
             </table>
+            <div className="h-4" />
         </div>
+        // <div className="overflow-x-auto">
+        //     <table className="table">
+        //         <thead>
+        //             <tr>
+        //                 {showDeleteStudents && <th></th>}
+        //                 {schema.map((field) => (
+        //                     <th key={field}>{field}</th>
+        //                 ))}
+        //             </tr>
+        //         </thead>
+        //         <tbody>
+        //             {Object.entries(data).map(([studentId, studentData]) => (
+        //                 <tr
+        //                     className="hover:bg-base-300"
+        //                     key={studentId}
+        //                     onClick={() => showEditStudent(studentId)}
+        //                 >
+        //                     {showDeleteStudents && (
+        //                         <td
+        //                             className="text-red-400"
+        //                             onClick={(e) => {
+        //                                 e.stopPropagation();
+        //                                 deleteStudent(studentId);
+        //                             }}
+        //                         >
+        //                             Delete
+        //                         </td>
+        //                     )}
+        //                     {schema.map((field) => (
+        //                         <td key={field}>{studentData[field]}</td>
+        //                     ))}
+        //                 </tr>
+        //             ))}
+        //         </tbody>
+        //     </table>
+        // </div>
     );
 }
