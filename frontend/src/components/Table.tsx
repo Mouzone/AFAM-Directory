@@ -5,6 +5,8 @@ import {
     flexRender,
     getCoreRowModel,
     getPaginationRowModel,
+    getSortedRowModel,
+    SortingState,
     useReactTable,
 } from "@tanstack/react-table";
 import {
@@ -32,6 +34,9 @@ export default function Table({
         pageIndex: 0,
         pageSize: 12,
     });
+    const [sorting, setSorting] = useState<SortingState>([
+        { id: "First Name", desc: false },
+    ]);
     const deleteStudent = async (studentId: string) => {
         const studentDocRef = doc(
             db,
@@ -64,21 +69,25 @@ export default function Table({
             id: "First Name",
             header: () => "First Name",
             cell: (info) => info.getValue(),
+            sortingFn: "alphanumeric",
         }),
         columnHelper.accessor((row) => row["Last Name"], {
             id: "Last Name",
-            header: () => <span>Last Name</span>,
+            header: () => "Last Name",
             cell: (info) => info.getValue(),
+            sortingFn: "alphanumeric",
         }),
         columnHelper.accessor((row) => row["Grade"], {
             id: "Grade",
-            header: () => <span>Last Name</span>,
+            header: () => "Grade",
             cell: (info) => info.getValue(),
+            sortingFn: "alphanumeric",
         }),
         columnHelper.accessor((row) => row["Teacher"], {
             id: "Teacher",
-            header: () => <span>Last Name</span>,
+            header: () => "Teacher",
             cell: (info) => info.getValue(),
+            sortingFn: "alphanumeric",
         }),
     ];
 
@@ -87,11 +96,16 @@ export default function Table({
         columns,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
         autoResetPageIndex: false,
         onPaginationChange: setPagination,
+        onSortingChange: setSorting,
+        enableMultiSort: false,
         state: {
+            sorting,
             pagination,
         },
+        enableSortingRemoval: false,
     });
 
     return (
@@ -102,7 +116,10 @@ export default function Table({
                         <tr key={headerGroup.id}>
                             {showDeleteStudents && <th></th>}
                             {headerGroup.headers.map((header) => (
-                                <th key={header.id}>
+                                <th
+                                    key={header.id}
+                                    onClick={header.column.getToggleSortingHandler()}
+                                >
                                     {header.isPlaceholder
                                         ? null
                                         : flexRender(
