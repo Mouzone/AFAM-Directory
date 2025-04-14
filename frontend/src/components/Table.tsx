@@ -4,6 +4,7 @@ import {
     createColumnHelper,
     flexRender,
     getCoreRowModel,
+    getPaginationRowModel,
     useReactTable,
 } from "@tanstack/react-table";
 import {
@@ -13,7 +14,7 @@ import {
     getDocs,
     writeBatch,
 } from "firebase/firestore";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 type TableProps = {
     data: StudentGeneralInfo[];
@@ -27,6 +28,10 @@ export default function Table({
     showDeleteStudents,
     setData,
 }: TableProps) {
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 10,
+    });
     const deleteStudent = async (studentId: string) => {
         const studentDocRef = doc(
             db,
@@ -81,6 +86,12 @@ export default function Table({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        autoResetPageIndex: false,
+        onPaginationChange: setPagination,
+        state: {
+            pagination,
+        },
     });
 
     return (
@@ -133,42 +144,21 @@ export default function Table({
                     ))}
                 </tbody>
             </table>
+            <div className="flex">
+                <button
+                    onClick={() => table.previousPage()}
+                    disabled={!table.getCanPreviousPage()}
+                >
+                    {"<"}
+                </button>
+                <div> {pagination["pageIndex"]} </div>
+                <button
+                    onClick={() => table.nextPage()}
+                    disabled={!table.getCanNextPage()}
+                >
+                    {">"}
+                </button>
+            </div>
         </div>
-        // <div className="overflow-x-auto">
-        //     <table className="table">
-        //         <thead>
-        //             <tr>
-        //                 {showDeleteStudents && <th></th>}
-        //                 {schema.map((field) => (
-        //                     <th key={field}>{field}</th>
-        //                 ))}
-        //             </tr>
-        //         </thead>
-        //         <tbody>
-        //             {Object.entries(data).map(([studentId, studentData]) => (
-        //                 <tr
-        //                     className="hover:bg-base-300"
-        //                     key={studentId}
-        //                     onClick={() => showEditStudent(studentId)}
-        //                 >
-        //                     {showDeleteStudents && (
-        //                         <td
-        //                             className="text-red-400"
-        //                             onClick={(e) => {
-        //                                 e.stopPropagation();
-        //                                 deleteStudent(studentId);
-        //                             }}
-        //                         >
-        //                             Delete
-        //                         </td>
-        //                     )}
-        //                     {schema.map((field) => (
-        //                         <td key={field}>{studentData[field]}</td>
-        //                     ))}
-        //                 </tr>
-        //             ))}
-        //         </tbody>
-        //     </table>
-        // </div>
     );
 }
