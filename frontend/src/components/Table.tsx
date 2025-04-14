@@ -63,17 +63,17 @@ export default function Table({
         columnHelper.accessor((row) => row["Last Name"], {
             id: "Last Name",
             header: () => <span>Last Name</span>,
-            cell: (info) => <i>{info.getValue()}</i>,
+            cell: (info) => info.getValue(),
         }),
         columnHelper.accessor((row) => row["Grade"], {
             id: "Grade",
             header: () => <span>Last Name</span>,
-            cell: (info) => <i>{info.getValue()}</i>,
+            cell: (info) => info.getValue(),
         }),
         columnHelper.accessor((row) => row["Teacher"], {
             id: "Teacher",
             header: () => <span>Last Name</span>,
-            cell: (info) => <i>{info.getValue()}</i>,
+            cell: (info) => info.getValue(),
         }),
     ];
 
@@ -85,10 +85,11 @@ export default function Table({
 
     return (
         <div className="p-2">
-            <table>
+            <table className="table">
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id}>
+                            {showDeleteStudents && <th></th>}
                             {headerGroup.headers.map((header) => (
                                 <th key={header.id}>
                                     {header.isPlaceholder
@@ -104,7 +105,22 @@ export default function Table({
                 </thead>
                 <tbody>
                     {table.getRowModel().rows.map((row) => (
-                        <tr key={row.id}>
+                        <tr
+                            className="hover:bg-base-300"
+                            key={row.id}
+                            onClick={() => showEditStudent(row.original)}
+                        >
+                            {showDeleteStudents && (
+                                <td
+                                    className="text-red-400"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteStudent(row.original["Id"]);
+                                    }}
+                                >
+                                    Delete
+                                </td>
+                            )}
                             {row.getVisibleCells().map((cell) => (
                                 <td key={cell.id}>
                                     {flexRender(
@@ -116,24 +132,7 @@ export default function Table({
                         </tr>
                     ))}
                 </tbody>
-                <tfoot>
-                    {table.getFooterGroups().map((footerGroup) => (
-                        <tr key={footerGroup.id}>
-                            {footerGroup.headers.map((header) => (
-                                <th key={header.id}>
-                                    {header.isPlaceholder
-                                        ? null
-                                        : flexRender(
-                                              header.column.columnDef.footer,
-                                              header.getContext()
-                                          )}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </tfoot>
             </table>
-            <div className="h-4" />
         </div>
         // <div className="overflow-x-auto">
         //     <table className="table">
