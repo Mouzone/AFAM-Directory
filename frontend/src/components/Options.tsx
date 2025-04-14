@@ -12,7 +12,6 @@ type OptionsProps = {
     manageAccountsOnClick: () => void;
     showDeleteStudentsOnClick: () => void;
     showDeleteStudents: boolean;
-    searchOnClick: () => void;
 };
 export default function Options({
     showManageAccounts,
@@ -20,18 +19,9 @@ export default function Options({
     manageAccountsOnClick,
     showDeleteStudentsOnClick,
     showDeleteStudents,
-    searchOnClick,
 }: OptionsProps) {
     return (
         <div className="join w-screen overflow-y-scroll">
-            <button
-                className="btn join-item"
-                type="button"
-                onClick={searchOnClick}
-            >
-                <Image src={search} alt="search" />
-                <span> Search Student</span>
-            </button>
             <button
                 className="btn join-item"
                 type="button"

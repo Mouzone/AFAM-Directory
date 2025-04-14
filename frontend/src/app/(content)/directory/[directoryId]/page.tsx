@@ -10,16 +10,10 @@ import Options from "@/components/Options";
 import Modal from "@/components/Modal";
 import showModal from "@/utility/showModal";
 import StudentForm from "@/components/Forms/StudentForm";
-import { generalFormDataDefault, searchTermsState } from "@/utility/consts";
+import { generalFormDataDefault } from "@/utility/consts";
 import AccountManagementForm from "@/components/Forms/AccountManagementForm";
 import { getStaff } from "@/utility/getters/getStaff";
-import {
-    Directory,
-    SearchTerms,
-    StaffObject,
-    StudentGeneralInfo,
-} from "@/utility/types";
-import SearchForm from "@/components/Forms/SearchForm";
+import { Directory, StaffObject, StudentGeneralInfo } from "@/utility/types";
 
 export default function Page() {
     const pathname = usePathname();
@@ -35,8 +29,6 @@ export default function Page() {
     const [students, setStudents] = useState<StudentGeneralInfo[]>([]);
     const [staff, setStaff] = useState<StaffObject>({});
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
-    const [searchTerms, setSearchTerms] =
-        useState<SearchTerms>(searchTermsState);
     useEffect(() => {
         if (pathname) {
             const segments = pathname.split("/");
@@ -94,38 +86,11 @@ export default function Page() {
 
     delete staff[user.uid];
 
-    const filtered = students.filter((student) => {
-        const firstNameMatch =
-            searchTerms["First Name"] === "" ||
-            student["First Name"]
-                .toLowerCase()
-                .includes(searchTerms["First Name"].toLowerCase());
-
-        const lastNameMatch =
-            searchTerms["Last Name"] === "" ||
-            student["Last Name"]
-                .toLowerCase()
-                .includes(searchTerms["Last Name"].toLowerCase());
-
-        const highSchoolMatch =
-            searchTerms["High School"] === "" ||
-            student["High School"]
-                .toLowerCase()
-                .includes(searchTerms["High School"].toLowerCase());
-
-        return firstNameMatch && lastNameMatch && highSchoolMatch;
-    });
-
     return (
         <>
             <Modal>
                 {formToShow === "accounts" ? (
                     <AccountManagementForm staff={staff} setStaff={setStaff} />
-                ) : formToShow === "search" ? (
-                    <SearchForm
-                        searchTerms={searchTerms}
-                        setSearchTerms={setSearchTerms}
-                    />
                 ) : (
                     <StudentForm
                         generalFormState={studentFormState}
@@ -148,16 +113,12 @@ export default function Page() {
                         setFormToShow("accounts");
                         showModal();
                     }}
-                    searchOnClick={() => {
-                        setFormToShow("search");
-                        showModal();
-                    }}
                     showDeleteStudentsOnClick={() => {
                         setShowDeleteStudents((prev) => !prev);
                     }}
                 />
                 <Table
-                    data={filtered}
+                    data={students}
                     setData={setStudents}
                     showEditStudent={(student: StudentGeneralInfo) => {
                         setStudentFormState(student);
