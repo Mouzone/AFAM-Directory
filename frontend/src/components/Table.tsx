@@ -148,11 +148,17 @@ export default function Table({
                             {showDeleteStudents && <th></th>}
                             {headerGroup.headers.map((header) => (
                                 <th
-                                    className={
-                                        header.column.getIsSorted()
-                                            ? "bg-gray-300"
-                                            : ""
-                                    }
+                                    className={`
+                                        ${
+                                            header.column.getIsSorted()
+                                                ? "bg-gray-300"
+                                                : ""
+                                        }
+                                        ${
+                                            showDeleteStudents
+                                                ? "w-1/4"
+                                                : "w-1/5"
+                                        }`}
                                     key={header.id}
                                     onClick={header.column.getToggleSortingHandler()}
                                 >
@@ -171,17 +177,22 @@ export default function Table({
                                             header.column.getIsSorted() as string
                                         ] ?? null}
                                     </div>
-                                    {showSearch && (
-                                        <div>
-                                            <Filter column={header.column} />
-                                        </div>
-                                    )}
                                 </th>
                             ))}
                         </tr>
                     ))}
                 </thead>
                 <tbody>
+                    {showSearch &&
+                        table.getHeaderGroups().map((headerGroup) => (
+                            <tr>
+                                {headerGroup.headers.map((header) => (
+                                    <td>
+                                        <Filter column={header.column} />
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
                     {table.getRowModel().rows.map((row) => (
                         <tr
                             className="hover:bg-base-300"
