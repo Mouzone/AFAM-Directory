@@ -21,6 +21,8 @@ export default function PermissionsSubForm({
         Object.entries(tempStaff).map(([staffId, staffData]) => {
             const staffDocRef = doc(db, "directory", "afam", "staff", staffId);
             batch.update(staffDocRef, staffData);
+            const userDocRef = doc(db, "user", staffId, "directory", "afam");
+            batch.update(userDocRef, staffData);
         });
         await batch.commit();
         setStaff(tempStaff);
