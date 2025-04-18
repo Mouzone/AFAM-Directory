@@ -238,7 +238,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
     const columnFilterValue = column.getFilterValue();
     const { filterVariant } =
         (column.columnDef.meta as {
-            filterVariant?: "text" | "range" | "select";
+            filterVariant?: "text" | "select";
         }) ?? {};
 
     return filterVariant === "select" ? (
