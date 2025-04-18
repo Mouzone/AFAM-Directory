@@ -21,6 +21,8 @@ import {
     writeBatch,
 } from "firebase/firestore";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import trashcan from "../../public/svgs/trashcan.svg";
+import Image from "next/image";
 
 type TableProps = {
     data: StudentGeneralInfo[];
@@ -190,7 +192,7 @@ export default function Table({
                                         deleteStudent(row.original["Id"]);
                                     }}
                                 >
-                                    Delete
+                                    <Image src={trashcan} alt="delete" />
                                 </td>
                             )}
                             {row.getVisibleCells().map((cell) => (
