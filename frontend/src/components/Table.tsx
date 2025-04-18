@@ -44,6 +44,11 @@ export default function Table({
         { id: "First Name", desc: false },
     ]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+    useEffect(() => {
+        setColumnFilters([]);
+    }, [showSearch]);
+
     const deleteStudent = async (studentId: string) => {
         const studentDocRef = doc(
             db,
