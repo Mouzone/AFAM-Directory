@@ -1,5 +1,5 @@
 import { db } from "@/utility/firebase";
-import { StudentGeneralInfo } from "@/utility/types";
+import { Grade, StudentGeneralInfo } from "@/utility/types";
 import {
     Column,
     ColumnDef,
@@ -78,6 +78,7 @@ export default function Table({
 
     const columnHelper = createColumnHelper<StudentGeneralInfo>();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const columns = useMemo<ColumnDef<StudentGeneralInfo, any>[]>(
         () => [
             columnHelper.accessor((row) => row["First Name"], {
@@ -99,7 +100,7 @@ export default function Table({
             columnHelper.accessor((row) => row["Grade"], {
                 id: "Grade",
                 header: () => "Grade",
-                cell: (info) => info.getValue(),
+                cell: (info) => info.getValue<Grade>(),
                 filterFn: "equalsString",
                 sortingFn: "alphanumeric",
                 meta: {
@@ -115,7 +116,7 @@ export default function Table({
                 meta: {},
             }),
         ],
-        []
+        [columnHelper]
     );
 
     const table = useReactTable({
@@ -219,8 +220,7 @@ export default function Table({
                     «
                 </button>
                 <div className="join-item btn">
-                    {" "}
-                    {pagination["pageIndex"] + 1}{" "}
+                    {pagination["pageIndex"] + 1}
                 </div>
                 <button
                     className="join-item btn"
@@ -234,7 +234,7 @@ export default function Table({
     );
 }
 
-function Filter({ column }: { column: Column<any, unknown> }) {
+function Filter({ column }: { column: Column<StudentGeneralInfo, unknown> }) {
     const columnFilterValue = column.getFilterValue();
     const { filterVariant } =
         (column.columnDef.meta as {
@@ -289,7 +289,7 @@ function DebouncedInput({
         }, debounce);
 
         return () => clearTimeout(timeout);
-    }, [value]);
+    }, [debounce, onChange, value]);
 
     return (
         <input

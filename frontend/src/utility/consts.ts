@@ -1,4 +1,4 @@
-import { SearchTerms, StudentGeneralInfo } from "./types";
+import { StudentGeneralInfo } from "./types";
 
 export const generalFormDataDefault = {
     Id: "",

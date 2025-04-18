@@ -15,7 +15,7 @@ export default function Page() {
         ) {
             router.push("/directory/afam");
         }
-    }, [directories]);
+    }, [router, directories]);
 
     return (
         <div className="flex items-center justify-center h-screen">

@@ -22,6 +22,8 @@ export type AuthUser =
           directories: null;
       };
 
+export type Grade = "9" | "10" | "11" | "12";
+
 export type StudentGeneralInfo = {
     Id: string;
     "Headshot URL": string;
@@ -30,7 +32,7 @@ export type StudentGeneralInfo = {
     Gender: "M" | "F";
     Birthday: string;
     "High School": string;
-    Grade: "9" | "10" | "11" | "12";
+    Grade: Grade;
     Teacher: "None" | string;
 };
 
