@@ -148,11 +148,17 @@ export default function Table({
                             {showDeleteStudents && <th></th>}
                             {headerGroup.headers.map((header) => (
                                 <th
-                                    className={
-                                        header.column.getIsSorted()
-                                            ? "bg-gray-300"
-                                            : ""
-                                    }
+                                    className={`
+                                        ${
+                                            header.column.getIsSorted()
+                                                ? "bg-gray-300"
+                                                : ""
+                                        }
+                                        ${
+                                            showDeleteStudents
+                                                ? "w-1/4"
+                                                : "w-1/5"
+                                        }`}
                                     key={header.id}
                                     onClick={header.column.getToggleSortingHandler()}
                                 >
