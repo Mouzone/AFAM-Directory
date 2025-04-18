@@ -158,6 +158,12 @@ export default function Table({
                                             header.column.columnDef.header,
                                             header.getContext()
                                         )}
+                                        {{
+                                            asc: " 🔼",
+                                            desc: " 🔽",
+                                        }[
+                                            header.column.getIsSorted() as string
+                                        ] ?? null}
                                     </div>
                                     {showSearch && (
                                         <div>
