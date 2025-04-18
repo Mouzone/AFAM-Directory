@@ -1,6 +1,6 @@
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
-import { StudentGeneralInfoObject, StudentGeneralInfo } from "../types";
+import { StudentGeneralInfo } from "../types";
 
 export const getStudents = async (directoryId: string) => {
     const studentsCollectionRef = collection(
@@ -11,11 +11,10 @@ export const getStudents = async (directoryId: string) => {
     );
     const studentDocs = await getDocs(studentsCollectionRef);
 
-    const students: StudentGeneralInfoObject = {};
-    studentDocs.docs.forEach(
-        (studentDoc) =>
-            (students[studentDoc.id] = studentDoc.data() as StudentGeneralInfo)
-    );
-
-    return students;
+    return studentDocs.docs.map((studentDoc) => {
+        return {
+            Id: studentDoc.id,
+            ...studentDoc.data(),
+        } as StudentGeneralInfo;
+    });
 };

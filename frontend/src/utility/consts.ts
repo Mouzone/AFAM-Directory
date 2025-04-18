@@ -1,6 +1,7 @@
 import { SearchTerms, StudentGeneralInfo } from "./types";
 
 export const generalFormDataDefault = {
+    Id: "",
     "Headshot URL": "",
     "First Name": "",
     "Last Name": "",
@@ -26,12 +27,3 @@ export const privateFormDataDefault = {
 export const schema = Object.keys(generalFormDataDefault).filter(
     (key) => key !== "Headshot URL"
 ) as (keyof StudentGeneralInfo)[];
-
-export const searchTermsState: SearchTerms = {
-    "First Name": "",
-    "Last Name": "",
-    Gender: "M",
-    "High School": "",
-    Grade: "9",
-    Teacher: "None",
-};

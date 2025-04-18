@@ -3,27 +3,31 @@ import plus from "../../public/svgs/plus.svg";
 import account from "../../public/svgs/account.svg";
 import minus from "../../public/svgs/minus.svg";
 import search from "../../public/svgs/search.svg";
+import { StudentGeneralInfo } from "@/utility/types";
+import { generalFormDataDefault } from "@/utility/consts";
 
 type OptionsProps = {
     showManageAccounts: boolean;
-    addStudentOnClick: () => void;
+    addStudentOnClick: (student: StudentGeneralInfo) => void;
     manageAccountsOnClick: () => void;
     showDeleteStudentsOnClick: () => void;
-    showDeleteStudents: boolean;
     searchOnClick: () => void;
+    showDeleteStudents: boolean;
+    showSearch: boolean;
 };
 export default function Options({
     showManageAccounts,
+    showSearch,
+    searchOnClick,
     addStudentOnClick,
     manageAccountsOnClick,
     showDeleteStudentsOnClick,
     showDeleteStudents,
-    searchOnClick,
 }: OptionsProps) {
     return (
         <div className="join w-screen overflow-y-scroll">
             <button
-                className="btn join-item"
+                className={`btn join-item ${showSearch ? "bg-gray-300" : ""}`}
                 type="button"
                 onClick={searchOnClick}
             >
@@ -33,7 +37,7 @@ export default function Options({
             <button
                 className="btn join-item"
                 type="button"
-                onClick={addStudentOnClick}
+                onClick={() => addStudentOnClick(generalFormDataDefault)}
             >
                 <Image src={plus} alt="add" />
                 <span> Add Student</span>
