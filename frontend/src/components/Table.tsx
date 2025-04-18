@@ -27,9 +27,11 @@ type TableProps = {
     showEditStudent: (student: StudentGeneralInfo) => void;
     showDeleteStudents: boolean;
     setData: Dispatch<SetStateAction<StudentGeneralInfo[]>>;
+    showSearch: boolean;
 };
 export default function Table({
     data,
+    showSearch,
     showEditStudent,
     showDeleteStudents,
     setData,
@@ -121,7 +123,7 @@ export default function Table({
             pagination,
             columnFilters,
         },
-        autoResetPageIndex: false,
+        autoResetPageIndex: true,
         enableMultiSort: false,
         enableSortingRemoval: false,
     });
@@ -152,11 +154,11 @@ export default function Table({
                                             header.getContext()
                                         )}
                                     </div>
-                                    {header.column.getCanFilter() ? (
+                                    {showSearch && (
                                         <div>
                                             <Filter column={header.column} />
                                         </div>
-                                    ) : null}
+                                    )}
                                 </th>
                             ))}
                         </tr>

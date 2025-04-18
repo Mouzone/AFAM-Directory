@@ -29,6 +29,7 @@ export default function Page() {
     const [students, setStudents] = useState<StudentGeneralInfo[]>([]);
     const [staff, setStaff] = useState<StaffObject>({});
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
+    const [showSearch, setShowSearch] = useState(false);
 
     useEffect(() => {
         if (pathname) {
@@ -104,6 +105,10 @@ export default function Page() {
             <div className="p-4">
                 <Options
                     showManageAccounts={permissions["Manage Accounts"]}
+                    showSearch={showSearch}
+                    searchOnClick={() => {
+                        setShowSearch((prev) => !prev);
+                    }}
                     showDeleteStudents={showDeleteStudents}
                     addStudentOnClick={(student: StudentGeneralInfo) => {
                         setStudentFormState(student);
@@ -121,6 +126,7 @@ export default function Page() {
                 <Table
                     data={students}
                     setData={setStudents}
+                    showSearch={showSearch}
                     showEditStudent={(student: StudentGeneralInfo) => {
                         setStudentFormState(student);
                         setFormToShow("student");
