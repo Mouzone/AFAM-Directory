@@ -86,6 +86,7 @@ export default function Table({
                 cell: (info) => info.getValue(),
                 filterFn: "includesString",
                 sortingFn: "alphanumeric",
+                meta: {},
             }),
             columnHelper.accessor((row) => row["Last Name"], {
                 id: "Last Name",
@@ -93,6 +94,7 @@ export default function Table({
                 cell: (info) => info.getValue(),
                 filterFn: "includesString",
                 sortingFn: "alphanumeric",
+                meta: {},
             }),
             columnHelper.accessor((row) => row["Grade"], {
                 id: "Grade",
@@ -110,6 +112,7 @@ export default function Table({
                 cell: (info) => info.getValue(),
                 filterFn: "includesString",
                 sortingFn: "alphanumeric",
+                meta: {},
             }),
         ],
         []
@@ -233,7 +236,10 @@ export default function Table({
 
 function Filter({ column }: { column: Column<any, unknown> }) {
     const columnFilterValue = column.getFilterValue();
-    const { filterVariant } = column.columnDef.meta ?? {};
+    const { filterVariant } =
+        (column.columnDef.meta as {
+            filterVariant?: "text" | "range" | "select";
+        }) ?? {};
 
     return filterVariant === "select" ? (
         <select
