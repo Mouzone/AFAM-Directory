@@ -20,7 +20,14 @@ import {
     getDocs,
     writeBatch,
 } from "firebase/firestore";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import {
+    Dispatch,
+    SetStateAction,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import trashcan from "../../public/svgs/trashcan.svg";
 import Image from "next/image";
 
@@ -46,10 +53,6 @@ export default function Table({
         { id: "First Name", desc: false },
     ]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-    useEffect(() => {
-        setColumnFilters([]);
-    }, [showSearch]);
 
     const deleteStudent = async (studentId: string) => {
         const studentDocRef = doc(
@@ -116,9 +119,10 @@ export default function Table({
                 meta: {},
             }),
         ],
-        [columnHelper]
+        []
     );
 
+    console.log("rerendering");
     const table = useReactTable({
         data,
         columns,
@@ -185,10 +189,13 @@ export default function Table({
                 <tbody>
                     {showSearch &&
                         table.getHeaderGroups().map((headerGroup) => (
-                            <tr>
+                            <tr key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
-                                    <td>
-                                        <Filter column={header.column} />
+                                    <td key={header.id}>
+                                        <Filter
+                                            key={header.id}
+                                            column={header.column}
+                                        />
                                     </td>
                                 ))}
                             </tr>
@@ -252,10 +259,15 @@ function Filter({ column }: { column: Column<StudentGeneralInfo, unknown> }) {
             filterVariant?: "text" | "select";
         }) ?? {};
 
+    const handleChange = useCallback(
+        (value: string | number) => column.setFilterValue(value),
+        [column]
+    );
+
     return filterVariant === "select" ? (
         <select
             onClick={(e) => e.stopPropagation()}
-            onChange={(e) => column.setFilterValue(e.target.value)}
+            onChange={(e) => handleChange(e.target.value)}
             value={columnFilterValue?.toString()}
         >
             {/* See faceted column filters example for dynamic select options */}
@@ -269,7 +281,7 @@ function Filter({ column }: { column: Column<StudentGeneralInfo, unknown> }) {
         <DebouncedInput
             onClick={(e) => e.stopPropagation()}
             className="w-36 border shadow rounded p-2"
-            onChange={(value) => column.setFilterValue(value)}
+            onChange={handleChange}
             placeholder={`Search...`}
             type="text"
             value={(columnFilterValue ?? "") as string}
@@ -291,10 +303,6 @@ function DebouncedInput({
     const [value, setValue] = useState(initialValue);
 
     useEffect(() => {
-        setValue(initialValue);
-    }, [initialValue]);
-
-    useEffect(() => {
         const timeout = setTimeout(() => {
             onChange(value);
         }, debounce);
@@ -305,6 +313,7 @@ function DebouncedInput({
     return (
         <input
             {...props}
+            key={String(initialValue)}
             value={value}
             onChange={(e) => setValue(e.target.value)}
         />
