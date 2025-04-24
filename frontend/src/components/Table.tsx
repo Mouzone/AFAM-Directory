@@ -54,30 +54,33 @@ export default function Table({
     ]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-    const deleteStudent = async (studentId: string) => {
-        const studentDocRef = doc(
-            db,
-            "directory",
-            "afam",
-            "student",
-            studentId
-        );
-        const [privateDocs, attendanceDocs] = await Promise.all([
-            getDocs(collection(studentDocRef, "private")),
-            getDocs(collection(studentDocRef, "attendance")),
-        ]);
+    const deleteStudent = useCallback(
+        async (studentId: string) => {
+            const studentDocRef = doc(
+                db,
+                "directory",
+                "afam",
+                "student",
+                studentId
+            );
+            const [privateDocs, attendanceDocs] = await Promise.all([
+                getDocs(collection(studentDocRef, "private")),
+                getDocs(collection(studentDocRef, "attendance")),
+            ]);
 
-        const batch = writeBatch(db);
+            const batch = writeBatch(db);
 
-        // Add all deletes to batch
-        privateDocs.forEach((doc) => batch.delete(doc.ref));
-        attendanceDocs.forEach((doc) => batch.delete(doc.ref));
-        batch.delete(studentDocRef);
-        await batch.commit();
+            // Add all deletes to batch
+            privateDocs.forEach((doc) => batch.delete(doc.ref));
+            attendanceDocs.forEach((doc) => batch.delete(doc.ref));
+            batch.delete(studentDocRef);
+            await batch.commit();
 
-        await deleteDoc(studentDocRef);
-        setData(data.filter((student) => student["Id"] !== studentId));
-    };
+            await deleteDoc(studentDocRef);
+            setData(data.filter((student) => student["Id"] !== studentId));
+        },
+        [data]
+    );
 
     const columnHelper = createColumnHelper<StudentGeneralInfo>();
 
@@ -180,6 +183,12 @@ export default function Table({
                                         }[
                                             header.column.getIsSorted() as string
                                         ] ?? null}
+                                        {showSearch && (
+                                            <Filter
+                                                key={header.id}
+                                                column={header.column}
+                                            />
+                                        )}
                                     </div>
                                 </th>
                             ))}
@@ -187,19 +196,6 @@ export default function Table({
                     ))}
                 </thead>
                 <tbody>
-                    {showSearch &&
-                        table.getHeaderGroups().map((headerGroup) => (
-                            <tr key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => (
-                                    <td key={header.id}>
-                                        <Filter
-                                            key={header.id}
-                                            column={header.column}
-                                        />
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
                     {table.getRowModel().rows.map((row) => (
                         <tr
                             className="hover:bg-base-300"
@@ -259,15 +255,10 @@ function Filter({ column }: { column: Column<StudentGeneralInfo, unknown> }) {
             filterVariant?: "text" | "select";
         }) ?? {};
 
-    const handleChange = useCallback(
-        (value: string | number) => column.setFilterValue(value),
-        [column]
-    );
-
     return filterVariant === "select" ? (
         <select
             onClick={(e) => e.stopPropagation()}
-            onChange={(e) => handleChange(e.target.value)}
+            onChange={(e) => column.setFilterValue(e.target.value)}
             value={columnFilterValue?.toString()}
         >
             {/* See faceted column filters example for dynamic select options */}
@@ -281,7 +272,7 @@ function Filter({ column }: { column: Column<StudentGeneralInfo, unknown> }) {
         <DebouncedInput
             onClick={(e) => e.stopPropagation()}
             className="w-36 border shadow rounded p-2"
-            onChange={handleChange}
+            onChange={(value) => column.setFilterValue(value)}
             placeholder={`Search...`}
             type="text"
             value={(columnFilterValue ?? "") as string}
@@ -301,6 +292,10 @@ function DebouncedInput({
     debounce?: number;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange">) {
     const [value, setValue] = useState(initialValue);
+
+    useEffect(() => {
+        setValue(initialValue);
+    }, [initialValue]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
