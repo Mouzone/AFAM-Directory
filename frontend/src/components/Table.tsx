@@ -10,6 +10,7 @@ import {
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
+    RowData,
     SortingState,
     useReactTable,
 } from "@tanstack/react-table";
@@ -30,6 +31,13 @@ import {
 } from "react";
 import trashcan from "../../public/svgs/trashcan.svg";
 import Image from "next/image";
+
+declare module "@tanstack/react-table" {
+    //allows us to define custom properties for our columns
+    interface ColumnMeta<TData extends RowData, TValue> {
+        filterVariant?: "text" | "select";
+    }
+}
 
 type TableProps = {
     data: StudentGeneralInfo[];
@@ -93,7 +101,6 @@ export default function Table({
                 cell: (info) => info.getValue(),
                 // filterFn: "includesString",
                 sortingFn: "alphanumeric",
-                meta: {},
             }),
             columnHelper.accessor((row) => row["Last Name"], {
                 id: "Last Name",
@@ -101,7 +108,6 @@ export default function Table({
                 cell: (info) => info.getValue(),
                 // filterFn: "includesString",
                 sortingFn: "alphanumeric",
-                meta: {},
             }),
             columnHelper.accessor((row) => row["Grade"], {
                 id: "Grade",
@@ -119,7 +125,6 @@ export default function Table({
                 cell: (info) => info.getValue(),
                 // filterFn: "includesString",
                 sortingFn: "alphanumeric",
-                meta: {},
             }),
         ],
         []
@@ -310,20 +315,20 @@ function DebouncedInput({
         setValue(initialValue);
     }, [initialValue]);
 
-    // useEffect(() => {
-    //     const timeout = setTimeout(() => {
-    //         onChange(value);
-    //     }, debounce);
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            onChange(value);
+        }, debounce);
 
-    //     return () => clearTimeout(timeout);
-    // }, [debounce, onChange, value]);
+        return () => clearTimeout(timeout);
+    }, [value]);
 
     return (
         <input
             {...props}
             key={String(initialValue)}
             value={value}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => setValue(e.target.value)}
         />
     );
 }
