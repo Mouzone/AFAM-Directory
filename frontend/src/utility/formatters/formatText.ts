@@ -1,0 +1,8 @@
+// capitalize first letters of every word
+export default function formatText(text: string) {
+    const words = text.split(" ");
+    const words_capitalized = words.map(
+        (word) => word.at(0)?.toUpperCase() + word.slice(1)
+    );
+    return words_capitalized.join(" ");
+}
