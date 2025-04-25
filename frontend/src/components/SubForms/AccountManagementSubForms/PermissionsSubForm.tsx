@@ -44,7 +44,7 @@ export default function PermissionsSubForm({
 
     return (
         <form onSubmit={(e) => onSubmit(e)}>
-            <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
+            <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box h-[400px] overflow-y-auto">
                 <legend className="fieldset-legend">Permissions</legend>
                 <div className="join join-vertical bg-base-100">
                     {Object.entries(tempStaff).map(([staffId, staffData]) => (
