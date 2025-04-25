@@ -147,84 +147,82 @@ export default function Table({
     });
 
     return (
-        <div className="flex flex-col p-2">
-            <table className="table">
-                <thead>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <tr key={headerGroup.id}>
-                            {showDeleteStudents && <th></th>}
-                            {headerGroup.headers.map((header) => (
-                                <th
-                                    className={`
-                                        ${
-                                            header.column.getIsSorted()
-                                                ? "bg-gray-300"
-                                                : ""
-                                        }
-                                        ${
-                                            showDeleteStudents
-                                                ? "w-1/4"
-                                                : "w-1/5"
-                                        }`}
-                                    key={header.id}
-                                    onClick={header.column.getToggleSortingHandler()}
-                                >
-                                    <div
-                                        className="cursor-pointer select-none"
+        <div className="flex flex-col p-2 w-full overflow-x-auto">
+            <div className="w-full overflow-x-auto">
+                <table className="table min-w-[600px] lg:min-w-full">
+                    <thead>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <tr key={headerGroup.id}>
+                                {showDeleteStudents && (
+                                    <th className="w-5 md:w-12 lg:w-1/12 px-2 md:px-4"></th>
+                                )}
+                                {headerGroup.headers.map((header) => (
+                                    <th
+                                        className={`
+                ${header.column.getIsSorted() ? "bg-gray-300" : ""}
+                ${showDeleteStudents ? "w-1/5" : "w-1/4"}
+                px-2 md:px-4
+              `}
+                                        key={header.id}
                                         onClick={header.column.getToggleSortingHandler()}
                                     >
-                                        {flexRender(
-                                            header.column.columnDef.header,
-                                            header.getContext()
-                                        )}
-                                        {{
-                                            asc: " 🔼",
-                                            desc: " 🔽",
-                                        }[
-                                            header.column.getIsSorted() as string
-                                        ] ?? null}
-                                        {showSearch && (
-                                            <Filter
-                                                key={header.id}
-                                                column={header.column}
+                                        <div className="cursor-pointer select-none">
+                                            {flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                            {/* Sort indicators */}
+                                        </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody>
+                        {table.getRowModel().rows.map((row) => (
+                            <tr
+                                className="hover:bg-base-300"
+                                key={row.id}
+                                onClick={() => showEditStudent(row.original)}
+                            >
+                                {showDeleteStudents && (
+                                    <td
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            deleteStudent(row.original["Id"]);
+                                        }}
+                                        className="w-5 md:w-12 lg:w-1/12 px-2 md:px-4"
+                                    >
+                                        <div className="flex justify-center">
+                                            <Image
+                                                src={trashcan}
+                                                alt="delete"
+                                                width={16}
+                                                height={16}
+                                                className="min-w-[16px]"
                                             />
+                                        </div>
+                                    </td>
+                                )}
+                                {row.getVisibleCells().map((cell) => (
+                                    <td
+                                        key={cell.id}
+                                        className={`
+                ${showDeleteStudents ? "w-1/5" : "w-1/4"}
+                px-2 md:px-4
+              `}
+                                    >
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext()
                                         )}
-                                    </div>
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody>
-                    {table.getRowModel().rows.map((row) => (
-                        <tr
-                            className="hover:bg-base-300"
-                            key={row.id}
-                            onClick={() => showEditStudent(row.original)}
-                        >
-                            {showDeleteStudents && (
-                                <td
-                                    className="text-red-400"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        deleteStudent(row.original["Id"]);
-                                    }}
-                                >
-                                    <Image src={trashcan} alt="delete" />
-                                </td>
-                            )}
-                            {row.getVisibleCells().map((cell) => (
-                                <td key={cell.id}>
-                                    {flexRender(
-                                        cell.column.columnDef.cell,
-                                        cell.getContext()
-                                    )}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
             <div className="join justify-center mt-4">
                 <button
                     className="join-item btn"
