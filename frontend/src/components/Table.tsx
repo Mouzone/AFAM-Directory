@@ -84,6 +84,22 @@ export default function Table({
     const columns = useMemo<ColumnDef<StudentGeneralInfo, any>[]>(
         () => [
             {
+                accessorKey: "Headshot URL",
+                header: "",
+                cell: (info) =>
+                    info.getValue() !== "" && (
+                        <div className="flex justify-center">
+                            <img
+                                src={info.getValue()}
+                                alt="profile"
+                                width={100}
+                            />
+                        </div>
+                    ),
+                enableColumnFilter: false,
+                enableSorting: false,
+            },
+            {
                 accessorKey: "First Name",
                 header: () => "First Name",
                 meta: {
@@ -153,8 +169,8 @@ export default function Table({
                                         className={`
                                             ${
                                                 showDeleteStudents
-                                                    ? "w-1/5"
-                                                    : "w-1/4"
+                                                    ? "w-1/6"
+                                                    : "w-1/5"
                                             }
                                             px-2 md:px-4
                                         `}
@@ -221,8 +237,8 @@ export default function Table({
                                         className={`
                                             ${
                                                 showDeleteStudents
-                                                    ? "w-1/5"
-                                                    : "w-1/4"
+                                                    ? "w-1/6"
+                                                    : "w-1/5"
                                             }
                                             px-2 md:px-4
                                         `}
