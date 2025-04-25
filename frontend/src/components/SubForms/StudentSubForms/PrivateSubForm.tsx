@@ -109,7 +109,7 @@ export default function PrivateSubForm({
                 <div className="flex flex-col">
                     <label className="fieldset-label">Email</label>
                     <input
-                        type="text"
+                        type="email"
                         className="input"
                         value={data["Personal"]["Email"]}
                         onChange={(e) =>
@@ -179,7 +179,7 @@ export default function PrivateSubForm({
                     <div className="flex flex-col">
                         <label className="fieldset-label">Email</label>
                         <input
-                            type="text"
+                            type="email"
                             className="input"
                             value={data["Guardian 1"]["Email"]}
                             onChange={(e) =>
@@ -254,7 +254,7 @@ export default function PrivateSubForm({
                     <div className="flex flex-col">
                         <label className="fieldset-label">Email</label>
                         <input
-                            type="text"
+                            type="email"
                             className="input"
                             value={data["Guardian 2"]["Email"]}
                             onChange={(e) =>
