@@ -53,13 +53,6 @@ export default function Table({
     showDeleteStudents,
     setData,
 }: TableProps) {
-    const [pagination, setPagination] = useState({
-        pageIndex: 0,
-        pageSize: 12,
-    });
-    const [sorting, setSorting] = useState<SortingState>([
-        { id: "First Name", desc: false },
-    ]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
     const deleteStudent = useCallback(
@@ -132,12 +125,9 @@ export default function Table({
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        onPaginationChange: setPagination,
-        onSortingChange: setSorting,
+
         onColumnFiltersChange: setColumnFilters,
         state: {
-            sorting,
-            pagination,
             columnFilters,
         },
         autoResetPageIndex: true,
@@ -257,7 +247,7 @@ export default function Table({
                     «
                 </button>
                 <div className="join-item btn">
-                    {pagination["pageIndex"] + 1}
+                    {table.getState().pagination.pageIndex + 1}
                 </div>
                 <button
                     className="join-item btn"
