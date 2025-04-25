@@ -91,7 +91,7 @@ export default function Table({
                 id: "First Name",
                 header: () => "First Name",
                 cell: (info) => info.getValue(),
-                filterFn: "includesString",
+                // filterFn: "includesString",
                 sortingFn: "alphanumeric",
                 meta: {},
             }),
@@ -99,7 +99,7 @@ export default function Table({
                 id: "Last Name",
                 header: () => "Last Name",
                 cell: (info) => info.getValue(),
-                filterFn: "includesString",
+                // filterFn: "includesString",
                 sortingFn: "alphanumeric",
                 meta: {},
             }),
@@ -107,7 +107,7 @@ export default function Table({
                 id: "Grade",
                 header: () => "Grade",
                 cell: (info) => info.getValue<Grade>(),
-                filterFn: "equalsString",
+                // filterFn: "equalsString",
                 sortingFn: "alphanumeric",
                 meta: {
                     filterVariant: "select",
@@ -117,7 +117,7 @@ export default function Table({
                 id: "Teacher",
                 header: () => "Teacher",
                 cell: (info) => info.getValue(),
-                filterFn: "includesString",
+                // filterFn: "includesString",
                 sortingFn: "alphanumeric",
                 meta: {},
             }),
@@ -125,10 +125,10 @@ export default function Table({
         []
     );
 
-    console.log("rerendering");
     const table = useReactTable({
         data,
         columns,
+        filterFns: {},
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
@@ -159,10 +159,18 @@ export default function Table({
                                 {headerGroup.headers.map((header) => (
                                     <th
                                         className={`
-                ${header.column.getIsSorted() ? "bg-gray-300" : ""}
-                ${showDeleteStudents ? "w-1/5" : "w-1/4"}
-                px-2 md:px-4
-              `}
+                                            ${
+                                                header.column.getIsSorted()
+                                                    ? "bg-gray-300"
+                                                    : ""
+                                            }
+                                            ${
+                                                showDeleteStudents
+                                                    ? "w-1/5"
+                                                    : "w-1/4"
+                                            }
+                                            px-2 md:px-4
+                                        `}
                                         key={header.id}
                                         onClick={header.column.getToggleSortingHandler()}
                                     >
@@ -171,8 +179,10 @@ export default function Table({
                                                 header.column.columnDef.header,
                                                 header.getContext()
                                             )}
-                                            {/* Sort indicators */}
                                         </div>
+                                        {showSearch && (
+                                            <Filter column={header.column} />
+                                        )}
                                     </th>
                                 ))}
                             </tr>
@@ -208,9 +218,13 @@ export default function Table({
                                     <td
                                         key={cell.id}
                                         className={`
-                ${showDeleteStudents ? "w-1/5" : "w-1/4"}
-                px-2 md:px-4
-              `}
+                                            ${
+                                                showDeleteStudents
+                                                    ? "w-1/5"
+                                                    : "w-1/4"
+                                            }
+                                            px-2 md:px-4
+                                        `}
                                     >
                                         {flexRender(
                                             cell.column.columnDef.cell,
@@ -247,6 +261,7 @@ export default function Table({
 }
 
 function Filter({ column }: { column: Column<StudentGeneralInfo, unknown> }) {
+    console.log("Rerendering");
     const columnFilterValue = column.getFilterValue();
     const { filterVariant } =
         (column.columnDef.meta as {
@@ -295,20 +310,20 @@ function DebouncedInput({
         setValue(initialValue);
     }, [initialValue]);
 
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            onChange(value);
-        }, debounce);
+    // useEffect(() => {
+    //     const timeout = setTimeout(() => {
+    //         onChange(value);
+    //     }, debounce);
 
-        return () => clearTimeout(timeout);
-    }, [debounce, onChange, value]);
+    //     return () => clearTimeout(timeout);
+    // }, [debounce, onChange, value]);
 
     return (
         <input
             {...props}
             key={String(initialValue)}
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={(e) => onChange(e.target.value)}
         />
     );
 }
