@@ -1,3 +1,4 @@
+import formatText from "@/utility/formatters/formatText";
 import { StudentGeneralInfo } from "@/utility/types";
 import Image from "next/image";
 import React, { RefObject, SetStateAction } from "react";
@@ -65,7 +66,7 @@ export default function GeneralSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["First Name"]}
+                            value={formatText(data["First Name"])}
                             onChange={(e) =>
                                 changeData("First Name", e.target.value)
                             }
@@ -76,7 +77,7 @@ export default function GeneralSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["Last Name"]}
+                            value={formatText(data["Last Name"])}
                             onChange={(e) =>
                                 changeData("Last Name", e.target.value)
                             }
@@ -90,7 +91,7 @@ export default function GeneralSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["High School"]}
+                            value={formatText(data["High School"])}
                             onChange={(e) =>
                                 changeData("High School", e.target.value)
                             }
