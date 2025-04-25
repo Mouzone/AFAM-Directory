@@ -2,7 +2,13 @@ import closeModal from "@/utility/closeModal";
 import { db } from "@/utility/firebase";
 import { StaffObject } from "@/utility/types";
 import { deleteDoc, doc, writeBatch } from "firebase/firestore";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import {
+    Dispatch,
+    FormEvent,
+    SetStateAction,
+    useEffect,
+    useState,
+} from "react";
 import trashcan from "../../../../public/svgs/trashcan.svg";
 import Image from "next/image";
 
@@ -17,6 +23,9 @@ export default function PermissionsSubForm({
 }: PermissionSubFormProps) {
     const [tempStaff, setTempStaff] = useState(staff);
 
+    useEffect(() => {
+        setTempStaff(staff);
+    }, [staff]);
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const batch = writeBatch(db);
