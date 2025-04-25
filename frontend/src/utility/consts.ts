@@ -27,3 +27,11 @@ export const privateFormDataDefault = {
 export const schema = Object.keys(generalFormDataDefault).filter(
     (key) => key !== "Headshot URL"
 ) as (keyof StudentGeneralInfo)[];
+
+export const mandatoryGeneralFields: (keyof StudentGeneralInfo)[] = [
+    "First Name",
+    "Last Name",
+    "Birthday",
+    "Grade",
+    "Teacher",
+];

@@ -20,7 +20,14 @@ import {
     getDocs,
     writeBatch,
 } from "firebase/firestore";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import {
+    Dispatch,
+    SetStateAction,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import trashcan from "../../public/svgs/trashcan.svg";
 import Image from "next/image";
 
@@ -47,34 +54,33 @@ export default function Table({
     ]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-    useEffect(() => {
-        setColumnFilters([]);
-    }, [showSearch]);
+    const deleteStudent = useCallback(
+        async (studentId: string) => {
+            const studentDocRef = doc(
+                db,
+                "directory",
+                "afam",
+                "student",
+                studentId
+            );
+            const [privateDocs, attendanceDocs] = await Promise.all([
+                getDocs(collection(studentDocRef, "private")),
+                getDocs(collection(studentDocRef, "attendance")),
+            ]);
 
-    const deleteStudent = async (studentId: string) => {
-        const studentDocRef = doc(
-            db,
-            "directory",
-            "afam",
-            "student",
-            studentId
-        );
-        const [privateDocs, attendanceDocs] = await Promise.all([
-            getDocs(collection(studentDocRef, "private")),
-            getDocs(collection(studentDocRef, "attendance")),
-        ]);
+            const batch = writeBatch(db);
 
-        const batch = writeBatch(db);
+            // Add all deletes to batch
+            privateDocs.forEach((doc) => batch.delete(doc.ref));
+            attendanceDocs.forEach((doc) => batch.delete(doc.ref));
+            batch.delete(studentDocRef);
+            await batch.commit();
 
-        // Add all deletes to batch
-        privateDocs.forEach((doc) => batch.delete(doc.ref));
-        attendanceDocs.forEach((doc) => batch.delete(doc.ref));
-        batch.delete(studentDocRef);
-        await batch.commit();
-
-        await deleteDoc(studentDocRef);
-        setData(data.filter((student) => student["Id"] !== studentId));
-    };
+            await deleteDoc(studentDocRef);
+            setData(data.filter((student) => student["Id"] !== studentId));
+        },
+        [data]
+    );
 
     const columnHelper = createColumnHelper<StudentGeneralInfo>();
 
@@ -116,9 +122,10 @@ export default function Table({
                 meta: {},
             }),
         ],
-        [columnHelper]
+        []
     );
 
+    console.log("rerendering");
     const table = useReactTable({
         data,
         columns,
@@ -176,6 +183,12 @@ export default function Table({
                                         }[
                                             header.column.getIsSorted() as string
                                         ] ?? null}
+                                        {showSearch && (
+                                            <Filter
+                                                key={header.id}
+                                                column={header.column}
+                                            />
+                                        )}
                                     </div>
                                 </th>
                             ))}
@@ -183,16 +196,6 @@ export default function Table({
                     ))}
                 </thead>
                 <tbody>
-                    {showSearch &&
-                        table.getHeaderGroups().map((headerGroup) => (
-                            <tr>
-                                {headerGroup.headers.map((header) => (
-                                    <td>
-                                        <Filter column={header.column} />
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
                     {table.getRowModel().rows.map((row) => (
                         <tr
                             className="hover:bg-base-300"
@@ -305,6 +308,7 @@ function DebouncedInput({
     return (
         <input
             {...props}
+            key={String(initialValue)}
             value={value}
             onChange={(e) => setValue(e.target.value)}
         />

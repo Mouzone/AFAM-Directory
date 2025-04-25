@@ -1,20 +1,23 @@
+import { mandatoryGeneralFields } from "./consts";
 import { StudentGeneralInfo, StudentPrivateInfo } from "./types";
 
+// returns True if valid, False otherwise
 export default function validateCreateStudentForm(
     generalFormData: StudentGeneralInfo,
     privateFormData: StudentPrivateInfo
 ) {
-    // make sure all fields of generalFormData are filled
-    // make sure all fields of personal in privateFormData are filled
-    // make sure all fields of either guardian1 or guardian2 are filled
+    const emptyGeneralFields = mandatoryGeneralFields.filter(
+        (field) => generalFormData[field] === ""
+    );
+
+    console.log(emptyGeneralFields);
     return (
-        noEmptyStrings(generalFormData) &&
-        noEmptyStrings(privateFormData["Personal"]) &&
-        (noEmptyStrings(privateFormData["Guardian 1"]) ||
-            noEmptyStrings(privateFormData["Guardian 2"]))
+        emptyGeneralFields.length === 0 &&
+        noEmptyStrings(privateFormData["Guardian 1"])
     );
 }
 
+// return True if no empty strings, else return False
 function noEmptyStrings(obj: { [key: string]: string }) {
     for (const value of Object.values(obj)) {
         if (value === "") {
