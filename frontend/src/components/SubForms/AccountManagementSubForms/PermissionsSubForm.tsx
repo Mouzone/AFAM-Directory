@@ -26,6 +26,7 @@ export default function PermissionsSubForm({
     useEffect(() => {
         setTempStaff(staff);
     }, [staff]);
+
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const batch = writeBatch(db);
@@ -49,6 +50,9 @@ export default function PermissionsSubForm({
         // // remove directory from the user
         const userDocRef = doc(db, "user", staffId, "directory", "afam");
         await deleteDoc(userDocRef);
+
+        delete staff[staffId];
+        setStaff(staff);
     };
 
     return (
