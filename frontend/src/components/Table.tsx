@@ -130,8 +130,6 @@ export default function Table({
         state: {
             columnFilters,
         },
-        autoResetPageIndex: true,
-        enableMultiSort: false,
         enableSortingRemoval: false,
     });
 
