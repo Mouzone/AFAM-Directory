@@ -192,11 +192,12 @@ export default function Table({
                                             ] ?? null}
                                         </div>
                                         <div>
-                                            {showSearch && (
-                                                <Filter
-                                                    column={header.column}
-                                                />
-                                            )}
+                                            {showSearch &&
+                                                header.column.getCanFilter() && (
+                                                    <Filter
+                                                        column={header.column}
+                                                    />
+                                                )}
                                         </div>
                                     </th>
                                 ))}
