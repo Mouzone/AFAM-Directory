@@ -4,14 +4,12 @@ import {
     Column,
     ColumnDef,
     ColumnFiltersState,
-    createColumnHelper,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
     RowData,
-    SortingState,
     useReactTable,
 } from "@tanstack/react-table";
 import {
@@ -125,7 +123,6 @@ export default function Table({
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-
         onColumnFiltersChange: setColumnFilters,
         state: {
             columnFilters,
