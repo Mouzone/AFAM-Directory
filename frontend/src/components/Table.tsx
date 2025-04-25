@@ -32,7 +32,6 @@ import Image from "next/image";
 
 declare module "@tanstack/react-table" {
     //allows us to define custom properties for our columns
-    // @ts-ignore
     interface ColumnMeta<TData extends RowData, TValue> {
         filterVariant?: "text" | "select";
     }
@@ -82,7 +81,6 @@ export default function Table({
         [data]
     );
 
-    // @ts-ignore
     const columns = useMemo<ColumnDef<StudentGeneralInfo, any>[]>(
         () => [
             {
