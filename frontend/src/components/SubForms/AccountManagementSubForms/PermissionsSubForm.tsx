@@ -1,8 +1,10 @@
 import closeModal from "@/utility/closeModal";
 import { db } from "@/utility/firebase";
 import { StaffObject } from "@/utility/types";
-import { doc, writeBatch } from "firebase/firestore";
+import { deleteDoc, doc, writeBatch } from "firebase/firestore";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import trashcan from "../../../../public/svgs/trashcan.svg";
+import Image from "next/image";
 
 type PermissionSubFormProps = {
     staff: StaffObject;
@@ -29,6 +31,17 @@ export default function PermissionsSubForm({
         closeModal();
     };
 
+    // remove user from directory
+    const onDelete = (staffId: string) => {
+        // remove user from the directory
+        const staffDocRef = doc(db, "directory", "afam", "staff", staffId);
+        deleteDoc(staffDocRef);
+
+        // remove directory from the user
+        const userDocRef = doc(db, "user", staffId, "directory", "afam");
+        deleteDoc(userDocRef);
+    };
+
     return (
         <form onSubmit={(e) => onSubmit(e)}>
             <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
@@ -44,45 +57,57 @@ export default function PermissionsSubForm({
                                 {`${staffData["First Name"]} ${staffData["Last Name"]} (${staffData["Email"]})`}
                             </div>
                             {/* private */}
-                            <div className="collapse-content grid grid-cols-2 gap-4 ml-8">
-                                <div className="text-sm">
-                                    Can access
-                                    <span className="font-bold"> Private</span>
+                            <div className="collapse-content flex flex-col justify-center gap-4">
+                                <div className=" grid grid-cols-2 ml-8 justify-items-center">
+                                    <div className="text-sm">
+                                        Can access
+                                        <span className="font-bold">
+                                            {" "}
+                                            Private
+                                        </span>
+                                    </div>
+                                    <input
+                                        type="checkbox"
+                                        className="toggle"
+                                        checked={staffData["Private"]}
+                                        onChange={() =>
+                                            setTempStaff({
+                                                ...staff,
+                                                [staffId]: {
+                                                    ...staffData,
+                                                    Private:
+                                                        !staffData["Private"],
+                                                },
+                                            })
+                                        }
+                                    />
+                                    <div className="text-sm">
+                                        Can invite other accounts
+                                    </div>
+                                    <input
+                                        type="checkbox"
+                                        className="toggle"
+                                        checked={staffData["Manage Accounts"]}
+                                        onChange={() =>
+                                            setTempStaff({
+                                                ...staff,
+                                                [staffId]: {
+                                                    ...staffData,
+                                                    "Manage Accounts":
+                                                        !staffData[
+                                                            "Manage Accounts"
+                                                        ],
+                                                },
+                                            })
+                                        }
+                                    />
                                 </div>
-                                <input
-                                    type="checkbox"
-                                    className="toggle"
-                                    checked={staffData["Private"]}
-                                    onChange={() =>
-                                        setTempStaff({
-                                            ...staff,
-                                            [staffId]: {
-                                                ...staffData,
-                                                Private: !staffData["Private"],
-                                            },
-                                        })
-                                    }
-                                />
-                                <div className="text-sm">
-                                    Can invite other accounts
-                                </div>
-                                <input
-                                    type="checkbox"
-                                    className="toggle"
-                                    checked={staffData["Manage Accounts"]}
-                                    onChange={() =>
-                                        setTempStaff({
-                                            ...staff,
-                                            [staffId]: {
-                                                ...staffData,
-                                                "Manage Accounts":
-                                                    !staffData[
-                                                        "Manage Accounts"
-                                                    ],
-                                            },
-                                        })
-                                    }
-                                />
+                                <button className="btn mx-4">
+                                    <Image src={trashcan} alt="delete" />
+                                    <div className="text-red-500">
+                                        Delete User
+                                    </div>
+                                </button>
                             </div>
                         </div>
                     ))}
