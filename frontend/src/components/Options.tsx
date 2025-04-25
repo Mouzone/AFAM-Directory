@@ -25,43 +25,47 @@ export default function Options({
     showDeleteStudents,
 }: OptionsProps) {
     return (
-        <div className="join w-screen overflow-y-scroll">
-            <button
-                className={`btn join-item ${showSearch ? "bg-gray-300" : ""}`}
-                type="button"
-                onClick={searchOnClick}
-            >
-                <Image src={search} alt="search" />
-                <span> Search Student</span>
-            </button>
-            <button
-                className="btn join-item"
-                type="button"
-                onClick={() => addStudentOnClick(generalFormDataDefault)}
-            >
-                <Image src={plus} alt="add" />
-                <span> Add Student</span>
-            </button>
-            <button
-                className={`btn join-item ${
-                    showDeleteStudents ? "bg-gray-300" : ""
-                }`}
-                type="button"
-                onClick={showDeleteStudentsOnClick}
-            >
-                <Image src={minus} alt="delete" />
-                <span>Delete Students</span>
-            </button>
-            {showManageAccounts && (
+        <div className="p-4 overflow-y-scroll">
+            <div className="join">
+                <button
+                    className={`btn join-item ${
+                        showSearch ? "bg-gray-300" : ""
+                    }`}
+                    type="button"
+                    onClick={searchOnClick}
+                >
+                    <Image src={search} alt="search" />
+                    <span> Search Student</span>
+                </button>
                 <button
                     className="btn join-item"
                     type="button"
-                    onClick={manageAccountsOnClick}
+                    onClick={() => addStudentOnClick(generalFormDataDefault)}
                 >
-                    <Image src={account} alt="accounts" />
-                    <span> Manage Accounts </span>
+                    <Image src={plus} alt="add" />
+                    <span> Add Student</span>
                 </button>
-            )}
+                <button
+                    className={`btn join-item ${
+                        showDeleteStudents ? "bg-gray-300" : ""
+                    }`}
+                    type="button"
+                    onClick={showDeleteStudentsOnClick}
+                >
+                    <Image src={minus} alt="delete" />
+                    <span>Delete Students</span>
+                </button>
+                {showManageAccounts && (
+                    <button
+                        className="btn join-item"
+                        type="button"
+                        onClick={manageAccountsOnClick}
+                    >
+                        <Image src={account} alt="accounts" />
+                        <span> Manage Accounts </span>
+                    </button>
+                )}
+            </div>
         </div>
     );
 }
