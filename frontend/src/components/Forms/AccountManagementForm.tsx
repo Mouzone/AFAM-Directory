@@ -16,7 +16,6 @@ export default function AccountManagementForm({
     const [tab, setTab] = useState("permissions");
     const [email, setEmail] = useState("");
 
-    console.log(staff);
     return (
         <>
             <form method="dialog">

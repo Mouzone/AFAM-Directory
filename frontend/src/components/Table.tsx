@@ -312,6 +312,7 @@ function DebouncedInput({
             {...props}
             value={value}
             onChange={(e) => setValue(e.target.value)}
+            className="w-20 sm:w-fit"
         />
     );
 }
