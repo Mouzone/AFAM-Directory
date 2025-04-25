@@ -206,7 +206,7 @@ export default function Table({
                     <tbody>
                         {table.getRowModel().rows.map((row, index) => (
                             <tr
-                                className={`hover:bg-base-300 ${
+                                className={`hover:bg-base-300 h-20 ${
                                     index % 2 ? "bg-gray-200" : ""
                                 }`}
                                 key={row.id}
