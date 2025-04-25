@@ -32,14 +32,14 @@ export default function PermissionsSubForm({
     };
 
     // remove user from directory
-    const onDelete = (staffId: string) => {
+    const onDelete = async (staffId: string) => {
         // remove user from the directory
         const staffDocRef = doc(db, "directory", "afam", "staff", staffId);
-        deleteDoc(staffDocRef);
+        await deleteDoc(staffDocRef);
 
-        // remove directory from the user
+        // // remove directory from the user
         const userDocRef = doc(db, "user", staffId, "directory", "afam");
-        deleteDoc(userDocRef);
+        await deleteDoc(userDocRef);
     };
 
     return (
@@ -105,6 +105,7 @@ export default function PermissionsSubForm({
                                 <button
                                     className="btn mx-4"
                                     onClick={() => onDelete(staffId)}
+                                    type="button"
                                 >
                                     <Image src={trashcan} alt="delete" />
                                     <div className="text-red-500">
