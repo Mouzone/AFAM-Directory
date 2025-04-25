@@ -58,7 +58,7 @@ export default function PermissionsSubForm({
                             </div>
                             {/* private */}
                             <div className="collapse-content flex flex-col justify-center gap-4">
-                                <div className=" grid grid-cols-2 ml-8 justify-items-center">
+                                <div className=" grid grid-cols-2 sm:gap-4 ml-8 justify-items-center">
                                     <div className="text-sm">
                                         Can access
                                         <span className="font-bold">
@@ -102,7 +102,10 @@ export default function PermissionsSubForm({
                                         }
                                     />
                                 </div>
-                                <button className="btn mx-4">
+                                <button
+                                    className="btn mx-4"
+                                    onClick={() => onDelete(staffId)}
+                                >
                                     <Image src={trashcan} alt="delete" />
                                     <div className="text-red-500">
                                         Delete User
