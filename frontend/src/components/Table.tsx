@@ -136,18 +136,16 @@ export default function Table({
                 <table className="table min-w-[600px] lg:min-w-full">
                     <thead>
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <tr key={headerGroup.id}>
+                            <tr
+                                key={headerGroup.id}
+                                className="bg-black text-white"
+                            >
                                 {showDeleteStudents && (
                                     <th className="w-5 md:w-12 lg:w-1/12 px-2 md:px-4"></th>
                                 )}
                                 {headerGroup.headers.map((header) => (
                                     <th
                                         className={`
-                                            ${
-                                                header.column.getIsSorted()
-                                                    ? "bg-gray-300"
-                                                    : ""
-                                            }
                                             ${
                                                 showDeleteStudents
                                                     ? "w-1/5"
