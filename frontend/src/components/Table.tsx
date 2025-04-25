@@ -1,5 +1,5 @@
 import { db } from "@/utility/firebase";
-import { Grade, StudentGeneralInfo } from "@/utility/types";
+import { StudentGeneralInfo } from "@/utility/types";
 import {
     Column,
     ColumnDef,
@@ -124,6 +124,11 @@ export default function Table({
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         onColumnFiltersChange: setColumnFilters,
+        initialState: {
+            pagination: {
+                pageSize: 14,
+            },
+        },
         state: {
             columnFilters,
         },
@@ -183,9 +188,11 @@ export default function Table({
                         ))}
                     </thead>
                     <tbody>
-                        {table.getRowModel().rows.map((row) => (
+                        {table.getRowModel().rows.map((row, index) => (
                             <tr
-                                className="hover:bg-base-300"
+                                className={`hover:bg-base-300 ${
+                                    index % 2 ? "bg-gray-200" : ""
+                                }`}
                                 key={row.id}
                                 onClick={() => showEditStudent(row.original)}
                             >
