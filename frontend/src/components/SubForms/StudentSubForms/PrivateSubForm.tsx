@@ -71,16 +71,16 @@ export default function PrivateSubForm({
                     <div className="flex flex-col">
                         <label className="fieldset-label">Zip Code</label>
                         <input
-                            type="number"
+                            type="text"
+                            inputMode="numeric"
                             className="input"
                             value={data["Personal"]["Zip Code"]}
-                            onChange={(e) =>
-                                changeData(
-                                    "Personal",
-                                    "Zip Code",
-                                    e.target.value
-                                )
-                            }
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (/^\d{0,5}$/.test(value)) {
+                                    changeData("Personal", "Zip Code", value);
+                                }
+                            }}
                             maxLength={5}
                         />
                     </div>
@@ -96,6 +96,7 @@ export default function PrivateSubForm({
                     <label className="fieldset-label">Phone</label>
                     <input
                         type="text"
+                        inputMode="numeric"
                         className="input"
                         value={formatPhoneNumber(data["Personal"]["Phone"])}
                         onChange={(e) =>
@@ -160,6 +161,7 @@ export default function PrivateSubForm({
                         <label className="fieldset-label">Phone</label>
                         <input
                             type="text"
+                            inputMode="numeric"
                             className="input"
                             value={formatPhoneNumber(
                                 data["Guardian 1"]["Phone"]
@@ -235,6 +237,7 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
+                            inputMode="numeric"
                             value={formatPhoneNumber(
                                 data["Guardian 2"]["Phone"]
                             )}
