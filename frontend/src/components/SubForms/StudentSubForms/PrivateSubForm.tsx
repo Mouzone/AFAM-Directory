@@ -95,13 +95,13 @@ export default function PrivateSubForm({
                 <div className="flex flex-col">
                     <label className="fieldset-label">Phone</label>
                     <input
-                        type="number"
+                        type="text"
                         className="input"
                         value={formatPhoneNumber(data["Personal"]["Phone"])}
                         onChange={(e) =>
                             changeData("Personal", "Phone", e.target.value)
                         }
-                        maxLength={10}
+                        maxLength={12}
                     />
                 </div>
 
@@ -159,7 +159,7 @@ export default function PrivateSubForm({
                     <div className="flex flex-col">
                         <label className="fieldset-label">Phone</label>
                         <input
-                            type="number"
+                            type="text"
                             className="input"
                             value={formatPhoneNumber(
                                 data["Guardian 1"]["Phone"]
@@ -171,7 +171,7 @@ export default function PrivateSubForm({
                                     e.target.value
                                 )
                             }
-                            maxLength={10}
+                            maxLength={12}
                         />
                     </div>
                     <div className="flex flex-col">
@@ -233,7 +233,7 @@ export default function PrivateSubForm({
                     <div className="flex flex-col">
                         <label className="fieldset-label">Phone</label>
                         <input
-                            type="number"
+                            type="text"
                             className="input"
                             value={formatPhoneNumber(
                                 data["Guardian 2"]["Phone"]
@@ -245,7 +245,7 @@ export default function PrivateSubForm({
                                     e.target.value
                                 )
                             }
-                            maxLength={10}
+                            maxLength={12}
                         />
                     </div>
                     <div className="flex flex-col">
