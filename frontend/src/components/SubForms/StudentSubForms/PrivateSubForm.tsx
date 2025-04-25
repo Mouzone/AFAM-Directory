@@ -71,7 +71,7 @@ export default function PrivateSubForm({
                     <div className="flex flex-col">
                         <label className="fieldset-label">Zip Code</label>
                         <input
-                            type="numeric"
+                            type="number"
                             className="input"
                             value={data["Personal"]["Zip Code"]}
                             onChange={(e) =>
@@ -159,7 +159,7 @@ export default function PrivateSubForm({
                     <div className="flex flex-col">
                         <label className="fieldset-label">Phone</label>
                         <input
-                            type="numeric"
+                            type="number"
                             className="input"
                             value={formatPhoneNumber(
                                 data["Guardian 1"]["Phone"]
@@ -233,7 +233,7 @@ export default function PrivateSubForm({
                     <div className="flex flex-col">
                         <label className="fieldset-label">Phone</label>
                         <input
-                            type="numeric"
+                            type="number"
                             className="input"
                             value={formatPhoneNumber(
                                 data["Guardian 2"]["Phone"]
