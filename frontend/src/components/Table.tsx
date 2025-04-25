@@ -90,42 +90,36 @@ export default function Table({
         [data]
     );
 
-    const columnHelper = createColumnHelper<StudentGeneralInfo>();
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const columns = useMemo<ColumnDef<StudentGeneralInfo, any>[]>(
         () => [
-            columnHelper.accessor((row) => row["First Name"], {
-                id: "First Name",
+            {
+                accessorKey: "First Name",
                 header: () => "First Name",
-                cell: (info) => info.getValue(),
-                // filterFn: "includesString",
-                sortingFn: "alphanumeric",
-            }),
-            columnHelper.accessor((row) => row["Last Name"], {
-                id: "Last Name",
+                meta: {
+                    filterVariant: "text",
+                },
+            },
+            {
+                accessorKey: "Last Name",
                 header: () => "Last Name",
-                cell: (info) => info.getValue(),
-                // filterFn: "includesString",
-                sortingFn: "alphanumeric",
-            }),
-            columnHelper.accessor((row) => row["Grade"], {
-                id: "Grade",
+                meta: {
+                    filterVariant: "text",
+                },
+            },
+            {
+                accessorKey: "Grade",
                 header: () => "Grade",
-                cell: (info) => info.getValue<Grade>(),
-                // filterFn: "equalsString",
-                sortingFn: "alphanumeric",
                 meta: {
                     filterVariant: "select",
                 },
-            }),
-            columnHelper.accessor((row) => row["Teacher"], {
-                id: "Teacher",
+            },
+            {
+                accessorKey: "Teacher",
                 header: () => "Teacher",
-                cell: (info) => info.getValue(),
-                // filterFn: "includesString",
-                sortingFn: "alphanumeric",
-            }),
+                meta: {
+                    filterVariant: "text",
+                },
+            },
         ],
         []
     );
@@ -177,17 +171,29 @@ export default function Table({
                                             px-2 md:px-4
                                         `}
                                         key={header.id}
-                                        onClick={header.column.getToggleSortingHandler()}
                                     >
-                                        <div className="cursor-pointer select-none">
+                                        <div
+                                            className="cursor-pointer select-none"
+                                            onClick={header.column.getToggleSortingHandler()}
+                                        >
                                             {flexRender(
                                                 header.column.columnDef.header,
                                                 header.getContext()
                                             )}
+                                            {{
+                                                asc: " 🔼",
+                                                desc: " 🔽",
+                                            }[
+                                                header.column.getIsSorted() as string
+                                            ] ?? null}
                                         </div>
-                                        {showSearch && (
-                                            <Filter column={header.column} />
-                                        )}
+                                        <div>
+                                            {showSearch && (
+                                                <Filter
+                                                    column={header.column}
+                                                />
+                                            )}
+                                        </div>
                                     </th>
                                 ))}
                             </tr>
@@ -265,17 +271,12 @@ export default function Table({
     );
 }
 
-function Filter({ column }: { column: Column<StudentGeneralInfo, unknown> }) {
-    console.log("Rerendering");
+function Filter({ column }: { column: Column<any, unknown> }) {
     const columnFilterValue = column.getFilterValue();
-    const { filterVariant } =
-        (column.columnDef.meta as {
-            filterVariant?: "text" | "select";
-        }) ?? {};
+    const { filterVariant } = column.columnDef.meta ?? {};
 
     return filterVariant === "select" ? (
         <select
-            onClick={(e) => e.stopPropagation()}
             onChange={(e) => column.setFilterValue(e.target.value)}
             value={columnFilterValue?.toString()}
         >
@@ -288,7 +289,6 @@ function Filter({ column }: { column: Column<StudentGeneralInfo, unknown> }) {
         </select>
     ) : (
         <DebouncedInput
-            onClick={(e) => e.stopPropagation()}
             className="w-36 border shadow rounded p-2"
             onChange={(value) => column.setFilterValue(value)}
             placeholder={`Search...`}
@@ -298,11 +298,10 @@ function Filter({ column }: { column: Column<StudentGeneralInfo, unknown> }) {
     );
 }
 
-// A typical debounced input react component
 function DebouncedInput({
     value: initialValue,
     onChange,
-    debounce = 200,
+    debounce = 300,
     ...props
 }: {
     value: string | number;
