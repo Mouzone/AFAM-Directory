@@ -55,6 +55,7 @@ export default function StudentForm({
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const studentId = generalFormState["Id"];
+    console.log(generalFormData, privateFormData);
     const { data: privateData } = useQuery({
         queryKey: [studentId, "privateData"],
         queryFn: () => getPrivateData(studentId),
@@ -67,6 +68,9 @@ export default function StudentForm({
     });
     useEffect(() => {
         setTab("general");
+        if (studentId === "") {
+            setPrivateFormData(privateFormDataDefault);
+        }
     }, [studentId]);
 
     useEffect(() => {

@@ -1,3 +1,5 @@
+import formatPhoneNumber from "@/utility/formatters/formatPhone";
+import formatText from "@/utility/formatters/formatText";
 import { StudentPrivateInfo } from "@/utility/types";
 import React, { SetStateAction } from "react";
 
@@ -43,7 +45,7 @@ export default function PrivateSubForm({
                     <input
                         type="text"
                         className="input"
-                        value={data["Personal"]["Street Address"]}
+                        value={formatText(data["Personal"]["Street Address"])}
                         onChange={(e) =>
                             changeData(
                                 "Personal",
@@ -59,7 +61,7 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["Personal"]["City"]}
+                            value={formatText(data["Personal"]["City"])}
                             onChange={(e) =>
                                 changeData("Personal", "City", e.target.value)
                             }
@@ -70,15 +72,16 @@ export default function PrivateSubForm({
                         <label className="fieldset-label">Zip Code</label>
                         <input
                             type="text"
+                            inputMode="numeric"
                             className="input"
                             value={data["Personal"]["Zip Code"]}
-                            onChange={(e) =>
-                                changeData(
-                                    "Personal",
-                                    "Zip Code",
-                                    e.target.value
-                                )
-                            }
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                if (/^\d{0,5}$/.test(value)) {
+                                    changeData("Personal", "Zip Code", value);
+                                }
+                            }}
+                            maxLength={5}
                         />
                     </div>
                 </div>
@@ -93,18 +96,20 @@ export default function PrivateSubForm({
                     <label className="fieldset-label">Phone</label>
                     <input
                         type="text"
+                        inputMode="numeric"
                         className="input"
-                        value={data["Personal"]["Phone"]}
+                        value={formatPhoneNumber(data["Personal"]["Phone"])}
                         onChange={(e) =>
                             changeData("Personal", "Phone", e.target.value)
                         }
+                        maxLength={12}
                     />
                 </div>
 
                 <div className="flex flex-col">
                     <label className="fieldset-label">Email</label>
                     <input
-                        type="text"
+                        type="email"
                         className="input"
                         value={data["Personal"]["Email"]}
                         onChange={(e) =>
@@ -125,7 +130,7 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["Guardian 1"]["First Name"]}
+                            value={formatText(data["Guardian 1"]["First Name"])}
                             onChange={(e) =>
                                 changeData(
                                     "Guardian 1",
@@ -140,7 +145,7 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["Guardian 1"]["Last Name"]}
+                            value={formatText(data["Guardian 1"]["Last Name"])}
                             onChange={(e) =>
                                 changeData(
                                     "Guardian 1",
@@ -156,8 +161,11 @@ export default function PrivateSubForm({
                         <label className="fieldset-label">Phone</label>
                         <input
                             type="text"
+                            inputMode="numeric"
                             className="input"
-                            value={data["Guardian 1"]["Phone"]}
+                            value={formatPhoneNumber(
+                                data["Guardian 1"]["Phone"]
+                            )}
                             onChange={(e) =>
                                 changeData(
                                     "Guardian 1",
@@ -165,12 +173,13 @@ export default function PrivateSubForm({
                                     e.target.value
                                 )
                             }
+                            maxLength={12}
                         />
                     </div>
                     <div className="flex flex-col">
                         <label className="fieldset-label">Email</label>
                         <input
-                            type="text"
+                            type="email"
                             className="input"
                             value={data["Guardian 1"]["Email"]}
                             onChange={(e) =>
@@ -196,7 +205,7 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["Guardian 2"]["First Name"]}
+                            value={formatText(data["Guardian 2"]["First Name"])}
                             onChange={(e) =>
                                 changeData(
                                     "Guardian 2",
@@ -211,7 +220,7 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["Guardian 2"]["Last Name"]}
+                            value={formatText(data["Guardian 2"]["Last Name"])}
                             onChange={(e) =>
                                 changeData(
                                     "Guardian 2",
@@ -228,7 +237,10 @@ export default function PrivateSubForm({
                         <input
                             type="text"
                             className="input"
-                            value={data["Guardian 2"]["Phone"]}
+                            inputMode="numeric"
+                            value={formatPhoneNumber(
+                                data["Guardian 2"]["Phone"]
+                            )}
                             onChange={(e) =>
                                 changeData(
                                     "Guardian 2",
@@ -236,12 +248,13 @@ export default function PrivateSubForm({
                                     e.target.value
                                 )
                             }
+                            maxLength={12}
                         />
                     </div>
                     <div className="flex flex-col">
                         <label className="fieldset-label">Email</label>
                         <input
-                            type="text"
+                            type="email"
                             className="input"
                             value={data["Guardian 2"]["Email"]}
                             onChange={(e) =>

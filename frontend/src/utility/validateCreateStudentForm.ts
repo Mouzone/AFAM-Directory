@@ -10,7 +10,6 @@ export default function validateCreateStudentForm(
         (field) => generalFormData[field] === ""
     );
 
-    console.log(emptyGeneralFields);
     return (
         emptyGeneralFields.length === 0 &&
         noEmptyStrings(privateFormData["Guardian 1"])

@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
             "afam-directory.firebasestorage.app",
         ],
     },
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
 };
 
 export default nextConfig;

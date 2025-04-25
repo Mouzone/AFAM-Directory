@@ -28,7 +28,7 @@ export default function SignedInLayout({ children }: { children: ReactNode }) {
                     </div>
                     <ul
                         tabIndex={0}
-                        className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow-sm mt-8"
+                        className="dropdown-content menu bg-base-100 rounded-box z-[1] w-50 p-2 shadow-sm mt-8 mr-4"
                     >
                         <li>
                             <div>{user.displayName}</div>
