@@ -310,7 +310,6 @@ function DebouncedInput({
     return (
         <input
             {...props}
-            key={String(initialValue)}
             value={value}
             onChange={(e) => setValue(e.target.value)}
         />
