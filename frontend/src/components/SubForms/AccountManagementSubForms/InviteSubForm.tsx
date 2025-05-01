@@ -106,7 +106,10 @@ export default function InviteSubForm({
                     Enter valid email address
                 </div>
             </div>
-            <button className="btn btn-neutral join-item" onClick={onClick}>
+            <button
+                className="btn btn-neutral join-item dark:btn-secondary"
+                onClick={onClick}
+            >
                 Invite
             </button>
         </div>

@@ -56,7 +56,7 @@ export default function LoginForm() {
                 )}
                 <button
                     type="submit"
-                    className="btn btn-neutral"
+                    className="btn btn-neutral dark:btn-secondary"
                     disabled={email === "" || password === ""}
                 >
                     Login

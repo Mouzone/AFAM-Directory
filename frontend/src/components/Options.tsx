@@ -28,17 +28,17 @@ export default function Options({
         <div className="p-4 overflow-y-scroll">
             <div className="join">
                 <button
-                    className={`btn join-item ${
-                        showSearch ? "bg-gray-300" : ""
+                    className={`btn join-item  ${
+                        showSearch ? "dark:btn-accent" : "dark:btn-secondary"
                     }`}
                     type="button"
                     onClick={searchOnClick}
                 >
                     <Image src={search} alt="search" />
-                    <span> Search Student</span>
+                    <span>Search Student</span>
                 </button>
                 <button
-                    className="btn join-item"
+                    className="btn join-item dark:btn-secondary"
                     type="button"
                     onClick={() => addStudentOnClick(generalFormDataDefault)}
                 >
@@ -47,7 +47,9 @@ export default function Options({
                 </button>
                 <button
                     className={`btn join-item ${
-                        showDeleteStudents ? "bg-gray-300" : ""
+                        showDeleteStudents
+                            ? "dark:btn-accent"
+                            : "dark:btn-secondary"
                     }`}
                     type="button"
                     onClick={showDeleteStudentsOnClick}
@@ -57,7 +59,7 @@ export default function Options({
                 </button>
                 {showManageAccounts && (
                     <button
-                        className="btn join-item"
+                        className="btn join-item dark:btn-secondary"
                         type="button"
                         onClick={manageAccountsOnClick}
                     >
