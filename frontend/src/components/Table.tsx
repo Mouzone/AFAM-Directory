@@ -207,8 +207,10 @@ export default function Table({
                     <tbody>
                         {table.getRowModel().rows.map((row, index) => (
                             <tr
-                                className={`hover:bg-base-300 h-20 ${
-                                    index % 2 ? "bg-gray-200" : ""
+                                className={`hover:bg-base-300 h-20 dark:hover:bg-accent ${
+                                    index % 2
+                                        ? "bg-gray-200 dark:bg-secondary"
+                                        : ""
                                 }`}
                                 key={row.id}
                                 onClick={() => showEditStudent(row.original)}
