@@ -32,6 +32,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                     collection_ref.document()
                 )  # Auto-generate document IDs
 
+                print(row)
                 # Convert all values to appropriate types.  Critical for Firestore!
                 general_info = {}
                 private_info = {}
@@ -40,7 +41,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 general_info["Grade"] = row["Grade"].strip()
 
                 # to go from 1/17/2009 to Timestamp
-                dob_parts = row["Date of Birth (DOB)"].split("/")
+                dob_parts = row["Date of Birth \n(DOB)"].split("/")
                 general_info["Birthday"] = (
                     f"20{dob_parts[2]}-{dob_parts[0].zfill(2)}-{dob_parts[1].zfill(2)}"
                 )
@@ -66,22 +67,22 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 private_info["Personal"] = {
                     "Email": row["Personal Email Address"].strip(),
                     "Phone": row["Personal Phone Number"].strip(),
-                    "City": row["City"].strip(),
+                    "City": row["City "].strip(),
                     "Street Address": row["Street Address"].strip(),
-                    "Zip Code": row["Postal Code"].strip(),
+                    "Zip Code": row["Postal \nCode"].strip(),
                 }
 
                 private_info["Guardian 1"] = {
-                    "First Name": row["Parent 1 First Name"].strip(),
-                    "Last Name": row["Parent 1 Last Name"].strip(),
-                    "Phone": row["Parent 1 Phone Number"].strip(),
-                    "Email": row["Parent 1 Email Address"].strip(),
+                    "First Name": row["Parent 1 \nFirst Name"].strip(),
+                    "Last Name": row["Parent 1 \nLast Name"].strip(),
+                    "Phone": row["Parent 1 \nPhone Number"].strip(),
+                    "Email": row["Parent 1 \nEmail Address"].strip(),
                 }
                 private_info["Guardian 2"] = {
-                    "First Name": row["Parent 2 First Name"].strip(),
-                    "Last Name": row["Parent 2 Last Name"].strip(),
-                    "Phone": row["Parent 2 Phone Number"].strip(),
-                    "Email": row["Parent 2 Email Address"].strip(),
+                    "First Name": row["Parent 2 \nFirst Name"].strip(),
+                    "Last Name": row["Parent 2 \nLast Name"].strip(),
+                    "Phone": row["Parent 2 \nPhone Number"].strip(),
+                    "Email": row["Parent 2 \nEmail Address"].strip(),
                 }
 
                 batch.set(general_doc_ref, general_info)
