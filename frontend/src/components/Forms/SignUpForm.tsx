@@ -110,7 +110,7 @@ export default function SignUpForm() {
                 )}
                 <button
                     type="submit"
-                    className="btn btn-neutral"
+                    className="btn btn-neutral dark:btn-secondary"
                     disabled={
                         firstName === "" ||
                         lastName === "" ||

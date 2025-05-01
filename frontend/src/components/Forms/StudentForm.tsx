@@ -264,7 +264,7 @@ export default function StudentForm({
                     }`}
                 >
                     <button
-                        className="btn btn-neutral"
+                        className="btn btn-neutral dark:btn-secondary"
                         type="submit"
                         disabled={
                             !validateCreateStudentForm(
@@ -277,7 +277,7 @@ export default function StudentForm({
                     </button>
                     <button
                         type="button"
-                        className="btn"
+                        className="btn dark:btn-accent"
                         onClick={() => exit()}
                     >
                         Cancel

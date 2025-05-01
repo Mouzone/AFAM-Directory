@@ -20,7 +20,7 @@ export default function AccountManagementForm({
         <>
             <form method="dialog">
                 <button
-                    className="btn btn-md btn-circle btn-ghost absolute right-2 top-2"
+                    className="btn btn-md btn-circle btn-ghost absolute right-2 top-2 dark:btn-secondary"
                     onClick={() => {
                         setEmail("");
                         closeModal();

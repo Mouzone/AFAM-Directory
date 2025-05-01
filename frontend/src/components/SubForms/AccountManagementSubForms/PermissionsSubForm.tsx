@@ -131,7 +131,10 @@ export default function PermissionsSubForm({
                 </div>
             </fieldset>
             <div className="flex justify-end gap-4 mt-4">
-                <button className="btn btn-neutral" type="submit">
+                <button
+                    className="btn btn-neutral dark:btn-secondary"
+                    type="submit"
+                >
                     Submit
                 </button>
                 <button
