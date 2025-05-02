@@ -12,7 +12,6 @@ import showModal from "@/utility/showModal";
 import StudentForm from "@/components/Forms/StudentForm";
 import { generalFormDataDefault } from "@/utility/consts";
 import AccountManagementForm from "@/components/Forms/AccountManagementForm";
-import { getStaff } from "@/utility/getters/getStaff";
 import {
     Directory,
     Staff,
