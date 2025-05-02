@@ -9,7 +9,6 @@ type InviteSubFormProps = {
 export default function InviteSubForm({ email, setEmail }: InviteSubFormProps) {
     const { isPending, isSuccess, mutate, error, reset } = useMutation({
         mutationFn: async (email: string) => inviteStaff({ email }),
-        onSuccess: () => setEmail(""),
     });
 
     useEffect(() => {
