@@ -49,6 +49,8 @@ export const inviteStaff = onCall(async (request) => {
       "No account associated with the email"
     );
   }
+
+  // copy user personal info to staff directory
   await firestore
     .collection("directory")
     .doc("afam")

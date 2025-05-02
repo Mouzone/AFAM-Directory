@@ -1,5 +1,7 @@
+import { inviteStaff } from "@/utility/cloudFunctions";
 import { db } from "@/utility/firebase";
 import { Staff, StaffObject } from "@/utility/types";
+import { useMutation } from "@tanstack/react-query";
 import {
     collection,
     doc,
@@ -19,56 +21,9 @@ export default function InviteSubForm({
     setEmail,
     setStaff,
 }: InviteSubFormProps) {
-    const onClick = async () => {
-        if (email === "") {
-            return;
-        }
-
-        // if already in staff, do nothing
-        const existsInStaffQuery = query(
-            collection(db, "directory", "afam", "staff"),
-            where("Email", "==", email)
-        );
-        const existsInStaffSnapshot = await getDocs(existsInStaffQuery);
-        if (existsInStaffSnapshot.docs.length === 1) {
-            console.log("already exists");
-            return;
-        }
-
-        // search through users for the email
-        // copy info and add it to staff with `Private` and `Manage Accounts` permissions
-        const q = query(collection(db, "user"), where("Email", "==", email));
-        // will only be one doc, since emails are only allowed to be used once
-        const querySnapshot = await getDocs(q);
-        if (querySnapshot.docs.length == 0) {
-            return;
-        }
-
-        // add user to staff
-        const result = querySnapshot.docs[0];
-        const newStaffDoc = doc(db, "directory", "afam", "staff", result.id);
-        const staffData = {
-            ...(result.data() as Staff),
-            Private: false,
-            "Manage Accounts": false,
-        };
-        await setDoc(newStaffDoc, staffData);
-
-        // add directory to user's available directories
-        const directoryRef = doc(db, "user", result.id, "directory", "afam");
-        await setDoc(directoryRef, {
-            name: "afam",
-            Private: false,
-            "Manage Accounts": false,
-        });
-
-        setStaff((prev) => {
-            return {
-                ...prev,
-                [result.id]: staffData,
-            };
-        });
-    };
+    const { isPending, isSuccess, mutate, error } = useMutation({
+        mutationFn: async (email: string) => inviteStaff(email),
+    });
 
     return (
         <div className="join flex justify-center">
@@ -108,10 +63,21 @@ export default function InviteSubForm({
             </div>
             <button
                 className="btn btn-neutral join-item dark:btn-secondary"
-                onClick={onClick}
+                onClick={() => mutate(email)}
             >
-                Invite
+                {isPending ? (
+                    <span className="loading loading-spinner loading-md"></span>
+                ) : (
+                    <span> Invite</span>
+                )}
             </button>
+            {error && <span className="text-red-400"> {error.message} </span>}
+            {isSuccess && (
+                <span className="text-green-400">
+                    {" "}
+                    User successfully invited{" "}
+                </span>
+            )}
         </div>
     );
 }
