@@ -33,14 +33,10 @@ export default function AccountManagementForm({
             <div>
                 <div className="tabs tabs-lift">
                     <Tab currTab={tab} value="permissions" setTab={setTab}>
-                        <PermissionsSubForm staff={staff} setStaff={setStaff} />
+                        <PermissionsSubForm staff={staff} />
                     </Tab>
                     <Tab currTab={tab} value="invite" setTab={setTab}>
-                        <InviteSubForm
-                            email={email}
-                            setEmail={setEmail}
-                            setStaff={setStaff}
-                        />
+                        <InviteSubForm email={email} setEmail={setEmail} />
                     </Tab>
                 </div>
             </div>

@@ -13,7 +13,14 @@ import StudentForm from "@/components/Forms/StudentForm";
 import { generalFormDataDefault } from "@/utility/consts";
 import AccountManagementForm from "@/components/Forms/AccountManagementForm";
 import { getStaff } from "@/utility/getters/getStaff";
-import { Directory, StaffObject, StudentGeneralInfo } from "@/utility/types";
+import {
+    Directory,
+    Staff,
+    StaffObject,
+    StudentGeneralInfo,
+} from "@/utility/types";
+import { collection, onSnapshot, query } from "firebase/firestore";
+import { db } from "@/utility/firebase";
 
 export default function Page() {
     const pathname = usePathname();
@@ -52,23 +59,27 @@ export default function Page() {
         enabled: directoryId != "",
     });
 
-    const { data: staffData } = useQuery({
-        queryKey: [directoryId, "staff"],
-        queryFn: () => getStaff(directoryId),
-        enabled: directoryId != "",
-    });
+    useEffect(() => {
+        const staffQuery = query(collection(db, "directory", "afam", "staff"));
+        return onSnapshot(staffQuery, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                    staff[change.doc.id] = change.doc.data() as Staff;
+                } else if (change.type === "modified") {
+                    staff[change.doc.id] = change.doc.data() as Staff;
+                } else {
+                    delete staff[change.doc.id];
+                }
+            });
+            setStaff({ ...staff });
+        });
+    }, [pathname]);
 
     useEffect(() => {
         if (studentsData) {
             setStudents(studentsData);
         }
     }, [studentsData]);
-
-    useEffect(() => {
-        if (staffData) {
-            setStaff(staffData);
-        }
-    }, [staffData, user]);
 
     if (!user) {
         return <></>;

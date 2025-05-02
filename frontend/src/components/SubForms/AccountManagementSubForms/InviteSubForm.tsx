@@ -1,26 +1,12 @@
 import { inviteStaff } from "@/utility/cloudFunctions";
-import { db } from "@/utility/firebase";
-import { Staff, StaffObject } from "@/utility/types";
 import { useMutation } from "@tanstack/react-query";
-import {
-    collection,
-    doc,
-    getDocs,
-    query,
-    setDoc,
-    where,
-} from "firebase/firestore";
+
 import { Dispatch, SetStateAction } from "react";
 type InviteSubFormProps = {
     email: string;
     setEmail: Dispatch<SetStateAction<string>>;
-    setStaff: Dispatch<SetStateAction<StaffObject>>;
 };
-export default function InviteSubForm({
-    email,
-    setEmail,
-    setStaff,
-}: InviteSubFormProps) {
+export default function InviteSubForm({ email, setEmail }: InviteSubFormProps) {
     const { isPending, isSuccess, mutate, error } = useMutation({
         mutationFn: async (email: string) => inviteStaff({ email }),
     });
