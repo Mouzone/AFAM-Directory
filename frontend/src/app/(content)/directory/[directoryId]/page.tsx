@@ -1,10 +1,8 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../components/Providers/AuthProvider";
 import { usePathname } from "next/navigation";
-import { getStudents } from "../../../../utility/getters/getStudents";
 import Table from "@/components/Table";
 import Options from "@/components/Options";
 import Modal from "@/components/Modal";
@@ -52,11 +50,33 @@ export default function Page() {
         }
     }, [pathname, directories]);
 
-    const { data: studentsData } = useQuery({
-        queryKey: [directoryId, "student"],
-        queryFn: () => getStudents(directoryId),
-        enabled: directoryId != "",
-    });
+    useEffect(() => {
+        const studentQuery = query(
+            collection(db, "directory", "afam", "student")
+        );
+        return onSnapshot(studentQuery, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                    students.push(change.doc.data() as StudentGeneralInfo);
+                    setStudents([...students]);
+                } else if (change.type === "modified") {
+                    setStudents([
+                        ...students.map((obj) =>
+                            obj["Id"] === change.doc.id
+                                ? { ...obj, ...change.doc.data() }
+                                : obj
+                        ),
+                    ]);
+                } else {
+                    setStudents([
+                        ...students.filter(
+                            (student) => student["Id"] !== change.doc.id
+                        ),
+                    ]);
+                }
+            });
+        });
+    }, [directoryId]);
 
     useEffect(() => {
         const staffQuery = query(collection(db, "directory", "afam", "staff"));
@@ -72,13 +92,7 @@ export default function Page() {
             });
             setStaff({ ...staff });
         });
-    }, [pathname]);
-
-    useEffect(() => {
-        if (studentsData) {
-            setStudents(studentsData);
-        }
-    }, [studentsData]);
+    }, [directoryId]);
 
     if (!user) {
         return <></>;
