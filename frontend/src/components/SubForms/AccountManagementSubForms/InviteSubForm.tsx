@@ -22,7 +22,7 @@ export default function InviteSubForm({
     setStaff,
 }: InviteSubFormProps) {
     const { isPending, isSuccess, mutate, error } = useMutation({
-        mutationFn: async (email: string) => inviteStaff(email),
+        mutationFn: async (email: string) => inviteStaff({ email }),
     });
 
     return (
