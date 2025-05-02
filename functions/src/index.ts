@@ -16,10 +16,7 @@ export const inviteStaff = onCall(async (request) => {
   const {email} = request.data;
 
   if (!email) {
-    throw new HttpsError(
-      "invalid-argument",
-      "The request has no name for new directory."
-    );
+    throw new HttpsError("invalid-argument", "The request has no email.");
   }
 
   // if already in staff, do nothing
