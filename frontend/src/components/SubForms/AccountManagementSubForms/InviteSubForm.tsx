@@ -1,15 +1,20 @@
 import { inviteStaff } from "@/utility/cloudFunctions";
 import { useMutation } from "@tanstack/react-query";
 
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 type InviteSubFormProps = {
     email: string;
     setEmail: Dispatch<SetStateAction<string>>;
 };
 export default function InviteSubForm({ email, setEmail }: InviteSubFormProps) {
-    const { isPending, isSuccess, mutate, error } = useMutation({
+    const { isPending, isSuccess, mutate, error, reset } = useMutation({
         mutationFn: async (email: string) => inviteStaff({ email }),
+        onSuccess: () => setEmail(""),
     });
+
+    useEffect(() => {
+        reset();
+    }, [email]);
 
     return (
         <div className="flex flex-col">
@@ -67,8 +72,7 @@ export default function InviteSubForm({ email, setEmail }: InviteSubFormProps) {
             </form>
             {error && (
                 <span className="text-red-400 text-xs text-center">
-                    {" "}
-                    {error.message}{" "}
+                    {error.message}
                 </span>
             )}
             {isSuccess && (

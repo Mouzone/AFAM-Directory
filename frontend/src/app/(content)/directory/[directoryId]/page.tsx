@@ -102,7 +102,7 @@ export default function Page() {
         <>
             <Modal>
                 {formToShow === "accounts" ? (
-                    <AccountManagementForm staff={staff} setStaff={setStaff} />
+                    <AccountManagementForm staff={staff} />
                 ) : (
                     <StudentForm
                         generalFormState={studentFormState}
