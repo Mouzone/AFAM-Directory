@@ -29,6 +29,7 @@ import {
 } from "react";
 import trashcan from "../../public/svgs/trashcan.svg";
 import Image from "next/image";
+import { deleteStudent } from "@/utility/cloudFunctions";
 
 declare module "@tanstack/react-table" {
     //allows us to define custom properties for our columns
@@ -50,33 +51,6 @@ export default function Table({
     showDeleteStudents,
 }: TableProps) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-    const deleteStudent = useCallback(
-        async (studentId: string) => {
-            const studentDocRef = doc(
-                db,
-                "directory",
-                "afam",
-                "student",
-                studentId
-            );
-            const [privateDocs, attendanceDocs] = await Promise.all([
-                getDocs(collection(studentDocRef, "private")),
-                getDocs(collection(studentDocRef, "attendance")),
-            ]);
-
-            const batch = writeBatch(db);
-
-            // Add all deletes to batch
-            privateDocs.forEach((doc) => batch.delete(doc.ref));
-            attendanceDocs.forEach((doc) => batch.delete(doc.ref));
-            batch.delete(studentDocRef);
-            await batch.commit();
-
-            await deleteDoc(studentDocRef);
-        },
-        [data]
-    );
 
     const columns = useMemo<ColumnDef<StudentGeneralInfo, any>[]>(
         () => [
@@ -217,7 +191,9 @@ export default function Table({
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             console.log(row.original);
-                                            deleteStudent(row.original["Id"]);
+                                            deleteStudent({
+                                                studentId: row.original["Id"],
+                                            });
                                         }}
                                         className="w-5 md:w-12 lg:w-1/12 px-2 md:px-4"
                                     >
