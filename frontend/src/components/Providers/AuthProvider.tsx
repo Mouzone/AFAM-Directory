@@ -1,72 +1,28 @@
 "use client";
 
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { auth, db } from "../../utility/firebase";
-import {
-    collection,
-    onSnapshot,
-    DocumentData,
-    QueryDocumentSnapshot,
-} from "firebase/firestore";
-import { AuthUser, Directory } from "../../utility/types";
+import { auth } from "../../utility/firebase";
+import { AuthUser } from "../../utility/types";
 
-export const AuthContext = createContext<AuthUser>({
-    user: null,
-    directories: [],
-});
+export const AuthContext = createContext<AuthUser>(null);
 
 type AuthProviderProps = {
     children: ReactNode;
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [userState, setUserState] = useState<AuthUser>({
-        user: null,
-        directories: [],
-    });
+    const [userState, setUserState] = useState<AuthUser>(null);
 
     useEffect(() => {
-        let unsubscribeDirectories = () => {};
-
         const unsubscribeAuth = auth.onAuthStateChanged((user) => {
-            // Cleanup previous directory listener
-            unsubscribeDirectories();
-
             if (user) {
-                const directoriesRef = collection(
-                    db,
-                    "user",
-                    user.uid,
-                    "directory"
-                );
-
-                unsubscribeDirectories = onSnapshot(
-                    directoriesRef,
-                    (snapshot) => {
-                        const updatedDirectories: DocumentData[] = [];
-
-                        snapshot.forEach((doc: QueryDocumentSnapshot) => {
-                            updatedDirectories.push({
-                                id: doc.id,
-                                ...doc.data(),
-                            });
-                        });
-
-                        setUserState({
-                            user,
-                            directories: updatedDirectories as Directory[],
-                        });
-                    }
-                );
+                setUserState(user);
             } else {
-                setUserState({ user: false, directories: [] });
+                setUserState(false);
             }
         });
 
-        return () => {
-            unsubscribeAuth();
-            unsubscribeDirectories();
-        };
+        return () => unsubscribeAuth();
     }, []);
 
     return (
