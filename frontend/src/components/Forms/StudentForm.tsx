@@ -52,7 +52,6 @@ export default function StudentForm({
 
     useEffect(() => {
         setGeneralFormData(generalFormState);
-        setTab("general");
     }, [generalFormState]);
 
     useEffect(() => {
@@ -102,6 +101,7 @@ export default function StudentForm({
             fileInputRef.current.value = ""; // This clears the selected file
         }
         setFile(null);
+        setTab("general");
     };
 
     const onSubmit = async (
