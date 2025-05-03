@@ -57,8 +57,8 @@ export default function Page() {
         return onSnapshot(studentQuery, (snapshot) => {
             snapshot.docChanges().forEach((change) => {
                 const data = {
-                    Id: change.doc.id,
                     ...change.doc.data(),
+                    Id: change.doc.id,
                 } as StudentGeneralInfo;
                 console.log(data);
                 if (change.type === "added") {
