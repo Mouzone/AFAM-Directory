@@ -168,6 +168,7 @@ export default function StudentForm({
                 collection(db, "directory", "afam", "student"),
                 generalFormData
             );
+            await updateDoc(newStudentRef, { Id: newStudentRef.id });
             await setDoc(
                 doc(newStudentRef, "private", "data"),
                 privateFormData
