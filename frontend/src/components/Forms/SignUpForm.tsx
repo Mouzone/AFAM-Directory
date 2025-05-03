@@ -31,7 +31,6 @@ export default function SignUpForm() {
                 "Last Name": lastName,
                 Email: email,
             });
-            router.push("/directory");
         },
     });
 

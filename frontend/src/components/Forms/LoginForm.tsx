@@ -5,17 +5,12 @@ import { useMutation } from "@tanstack/react-query";
 import { login } from "../../utility/login";
 import { useRouter } from "next/navigation";
 
-// todo: add redirect if user is already logged in
 export default function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const router = useRouter();
     const { error, isPending, isSuccess, mutate } = useMutation({
         mutationFn: login,
-        onSuccess: () => {
-            // todo: provide indicator login was succesful or loading...
-            router.push("/directory/afam");
-        },
     });
 
     return (
