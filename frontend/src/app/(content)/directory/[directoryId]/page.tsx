@@ -56,23 +56,23 @@ export default function Page() {
         );
         return onSnapshot(studentQuery, (snapshot) => {
             snapshot.docChanges().forEach((change) => {
+                const data = {
+                    Id: change.doc.id,
+                    ...change.doc.data(),
+                } as StudentGeneralInfo;
+                console.log(data);
                 if (change.type === "added") {
-                    students.push(change.doc.data() as StudentGeneralInfo);
-                    setStudents([...students]);
+                    setStudents((prev) => [...prev, data]);
                 } else if (change.type === "modified") {
-                    setStudents([
-                        ...students.map((obj) =>
-                            obj["Id"] === change.doc.id
-                                ? { ...obj, ...change.doc.data() }
-                                : obj
-                        ),
-                    ]);
-                } else {
-                    setStudents([
-                        ...students.filter(
-                            (student) => student["Id"] !== change.doc.id
-                        ),
-                    ]);
+                    setStudents((prev) =>
+                        prev.map((student) =>
+                            student.Id === change.doc.id ? data : student
+                        )
+                    );
+                } else if (change.type === "removed") {
+                    setStudents((prev) =>
+                        prev.filter((student) => student.Id !== change.doc.id)
+                    );
                 }
             });
         });
@@ -120,7 +120,6 @@ export default function Page() {
                 ) : (
                     <StudentForm
                         generalFormState={studentFormState}
-                        setStudents={setStudents}
                         showPrivate={permissions["Private"]}
                     />
                 )}
@@ -149,7 +148,6 @@ export default function Page() {
                 />
                 <Table
                     data={students}
-                    setData={setStudents}
                     showSearch={showSearch}
                     showEditStudent={(student: StudentGeneralInfo) => {
                         setStudentFormState(student);

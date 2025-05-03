@@ -34,12 +34,10 @@ import {
 
 type StudentFormProps = {
     generalFormState: StudentGeneralInfo;
-    setStudents: Dispatch<SetStateAction<StudentGeneralInfo[]>>;
     showPrivate: boolean;
 };
 export default function StudentForm({
     generalFormState,
-    setStudents,
     showPrivate,
 }: StudentFormProps) {
     const [tab, setTab] = useState("general");
@@ -55,7 +53,7 @@ export default function StudentForm({
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const studentId = generalFormState["Id"];
-    console.log(generalFormData, privateFormData);
+
     const { data: privateData } = useQuery({
         queryKey: [studentId, "privateData"],
         queryFn: () => getPrivateData(studentId),
@@ -163,11 +161,6 @@ export default function StudentForm({
             });
 
             await batch.commit();
-            setStudents((prev) =>
-                prev.map((student) =>
-                    student["Id"] === studentId ? generalFormData : student
-                )
-            );
         } else {
             // Create new student
 
@@ -209,11 +202,6 @@ export default function StudentForm({
                     }
                 );
             }
-
-            setStudents((prev) => [
-                ...prev,
-                { id: studentId, ...generalFormData },
-            ]);
         }
 
         exit();

@@ -41,7 +41,6 @@ type TableProps = {
     data: StudentGeneralInfo[];
     showEditStudent: (student: StudentGeneralInfo) => void;
     showDeleteStudents: boolean;
-    setData: Dispatch<SetStateAction<StudentGeneralInfo[]>>;
     showSearch: boolean;
 };
 export default function Table({
@@ -49,12 +48,12 @@ export default function Table({
     showSearch,
     showEditStudent,
     showDeleteStudents,
-    setData,
 }: TableProps) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
     const deleteStudent = useCallback(
         async (studentId: string) => {
+            console.log(studentId);
             const studentDocRef = doc(
                 db,
                 "directory",
@@ -76,7 +75,6 @@ export default function Table({
             await batch.commit();
 
             await deleteDoc(studentDocRef);
-            setData(data.filter((student) => student["Id"] !== studentId));
         },
         [data]
     );
@@ -219,6 +217,7 @@ export default function Table({
                                     <td
                                         onClick={(e) => {
                                             e.stopPropagation();
+                                            console.log(row.original);
                                             deleteStudent(row.original["Id"]);
                                         }}
                                         className="w-5 md:w-12 lg:w-1/12 px-2 md:px-4"
