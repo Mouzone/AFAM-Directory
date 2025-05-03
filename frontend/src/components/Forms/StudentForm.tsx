@@ -1,11 +1,4 @@
-import {
-    Dispatch,
-    FormEvent,
-    SetStateAction,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import GeneralSubForm from "../SubForms/StudentSubForms/GeneralSubForm";
 import PrivateSubForm from "../SubForms/StudentSubForms/PrivateSubForm";
 import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
@@ -14,19 +7,22 @@ import {
     addDoc,
     collection,
     doc,
+    getDoc,
+    getDocs,
     setDoc,
     updateDoc,
     writeBatch,
 } from "firebase/firestore";
 import { db, storage } from "@/utility/firebase";
-import { getPrivateData } from "@/utility/getters/getPrivateData";
-import { useQuery } from "@tanstack/react-query";
 import Tab from "../Tab";
 import AttendanceSubForm from "../SubForms/StudentSubForms/AttendanceSubForm";
-import { getAttendanceData } from "@/utility/getters/getAttendanceData";
-import { privateFormDataDefault } from "@/utility/consts";
+import {
+    generalFormDataDefault,
+    privateFormDataDefault,
+} from "@/utility/consts";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import {
+    Attendance,
     AttendanceObject,
     StudentGeneralInfo,
     StudentPrivateInfo,
@@ -54,38 +50,50 @@ export default function StudentForm({
 
     const studentId = generalFormState["Id"];
 
-    const { data: privateData } = useQuery({
-        queryKey: [studentId, "privateData"],
-        queryFn: () => getPrivateData(studentId),
-        enabled: studentId !== "",
-    });
-    const { data: attendanceData } = useQuery({
-        queryKey: [studentId, "attendanceData"],
-        queryFn: () => getAttendanceData(studentId),
-        enabled: studentId !== "",
-    });
-    useEffect(() => {
-        setTab("general");
-        if (studentId === "") {
-            setPrivateFormData(privateFormDataDefault);
-        }
-    }, [studentId]);
-
     useEffect(() => {
         setGeneralFormData(generalFormState);
+        setTab("general");
     }, [generalFormState]);
 
     useEffect(() => {
-        if (privateData) {
-            setPrivateFormData(privateData);
-        }
-    }, [studentId, privateData]);
-
-    useEffect(() => {
-        if (attendanceData) {
+        const getPrivate = async () => {
+            const privateDocRef = doc(
+                db,
+                "directory",
+                "afam",
+                "student",
+                studentId,
+                "private",
+                "data"
+            );
+            const privateDoc = await getDoc(privateDocRef);
+            setPrivateFormData(privateDoc.data() as StudentPrivateInfo);
+        };
+        const getAttendance = async () => {
+            const attendanceColRef = collection(
+                db,
+                "directory",
+                "afam",
+                "student",
+                studentId,
+                "attendance"
+            );
+            const attendanceDocs = await getDocs(attendanceColRef);
+            const attendanceData: AttendanceObject = {};
+            for (const attendanceDoc of attendanceDocs.docs) {
+                attendanceData[attendanceDoc.id] =
+                    attendanceDoc.data() as Attendance;
+            }
             setAttendanceFormData(attendanceData);
+        };
+
+        if (studentId != "") {
+            getPrivate();
+            getAttendance();
+        } else {
+            setPrivateFormData(privateFormDataDefault);
         }
-    }, [studentId, attendanceData]);
+    }, [studentId]);
 
     const exit = () => {
         closeModal();
@@ -205,6 +213,8 @@ export default function StudentForm({
             }
         }
 
+        setGeneralFormData(generalFormDataDefault);
+        setPrivateFormData(privateFormDataDefault);
         exit();
     };
 
