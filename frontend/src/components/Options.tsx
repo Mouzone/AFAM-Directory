@@ -29,7 +29,9 @@ export default function Options({
             <div className="join">
                 <button
                     className={`btn join-item  ${
-                        showSearch ? "dark:btn-accent" : "dark:btn-secondary"
+                        showSearch
+                            ? "btn-secondary dark:btn-accent"
+                            : "dark:btn-secondary"
                     }`}
                     type="button"
                     onClick={searchOnClick}
@@ -48,7 +50,7 @@ export default function Options({
                 <button
                     className={`btn join-item ${
                         showDeleteStudents
-                            ? "dark:btn-accent"
+                            ? "btn-secondary dark:btn-accent"
                             : "dark:btn-secondary"
                     }`}
                     type="button"
