@@ -53,7 +53,6 @@ export default function Table({
 
     const deleteStudent = useCallback(
         async (studentId: string) => {
-            console.log(studentId);
             const studentDocRef = doc(
                 db,
                 "directory",

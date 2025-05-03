@@ -67,3 +67,36 @@ export const inviteStaff = onCall(async (request) => {
       "Manage Accounts": false,
     });
 });
+
+export const deleteStudent = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
+
+  const {studentId} = request.data;
+
+  if (!studentId) {
+    throw new HttpsError("invalid-argument", "The request has no student id.");
+  }
+
+  const studentRef = firestore
+    .collection("directory")
+    .doc("afam")
+    .collection("student")
+    .doc(studentId);
+
+  // Delete attendance subcollection documents in a batch
+  const attendanceDocs = await studentRef.collection("attendance").get();
+  const batch = firestore.batch();
+  attendanceDocs.docs.forEach((doc) => batch.delete(doc.ref));
+  await batch.commit(); // <-- You missed this line
+
+  // Delete private/data doc
+  await studentRef.collection("private").doc("data").delete();
+
+  // Delete student doc
+  await studentRef.delete();
+});
