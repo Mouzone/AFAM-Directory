@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { ReactNode, useContext } from "react";
 
 export default function SignedInLayout({ children }: { children: ReactNode }) {
-    const { user } = useContext(AuthContext);
+    const user = useContext(AuthContext);
     const router = useRouter();
     if (!user) {
         return <></>;

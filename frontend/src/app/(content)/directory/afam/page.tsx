@@ -2,7 +2,6 @@
 
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../../components/Providers/AuthProvider";
-import { usePathname } from "next/navigation";
 import Table from "@/components/Table";
 import Options from "@/components/Options";
 import Modal from "@/components/Modal";
@@ -10,45 +9,34 @@ import showModal from "@/utility/showModal";
 import StudentForm from "@/components/Forms/StudentForm";
 import { generalFormDataDefault } from "@/utility/consts";
 import AccountManagementForm from "@/components/Forms/AccountManagementForm";
-import {
-    Directory,
-    Staff,
-    StaffObject,
-    StudentGeneralInfo,
-} from "@/utility/types";
-import { collection, onSnapshot, query } from "firebase/firestore";
+import { Staff, StaffObject, StudentGeneralInfo } from "@/utility/types";
+import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { db } from "@/utility/firebase";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
-    const pathname = usePathname();
+    const user = useContext(AuthContext);
 
-    const { user, directories } = useContext(AuthContext);
-    const [permissions, setPermissions] = useState<Directory | undefined>(
-        undefined
-    );
-    const [directoryId, setDirectoryId] = useState("");
     const [studentFormState, setStudentFormState] =
         useState<StudentGeneralInfo>(generalFormDataDefault);
     const [formToShow, setFormToShow] = useState("student");
     const [students, setStudents] = useState<StudentGeneralInfo[]>([]);
     const [staff, setStaff] = useState<StaffObject>({});
+    const [accountInfo, setAccountInfo] = useState();
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
-        if (pathname) {
-            const segments = pathname.split("/");
-            setDirectoryId(segments[segments.length - 1]);
-            setPermissions(
-                directories
-                    ?.filter(
-                        (directory) =>
-                            directory.name === segments[segments.length - 1]
-                    )
-                    .at(0)
+        if (user) {
+            return onSnapshot(
+                doc(db, "directory", "afam", "staff", user.uid),
+                (doc) => {
+                    setAccountInfo({ ...doc.data() });
+                }
             );
         }
-    }, [pathname, directories]);
+    }, [user]);
 
     useEffect(() => {
         const studentQuery = query(
@@ -76,7 +64,7 @@ export default function Page() {
                 }
             });
         });
-    }, [directoryId]);
+    }, [user]);
 
     useEffect(() => {
         const staffQuery = query(collection(db, "directory", "afam", "staff"));
@@ -92,7 +80,7 @@ export default function Page() {
             });
             setStaff({ ...staff });
         });
-    }, [directoryId]);
+    }, [user]);
 
     if (!user) {
         return <></>;
@@ -106,7 +94,7 @@ export default function Page() {
         return <></>;
     }
 
-    if (!permissions) {
+    if (!accountInfo) {
         return <></>;
     }
 
@@ -120,14 +108,14 @@ export default function Page() {
                 ) : (
                     <StudentForm
                         generalFormState={studentFormState}
-                        showPrivate={permissions["Private"]}
+                        showPrivate={accountInfo["Private"]}
                     />
                 )}
             </Modal>
 
             <div className="p-4">
                 <Options
-                    showManageAccounts={permissions["Manage Accounts"]}
+                    showManageAccounts={accountInfo["Manage Accounts"]}
                     showSearch={showSearch}
                     searchOnClick={() => {
                         setShowSearch((prev) => !prev);

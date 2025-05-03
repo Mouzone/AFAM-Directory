@@ -1,21 +1,32 @@
 "use client";
 
 import { AuthContext } from "@/components/Providers/AuthProvider";
+import { db } from "@/utility/firebase";
+import { collection, onSnapshot } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 
 export default function Page() {
-    const { directories } = useContext(AuthContext);
+    const user = useContext(AuthContext);
     const router = useRouter();
 
     useEffect(() => {
-        if (
-            directories &&
-            directories.filter((directory) => directory.name === "afam")
-        ) {
-            router.push("/directory/afam");
+        if (user) {
+            const directoryQuery = collection(
+                db,
+                "user",
+                user.uid,
+                "directory"
+            );
+            onSnapshot(directoryQuery, (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.doc.id === "afam") {
+                        router.push("/directory/afam");
+                    }
+                });
+            });
         }
-    }, [router, directories]);
+    }, [user]);
 
     return (
         <div className="flex items-center justify-center h-screen">
