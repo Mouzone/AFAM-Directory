@@ -2,13 +2,7 @@ import closeModal from "@/utility/closeModal";
 import { db } from "@/utility/firebase";
 import { StaffObject } from "@/utility/types";
 import { deleteDoc, doc, writeBatch } from "firebase/firestore";
-import {
-    Dispatch,
-    FormEvent,
-    SetStateAction,
-    useEffect,
-    useState,
-} from "react";
+import { FormEvent, useEffect, useState } from "react";
 import trashcan from "../../../../public/svgs/trashcan.svg";
 import Image from "next/image";
 

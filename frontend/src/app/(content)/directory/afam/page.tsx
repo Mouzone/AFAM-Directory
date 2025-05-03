@@ -12,7 +12,6 @@ import AccountManagementForm from "@/components/Forms/AccountManagementForm";
 import { Staff, StaffObject, StudentGeneralInfo } from "@/utility/types";
 import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { db } from "@/utility/firebase";
-import { useRouter } from "next/navigation";
 
 export default function Page() {
     const user = useContext(AuthContext);
@@ -25,7 +24,6 @@ export default function Page() {
     const [accountInfo, setAccountInfo] = useState();
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
-    const router = useRouter();
 
     useEffect(() => {
         if (user) {

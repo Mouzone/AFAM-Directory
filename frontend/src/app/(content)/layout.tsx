@@ -1,18 +1,51 @@
 "use client";
 
 import { AuthContext } from "@/components/Providers/AuthProvider";
-import { auth } from "@/utility/firebase";
+import { auth, db } from "@/utility/firebase";
 import { signOut } from "firebase/auth";
+import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { ReactNode, useContext } from "react";
+import { ReactNode, useContext, useEffect } from "react";
 
 export default function SignedInLayout({ children }: { children: ReactNode }) {
     const user = useContext(AuthContext);
     const router = useRouter();
+
+    useEffect(() => {
+        if (user === null) {
+            // User is not authenticated
+            router.push("/");
+            return;
+        }
+
+        if (user) {
+            const directoryRef = collection(db, "user", user.uid, "directory");
+            const afamDocRef = doc(directoryRef, "afam");
+
+            // First check if "afam" exists
+            getDoc(afamDocRef).then((docSnap) => {
+                if (!docSnap.exists()) {
+                    // No afam doc, redirect to /directory
+                    router.push("/directory");
+                } else {
+                    // Set up listener to redirect to /directory/afam if "afam" doc appears/updates
+                    const unsubscribe = onSnapshot(directoryRef, (snapshot) => {
+                        snapshot.docChanges().forEach((change) => {
+                            if (change.doc.id === "afam") {
+                                router.push("/directory/afam");
+                            }
+                        });
+                    });
+
+                    return () => unsubscribe();
+                }
+            });
+        }
+    }, [user]);
+
     if (!user) {
         return <></>;
     }
-
     return (
         <>
             <div className="flex justify-end">
@@ -41,7 +74,6 @@ export default function SignedInLayout({ children }: { children: ReactNode }) {
                                 className="text-red-400"
                                 onClick={() => {
                                     signOut(auth);
-                                    router.push("/");
                                 }}
                             >
                                 Sign Out
