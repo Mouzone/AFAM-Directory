@@ -8,19 +8,10 @@ export type Directory = {
 };
 
 // loading, loaded, logged out / error
-export type AuthUser =
-    | {
-          user: null;
-          directories: null;
-      }
-    | {
-          user: User;
-          directories: Directory[];
-      }
-    | {
-          user: false;
-          directories: null;
-      };
+export type AuthUser = {
+    user: null | User | false;
+    directories: Directory[];
+};
 
 export type Grade = "9" | "10" | "11" | "12";
 

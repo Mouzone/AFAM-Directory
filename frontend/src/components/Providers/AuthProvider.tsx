@@ -2,28 +2,34 @@
 
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { auth, db } from "../../utility/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
-import { Directory, AuthUser } from "../../utility/types";
+import {
+    collection,
+    onSnapshot,
+    DocumentData,
+    QueryDocumentSnapshot,
+} from "firebase/firestore";
+import { AuthUser, Directory } from "../../utility/types";
 
 export const AuthContext = createContext<AuthUser>({
     user: null,
-    directories: null,
+    directories: [],
 });
 
 type AuthProviderProps = {
     children: ReactNode;
 };
+
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [user, setUser] = useState<AuthUser>({
+    const [userState, setUserState] = useState<AuthUser>({
         user: null,
-        directories: null,
+        directories: [],
     });
 
     useEffect(() => {
-        let unsubscribeDirectories = () => {}; // Initialize as no-op
+        let unsubscribeDirectories = () => {};
 
         const unsubscribeAuth = auth.onAuthStateChanged((user) => {
-            // First clean up any existing directory listener
+            // Cleanup previous directory listener
             unsubscribeDirectories();
 
             if (user) {
@@ -33,34 +39,39 @@ export function AuthProvider({ children }: AuthProviderProps) {
                     user.uid,
                     "directory"
                 );
+
                 unsubscribeDirectories = onSnapshot(
                     directoriesRef,
                     (snapshot) => {
-                        const directories = snapshot.docs.map(
-                            (doc) =>
-                                ({ ...doc.data(), id: doc.id } as Directory)
-                        );
+                        const updatedDirectories: DocumentData[] = [];
 
-                        setUser({
+                        snapshot.forEach((doc: QueryDocumentSnapshot) => {
+                            updatedDirectories.push({
+                                id: doc.id,
+                                ...doc.data(),
+                            });
+                        });
+
+                        setUserState({
                             user,
-                            directories,
+                            directories: updatedDirectories as Directory[],
                         });
                     }
                 );
             } else {
-                setUser({ user: false, directories: null });
+                setUserState({ user: false, directories: [] });
             }
         });
 
         return () => {
             unsubscribeAuth();
-            unsubscribeDirectories(); // Cleanup whatever is current
+            unsubscribeDirectories();
         };
-    }, []); // Empty array is correct here
-
-    const value = user;
+    }, []);
 
     return (
-        <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={userState}>
+            {children}
+        </AuthContext.Provider>
     );
 }
