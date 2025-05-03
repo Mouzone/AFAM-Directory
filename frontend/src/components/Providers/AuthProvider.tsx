@@ -11,15 +11,11 @@ type AuthProviderProps = {
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [userState, setUserState] = useState<AuthUser>(null);
+    const [userState, setUserState] = useState<AuthUser>(false);
 
     useEffect(() => {
         const unsubscribeAuth = auth.onAuthStateChanged((user) => {
-            if (user) {
-                setUserState(user);
-            } else {
-                setUserState(false);
-            }
+            setUserState(user);
         });
 
         return () => unsubscribeAuth();

@@ -18,7 +18,9 @@ export default function Page() {
                 user.uid,
                 "directory"
             );
-            onSnapshot(directoryQuery, (snapshot) => {
+
+            // redirects user the moment afam is detected in their directories
+            return onSnapshot(directoryQuery, (snapshot) => {
                 snapshot.docChanges().forEach((change) => {
                     if (change.doc.id === "afam") {
                         router.push("/directory/afam");
