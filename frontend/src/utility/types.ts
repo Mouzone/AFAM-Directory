@@ -1,8 +1,9 @@
 import { User } from "firebase/auth";
 
-export type Directory = {
-    id: string;
-    name: string;
+export type AccountInfo = {
+    Email: string;
+    "First Name": string;
+    "Last Name": string;
     Private: boolean;
     "Manage Accounts": boolean;
 };
