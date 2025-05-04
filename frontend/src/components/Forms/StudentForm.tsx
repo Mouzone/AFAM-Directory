@@ -213,8 +213,6 @@ export default function StudentForm({
             }
         }
 
-        setGeneralFormData(generalFormDataDefault);
-        setPrivateFormData(privateFormDataDefault);
         exit();
     };
 
