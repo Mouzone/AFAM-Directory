@@ -44,8 +44,13 @@ export default function SignedInLayout({ children }: { children: ReactNode }) {
     }, [user]);
 
     if (!user) {
-        return <></>;
+        return (
+            <div className="w-full h-screen flex justify-center align-middle">
+                <span className="loading loading-spinner loading-lg"></span>
+            </div>
+        );
     }
+
     return (
         <>
             <div className="flex justify-end">

@@ -42,7 +42,7 @@ export default function Page() {
     }, [user]);
 
     useEffect(() => {
-        if (user) {
+        if (user && accountInfo) {
             const studentQuery = query(
                 collection(db, "directory", "afam", "student")
             );
@@ -71,10 +71,10 @@ export default function Page() {
                 });
             });
         }
-    }, [user]);
+    }, [user, accountInfo]);
 
     useEffect(() => {
-        if (user) {
+        if (user && accountInfo) {
             const staffQuery = query(
                 collection(db, "directory", "afam", "staff")
             );
@@ -91,7 +91,7 @@ export default function Page() {
                 setStaff({ ...staff });
             });
         }
-    }, [user]);
+    }, [user, accountInfo]);
 
     if (!user) {
         return <></>;
