@@ -5,28 +5,19 @@ import { useMutation } from "@tanstack/react-query";
 import { login } from "../../utility/login";
 import { useRouter } from "next/navigation";
 
-// todo: add redirect if user is already logged in
 export default function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState<Error | null>(null);
     const router = useRouter();
-    const mutation = useMutation({
+    const { error, isPending, isSuccess, mutate } = useMutation({
         mutationFn: login,
-        onSuccess: () => {
-            // todo: provide indicator login was succesful or loading...
-            router.push("/directory/afam");
-        },
-        onError: (error) => {
-            setError(error);
-        },
     });
 
     return (
         <form
             onSubmit={(e) => {
                 e.preventDefault();
-                mutation.mutate({ email, password });
+                mutate({ email, password });
             }}
         >
             <fieldset className="fieldset w-xs bg-base-200 border border-base-300 p-4 rounded-box">
@@ -59,7 +50,11 @@ export default function LoginForm() {
                     className="btn btn-neutral dark:btn-secondary"
                     disabled={email === "" || password === ""}
                 >
-                    Login
+                    {!isPending && !isSuccess && <span> Login </span>}
+                    {isPending && (
+                        <span className="loading loading-spinner loading-md"></span>
+                    )}
+                    {isSuccess && <span> Redirecting... </span>}
                 </button>
             </fieldset>
         </form>

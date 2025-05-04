@@ -15,10 +15,9 @@ export default function SignUpForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [error, setError] = useState<Error | null>(null);
     const [inputError, setInputError] = useState("");
     const router = useRouter();
-    const mutation = useMutation({
+    const { mutate, error, isPending, isSuccess } = useMutation({
         mutationFn: signUp,
         onSuccess: async (data) => {
             // todo: provide indicator login was succesful or loading...
@@ -32,10 +31,6 @@ export default function SignUpForm() {
                 "Last Name": lastName,
                 Email: email,
             });
-            router.push("/directory");
-        },
-        onError: (error) => {
-            setError(error);
         },
     });
 
@@ -46,7 +41,7 @@ export default function SignUpForm() {
                 if (password !== confirmPassword) {
                     setInputError("Password does not match");
                 }
-                mutation.mutate({
+                mutate({
                     email,
                     password,
                 });
@@ -118,7 +113,11 @@ export default function SignUpForm() {
                         password === ""
                     }
                 >
-                    Sign Up
+                    {!isPending && !isSuccess && <span> Login </span>}
+                    {isPending && (
+                        <span className="loading loading-spinner loading-md"></span>
+                    )}
+                    {isSuccess && <span> Redirecting... </span>}
                 </button>
             </fieldset>
         </form>

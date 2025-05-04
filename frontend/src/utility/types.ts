@@ -1,27 +1,15 @@
 import { User } from "firebase/auth";
 
-export type Directory = {
-    id: string;
-    name: string;
+export type AccountInfo = {
+    Email: string;
+    "First Name": string;
+    "Last Name": string;
     Private: boolean;
     "Manage Accounts": boolean;
 };
 
 // loading, loaded, logged out / error
-export type AuthUser =
-    | {
-          user: null;
-          directories: null;
-      }
-    | {
-          user: User;
-          directories: Directory[];
-      }
-    | {
-          user: false;
-          directories: null;
-      };
-
+export type AuthUser = null | User | false;
 export type Grade = "9" | "10" | "11" | "12";
 
 export type StudentGeneralInfo = {

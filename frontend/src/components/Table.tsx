@@ -29,6 +29,7 @@ import {
 } from "react";
 import trashcan from "../../public/svgs/trashcan.svg";
 import Image from "next/image";
+import { deleteStudent } from "@/utility/cloudFunctions";
 
 declare module "@tanstack/react-table" {
     //allows us to define custom properties for our columns
@@ -41,7 +42,6 @@ type TableProps = {
     data: StudentGeneralInfo[];
     showEditStudent: (student: StudentGeneralInfo) => void;
     showDeleteStudents: boolean;
-    setData: Dispatch<SetStateAction<StudentGeneralInfo[]>>;
     showSearch: boolean;
 };
 export default function Table({
@@ -49,37 +49,8 @@ export default function Table({
     showSearch,
     showEditStudent,
     showDeleteStudents,
-    setData,
 }: TableProps) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-    const deleteStudent = useCallback(
-        async (studentId: string) => {
-            const studentDocRef = doc(
-                db,
-                "directory",
-                "afam",
-                "student",
-                studentId
-            );
-            const [privateDocs, attendanceDocs] = await Promise.all([
-                getDocs(collection(studentDocRef, "private")),
-                getDocs(collection(studentDocRef, "attendance")),
-            ]);
-
-            const batch = writeBatch(db);
-
-            // Add all deletes to batch
-            privateDocs.forEach((doc) => batch.delete(doc.ref));
-            attendanceDocs.forEach((doc) => batch.delete(doc.ref));
-            batch.delete(studentDocRef);
-            await batch.commit();
-
-            await deleteDoc(studentDocRef);
-            setData(data.filter((student) => student["Id"] !== studentId));
-        },
-        [data]
-    );
 
     const columns = useMemo<ColumnDef<StudentGeneralInfo, any>[]>(
         () => [
@@ -219,7 +190,10 @@ export default function Table({
                                     <td
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            deleteStudent(row.original["Id"]);
+                                            console.log(row.original);
+                                            deleteStudent({
+                                                studentId: row.original["Id"],
+                                            });
                                         }}
                                         className="w-5 md:w-12 lg:w-1/12 px-2 md:px-4"
                                     >

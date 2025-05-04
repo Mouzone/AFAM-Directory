@@ -2,25 +2,15 @@ import closeModal from "@/utility/closeModal";
 import { db } from "@/utility/firebase";
 import { StaffObject } from "@/utility/types";
 import { deleteDoc, doc, writeBatch } from "firebase/firestore";
-import {
-    Dispatch,
-    FormEvent,
-    SetStateAction,
-    useEffect,
-    useState,
-} from "react";
+import { FormEvent, useEffect, useState } from "react";
 import trashcan from "../../../../public/svgs/trashcan.svg";
 import Image from "next/image";
 
 type PermissionSubFormProps = {
     staff: StaffObject;
-    setStaff: Dispatch<SetStateAction<StaffObject>>;
 };
 
-export default function PermissionsSubForm({
-    staff,
-    setStaff,
-}: PermissionSubFormProps) {
+export default function PermissionsSubForm({ staff }: PermissionSubFormProps) {
     const [tempStaff, setTempStaff] = useState(staff);
 
     useEffect(() => {
@@ -37,7 +27,6 @@ export default function PermissionsSubForm({
             batch.update(userDocRef, staffData);
         });
         await batch.commit();
-        setStaff(tempStaff);
         closeModal();
     };
 
@@ -50,9 +39,6 @@ export default function PermissionsSubForm({
         // // remove directory from the user
         const userDocRef = doc(db, "user", staffId, "directory", "afam");
         await deleteDoc(userDocRef);
-
-        delete staff[staffId];
-        setStaff(staff);
     };
 
     return (

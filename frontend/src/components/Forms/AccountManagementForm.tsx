@@ -7,11 +7,9 @@ import { StaffObject } from "@/utility/types";
 
 type AccountManagementFormProps = {
     staff: StaffObject;
-    setStaff: Dispatch<SetStateAction<StaffObject>>;
 };
 export default function AccountManagementForm({
     staff,
-    setStaff,
 }: AccountManagementFormProps) {
     const [tab, setTab] = useState("permissions");
     const [email, setEmail] = useState("");
@@ -33,14 +31,10 @@ export default function AccountManagementForm({
             <div>
                 <div className="tabs tabs-lift">
                     <Tab currTab={tab} value="permissions" setTab={setTab}>
-                        <PermissionsSubForm staff={staff} setStaff={setStaff} />
+                        <PermissionsSubForm staff={staff} />
                     </Tab>
                     <Tab currTab={tab} value="invite" setTab={setTab}>
-                        <InviteSubForm
-                            email={email}
-                            setEmail={setEmail}
-                            setStaff={setStaff}
-                        />
+                        <InviteSubForm email={email} setEmail={setEmail} />
                     </Tab>
                 </div>
             </div>
