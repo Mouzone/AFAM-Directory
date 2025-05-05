@@ -5,7 +5,7 @@ import {getFirestore} from "firebase-admin/firestore";
 initializeApp();
 const firestore = getFirestore();
 
-export const inviteStaff = onCall(async (request) => {
+export const inviteStaff = onCall({cors: true}, async (request) => {
   if (!request.auth) {
     throw new HttpsError(
       "unauthenticated",
@@ -33,7 +33,7 @@ export const inviteStaff = onCall(async (request) => {
   }
 
   // search through users for the email
-  // copy info and add it to staff with `Private` and `Manage Accounts` permissions
+  // copy info and add it to `Private` and `Manage Accounts` permissions
   // will only be one doc, since emails are only allowed to be used once
   const user = await firestore
     .collection("user")
@@ -48,27 +48,29 @@ export const inviteStaff = onCall(async (request) => {
   }
 
   // copy user personal info to staff directory
+  // prettier-ignore
   await firestore
     .collection("directory")
     .doc("afam")
     .collection("staff")
     .doc(user.docs[0].id)
-    .set({...user.docs[0].data(), Private: false, "Manage Accounts": false});
+    .set({...user.docs[0].data(), "Private": false, "Manage Accounts": false});
 
   // add directory to user's available directories
+  // prettier-ignore
   await firestore
     .collection("user")
     .doc(user.docs[0].id)
     .collection("directory")
     .doc("afam")
     .set({
-      name: "afam",
-      Private: false,
+      "name": "afam",
+      "Private": false,
       "Manage Accounts": false,
     });
 });
 
-export const deleteStudent = onCall(async (request) => {
+export const deleteStudent = onCall({cors: true}, async (request) => {
   if (!request.auth) {
     throw new HttpsError(
       "unauthenticated",
