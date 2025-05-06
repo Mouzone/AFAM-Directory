@@ -149,8 +149,8 @@ export default function GeneralSubForm({
                                 changeData("Gender", e.target.value)
                             }
                         >
-                            <option>Male</option>
-                            <option>Female</option>
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
                         </select>
                     </div>
 
