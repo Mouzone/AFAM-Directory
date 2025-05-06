@@ -1,3 +1,4 @@
+import AllergyInput from "@/components/Inputs/AllergyInput";
 import formatText from "@/utility/formatters/formatText";
 import { StudentGeneralInfo } from "@/utility/types";
 import Image from "next/image";
@@ -166,6 +167,7 @@ export default function GeneralSubForm({
                         />
                     </div>
                 </div>
+                <AllergyInput />
             </fieldset>
         </>
     );
