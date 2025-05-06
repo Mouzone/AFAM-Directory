@@ -1,6 +1,9 @@
 import { useState } from "react";
 
-export default function AllergyInput() {
+type AllergyInputProps = {
+    allergies: string[];
+};
+export default function AllergyInput({ allergies }: AllergyInputProps) {
     const [newAllergy, setNewAllergy] = useState("");
     const [allergies, setAllergies] = useState<string[]>([]);
 

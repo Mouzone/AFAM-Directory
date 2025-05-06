@@ -167,7 +167,7 @@ export default function GeneralSubForm({
                         />
                     </div>
                 </div>
-                <AllergyInput />
+                <AllergyInput allergies={data["Allergies"]} />
             </fieldset>
         </>
     );
