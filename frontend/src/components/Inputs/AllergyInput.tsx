@@ -17,7 +17,7 @@ export default function AllergyInput() {
     };
 
     return (
-        <div className="form-control">
+        <div className="form-control flex flex-col">
             <label className="label">
                 <span className="label-text">Allergies</span>
             </label>
