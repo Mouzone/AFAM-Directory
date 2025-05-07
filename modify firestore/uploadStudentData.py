@@ -46,7 +46,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                     f"20{dob_parts[2]}-{dob_parts[0].zfill(2)}-{dob_parts[1].zfill(2)}"
                 )
 
-                if row["Allergies"] == "":
+                if row["Allergies"] == "-":
                     general_info["Allergies"] = []
                 else:
                     general_info["Allergies"] = [
