@@ -1,4 +1,5 @@
 #!/usr/local/bin/fish
+
 # Start Firebase local emulator
 osascript -e '
 tell application "iTerm"
@@ -8,7 +9,7 @@ tell application "iTerm"
     end tell
 end tell'
 
-# Start Nextjs server
+# Start Next.js server
 osascript -e '
 tell application "iTerm"
     tell current window
@@ -16,3 +17,6 @@ tell application "iTerm"
         tell current session to write text "cd ~/repos/AFAM-Directory/frontend && bun run dev"
     end tell
 end tell'
+
+# Open frontend in Chrome
+open -a "Google Chrome" http://localhost:3000
