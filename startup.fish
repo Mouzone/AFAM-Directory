@@ -22,3 +22,10 @@ end tell'
 open -a "Google Chrome" http://localhost:3000
 code .
 clear
+
+osascript -e '
+tell application "iTerm"
+    tell current window
+        select tab 1
+    end tell
+end tell'
