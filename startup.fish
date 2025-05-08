@@ -20,3 +20,5 @@ end tell'
 
 # Open frontend in Chrome
 open -a "Google Chrome" http://localhost:3000
+code .
+clear
