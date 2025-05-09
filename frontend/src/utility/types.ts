@@ -22,6 +22,7 @@ export type StudentGeneralInfo = {
     "High School": string;
     Grade: Grade;
     Teacher: "None" | string;
+    Allergies: string[];
 };
 
 export type StudentPrivateInfo = {

@@ -1,3 +1,4 @@
+import AllergyInput from "@/components/Inputs/AllergyInput";
 import formatText from "@/utility/formatters/formatText";
 import { StudentGeneralInfo } from "@/utility/types";
 import Image from "next/image";
@@ -8,12 +9,14 @@ type GeneralSubFormProps = {
     setGeneralFormData: React.Dispatch<SetStateAction<StudentGeneralInfo>>;
     setFile: React.Dispatch<SetStateAction<File | null>>;
     fileInputRef: RefObject<null | HTMLInputElement>;
+    resetCounter: number;
 };
 export default function GeneralSubForm({
     data,
     setGeneralFormData,
     setFile,
     fileInputRef,
+    resetCounter,
 }: GeneralSubFormProps) {
     const changeData = (field: keyof StudentGeneralInfo, value: string) =>
         setGeneralFormData((prev) => {
@@ -166,6 +169,18 @@ export default function GeneralSubForm({
                         />
                     </div>
                 </div>
+                <AllergyInput
+                    allergies={data["Allergies"]}
+                    setAllergies={(allergy: string[]) =>
+                        setGeneralFormData((prev) => {
+                            return {
+                                ...prev,
+                                Allergies: allergy,
+                            };
+                        })
+                    }
+                    resetCounter={resetCounter}
+                />
             </fieldset>
         </>
     );
