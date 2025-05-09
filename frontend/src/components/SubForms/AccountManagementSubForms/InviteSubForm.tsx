@@ -2,17 +2,14 @@ import { inviteStaff } from "@/utility/cloudFunctions";
 import { useMutation } from "@tanstack/react-query";
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { isErrored } from "stream";
 type InviteSubFormProps = {
     email: string;
     setEmail: Dispatch<SetStateAction<string>>;
 };
 export default function InviteSubForm({ email, setEmail }: InviteSubFormProps) {
-    const { isPending, isSuccess, mutate, isError, error, reset } = useMutation(
-        {
-            mutationFn: async (email: string) => inviteStaff({ email }),
-        }
-    );
+    const { isPending, isSuccess, mutate, error, reset } = useMutation({
+        mutationFn: async (email: string) => inviteStaff({ email }),
+    });
 
     useEffect(() => {
         reset();
