@@ -21,7 +21,7 @@ import { ToastContext } from "@/components/Providers/ToastProvider";
 
 export default function Page() {
     const user = useContext(AuthContext);
-    const { message, setMessage } = useContext(ToastContext)!;
+    const { message } = useContext(ToastContext)!;
 
     const [studentFormState, setStudentFormState] =
         useState<StudentGeneralInfo>(generalFormDataDefault);
@@ -70,12 +70,6 @@ export default function Page() {
                             )
                         );
                     }
-
-                    if (change.doc.metadata.hasPendingWrites) {
-                        if (change.type === "modified") {
-                            setMessage("Student successfully modified");
-                        }
-                    }
                 });
             });
         }
@@ -94,12 +88,6 @@ export default function Page() {
                         staff[change.doc.id] = change.doc.data() as Staff;
                     } else {
                         delete staff[change.doc.id];
-                    }
-
-                    if (change.doc.metadata.hasPendingWrites) {
-                        if (change.type === "modified") {
-                            setMessage("Staff member successfully modified");
-                        }
                     }
                 });
                 setStaff({ ...staff });
