@@ -102,6 +102,8 @@ export default function StudentForm({
         }
         setFile(null);
         setTab("general");
+        setGeneralFormData(generalFormState);
+        setPrivateFormData(privateFormDataDefault);
     };
 
     const onSubmit = async (

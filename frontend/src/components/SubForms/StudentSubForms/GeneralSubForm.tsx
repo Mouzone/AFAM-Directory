@@ -168,6 +168,7 @@ export default function GeneralSubForm({
                     </div>
                 </div>
                 <AllergyInput
+                    id={data["Id"]}
                     allergies={data["Allergies"]}
                     setAllergies={(allergy: string[]) =>
                         setGeneralFormData((prev) => {
