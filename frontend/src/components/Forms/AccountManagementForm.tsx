@@ -1,5 +1,5 @@
 import closeModal from "@/utility/closeModal";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useEffect, useState } from "react";
 import PermissionsSubForm from "../SubForms/AccountManagementSubForms/PermissionsSubForm";
 import InviteSubForm from "../SubForms/AccountManagementSubForms/InviteSubForm";
 import Tab from "../Tab";
@@ -14,6 +14,9 @@ export default function AccountManagementForm({
     const [tab, setTab] = useState("permissions");
     const [email, setEmail] = useState("");
 
+    useEffect(() => {
+        setEmail("");
+    }, [tab]);
     return (
         <>
             <form method="dialog">

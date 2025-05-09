@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import GeneralSubForm from "../SubForms/StudentSubForms/GeneralSubForm";
 import PrivateSubForm from "../SubForms/StudentSubForms/PrivateSubForm";
 import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
@@ -16,10 +16,7 @@ import {
 import { db, storage } from "@/utility/firebase";
 import Tab from "../Tab";
 import AttendanceSubForm from "../SubForms/StudentSubForms/AttendanceSubForm";
-import {
-    generalFormDataDefault,
-    privateFormDataDefault,
-} from "@/utility/consts";
+import { privateFormDataDefault } from "@/utility/consts";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import {
     Attendance,
@@ -27,6 +24,7 @@ import {
     StudentGeneralInfo,
     StudentPrivateInfo,
 } from "@/utility/types";
+import { ToastContext } from "../Providers/ToastProvider";
 
 type StudentFormProps = {
     generalFormState: StudentGeneralInfo;
@@ -36,6 +34,7 @@ export default function StudentForm({
     generalFormState,
     showPrivate,
 }: StudentFormProps) {
+    const { setMessage } = useContext(ToastContext)!;
     const [tab, setTab] = useState("general");
 
     const [generalFormData, setGeneralFormData] = useState(generalFormState);
@@ -107,7 +106,6 @@ export default function StudentForm({
         setTab("general");
         setResetCounter((prev) => prev + 1);
         setGeneralFormData(originalData.current);
-        setPrivateFormData(privateFormDataDefault);
     };
 
     const onSubmit = async (
@@ -117,64 +115,72 @@ export default function StudentForm({
         e.preventDefault();
         if (studentId !== "") {
             // Edit existing student
-            const studentRef = doc(
-                db,
-                "directory",
-                "afam",
-                "student",
-                studentId
-            );
+            try {
+                const studentRef = doc(
+                    db,
+                    "directory",
+                    "afam",
+                    "student",
+                    studentId
+                );
 
-            if (file) {
-                const storageRef = ref(storage, `images/${studentId}`);
-                const uploadTask = uploadBytesResumable(storageRef, file);
-                uploadTask.on(
-                    "state_changed",
-                    (snapshot) => {
-                        // Track upload progress (optional)
-                        const progress =
-                            (snapshot.bytesTransferred / snapshot.totalBytes) *
-                            100;
-                        console.log(`Upload progress: ${progress}%`);
-                    },
-                    (error) => {
-                        console.error("Upload failed:", error);
-                    },
-                    async () => {
-                        // Upload completed: Get the public URL
-                        const downloadURL = await getDownloadURL(
-                            uploadTask.snapshot.ref
-                        );
+                if (file) {
+                    const storageRef = ref(storage, `images/${studentId}`);
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+                    uploadTask.on(
+                        "state_changed",
+                        (snapshot) => {
+                            // Track upload progress (optional)
+                            const progress =
+                                (snapshot.bytesTransferred /
+                                    snapshot.totalBytes) *
+                                100;
+                            console.log(`Upload progress: ${progress}%`);
+                        },
+                        (error) => {
+                            console.error("Upload failed:", error);
+                        },
+                        async () => {
+                            // Upload completed: Get the public URL
+                            const downloadURL = await getDownloadURL(
+                                uploadTask.snapshot.ref
+                            );
 
-                        // Store the URL in your form data
-                        generalFormData["Headshot URL"] = downloadURL;
+                            // Store the URL in your form data
+                            generalFormData["Headshot URL"] = downloadURL;
+                        }
+                    );
+                }
+
+                const promises = [updateDoc(studentRef, generalFormData)];
+
+                // conditionally set private data, if edit mode and no private, will overwrite all private fields to ""
+                if (showPrivate) {
+                    promises.push(
+                        updateDoc(
+                            doc(studentRef, "private", "data"),
+                            privateFormData
+                        )
+                    );
+                }
+
+                await Promise.all([promises]);
+
+                const batch = writeBatch(db);
+
+                // Add each document to the batch
+                Object.entries(attendanceFormData).forEach(
+                    ([date, attendance]) => {
+                        const docRef = doc(studentRef, "attendance", date);
+                        batch.set(docRef, attendance);
                     }
                 );
+
+                await batch.commit();
+                setMessage("Student was successfully modified");
+            } catch {
+                setMessage("Student could not be modified");
             }
-
-            const promises = [updateDoc(studentRef, generalFormData)];
-
-            // conditionally set private data, if edit mode and no private, will overwrite all private fields to ""
-            if (showPrivate) {
-                promises.push(
-                    updateDoc(
-                        doc(studentRef, "private", "data"),
-                        privateFormData
-                    )
-                );
-            }
-
-            await Promise.all([promises]);
-
-            const batch = writeBatch(db);
-
-            // Add each document to the batch
-            Object.entries(attendanceFormData).forEach(([date, attendance]) => {
-                const docRef = doc(studentRef, "attendance", date);
-                batch.set(docRef, attendance);
-            });
-
-            await batch.commit();
         } else {
             // Create new student
 
@@ -182,40 +188,50 @@ export default function StudentForm({
                 collection(db, "directory", "afam", "student"),
                 generalFormData
             );
-            await updateDoc(newStudentRef, { Id: newStudentRef.id });
-            await setDoc(
-                doc(newStudentRef, "private", "data"),
-                privateFormData
-            );
 
-            if (file) {
-                const storageRef = ref(storage, `images/${newStudentRef.id}`);
-                const uploadTask = uploadBytesResumable(storageRef, file);
-                uploadTask.on(
-                    "state_changed",
-                    (snapshot) => {
-                        // Track upload progress (optional)
-                        const progress =
-                            (snapshot.bytesTransferred / snapshot.totalBytes) *
-                            100;
-                        console.log(`Upload progress: ${progress}%`);
-                    },
-                    (error) => {
-                        console.error("Upload failed:", error);
-                    },
-                    async () => {
-                        // Upload completed: Get the public URL
-                        const downloadURL = await getDownloadURL(
-                            uploadTask.snapshot.ref
-                        );
-
-                        // Store the URL in your form data
-                        generalFormData["Headshot URL"] = downloadURL;
-                        await updateDoc(newStudentRef, {
-                            "Headshot URL": downloadURL,
-                        });
-                    }
+            try {
+                await updateDoc(newStudentRef, { Id: newStudentRef.id });
+                await setDoc(
+                    doc(newStudentRef, "private", "data"),
+                    privateFormData
                 );
+
+                if (file) {
+                    const storageRef = ref(
+                        storage,
+                        `images/${newStudentRef.id}`
+                    );
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+                    uploadTask.on(
+                        "state_changed",
+                        (snapshot) => {
+                            // Track upload progress (optional)
+                            const progress =
+                                (snapshot.bytesTransferred /
+                                    snapshot.totalBytes) *
+                                100;
+                            console.log(`Upload progress: ${progress}%`);
+                        },
+                        (error) => {
+                            console.error("Upload failed:", error);
+                        },
+                        async () => {
+                            // Upload completed: Get the public URL
+                            const downloadURL = await getDownloadURL(
+                                uploadTask.snapshot.ref
+                            );
+
+                            // Store the URL in your form data
+                            generalFormData["Headshot URL"] = downloadURL;
+                            await updateDoc(newStudentRef, {
+                                "Headshot URL": downloadURL,
+                            });
+                        }
+                    );
+                }
+                setMessage("Student was successfully created");
+            } catch {
+                setMessage("Student could not be created");
             }
         }
 

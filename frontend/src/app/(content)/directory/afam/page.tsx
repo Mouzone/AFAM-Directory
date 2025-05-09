@@ -17,9 +17,11 @@ import {
 } from "@/utility/types";
 import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { db } from "@/utility/firebase";
+import { ToastContext } from "@/components/Providers/ToastProvider";
 
 export default function Page() {
     const user = useContext(AuthContext);
+    const { message } = useContext(ToastContext)!;
 
     const [studentFormState, setStudentFormState] =
         useState<StudentGeneralInfo>(generalFormDataDefault);
@@ -156,6 +158,19 @@ export default function Page() {
                     showDeleteStudents={showDeleteStudents}
                 />
             </div>
+            {message && (
+                <div className="toast">
+                    <div
+                        className={`alert alert-info ${
+                            message.includes("successfully")
+                                ? "bg-green-300"
+                                : "bg-red-300"
+                        }`}
+                    >
+                        <span>{message}</span>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

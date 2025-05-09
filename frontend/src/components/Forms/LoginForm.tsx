@@ -3,12 +3,10 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "../../utility/login";
-import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const router = useRouter();
     const { error, isPending, isSuccess, mutate } = useMutation({
         mutationFn: login,
     });

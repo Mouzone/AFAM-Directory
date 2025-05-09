@@ -1,6 +1,7 @@
 "use client";
 
 import { AuthContext } from "@/components/Providers/AuthProvider";
+import ToastProvider from "@/components/Providers/ToastProvider";
 import { auth, db } from "@/utility/firebase";
 import { signOut } from "firebase/auth";
 import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
@@ -87,8 +88,7 @@ export default function SignedInLayout({ children }: { children: ReactNode }) {
                     </ul>
                 </div>
             </div>
-
-            {children}
+            <ToastProvider>{children}</ToastProvider>
         </>
     );
 }

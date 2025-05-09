@@ -1,7 +1,7 @@
 import { inviteStaff } from "@/utility/cloudFunctions";
 import { useMutation } from "@tanstack/react-query";
 
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 type InviteSubFormProps = {
     email: string;
     setEmail: Dispatch<SetStateAction<string>>;
