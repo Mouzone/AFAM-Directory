@@ -16,10 +16,7 @@ import {
 import { db, storage } from "@/utility/firebase";
 import Tab from "../Tab";
 import AttendanceSubForm from "../SubForms/StudentSubForms/AttendanceSubForm";
-import {
-    generalFormDataDefault,
-    privateFormDataDefault,
-} from "@/utility/consts";
+import { privateFormDataDefault } from "@/utility/consts";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import {
     Attendance,
