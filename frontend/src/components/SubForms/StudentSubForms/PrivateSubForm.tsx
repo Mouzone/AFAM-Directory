@@ -47,7 +47,7 @@ export default function PrivateSubForm({
                     label={"Street Address"}
                     data={data["Personal"]["Street Address"]}
                     setData={(e) =>
-                        changeData("Personal", "Street Adress", e.target.value)
+                        changeData("Personal", "Street Address", e.target.value)
                     }
                 />
                 <div className="flex gap-4">
