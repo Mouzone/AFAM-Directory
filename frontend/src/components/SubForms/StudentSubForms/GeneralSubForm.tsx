@@ -167,7 +167,17 @@ export default function GeneralSubForm({
                         />
                     </div>
                 </div>
-                <AllergyInput allergies={data["Allergies"]} />
+                <AllergyInput
+                    allergies={data["Allergies"]}
+                    setAllergies={(allergy: string[]) =>
+                        setGeneralFormData((prev) => {
+                            return {
+                                ...prev,
+                                Allergies: allergy,
+                            };
+                        })
+                    }
+                />
             </fieldset>
         </>
     );
