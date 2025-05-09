@@ -1,22 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type AllergyInputProps = {
     allergies: string[];
 };
 export default function AllergyInput({ allergies }: AllergyInputProps) {
     const [newAllergy, setNewAllergy] = useState("");
-    const [allergies, setAllergies] = useState<string[]>([]);
+    const [formAllergies, setFormAllergies] = useState<string[]>(allergies);
+
+    useEffect(() => {
+        setFormAllergies(allergies);
+    }, [allergies]);
 
     const addAllergy = () => {
         const trimmed = newAllergy.trim();
         if (trimmed && !allergies.includes(trimmed)) {
-            setAllergies([...allergies, trimmed]);
+            setFormAllergies([...allergies, trimmed]);
         }
         setNewAllergy("");
     };
 
     const removeAllergy = (indexToRemove: number) => {
-        setAllergies(allergies.filter((_, i) => i !== indexToRemove));
+        setFormAllergies(allergies.filter((_, i) => i !== indexToRemove));
     };
 
     return (
@@ -40,7 +44,7 @@ export default function AllergyInput({ allergies }: AllergyInputProps) {
 
             {/* Allergy tags */}
             <div className="mt-2 flex flex-wrap gap-2 max-h-40 overflow-y-auto p-1">
-                {allergies.map((allergy, index) => (
+                {formAllergies.map((allergy, index) => (
                     <div
                         key={index}
                         className="badge badge-primary gap-1 cursor-pointer"
