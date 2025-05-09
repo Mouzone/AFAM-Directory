@@ -17,9 +17,11 @@ import {
 } from "@/utility/types";
 import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { db } from "@/utility/firebase";
+import { ToastContext } from "@/components/Providers/ToastProvider";
 
 export default function Page() {
     const user = useContext(AuthContext);
+    const { message, setMessage } = useContext(ToastContext)!;
 
     const [studentFormState, setStudentFormState] =
         useState<StudentGeneralInfo>(generalFormDataDefault);
@@ -29,7 +31,6 @@ export default function Page() {
     const [accountInfo, setAccountInfo] = useState<AccountInfo>();
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
-    const [toastMessage, setToastMessage] = useState("");
 
     useEffect(() => {
         if (user) {
@@ -72,11 +73,7 @@ export default function Page() {
 
                     if (change.doc.metadata.hasPendingWrites) {
                         if (change.type === "modified") {
-                            setToastMessage("Student successfully modified");
-                        } else if (change.type === "added") {
-                            setToastMessage("Student successfully added");
-                        } else {
-                            setToastMessage("Student successfully deleted");
+                            setMessage("Student successfully modified");
                         }
                     }
                 });
@@ -97,6 +94,12 @@ export default function Page() {
                         staff[change.doc.id] = change.doc.data() as Staff;
                     } else {
                         delete staff[change.doc.id];
+                    }
+
+                    if (change.doc.metadata.hasPendingWrites) {
+                        if (change.type === "modified") {
+                            setMessage("Staff member successfully modified");
+                        }
                     }
                 });
                 setStaff({ ...staff });
@@ -167,10 +170,10 @@ export default function Page() {
                     showDeleteStudents={showDeleteStudents}
                 />
             </div>
-            {toastMessage && (
+            {message && (
                 <div className="toast">
                     <div className="alert alert-info">
-                        <span>{toastMessage}</span>
+                        <span>{message}</span>
                     </div>
                 </div>
             )}

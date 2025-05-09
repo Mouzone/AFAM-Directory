@@ -1,4 +1,3 @@
-import { db } from "@/utility/firebase";
 import { StudentGeneralInfo } from "@/utility/types";
 import {
     Column,
@@ -12,21 +11,7 @@ import {
     RowData,
     useReactTable,
 } from "@tanstack/react-table";
-import {
-    collection,
-    deleteDoc,
-    doc,
-    getDocs,
-    writeBatch,
-} from "firebase/firestore";
-import {
-    Dispatch,
-    SetStateAction,
-    useCallback,
-    useEffect,
-    useMemo,
-    useState,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 import trashcan from "../../public/svgs/trashcan.svg";
 import Image from "next/image";
 import { deleteStudent } from "@/utility/cloudFunctions";

@@ -72,3 +72,8 @@ export type SearchTerms = {
     Grade: "9" | "10" | "11" | "!2";
     Teacher: "None" | string;
 };
+
+export type ToastContextType = {
+    message: string;
+    setMessage: React.Dispatch<React.SetStateAction<string>>;
+};
