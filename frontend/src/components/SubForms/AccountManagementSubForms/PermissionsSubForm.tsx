@@ -46,12 +46,6 @@ export default function PermissionsSubForm({ staff }: PermissionSubFormProps) {
         closeModal();
     };
 
-    // remove user from directory
-    const onDelete = async (staffId: string) => {
-        // remove user from the directory
-        setToDelete([...toDelete, staffId]);
-    };
-
     return (
         <form onSubmit={(e) => onSubmit(e)}>
             <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box h-[400px] overflow-y-auto">
@@ -120,7 +114,12 @@ export default function PermissionsSubForm({ staff }: PermissionSubFormProps) {
                                         </div>
                                         <button
                                             className="btn mx-4"
-                                            onClick={() => onDelete(staffId)}
+                                            onClick={() =>
+                                                setToDelete([
+                                                    ...toDelete,
+                                                    staffId,
+                                                ])
+                                            }
                                             type="button"
                                         >
                                             <Image
