@@ -177,7 +177,6 @@ export default function Table({
                                     <td
                                         onClick={async (e) => {
                                             e.stopPropagation();
-                                            console.log(row.original);
                                             try {
                                                 await deleteStudent({
                                                     studentId:
