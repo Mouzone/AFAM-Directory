@@ -11,10 +11,11 @@ import {
     RowData,
     useReactTable,
 } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import trashcan from "../../public/svgs/trashcan.svg";
 import Image from "next/image";
 import { deleteStudent } from "@/utility/cloudFunctions";
+import { ToastContext } from "./Providers/ToastProvider";
 
 declare module "@tanstack/react-table" {
     //allows us to define custom properties for our columns
@@ -35,6 +36,7 @@ export default function Table({
     showEditStudent,
     showDeleteStudents,
 }: TableProps) {
+    const { setMessage } = useContext(ToastContext)!;
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
     const columns = useMemo<ColumnDef<StudentGeneralInfo, any>[]>(
@@ -173,12 +175,22 @@ export default function Table({
                             >
                                 {showDeleteStudents && (
                                     <td
-                                        onClick={(e) => {
+                                        onClick={async (e) => {
                                             e.stopPropagation();
                                             console.log(row.original);
-                                            deleteStudent({
-                                                studentId: row.original["Id"],
-                                            });
+                                            try {
+                                                await deleteStudent({
+                                                    studentId:
+                                                        row.original["Id"],
+                                                });
+                                                setMessage(
+                                                    "Student successfully deleted"
+                                                );
+                                            } catch {
+                                                setMessage(
+                                                    "Student could not be deleted"
+                                                );
+                                            }
                                         }}
                                         className="w-5 md:w-12 lg:w-1/12 px-2 md:px-4"
                                     >
