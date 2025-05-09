@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 
 type AllergyInputProps = {
-    id: string;
     allergies: string[];
     setAllergies: (allergy: string[]) => void;
+    resetCounter: number;
 };
 export default function AllergyInput({
-    id,
     allergies,
     setAllergies,
+    resetCounter,
 }: AllergyInputProps) {
     const [newAllergy, setNewAllergy] = useState("");
 
     useEffect(() => {
-        setNewAllergy("");
-    }, [id]);
+        setNewAllergy(""); // Clear input when resetTrigger changes
+    }, [resetCounter]);
 
     const addAllergy = () => {
         const trimmed = newAllergy.trim();

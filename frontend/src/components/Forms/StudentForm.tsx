@@ -47,11 +47,14 @@ export default function StudentForm({
     const [file, setFile] = useState<File | null>(null);
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [resetCounter, setResetCounter] = useState(0);
 
+    const originalData = useRef(generalFormState);
     const studentId = generalFormState["Id"];
 
     useEffect(() => {
         setGeneralFormData(generalFormState);
+        originalData.current = generalFormState;
     }, [generalFormState]);
 
     useEffect(() => {
@@ -102,7 +105,8 @@ export default function StudentForm({
         }
         setFile(null);
         setTab("general");
-        setGeneralFormData(generalFormState);
+        setResetCounter((prev) => prev + 1);
+        setGeneralFormData(originalData.current);
         setPrivateFormData(privateFormDataDefault);
     };
 
@@ -236,6 +240,7 @@ export default function StudentForm({
                             setGeneralFormData={setGeneralFormData}
                             setFile={setFile}
                             fileInputRef={fileInputRef}
+                            resetCounter={resetCounter}
                         />
                     </Tab>
                     {(studentId === "" || showPrivate) && (

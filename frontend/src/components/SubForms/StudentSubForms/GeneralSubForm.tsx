@@ -9,12 +9,14 @@ type GeneralSubFormProps = {
     setGeneralFormData: React.Dispatch<SetStateAction<StudentGeneralInfo>>;
     setFile: React.Dispatch<SetStateAction<File | null>>;
     fileInputRef: RefObject<null | HTMLInputElement>;
+    resetCounter: number;
 };
 export default function GeneralSubForm({
     data,
     setGeneralFormData,
     setFile,
     fileInputRef,
+    resetCounter,
 }: GeneralSubFormProps) {
     const changeData = (field: keyof StudentGeneralInfo, value: string) =>
         setGeneralFormData((prev) => {
@@ -168,7 +170,6 @@ export default function GeneralSubForm({
                     </div>
                 </div>
                 <AllergyInput
-                    id={data["Id"]}
                     allergies={data["Allergies"]}
                     setAllergies={(allergy: string[]) =>
                         setGeneralFormData((prev) => {
@@ -178,6 +179,7 @@ export default function GeneralSubForm({
                             };
                         })
                     }
+                    resetCounter={resetCounter}
                 />
             </fieldset>
         </>
