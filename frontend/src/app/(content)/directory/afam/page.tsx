@@ -29,6 +29,7 @@ export default function Page() {
     const [accountInfo, setAccountInfo] = useState<AccountInfo>();
     const [showDeleteStudents, setShowDeleteStudents] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
 
     useEffect(() => {
         if (user) {
@@ -67,6 +68,16 @@ export default function Page() {
                                 (student) => student.Id !== change.doc.id
                             )
                         );
+                    }
+
+                    if (change.doc.metadata.hasPendingWrites) {
+                        if (change.type === "modified") {
+                            setToastMessage("Student successfully modified");
+                        } else if (change.type === "added") {
+                            setToastMessage("Student successfully added");
+                        } else {
+                            setToastMessage("Student successfully deleted");
+                        }
                     }
                 });
             });
@@ -156,11 +167,13 @@ export default function Page() {
                     showDeleteStudents={showDeleteStudents}
                 />
             </div>
-            <div className="toast">
-                <div className="alert alert-info">
-                    <span>New message arrived.</span>
+            {toastMessage && (
+                <div className="toast">
+                    <div className="alert alert-info">
+                        <span>{toastMessage}</span>
+                    </div>
                 </div>
-            </div>
+            )}
         </>
     );
 }
