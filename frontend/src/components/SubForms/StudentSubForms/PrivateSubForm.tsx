@@ -2,6 +2,7 @@ import formatPhoneNumber from "@/utility/formatters/formatPhone";
 import formatText from "@/utility/formatters/formatText";
 import { StudentPrivateInfo } from "@/utility/types";
 import React, { SetStateAction } from "react";
+import { ClipboardIcon } from "@heroicons/react/24/outline";
 
 type PrivateSubFormProps = {
     data: StudentPrivateInfo;
@@ -42,18 +43,34 @@ export default function PrivateSubForm({
 
                 <div className="flex flex-col">
                     <label className="fieldset-label">Street Address</label>
-                    <input
-                        type="text"
-                        className="input"
-                        value={formatText(data["Personal"]["Street Address"])}
-                        onChange={(e) =>
-                            changeData(
-                                "Personal",
-                                "Street Address",
-                                e.target.value
-                            )
-                        }
-                    />
+                    <div className="relative">
+                        <input
+                            type="text"
+                            className="input"
+                            value={formatText(
+                                data["Personal"]["Street Address"]
+                            )}
+                            onChange={(e) =>
+                                changeData(
+                                    "Personal",
+                                    "Street Address",
+                                    e.target.value
+                                )
+                            }
+                        />
+                        <button
+                            type="button"
+                            onClick={async () =>
+                                navigator.clipboard.writeText(
+                                    data["Personal"]["Street Address"]
+                                )
+                            }
+                            className="absolute right-2 top-1/2 -translate-y-1/2"
+                            title="Copy to clipboard"
+                        >
+                            <ClipboardIcon className="w-5 h-5 text-gray-500 hover:text-black" />
+                        </button>
+                    </div>
                 </div>
                 <div className="flex gap-4">
                     <div className="flex flex-col">
