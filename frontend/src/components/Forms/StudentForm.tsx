@@ -107,7 +107,6 @@ export default function StudentForm({
         setTab("general");
         setResetCounter((prev) => prev + 1);
         setGeneralFormData(originalData.current);
-        setPrivateFormData(privateFormDataDefault);
     };
 
     const onSubmit = async (
