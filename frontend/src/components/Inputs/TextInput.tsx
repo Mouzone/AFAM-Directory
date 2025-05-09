@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // type it to be either a general form input or a private form input
 export type TextInputProps = {
@@ -11,7 +11,7 @@ export default function TextInput({ label, data, setData }: TextInputProps) {
     const [copied, setCopied] = useState(false);
 
     //                             inputMode="numeric",                             maxLength={5}
-    // set a timer once copied is tru
+    // inputMode="numeric" maxLength={12}
     return (
         <div className="flex flex-col">
             <label className="fieldset-label mb-1">{label}</label>
@@ -27,6 +27,7 @@ export default function TextInput({ label, data, setData }: TextInputProps) {
                         type="button"
                         onClick={async () => {
                             await navigator.clipboard.writeText(data);
+                            setTimeout(() => setCopied(false), 1000);
                             setCopied(true);
                         }}
                         className="absolute end-2 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-2 inline-flex items-center justify-center"

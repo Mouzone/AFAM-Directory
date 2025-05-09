@@ -38,7 +38,6 @@ export default function PrivateSubForm({
         });
     };
 
-    const copied = false;
     return (
         <>
             <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex flex-col">
@@ -76,31 +75,21 @@ export default function PrivateSubForm({
                     Personal Contact Info
                 </legend>
 
-                <div className="flex flex-col">
-                    <label className="fieldset-label">Phone</label>
-                    <input
-                        type="text"
-                        inputMode="numeric"
-                        className="input"
-                        value={formatPhoneNumber(data["Personal"]["Phone"])}
-                        onChange={(e) =>
-                            changeData("Personal", "Phone", e.target.value)
-                        }
-                        maxLength={12}
-                    />
-                </div>
+                <TextInput
+                    label="Phone"
+                    data={formatPhoneNumber(data["Personal"]["Phone"])}
+                    setData={(e) =>
+                        changeData("Personal", "Phone", e.target.value)
+                    }
+                />
 
-                <div className="flex flex-col">
-                    <label className="fieldset-label">Email</label>
-                    <input
-                        type="email"
-                        className="input"
-                        value={data["Personal"]["Email"]}
-                        onChange={(e) =>
-                            changeData("Personal", "Email", e.target.value)
-                        }
-                    />
-                </div>
+                <TextInput
+                    label="Email"
+                    data={data["Personal"]["Email"]}
+                    setData={(e) =>
+                        changeData("Personal", "Email", e.target.value)
+                    }
+                />
             </fieldset>
 
             <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
