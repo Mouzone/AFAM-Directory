@@ -160,7 +160,13 @@ export default function Page() {
             </div>
             {message && (
                 <div className="toast">
-                    <div className="alert alert-info">
+                    <div
+                        className={`alert alert-info ${
+                            message.includes("successfully")
+                                ? "bg-green-300"
+                                : "bg-red-300"
+                        }`}
+                    >
                         <span>{message}</span>
                     </div>
                 </div>
