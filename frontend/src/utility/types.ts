@@ -25,6 +25,12 @@ export type StudentGeneralInfo = {
     Allergies: string[];
 };
 
+export type Guardian = {
+    "First Name": string;
+    "Last Name": string;
+    Phone: string;
+    Email: string;
+};
 export type StudentPrivateInfo = {
     Personal: {
         "Street Address": string;
@@ -33,18 +39,8 @@ export type StudentPrivateInfo = {
         Phone: string;
         Email: string;
     };
-    "Guardian 1": {
-        "First Name": string;
-        "Last Name": string;
-        Phone: string;
-        Email: string;
-    };
-    "Guardian 2": {
-        "First Name": string;
-        "Last Name": string;
-        Phone: string;
-        Email: string;
-    };
+    "Guardian 1": Guardian;
+    "Guardian 2": Guardian;
 };
 
 export type Attendance = {
