@@ -10,9 +10,9 @@ export type TextInputProps = {
 export default function TextInput({ label, data, setData }: TextInputProps) {
     const [copied, setCopied] = useState(false);
 
-    //                             inputMode="numeric",                             maxLength={5}
-    // inputMode="numeric" maxLength={12}
-    // add type = email
+    // zipCode = inputMode="numeric", maxLength={5}
+    // phone = inputMode="numeric", maxLength={12}
+    // email = add type = email
     return (
         <div className="flex flex-col">
             <label className="fieldset-label mb-1">{label}</label>
@@ -22,7 +22,7 @@ export default function TextInput({ label, data, setData }: TextInputProps) {
                         type="text"
                         value={data}
                         onChange={(e) => setData(e)}
-                        className="input"
+                        className="input pr-10 truncate" // Add right padding and truncate long text
                     />
                     <button
                         type="button"
@@ -59,13 +59,13 @@ export default function TextInput({ label, data, setData }: TextInputProps) {
                         )}
                     </button>
                     <div
-                        className={`absolute z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs tooltip dark:bg-gray-700 ${
+                        className={`absolute z-10 px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs dark:bg-gray-700 ${
                             copied
                                 ? "opacity-100 visible"
                                 : "opacity-0 invisible"
                         }`}
                         style={{
-                            top: "calc(100% + 0.5rem)",
+                            bottom: "calc(100% + 0.5rem)", // move above the icon
                             right: "0",
                         }}
                     >
