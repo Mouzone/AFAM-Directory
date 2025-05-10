@@ -12,6 +12,7 @@ export default function TextInput({ label, data, setData }: TextInputProps) {
 
     //                             inputMode="numeric",                             maxLength={5}
     // inputMode="numeric" maxLength={12}
+    // add type = email
     return (
         <div className="flex flex-col">
             <label className="fieldset-label mb-1">{label}</label>

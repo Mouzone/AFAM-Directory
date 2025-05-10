@@ -4,6 +4,7 @@ import { StudentPrivateInfo } from "@/utility/types";
 import React, { SetStateAction } from "react";
 import { ClipboardIcon } from "@heroicons/react/24/outline";
 import TextInput from "@/components/Inputs/TextInput";
+import GuardianFieldset from "@/components/Fieldsets/GuardianFieldset";
 
 type PrivateSubFormProps = {
     data: StudentPrivateInfo;
@@ -92,155 +93,16 @@ export default function PrivateSubForm({
                 />
             </fieldset>
 
-            <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
-                <legend className="fieldset-legend">
-                    Parent 1 Contact Info
-                </legend>
-
-                <div className="flex gap-4">
-                    <div className="flex flex-col">
-                        <label className="fieldset-label">First Name</label>
-                        <input
-                            type="text"
-                            className="input"
-                            value={formatText(data["Guardian 1"]["First Name"])}
-                            onChange={(e) =>
-                                changeData(
-                                    "Guardian 1",
-                                    "First Name",
-                                    e.target.value
-                                )
-                            }
-                        />
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="fieldset-label">Last Name</label>
-                        <input
-                            type="text"
-                            className="input"
-                            value={formatText(data["Guardian 1"]["Last Name"])}
-                            onChange={(e) =>
-                                changeData(
-                                    "Guardian 1",
-                                    "Last Name",
-                                    e.target.value
-                                )
-                            }
-                        />
-                    </div>
-                </div>
-                <div className="flex gap-4">
-                    <div className="flex flex-col">
-                        <label className="fieldset-label">Phone</label>
-                        <input
-                            type="text"
-                            inputMode="numeric"
-                            className="input"
-                            value={formatPhoneNumber(
-                                data["Guardian 1"]["Phone"]
-                            )}
-                            onChange={(e) =>
-                                changeData(
-                                    "Guardian 1",
-                                    "Phone",
-                                    e.target.value
-                                )
-                            }
-                            maxLength={12}
-                        />
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="fieldset-label">Email</label>
-                        <input
-                            type="email"
-                            className="input"
-                            value={data["Guardian 1"]["Email"]}
-                            onChange={(e) =>
-                                changeData(
-                                    "Guardian 1",
-                                    "Email",
-                                    e.target.value
-                                )
-                            }
-                        />
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
-                <legend className="fieldset-legend">
-                    Parent 2 Contact Info
-                </legend>
-
-                <div className="flex gap-4">
-                    <div className="flex flex-col">
-                        <label className="fieldset-label">First Name</label>
-                        <input
-                            type="text"
-                            className="input"
-                            value={formatText(data["Guardian 2"]["First Name"])}
-                            onChange={(e) =>
-                                changeData(
-                                    "Guardian 2",
-                                    "First Name",
-                                    e.target.value
-                                )
-                            }
-                        />
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="fieldset-label">Last Name</label>
-                        <input
-                            type="text"
-                            className="input"
-                            value={formatText(data["Guardian 2"]["Last Name"])}
-                            onChange={(e) =>
-                                changeData(
-                                    "Guardian 2",
-                                    "Last Name",
-                                    e.target.value
-                                )
-                            }
-                        />
-                    </div>
-                </div>
-                <div className="flex gap-4">
-                    <div className="flex flex-col">
-                        <label className="fieldset-label">Phone</label>
-                        <input
-                            type="text"
-                            className="input"
-                            inputMode="numeric"
-                            value={formatPhoneNumber(
-                                data["Guardian 2"]["Phone"]
-                            )}
-                            onChange={(e) =>
-                                changeData(
-                                    "Guardian 2",
-                                    "Phone",
-                                    e.target.value
-                                )
-                            }
-                            maxLength={12}
-                        />
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="fieldset-label">Email</label>
-                        <input
-                            type="email"
-                            className="input"
-                            value={data["Guardian 2"]["Email"]}
-                            onChange={(e) =>
-                                changeData(
-                                    "Guardian 2",
-                                    "Email",
-                                    e.target.value
-                                )
-                            }
-                        />
-                    </div>
-                </div>
-            </fieldset>
+            <GuardianFieldset
+                label="Guardian 1"
+                data={data["Guardian 1"]}
+                changeData={changeData}
+            />
+            <GuardianFieldset
+                label="Guardian 2"
+                data={data["Guardian 2"]}
+                changeData={changeData}
+            />
         </>
     );
 }
