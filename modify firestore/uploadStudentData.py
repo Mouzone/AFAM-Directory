@@ -43,7 +43,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
                 # to go from 1/17/2009 to Timestamp
                 dob_parts = row["Date of Birth \n(DOB)"].split("/")
                 general_info["Birthday"] = (
-                    f"20{dob_parts[2]}-{dob_parts[0].zfill(2)}-{dob_parts[1].zfill(2)}"
+                    f"{dob_parts[2]}-{dob_parts[0].zfill(2)}-{dob_parts[1].zfill(2)}"
                 )
 
                 if row["Allergies"] == "-":
