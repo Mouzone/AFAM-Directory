@@ -144,11 +144,3 @@ This project heavily relies on Firebase for several core functionalities:
     *   For **backend functions** and **Python scripts**, you'll typically use the Firebase Admin SDK, which requires a service account key (JSON file) obtained from your Firebase project settings.
 3.  **Enable Services:** Ensure Firestore, Firebase Authentication, and Cloud Functions are enabled for your project in the Firebase Console.
 4.  **Security Rules:** Review and update `firestore.rules` and `storage.rules` to ensure your data is secure according to your application's needs. Deploy these rules using `firebase deploy`.
-
-## Contributing
-
-Contributions are welcome! Please follow standard coding practices and ensure any new features or changes are well-tested.
-
-## License
-
-This project is currently unlicensed. (Assuming no license file was found)
