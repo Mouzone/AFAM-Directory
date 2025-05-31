@@ -14,7 +14,9 @@ import { Input, InputField } from "@/components/ui/input";
 import { VStack } from "@/components/ui/vstack";
 import React from "react";
 
-export default function LoginForm() {
+export default function LoginForm(props: {
+    size: "sm" | "md" | "lg" | "xl" | undefined;
+}) {
     const [isInvalid, setIsInvalid] = React.useState(false);
     const [inputValue, setInputValue] = React.useState("12345");
     const handleSubmit = () => {
