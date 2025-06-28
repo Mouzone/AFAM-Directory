@@ -17,7 +17,6 @@ export default function Page(){
         privateFormDataDefault
     );
     const [file, setFile] = useState<File | null>(null);
-        const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
         const fileInputRef = useRef<HTMLInputElement | null>(null);
         const [resetCounter, setResetCounter] = useState(0);
     
@@ -78,7 +77,7 @@ export default function Page(){
     };
 
     return (
-        <form onSubmit={(e) => onSubmit(e)}>
+        <form onSubmit={(e) => onSubmit(e)} className="w-md">
             <div className="tabs tabs-lift">
                 <Tab currTab={tab} value="general" setTab={setTab}>
                     <GeneralSubForm
