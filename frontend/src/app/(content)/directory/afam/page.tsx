@@ -18,6 +18,7 @@ import {
 import { collection, doc, onSnapshot, query } from "firebase/firestore";
 import { db } from "@/utility/firebase";
 import { ToastContext } from "@/components/Providers/ToastProvider";
+import QRCodeForm from "@/components/Forms/QRCodeForm";
 
 export default function Page() {
     const user = useContext(AuthContext);
@@ -118,12 +119,12 @@ export default function Page() {
             <Modal>
                 {formToShow === "accounts" ? (
                     <AccountManagementForm staff={staff} />
-                ) : (
+                ) : formToShow === "student" ? (
                     <StudentForm
                         generalFormState={studentFormState}
                         showPrivate={accountInfo["Private"]}
                     />
-                )}
+                ) : <QRCodeForm/>}
             </Modal>
 
             <div className="p-4">
@@ -145,6 +146,10 @@ export default function Page() {
                     }}
                     showDeleteStudentsOnClick={() => {
                         setShowDeleteStudents((prev) => !prev);
+                    }}
+                    showQRCode={() => {
+                        setFormToShow("qrcode");
+                        showModal();
                     }}
                 />
                 <Table

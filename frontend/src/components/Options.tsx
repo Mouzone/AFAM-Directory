@@ -3,6 +3,7 @@ import plus from "../../public/svgs/plus.svg";
 import account from "../../public/svgs/account.svg";
 import minus from "../../public/svgs/minus.svg";
 import search from "../../public/svgs/search.svg";
+import invite from "../../public/svgs/invite.svg";
 import { StudentGeneralInfo } from "@/utility/types";
 import { generalFormDataDefault } from "@/utility/consts";
 
@@ -14,6 +15,7 @@ type OptionsProps = {
     searchOnClick: () => void;
     showDeleteStudents: boolean;
     showSearch: boolean;
+    showQRCode: () => void;
 };
 export default function Options({
     showManageAccounts,
@@ -23,6 +25,7 @@ export default function Options({
     manageAccountsOnClick,
     showDeleteStudentsOnClick,
     showDeleteStudents,
+    showQRCode,
 }: OptionsProps) {
     return (
         <div className="p-4 overflow-y-scroll">
@@ -58,6 +61,18 @@ export default function Options({
                 >
                     <Image src={minus} alt="delete" />
                     <span>Delete Students</span>
+                </button>
+                <button
+                    className={`btn join-item ${
+                        showDeleteStudents
+                            ? "btn-secondary dark:btn-accent"
+                            : "dark:btn-secondary"
+                    }`}
+                    type="button"
+                    onClick={showQRCode}
+                >
+                    <Image src={invite} alt="delete" />
+                    <span>Show Newcomer Form</span>
                 </button>
                 {showManageAccounts && (
                     <button
