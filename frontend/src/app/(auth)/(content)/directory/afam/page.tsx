@@ -1,7 +1,7 @@
 "use client";
 
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../../../components/Providers/AuthProvider";
+import { AuthContext } from "../../../../../components/Providers/AuthProvider";
 import Table from "@/components/Table";
 import Options from "@/components/Options";
 import Modal from "@/components/Modal";

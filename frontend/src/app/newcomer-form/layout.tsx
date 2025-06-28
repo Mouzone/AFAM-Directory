@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import QueryProvider from "../components/Providers/QueryProvider";
-import { AuthProvider } from "../components/Providers/AuthProvider";
+import "../globals.css";
+import QueryProvider from "../../components/Providers/QueryProvider";
+import { AuthProvider } from "../../components/Providers/AuthProvider";
 
 export const metadata: Metadata = {
     title: "Directory",
@@ -16,9 +16,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className="antialiased">
-                <AuthProvider>
-                    <QueryProvider>{children}</QueryProvider>
-                </AuthProvider>
+                {children}
             </body>
         </html>
     );
