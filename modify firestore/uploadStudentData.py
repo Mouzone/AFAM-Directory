@@ -26,7 +26,7 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
             batch = db.batch()
 
             for i, row in enumerate(reader):
-                if row["First Name"] == "":
+                if row["Last Name"] == "":
                     break
                 general_doc_ref = (
                     collection_ref.document()
@@ -120,6 +120,6 @@ def csv_to_firestore(csv_file_path, collection_name, batch_size):
 
 # Example usage:
 csv_file_path = (
-    "/Users/sunnyliu/Desktop/2025 AFAM Student Information (Responses) - Cleaned Up.csv"
+    "/Users/sunnyliu/Documents/2025 AFAM Student Information (Responses) - Cleaned Up.csv"
 )
 csv_to_firestore(csv_file_path, COLLECTION_NAME, BATCH_SIZE)
