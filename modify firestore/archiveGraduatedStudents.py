@@ -1,16 +1,7 @@
 import firebase_admin
 from firebase_admin import firestore
-from datetime import datetime
 
-def archiveGraduatedStudents():
-    firebase_admin.initialize_app()
-    db = firestore.client()
-
-    try:
-        origin_collection = "directory/afam/student"
-        destination_collection = f"directory/afam/archive/student/{datetime.now().year}"
-        origin_collection_ref = db.collection(origin_collection)
-        destination_collection_ref = db.collection(destination_collection)
+firebase_admin.initialize_app()
 
         # select all that are grade 12
         query_ref = origin_collection_ref.where("Grade", "==", "12")
