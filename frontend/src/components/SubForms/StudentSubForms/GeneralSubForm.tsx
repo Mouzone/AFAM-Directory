@@ -18,6 +18,11 @@ export default function GeneralSubForm({
     fileInputRef,
     resetCounter,
 }: GeneralSubFormProps) {
+    const currentYear = new Date().getFullYear();
+    const years = []
+    for (let i = 0; i < 5; i++) {
+        years.push(currentYear - i);
+    }
     const changeData = (field: keyof StudentGeneralInfo, value: string) =>
         setGeneralFormData((prev) => {
             return {
@@ -25,7 +30,7 @@ export default function GeneralSubForm({
                 [field]: value,
             };
         });
-
+    
     return (
         <>
             <fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex flex-col">
@@ -167,6 +172,24 @@ export default function GeneralSubForm({
                                 changeData("Birthday", e.target.value)
                             }
                         />
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="fieldset-label">AFAM Start Year</label>
+                        <select 
+                            value={data["Start Year"] || currentYear}
+                            onChange={(e) => 
+                                changeData("Start Year", e.target.value)
+                            }
+                            className="select"
+                        >
+                            {
+                                years.map((year) => (
+                                    <option key={year} value={year}>
+                                        {year}
+                                    </option>
+                                ))
+                            }
+                        </select>
                     </div>
                 </div>
                 <AllergyInput

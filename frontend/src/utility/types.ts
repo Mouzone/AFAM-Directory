@@ -23,6 +23,7 @@ export type StudentGeneralInfo = {
     Grade: Grade;
     Teacher: "None" | string;
     Allergies: string[];
+    "Start Year"?: string;
 };
 
 export type Guardian = {
