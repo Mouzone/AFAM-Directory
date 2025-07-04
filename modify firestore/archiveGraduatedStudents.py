@@ -28,7 +28,8 @@ def archiveGraduatedStudents():
 
             original_doc_ref = origin_collection_ref.document(doc_snap.id)
             private_doc_ref = original_doc_ref.collection("private").document("data")
-            
+            attendance_collection_ref = original_doc_ref.collection("attendance")
+
             private_data = private_doc_ref.get().to_dict()
 
             new_doc_ref = destination_collection_ref.document(doc_snap.id) # Keep same ID
@@ -41,6 +42,12 @@ def archiveGraduatedStudents():
             # Add operation to delete the document from the original collection
             batch.delete(private_doc_ref)
             batch.delete(original_doc_ref)
+            
+            attendance_docs = list(attendance_collection_ref.get())
+            for attendance_doc_snap in attendance_docs:
+                attendance_doc_ref = attendance_collection_ref.document(attendance_doc_snap.id)
+                batch.delete(attendance_doc_ref)
+                
             moved_count += 1
 
         # Commit the batch operations
