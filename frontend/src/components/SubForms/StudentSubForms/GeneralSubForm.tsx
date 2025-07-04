@@ -23,7 +23,7 @@ export default function GeneralSubForm({
     for (let i = 0; i < 5; i++) {
         years.push(currentYear - i);
     }
-    const changeData = (field: keyof StudentGeneralInfo, value: string) =>
+    const changeData = (field: keyof StudentGeneralInfo, value: string | number) =>
         setGeneralFormData((prev) => {
             return {
                 ...prev,
@@ -109,15 +109,15 @@ export default function GeneralSubForm({
                         <label className="fieldset-label">Grade</label>
                         <select
                             className="select"
-                            value={data["Grade"]}
+                            value={String(data["Grade"])}
                             onChange={(e) =>
-                                changeData("Grade", e.target.value)
+                                changeData("Grade", parseInt(e.target.value))
                             }
                         >
-                            <option>9</option>
-                            <option>10</option>
-                            <option>11</option>
-                            <option>12</option>
+                            <option value={9}>9</option>
+                            <option value={10}>10</option>
+                            <option value={11}>11</option>
+                            <option value={12}>12</option>
                         </select>
                     </div>
                     <div className="flex flex-col flex-1 min-w-full">
@@ -176,9 +176,9 @@ export default function GeneralSubForm({
                     <div className="flex flex-col">
                         <label className="fieldset-label">AFAM Start Year</label>
                         <select 
-                            value={data["Start Year"] || currentYear}
+                            value={String(data["Start Year"]) || String(currentYear)}
                             onChange={(e) => 
-                                changeData("Start Year", e.target.value)
+                                changeData("Start Year", parseInt(e.target.value))
                             }
                             className="select"
                         >

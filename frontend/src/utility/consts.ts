@@ -8,10 +8,10 @@ export const generalFormDataDefault = {
     Gender: "M",
     Birthday: new Date().toISOString().split("T")[0],
     "High School": "",
-    Grade: "9",
+    Grade: 9,
     Teacher: "None",
     Allergies: [],
-    "Start Year": "2025",
+    "Start Year": 2025,
 } as StudentGeneralInfo;
 
 export const privateFormDataDefault = {

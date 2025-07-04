@@ -10,7 +10,7 @@ export type AccountInfo = {
 
 // loading, loaded, logged out / error
 export type AuthUser = null | User | false;
-export type Grade = "9" | "10" | "11" | "12";
+export type Grade = 9 | 10 | 11 | 12;
 
 export type StudentGeneralInfo = {
     Id: string;
@@ -23,7 +23,7 @@ export type StudentGeneralInfo = {
     Grade: Grade;
     Teacher: "None" | string;
     Allergies: string[];
-    "Start Year"?: string;
+    "Start Year"?: number;
 };
 
 export type Guardian = {
