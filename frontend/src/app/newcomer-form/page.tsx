@@ -17,9 +17,9 @@ export default function Page(){
         privateFormDataDefault
     );
     const [file, setFile] = useState<File | null>(null);
-        const fileInputRef = useRef<HTMLInputElement | null>(null);
-        const [resetCounter, setResetCounter] = useState(0);
-    
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [resetCounter, setResetCounter] = useState(0);
+
 
     const onSubmit = async (
         e: FormEvent<HTMLFormElement>
