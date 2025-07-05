@@ -20,7 +20,7 @@ export default function Page(){
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [resetCounter, setResetCounter] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitStatus, setSubmitStatus] = useState(true);
+    const [submitStatus, setSubmitStatus] = useState(false);
     const [isError, setIsError] = useState(false);
 
     const onSubmit = async (
