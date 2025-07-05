@@ -15,7 +15,7 @@ export default function QRCodeForm() {
                 </button>
             </form>
             <Image 
-                src="/google-form-qrcode.jpeg" 
+                src="/website-qrcode.png" 
                 width={500}
                 height={500}
                 alt="Newcomer Form"
