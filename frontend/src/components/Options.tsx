@@ -63,11 +63,7 @@ export default function Options({
                     <span>Delete Students</span>
                 </button>
                 <button
-                    className={`btn join-item ${
-                        showDeleteStudents
-                            ? "btn-secondary dark:btn-accent"
-                            : "dark:btn-secondary"
-                    }`}
+                    className={`btn join-item dark:btn-secondary`}
                     type="button"
                     onClick={showQRCode}
                 >
