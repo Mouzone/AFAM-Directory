@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
+import MandatoryIndicator from "../Minor/MandatoryIndicator";
 
 // type it to be either a general form input or a private form input
 export type TextInputProps = {
     label: string;
     data: string;
     setData: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    isMandatory: boolean;
 };
 
-export default function TextInput({ label, data, setData }: TextInputProps) {
+export default function TextInput({ label, data, setData, isMandatory }: TextInputProps) {
     const [copied, setCopied] = useState(false);
 
     // zipCode = inputMode="numeric", maxLength={5}
@@ -15,7 +17,10 @@ export default function TextInput({ label, data, setData }: TextInputProps) {
     // email = add type = email
     return (
         <div className="flex flex-col">
-            <label className="fieldset-label mb-1">{label}</label>
+            <label className="fieldset-label mb-1">
+                {label}
+                {isMandatory && <MandatoryIndicator/>}
+            </label>
             <div className="w-full max-w-[16rem]">
                 <div className="relative">
                     <input

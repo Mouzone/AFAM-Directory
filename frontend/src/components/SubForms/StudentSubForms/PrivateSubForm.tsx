@@ -1,8 +1,6 @@
 import formatPhoneNumber from "@/utility/formatters/formatPhone";
-import formatText from "@/utility/formatters/formatText";
 import { StudentPrivateInfo } from "@/utility/types";
 import React, { SetStateAction } from "react";
-import { ClipboardIcon } from "@heroicons/react/24/outline";
 import TextInput from "@/components/Inputs/TextInput";
 import GuardianFieldset from "@/components/Fieldsets/GuardianFieldset";
 
@@ -49,6 +47,7 @@ export default function PrivateSubForm({
                     setData={(e) =>
                         changeData("Personal", "Street Address", e.target.value)
                     }
+                    isMandatory={true}
                 />
                 <div className="flex gap-4">
                     <TextInput
@@ -57,6 +56,7 @@ export default function PrivateSubForm({
                         setData={(e) =>
                             changeData("Personal", "City", e.target.value)
                         }
+                        isMandatory={true}
                     />
                     <TextInput
                         label="Zip Code"
@@ -67,6 +67,7 @@ export default function PrivateSubForm({
                                 changeData("Personal", "Zip Code", value);
                             }
                         }}
+                        isMandatory={true}
                     />
                 </div>
             </fieldset>
@@ -82,6 +83,7 @@ export default function PrivateSubForm({
                     setData={(e) =>
                         changeData("Personal", "Phone", e.target.value)
                     }
+                    isMandatory={true}
                 />
 
                 <TextInput
@@ -90,6 +92,7 @@ export default function PrivateSubForm({
                     setData={(e) =>
                         changeData("Personal", "Email", e.target.value)
                     }
+                    isMandatory={true}
                 />
             </fieldset>
 
@@ -97,11 +100,13 @@ export default function PrivateSubForm({
                 label="Guardian 1"
                 data={data["Guardian 1"]}
                 changeData={changeData}
+                isMandatory={true}
             />
             <GuardianFieldset
                 label="Guardian 2"
                 data={data["Guardian 2"]}
                 changeData={changeData}
+                isMandatory={false}
             />
         </>
     );

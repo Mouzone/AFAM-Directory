@@ -19,7 +19,9 @@ export default function Page(){
     const [file, setFile] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [resetCounter, setResetCounter] = useState(0);
-
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState(true);
+    const [isError, setIsError] = useState(false);
 
     const onSubmit = async (
         e: FormEvent<HTMLFormElement>
@@ -72,11 +74,18 @@ export default function Page(){
                     }
                 );
             }
+            setIsSubmitting(false)
+            setSubmitStatus(true)
         } catch {
+            setIsSubmitting(false)
+            setSubmitStatus(true)
+            setIsError(true)
         }
     };
 
     return (
+        <>
+        {!submitStatus && !isError ?
         <form onSubmit={(e) => onSubmit(e)} className="w-md">
             <div className="tabs tabs-lift">
                 <Tab currTab={tab} value="general" setTab={setTab}>
@@ -109,10 +118,36 @@ export default function Page(){
                             privateFormData
                         )
                     }
+                    onClick={(e) =>
+                        setIsSubmitting(true)
+                    }
                 >
-                    Submit
+                    {
+                        isSubmitting 
+                        ? <span className="loading loading-spinner loading-md"></span>
+                        : "Submit" }
                 </button>
             </div>
         </form>
+        :
+
+        <div className="flex items-center justify-center h-screen w-full">
+            {
+                submitStatus && !isError &&
+                <div>
+                    Success! You can close this tab now.
+                </div>
+            }
+
+            {
+                isError && 
+                <div> 
+                    Error. Notify Pastor Sang or Miss Rachael about the error
+                </div>
+            }
+        </div> 
+
+        }
+        </>
     )
 }
