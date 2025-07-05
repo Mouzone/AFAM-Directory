@@ -18,8 +18,10 @@ export default function TextInput({ label, data, setData, isMandatory }: TextInp
     return (
         <div className="flex flex-col">
             <label className="fieldset-label mb-1">
-                {label}
-                {isMandatory && <MandatoryIndicator/>}
+                <div className="flex">
+                    {label}
+                    {isMandatory && <MandatoryIndicator/>}
+                </div>
             </label>
             <div className="w-full max-w-[16rem]">
                 <div className="relative">

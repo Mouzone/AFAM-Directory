@@ -74,8 +74,10 @@ export default function GeneralSubForm({
                 <div className="flex gap-4">
                     <div className="flex flex-col">
                         <label className="fieldset-label">
-                            First Name
-                            <MandatoryIndicator/>
+                            <div className="flex">
+                                First Name
+                                <MandatoryIndicator/>
+                            </div>
                         </label>
                         <input
                             type="text"
@@ -88,8 +90,10 @@ export default function GeneralSubForm({
                     </div>
                     <div className="flex flex-col">
                         <label className="fieldset-label">
-                            Last Name
-                            <MandatoryIndicator/>
+                            <div className="flex">
+                                Last Name
+                                <MandatoryIndicator/>
+                            </div>
                         </label>
                         <input
                             type="text"
@@ -105,8 +109,10 @@ export default function GeneralSubForm({
                 <div className="flex flex-wrap gap-4">
                     <div className="flex flex-col flex-1 min-w-[calc(50%-0.5rem)]">
                         <label className="fieldset-label">
-                            High School
-                            <MandatoryIndicator/>
+                            <div className="flex">
+                                High School
+                                <MandatoryIndicator/>
+                            </div>
                         </label>
                         <input
                             type="text"
@@ -119,8 +125,10 @@ export default function GeneralSubForm({
                     </div>
                     <div className="flex flex-col flex-1 min-w-[calc(50%-0.5rem)]">
                         <label className="fieldset-label">
-                            Grade
-                            <MandatoryIndicator/>
+                            <div className="flex">
+                                Grade
+                                <MandatoryIndicator/>
+                            </div>
                         </label>
                         <select
                             className="select"
@@ -138,7 +146,6 @@ export default function GeneralSubForm({
                     <div className="flex flex-col flex-1 min-w-full">
                         <label className="fieldset-label">
                             Bible Study Teacher (if assigned)
-                            <MandatoryIndicator/>
                         </label>
                         <select
                             className="select"
@@ -163,11 +170,13 @@ export default function GeneralSubForm({
                     </div>
                 </div>
 
-                <div className="flex gap-4">
+                <div className="flex gap-1">
                     <div className="flex flex-col">
                         <label className="fieldset-label">
-                            Gender
-                            <MandatoryIndicator/>
+                            <div className="flex">
+                                Gender
+                                <MandatoryIndicator/>
+                            </div>
                         </label>
                         <select
                             className="select"
@@ -183,8 +192,10 @@ export default function GeneralSubForm({
 
                     <div className="flex flex-col">
                         <label className="fieldset-label">
-                            Birthday
-                            <MandatoryIndicator/>
+                            <div className="flex">
+                                Birthday
+                                <MandatoryIndicator/>
+                            </div>
                         </label>
                         <input
                             type="date"
@@ -197,8 +208,10 @@ export default function GeneralSubForm({
                     </div>
                     <div className="flex flex-col">
                         <label className="fieldset-label">
-                            First time AFAM?
-                            <MandatoryIndicator/>
+                            <div className="flex">
+                                First time AFAM?
+                                <MandatoryIndicator/>
+                            </div>
                         </label>
                         <select 
                             value={data["First Time"] ? "Yes" : "No"}
