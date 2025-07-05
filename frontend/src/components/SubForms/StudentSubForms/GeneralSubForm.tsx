@@ -1,4 +1,5 @@
 import AllergyInput from "@/components/Inputs/AllergyInput";
+import MandatoryIndicator from "@/components/Minor/MandatoryIndicator";
 import formatText from "@/utility/formatters/formatText";
 import { StudentGeneralInfo } from "@/utility/types";
 import Image from "next/image";
@@ -23,13 +24,15 @@ export default function GeneralSubForm({
     for (let i = 0; i < 5; i++) {
         years.push(currentYear - i);
     }
-    const changeData = (field: keyof StudentGeneralInfo, value: string | number) =>
+    const changeData = (field: keyof StudentGeneralInfo, value: string | number | boolean) =>
+        {console.log(field, value);
         setGeneralFormData((prev) => {
             return {
                 ...prev,
                 [field]: value,
             };
         });
+    }
     
     return (
         <>
@@ -70,7 +73,10 @@ export default function GeneralSubForm({
 
                 <div className="flex gap-4">
                     <div className="flex flex-col">
-                        <label className="fieldset-label">First Name</label>
+                        <label className="fieldset-label">
+                            First Name
+                            <MandatoryIndicator/>
+                        </label>
                         <input
                             type="text"
                             className="input"
@@ -174,21 +180,23 @@ export default function GeneralSubForm({
                         />
                     </div>
                     <div className="flex flex-col">
-                        <label className="fieldset-label">AFAM Start Year</label>
+                        <label className="fieldset-label">First time AFAM?</label>
                         <select 
-                            value={String(data["Start Year"]) || String(currentYear)}
-                            onChange={(e) => 
-                                changeData("Start Year", parseInt(e.target.value))
+                            value={data["First Time"] ? "Yes" : "No"}
+                            onChange={(e) => {
+                                changeData("First Time", e.target.value === "Yes");
+                            }
+                                
                             }
                             className="select"
                         >
-                            {
-                                years.map((year) => (
-                                    <option key={year} value={year}>
-                                        {year}
-                                    </option>
-                                ))
-                            }
+                            
+                            <option  value={"Yes"}>
+                                Yes
+                            </option>
+                            <option value={"No"}>
+                                No
+                            </option>
                         </select>
                     </div>
                 </div>
