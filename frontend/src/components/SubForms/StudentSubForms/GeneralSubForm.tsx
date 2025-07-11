@@ -4,7 +4,6 @@ import formatText from "@/utility/formatters/formatText";
 import { StudentGeneralInfo } from "@/utility/types";
 import verifyIsNewcomer from "@/utility/verifyIsNewcomer";
 import Image from "next/image";
-import { join } from "path";
 import React, { RefObject, SetStateAction } from "react";
 
 type GeneralSubFormProps = {
@@ -227,7 +226,9 @@ export default function GeneralSubForm({
 									"First Time",
 									e.target.value === "Yes"
 										? new Date().toISOString().split("T")[0]
-										: data["First Time"]
+										: new Date("2001-01-01")
+												.toISOString()
+												.split("T")[0]
 								);
 							}}
 							className="select"
