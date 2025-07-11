@@ -11,7 +11,7 @@ export const generalFormDataDefault = {
 	Grade: 9,
 	Teacher: "None",
 	Allergies: [],
-	"First Time": true,
+	"First Time": "2001-01-01",
 } as StudentGeneralInfo;
 
 export const privateFormDataDefault = {
