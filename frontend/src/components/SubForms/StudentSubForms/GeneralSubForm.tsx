@@ -1,3 +1,4 @@
+import ProfilePicFieldset from "@/components/Fieldsets/ProfilePicFieldset";
 import AllergyInput from "@/components/Inputs/AllergyInput";
 import MandatoryIndicator from "@/components/Minor/MandatoryIndicator";
 import formatText from "@/utility/formatters/formatText";
@@ -42,38 +43,13 @@ export default function GeneralSubForm({
 
 	return (
 		<>
-			<fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex flex-col">
-				<legend className="fieldset-legend">Image</legend>
-				<div className="flex justify-center">
-					<input
-						ref={fileInputRef}
-						type="file"
-						className="file-input file-input-sm"
-						onChange={(e) => {
-							const file = e.target?.files?.[0];
-							if (file) {
-								setFile(file);
-								const reader = new FileReader();
-								reader.onload = (event) => {
-									const url = event.target?.result ?? "";
-									changeData("Headshot URL", url as string);
-								};
-								reader.readAsDataURL(file);
-							}
-						}}
-						accept="image/*"
-					/>
-				</div>
+			<ProfilePicFieldset
+				fileInputRef={fileInputRef}
+				setFile={setFile}
+				changeData={changeData}
+				url={data["Headshot URL"]}
+			/>
 
-				{data["Headshot URL"] !== "" && (
-					<Image
-						src={data["Headshot URL"]}
-						alt="image"
-						width={800}
-						height={500}
-					/>
-				)}
-			</fieldset>
 			<fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box">
 				<legend className="fieldset-legend">General</legend>
 
