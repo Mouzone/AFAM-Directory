@@ -166,6 +166,7 @@ export default function Page() {
 
 				<div className="flex justify-between mt-5">
 					<button
+						type="button"
 						className="btn btn-neutral dark:btn-secondary"
 						onClick={() => setPage((prev) => prev - 1)}
 						disabled={page === 1}
@@ -173,9 +174,15 @@ export default function Page() {
 						Prev
 					</button>
 					{page === 4 ? (
-						<button onClick={() => "deez"}>Submit</button>
+						<button
+							type="submit"
+							className="btn btn-primary dark:btn-secondary"
+						>
+							Submit
+						</button>
 					) : (
 						<button
+							type="button"
 							className="btn btn-neutral dark:btn-secondary"
 							onClick={() => setPage((prev) => prev + 1)}
 						>
