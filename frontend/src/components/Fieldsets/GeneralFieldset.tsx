@@ -11,13 +11,11 @@ type GeneralFieldsetProps = {
 		value: string | number | string[]
 	) => void;
 	resetCounter: number;
-	setAllergies: (allergy: string[]) => void;
 };
 export default function GeneralFieldset({
 	data,
 	changeData,
 	resetCounter,
-	setAllergies,
 }: GeneralFieldsetProps) {
 	const joinDate = new Date(data["First Time"]);
 	const isNewcomer = verifyIsNewcomer(joinDate);

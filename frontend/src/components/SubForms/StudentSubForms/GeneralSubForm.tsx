@@ -1,3 +1,4 @@
+import GeneralFieldset from "@/components/Fieldsets/GeneralFieldset";
 import ProfilePicFieldset from "@/components/Fieldsets/ProfilePicFieldset";
 import AllergyInput from "@/components/Inputs/AllergyInput";
 import MandatoryIndicator from "@/components/Minor/MandatoryIndicator";
@@ -45,6 +46,11 @@ export default function GeneralSubForm({
 				setFile={setFile}
 				changeData={changeData}
 				url={data["Headshot URL"]}
+			/>
+			<GeneralFieldset
+				data={data}
+				changeData={changeData}
+				resetCounter={resetCounter}
 			/>
 		</>
 	);
