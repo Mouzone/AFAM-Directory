@@ -1,20 +1,22 @@
 "use client";
-import Tab from "@/components/Tab";
-import GeneralSubForm from "@/components/SubForms/StudentSubForms/GeneralSubForm";
-import PrivateSubForm from "@/components/SubForms/StudentSubForms/PrivateSubForm";
 import { FormEvent, useRef, useState } from "react";
 import {
 	generalFormDataDefault,
 	privateFormDataDefault,
 } from "@/utility/consts";
-import { StudentPrivateInfo } from "@/utility/types";
+import { StudentGeneralInfo, StudentPrivateInfo } from "@/utility/types";
 import { addDoc, collection, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db, storage } from "@/utility/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import validateCreateStudentForm from "@/utility/validateCreateStudentForm";
+import ProfilePicFieldset from "@/components/Fieldsets/ProfilePicFieldset";
+import GeneralFieldset from "@/components/Fieldsets/GeneralFieldset";
+import AddressFieldset from "@/components/Fieldsets/AddressFieldset";
+import PersonalContactFieldset from "@/components/Fieldsets/PersonalContactFieldset";
+import GuardianFieldset from "@/components/Fieldsets/GuardianFieldset";
+import { Guardian } from "@/utility/types";
 
 export default function Page() {
-	const [tab, setTab] = useState("general");
+	const [page, setPage] = useState(3);
 	const [generalFormData, setGeneralFormData] = useState(
 		generalFormDataDefault
 	);
@@ -24,9 +26,6 @@ export default function Page() {
 	const [file, setFile] = useState<File | null>(null);
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 	const [resetCounter, setResetCounter] = useState(0);
-	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [submitStatus, setSubmitStatus] = useState(false);
-	const [isError, setIsError] = useState(false);
 
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -73,85 +72,114 @@ export default function Page() {
 					}
 				);
 			}
-			setIsSubmitting(false);
-			setSubmitStatus(true);
+			// setIsSubmitting(false);
+			// setSubmitStatus(true);
 		} catch {
-			setIsSubmitting(false);
-			setSubmitStatus(true);
-			setIsError(true);
+			// setIsSubmitting(false);
+			// setSubmitStatus(true);
+			// setIsError(true);
 		}
 	};
 
+	const changeGeneralData = (
+		field: keyof StudentGeneralInfo,
+		value: string | number | string[]
+	) =>
+		setGeneralFormData((prev) => {
+			return { ...prev, [field]: value };
+		});
+
+	const changePersonalData = (
+		field: keyof StudentPrivateInfo["Personal"],
+		value: string | number | string[]
+	) =>
+		setPrivateFormData((prev) => {
+			return {
+				...prev,
+				Personal: { ...prev["Personal"], [field]: value },
+			};
+		});
+
+	const changePrivateData = (
+		label: "Personal" | "Guardian 1" | "Guardian 2",
+		field: keyof Guardian,
+		value: string
+	) =>
+		setPrivateFormData((prev) => {
+			return {
+				...prev,
+				Personal: { ...prev["Personal"], [field]: value },
+			};
+		});
 	return (
 		<>
-			{!submitStatus && !isError ? (
-				<form
-					onSubmit={(e) => onSubmit(e)}
-					className="w-md"
-				>
-					<div className="tabs tabs-lift">
-						<Tab
-							currTab={tab}
-							value="general"
-							setTab={setTab}
-						>
-							<GeneralSubForm
-								data={generalFormData}
-								setGeneralFormData={setGeneralFormData}
-								setFile={setFile}
-								fileInputRef={fileInputRef}
-								resetCounter={resetCounter}
-							/>
-						</Tab>
-						<Tab
-							currTab={tab}
-							value="private"
-							setTab={setTab}
-						>
-							<PrivateSubForm
-								data={privateFormData}
-								setPrivateFormData={setPrivateFormData}
-							/>
-						</Tab>
-					</div>
-					<div
-						className={`flex justify-end gap-4 mt-4 ${
-							tab !== "attendance" ? "pb-6" : ""
-						}`}
-					>
-						<button
-							className="btn btn-neutral dark:btn-secondary"
-							type="submit"
-							disabled={
-								!validateCreateStudentForm(
-									generalFormData,
-									privateFormData
-								)
-							}
-							onClick={(e) => setIsSubmitting(true)}
-						>
-							{isSubmitting ? (
-								<span className="loading loading-spinner loading-md"></span>
-							) : (
-								"Submit"
-							)}
-						</button>
-					</div>
-				</form>
-			) : (
-				<div className="flex items-center justify-center h-screen w-full">
-					{submitStatus && !isError && (
-						<div>Success! You can close this tab now.</div>
-					)}
+			<form
+				onSubmit={(e) => onSubmit(e)}
+				className="w-md"
+			>
+				{page === 1 && (
+					<ProfilePicFieldset
+						fileInputRef={fileInputRef}
+						setFile={setFile}
+						changeData={changeGeneralData}
+						url={generalFormData["Headshot URL"]}
+					/>
+				)}
 
-					{isError && (
-						<div>
-							Error. Notify Pastor Sang or Miss Rachael about the
-							error
-						</div>
+				{page === 2 && (
+					<GeneralFieldset
+						data={generalFormData}
+						changeData={changeGeneralData}
+						resetCounter={resetCounter}
+					/>
+				)}
+
+				{page === 3 && (
+					<>
+						<AddressFieldset
+							data={privateFormData["Personal"]}
+							changeData={changePersonalData}
+						/>{" "}
+						<PersonalContactFieldset
+							data={privateFormData["Personal"]}
+							changeData={changePersonalData}
+						/>
+					</>
+				)}
+
+				{page === 4 && (
+					<>
+						<GuardianFieldset
+							label="Guardian 1"
+							data={privateFormData["Guardian 1"]}
+							changeData={changePrivateData}
+							isMandatory={true}
+						/>
+						<GuardianFieldset
+							label="Guardian 2"
+							data={privateFormData["Guardian 2"]}
+							changeData={changePrivateData}
+							isMandatory={false}
+						/>
+					</>
+				)}
+
+				<div>
+					<button
+						onClick={() => setPage((prev) => prev - 1)}
+						disabled={page === 1}
+					>
+						Prev
+					</button>
+					{page === 4 ? (
+						<button onClick={() => "deez"}>Submit</button>
+					) : (
+						<button onClick={() => setPage((prev) => prev + 1)}>
+							Next
+						</button>
 					)}
 				</div>
-			)}
+			</form>
 		</>
 	);
 }

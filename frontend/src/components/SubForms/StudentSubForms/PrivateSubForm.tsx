@@ -20,15 +20,7 @@ export default function PrivateSubForm({
 	) => {
 		setPrivateFormData((prev) => {
 			return {
-				Personal: {
-					...prev["Personal"],
-				},
-				"Guardian 1": {
-					...prev["Guardian 1"],
-				},
-				"Guardian 2": {
-					...prev["Guardian 2"],
-				},
+				...prev,
 				[person]: {
 					...prev[person],
 					[field]: value,
@@ -43,15 +35,10 @@ export default function PrivateSubForm({
 	) =>
 		setPrivateFormData((prev) => {
 			return {
+				...prev,
 				Personal: {
 					...prev["Personal"],
 					[field]: value,
-				},
-				"Guardian 1": {
-					...prev["Guardian 1"],
-				},
-				"Guardian 2": {
-					...prev["Guardian 2"],
 				},
 			};
 		});
