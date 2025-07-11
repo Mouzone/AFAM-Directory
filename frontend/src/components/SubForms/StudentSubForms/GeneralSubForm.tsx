@@ -226,9 +226,7 @@ export default function GeneralSubForm({
 									"First Time",
 									e.target.value === "Yes"
 										? new Date().toISOString().split("T")[0]
-										: new Date("2001-01-01")
-												.toISOString()
-												.split("T")[0]
+										: "2001-01-01"
 								);
 							}}
 							className="select"
