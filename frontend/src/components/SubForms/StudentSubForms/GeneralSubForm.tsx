@@ -45,7 +45,7 @@ export default function GeneralSubForm({
 	let isNewcomer = false;
 	if (yearDiff === 0) {
 		// Same year
-		if (monthDiff === 0) {
+		if (monthDiff <= 1) {
 			// Same month, so difference is definitely less than a month
 			isNewcomer = true;
 		} else {
@@ -58,11 +58,11 @@ export default function GeneralSubForm({
 			// Dec to Jan
 			return todayDate.getDate() <= joinDate.getDate();
 		} else {
-			return false;
+			isNewcomer = false;
 		}
 	} else {
 		// More than one year difference
-		return false;
+		isNewcomer = false;
 	}
 	return (
 		<>
