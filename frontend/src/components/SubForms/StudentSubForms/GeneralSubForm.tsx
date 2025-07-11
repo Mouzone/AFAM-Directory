@@ -2,6 +2,7 @@ import AllergyInput from "@/components/Inputs/AllergyInput";
 import MandatoryIndicator from "@/components/Minor/MandatoryIndicator";
 import formatText from "@/utility/formatters/formatText";
 import { StudentGeneralInfo } from "@/utility/types";
+import verifyIsNewcomer from "@/utility/verifyIsNewcomer";
 import Image from "next/image";
 import { join } from "path";
 import React, { RefObject, SetStateAction } from "react";
@@ -37,33 +38,9 @@ export default function GeneralSubForm({
 		});
 	};
 
-	// calculate if the student joined in the past month
 	const joinDate = new Date(data["First Time"]);
-	const todayDate = new Date();
-	const yearDiff = todayDate.getFullYear() - joinDate.getFullYear();
-	const monthDiff = todayDate.getMonth() - joinDate.getMonth();
-	let isNewcomer = false;
-	if (yearDiff === 0) {
-		// Same year
-		if (monthDiff <= 1) {
-			// Same month, so difference is definitely less than a month
-			isNewcomer = true;
-		} else {
-			// More than one month difference
-			isNewcomer = false;
-		}
-	} else if (yearDiff === 1) {
-		// One year difference, check if it spans across the new year to be less than a month
-		if (joinDate.getMonth() === 11 && todayDate.getMonth() === 0) {
-			// Dec to Jan
-			return todayDate.getDate() <= joinDate.getDate();
-		} else {
-			isNewcomer = false;
-		}
-	} else {
-		// More than one year difference
-		isNewcomer = false;
-	}
+	const isNewcomer = verifyIsNewcomer(joinDate);
+
 	return (
 		<>
 			<fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex flex-col">
