@@ -1,9 +1,8 @@
-import formatPhoneNumber from "@/utility/formatters/formatPhone";
 import { StudentPrivateInfo } from "@/utility/types";
 import React, { SetStateAction } from "react";
-import TextInput from "@/components/Inputs/TextInput";
 import GuardianFieldset from "@/components/Fieldsets/GuardianFieldset";
 import AddressFieldset from "@/components/Fieldsets/AddressFieldset";
+import PersonalContactFieldset from "@/components/Fieldsets/PersonalContactFieldset";
 
 type PrivateSubFormProps = {
 	data: StudentPrivateInfo;
@@ -38,54 +37,36 @@ export default function PrivateSubForm({
 		});
 	};
 
+	const changePesonalData = (
+		field: keyof StudentPrivateInfo["Personal"],
+		value: string
+	) =>
+		setPrivateFormData((prev) => {
+			return {
+				Personal: {
+					...prev["Personal"],
+					[field]: value,
+				},
+				"Guardian 1": {
+					...prev["Guardian 1"],
+				},
+				"Guardian 2": {
+					...prev["Guardian 2"],
+				},
+			};
+		});
+
 	return (
 		<>
 			<AddressFieldset
 				data={data["Personal"]}
-				changeData={(
-					field: keyof StudentPrivateInfo["Personal"],
-					value: string
-				) =>
-					setPrivateFormData((prev) => {
-						return {
-							Personal: {
-								...prev["Personal"],
-								[field]: value,
-							},
-							"Guardian 1": {
-								...prev["Guardian 1"],
-							},
-							"Guardian 2": {
-								...prev["Guardian 2"],
-							},
-						};
-					})
-				}
+				changeData={changePesonalData}
 			/>
 
-			<fieldset className="fieldset w-s bg-base-200 border border-base-300 p-4 rounded-box flex gap-4">
-				<legend className="fieldset-legend">
-					Personal Contact Info
-				</legend>
-
-				<TextInput
-					label="Phone"
-					data={formatPhoneNumber(data["Personal"]["Phone"])}
-					setData={(e) =>
-						changeData("Personal", "Phone", e.target.value)
-					}
-					isMandatory={true}
-				/>
-
-				<TextInput
-					label="Email"
-					data={data["Personal"]["Email"]}
-					setData={(e) =>
-						changeData("Personal", "Email", e.target.value)
-					}
-					isMandatory={true}
-				/>
-			</fieldset>
+			<PersonalContactFieldset
+				data={data["Personal"]}
+				changeData={changePesonalData}
+			/>
 
 			<GuardianFieldset
 				label="Guardian 1"
