@@ -115,7 +115,7 @@ export default function Page() {
 		<>
 			<form
 				onSubmit={(e) => onSubmit(e)}
-				className="w-md"
+				className="w-md flex flex-col justify-center"
 			>
 				{page === 1 && (
 					<ProfilePicFieldset
@@ -139,7 +139,7 @@ export default function Page() {
 						<AddressFieldset
 							data={privateFormData["Personal"]}
 							changeData={changePersonalData}
-						/>{" "}
+						/>
 						<PersonalContactFieldset
 							data={privateFormData["Personal"]}
 							changeData={changePersonalData}
@@ -164,8 +164,9 @@ export default function Page() {
 					</>
 				)}
 
-				<div>
+				<div className="flex justify-between mt-5">
 					<button
+						className="btn btn-neutral dark:btn-secondary"
 						onClick={() => setPage((prev) => prev - 1)}
 						disabled={page === 1}
 					>
@@ -174,12 +175,28 @@ export default function Page() {
 					{page === 4 ? (
 						<button onClick={() => "deez"}>Submit</button>
 					) : (
-						<button onClick={() => setPage((prev) => prev + 1)}>
+						<button
+							className="btn btn-neutral dark:btn-secondary"
+							onClick={() => setPage((prev) => prev + 1)}
+						>
 							Next
 						</button>
 					)}
 				</div>
 			</form>
+
+			{/* <div className="flex items-center justify-center h-screen w-full">
+					{submitStatus && !isError && (
+						<div>Success! You can close this tab now.</div>
+					)}
+
+					{isError && (
+						<div>
+							Error. Notify Pastor Sang or Miss Rachael about the
+							error
+						</div>
+					)}
+				</div> */}
 		</>
 	);
 }
