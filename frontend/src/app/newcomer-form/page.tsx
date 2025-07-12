@@ -14,9 +14,10 @@ import AddressFieldset from "@/components/Fieldsets/AddressFieldset";
 import PersonalContactFieldset from "@/components/Fieldsets/PersonalContactFieldset";
 import GuardianFieldset from "@/components/Fieldsets/GuardianFieldset";
 import { Guardian } from "@/utility/types";
+import validateNewcomerForm from "@/utility/validateNewcomerForm";
 
 export default function Page() {
-	const [page, setPage] = useState(3);
+	const [page, setPage] = useState(1);
 	const [generalFormData, setGeneralFormData] = useState(
 		generalFormDataDefault
 	);
@@ -26,6 +27,9 @@ export default function Page() {
 	const [file, setFile] = useState<File | null>(null);
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 	const [resetCounter, setResetCounter] = useState(0);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isSubmitted, setIsSubmitted] = useState(false);
+	const [isError, setIsError] = useState(false);
 
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -72,12 +76,12 @@ export default function Page() {
 					}
 				);
 			}
-			// setIsSubmitting(false);
-			// setSubmitStatus(true);
+			setIsSubmitting(false);
+			setIsSubmitted(true);
 		} catch {
-			// setIsSubmitting(false);
-			// setSubmitStatus(true);
-			// setIsError(true);
+			setIsSubmitting(false);
+			setIsSubmitted(true);
+			setIsError(true);
 		}
 	};
 
@@ -108,92 +112,34 @@ export default function Page() {
 		setPrivateFormData((prev) => {
 			return {
 				...prev,
-				Personal: { ...prev["Personal"], [field]: value },
+				[label]: { ...prev[label], [field]: value },
 			};
 		});
+
+	if (page < 1 || page > 4) {
+		setPage(1);
+	}
+
+	let isSectionComplete = false;
+	function isValidPageNumber(value: number): value is 1 | 2 | 3 | 4 {
+		return value === 1 || value === 2 || value === 3 || value === 4;
+	}
+	if (isValidPageNumber(page)) {
+		isSectionComplete = validateNewcomerForm(
+			page,
+			generalFormData,
+			privateFormData
+		);
+	} else {
+		console.warn("Invalid page number detected:", page);
+		isSectionComplete = false;
+	}
+	console.log(isSectionComplete);
 	return (
 		<>
-			<form
-				onSubmit={(e) => onSubmit(e)}
-				className="w-md flex flex-col justify-center"
-			>
-				{page === 1 && (
-					<ProfilePicFieldset
-						fileInputRef={fileInputRef}
-						setFile={setFile}
-						changeData={changeGeneralData}
-						url={generalFormData["Headshot URL"]}
-					/>
-				)}
-
-				{page === 2 && (
-					<GeneralFieldset
-						data={generalFormData}
-						changeData={changeGeneralData}
-						resetCounter={resetCounter}
-					/>
-				)}
-
-				{page === 3 && (
-					<>
-						<AddressFieldset
-							data={privateFormData["Personal"]}
-							changeData={changePersonalData}
-						/>
-						<PersonalContactFieldset
-							data={privateFormData["Personal"]}
-							changeData={changePersonalData}
-						/>
-					</>
-				)}
-
-				{page === 4 && (
-					<>
-						<GuardianFieldset
-							label="Guardian 1"
-							data={privateFormData["Guardian 1"]}
-							changeData={changePrivateData}
-							isMandatory={true}
-						/>
-						<GuardianFieldset
-							label="Guardian 2"
-							data={privateFormData["Guardian 2"]}
-							changeData={changePrivateData}
-							isMandatory={false}
-						/>
-					</>
-				)}
-
-				<div className="flex justify-between mt-5">
-					<button
-						type="button"
-						className="btn btn-neutral dark:btn-secondary"
-						onClick={() => setPage((prev) => prev - 1)}
-						disabled={page === 1}
-					>
-						Prev
-					</button>
-					{page === 4 ? (
-						<button
-							type="submit"
-							className="btn btn-primary dark:btn-secondary"
-						>
-							Submit
-						</button>
-					) : (
-						<button
-							type="button"
-							className="btn btn-neutral dark:btn-secondary"
-							onClick={() => setPage((prev) => prev + 1)}
-						>
-							Next
-						</button>
-					)}
-				</div>
-			</form>
-
-			{/* <div className="flex items-center justify-center h-screen w-full">
-					{submitStatus && !isError && (
+			{isSubmitted ? (
+				<div className="flex items-center justify-center h-screen w-full">
+					{isSubmitted && !isError && (
 						<div>Success! You can close this tab now.</div>
 					)}
 
@@ -203,7 +149,94 @@ export default function Page() {
 							error
 						</div>
 					)}
-				</div> */}
+				</div>
+			) : (
+				<form
+					onSubmit={(e) => onSubmit(e)}
+					className="w-md flex flex-col justify-center"
+				>
+					{page === 1 && (
+						<ProfilePicFieldset
+							fileInputRef={fileInputRef}
+							setFile={setFile}
+							changeData={changeGeneralData}
+							url={generalFormData["Headshot URL"]}
+						/>
+					)}
+
+					{page === 2 && (
+						<GeneralFieldset
+							data={generalFormData}
+							changeData={changeGeneralData}
+							resetCounter={resetCounter}
+						/>
+					)}
+
+					{page === 3 && (
+						<>
+							<AddressFieldset
+								data={privateFormData["Personal"]}
+								changeData={changePersonalData}
+							/>
+							<PersonalContactFieldset
+								data={privateFormData["Personal"]}
+								changeData={changePersonalData}
+							/>
+						</>
+					)}
+
+					{page === 4 && (
+						<>
+							<GuardianFieldset
+								label="Guardian 1"
+								data={privateFormData["Guardian 1"]}
+								changeData={changePrivateData}
+								isMandatory={true}
+							/>
+							<GuardianFieldset
+								label="Guardian 2"
+								data={privateFormData["Guardian 2"]}
+								changeData={changePrivateData}
+								isMandatory={false}
+							/>
+						</>
+					)}
+
+					<div className="flex justify-between mt-5">
+						<button
+							type="button"
+							className="btn btn-neutral dark:btn-secondary"
+							onClick={() => setPage((prev) => prev - 1)}
+							disabled={page === 1}
+						>
+							Prev
+						</button>
+						{page === 4 ? (
+							<button
+								type="submit"
+								className="btn btn-primary dark:btn-secondary"
+								disabled={!isSectionComplete}
+								onClick={() => setIsSubmitting(true)}
+							>
+								{isSubmitting ? (
+									<span className="loading loading-spinner loading-sm"></span>
+								) : (
+									"Submit"
+								)}
+							</button>
+						) : (
+							<button
+								type="button"
+								className="btn btn-neutral dark:btn-secondary"
+								onClick={() => setPage((prev) => prev + 1)}
+								disabled={!isSectionComplete}
+							>
+								Next
+							</button>
+						)}
+					</div>
+				</form>
+			)}
 		</>
 	);
 }
