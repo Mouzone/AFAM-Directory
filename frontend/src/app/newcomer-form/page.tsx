@@ -105,7 +105,7 @@ export default function Page() {
 		});
 
 	const changePrivateData = (
-		label: "Personal" | "Guardian 1" | "Guardian 2",
+		label: "Guardian 1" | "Guardian 2",
 		field: keyof Guardian,
 		value: string
 	) =>
