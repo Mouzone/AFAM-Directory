@@ -16,6 +16,7 @@ import trashcan from "../../public/svgs/trashcan.svg";
 import Image from "next/image";
 import { deleteStudent } from "@/utility/cloudFunctions";
 import { ToastContext } from "./Providers/ToastProvider";
+import verifyIsNewcomer from "@/utility/verifyIsNewcomer";
 
 declare module "@tanstack/react-table" {
 	//allows us to define custom properties for our columns
@@ -41,6 +42,20 @@ export default function Table({
 		"normal"
 	);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+	const [culledData, setCulledData] = useState<StudentGeneralInfo[]>(data);
+
+	useEffect(() => {
+		if (view === "normal") {
+			setCulledData(data);
+		} else if (view === "newcomer") {
+			setCulledData(
+				data.filter((item) =>
+					verifyIsNewcomer(new Date(item["First Time"]))
+				)
+			);
+		} else if (view === "birthday") {
+		}
+	}, [data, view]);
 
 	const columns = useMemo<ColumnDef<StudentGeneralInfo, any>[]>(
 		() => [
@@ -93,7 +108,7 @@ export default function Table({
 	);
 
 	const table = useReactTable({
-		data,
+		data: culledData,
 		columns,
 		filterFns: {},
 		getCoreRowModel: getCoreRowModel(),
