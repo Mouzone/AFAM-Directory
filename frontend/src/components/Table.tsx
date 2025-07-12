@@ -37,6 +37,9 @@ export default function Table({
 	showDeleteStudents,
 }: TableProps) {
 	const { setMessage } = useContext(ToastContext)!;
+	const [view, setView] = useState<"normal" | "newcomer" | "birthday">(
+		"normal"
+	);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
 	const columns = useMemo<ColumnDef<StudentGeneralInfo, any>[]>(
@@ -110,21 +113,36 @@ export default function Table({
 	});
 
 	return (
-		<div className="flex flex-col p-2 w-full overflow-x-auto">
-			<div className="w-full overflow-x-auto">
-				<table className="table min-w-[600px] lg:min-w-full">
-					<thead>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<tr
-								key={headerGroup.id}
-								className="bg-black text-white"
-							>
-								{showDeleteStudents && (
-									<th className="w-5 md:w-12 lg:w-1/12 px-2 md:px-4"></th>
-								)}
-								{headerGroup.headers.map((header) => (
-									<th
-										className={`
+		<>
+			<select
+				defaultValue="Pick a view"
+				className="select"
+				onChange={(e) =>
+					setView(
+						e.target.value as "normal" | "newcomer" | "birthday"
+					)
+				}
+			>
+				<option disabled={true}>Pick a view</option>
+				<option value="normal"> Default </option>
+				<option value="newcomer"> 🆕 Newcomer </option>
+				<option value="birthday"> 🥳 Birthday </option>
+			</select>
+			<div className="flex flex-col p-2 w-full overflow-x-auto">
+				<div className="w-full overflow-x-auto">
+					<table className="table min-w-[600px] lg:min-w-full">
+						<thead>
+							{table.getHeaderGroups().map((headerGroup) => (
+								<tr
+									key={headerGroup.id}
+									className="bg-black text-white"
+								>
+									{showDeleteStudents && (
+										<th className="w-5 md:w-12 lg:w-1/12 px-2 md:px-4"></th>
+									)}
+									{headerGroup.headers.map((header) => (
+										<th
+											className={`
                                             ${
 												showDeleteStudents
 													? "w-1/6"
@@ -132,121 +150,127 @@ export default function Table({
 											}
                                             px-2 md:px-4
                                         `}
-										key={header.id}
-									>
-										<div
-											className="cursor-pointer select-none"
-											onClick={header.column.getToggleSortingHandler()}
+											key={header.id}
+										>
+											<div
+												className="cursor-pointer select-none"
+												onClick={header.column.getToggleSortingHandler()}
+											>
+												{flexRender(
+													header.column.columnDef
+														.header,
+													header.getContext()
+												)}
+												{{
+													asc: " 🔼",
+													desc: " 🔽",
+												}[
+													header.column.getIsSorted() as string
+												] ?? null}
+											</div>
+											<div>
+												{showSearch &&
+													header.column.getCanFilter() && (
+														<Filter
+															column={
+																header.column
+															}
+														/>
+													)}
+											</div>
+										</th>
+									))}
+								</tr>
+							))}
+						</thead>
+						<tbody>
+							{table.getRowModel().rows.map((row, index) => (
+								<tr
+									className={`hover:bg-base-300 h-20 dark:hover:bg-accent ${
+										index % 2
+											? "bg-gray-200 dark:bg-secondary"
+											: ""
+									}`}
+									key={row.id}
+									onClick={() =>
+										showEditStudent(row.original)
+									}
+								>
+									{showDeleteStudents && (
+										<td
+											onClick={async (e) => {
+												e.stopPropagation();
+												try {
+													await deleteStudent({
+														studentId:
+															row.original["Id"],
+													});
+													setMessage(
+														"Student successfully deleted"
+													);
+												} catch {
+													setMessage(
+														"Student could not be deleted"
+													);
+												}
+											}}
+											className="w-5 md:w-12 lg:w-1/12 px-2 md:px-4"
+										>
+											<div className="flex justify-center">
+												<Image
+													src={trashcan}
+													alt="delete"
+													width={16}
+													height={16}
+													className="min-w-[16px]"
+												/>
+											</div>
+										</td>
+									)}
+									{row.getVisibleCells().map((cell) => (
+										<td
+											key={cell.id}
+											className={`
+                                            ${
+												showDeleteStudents
+													? "w-1/6"
+													: "w-1/5"
+											}
+                                            px-2 md:px-4
+                                        `}
 										>
 											{flexRender(
-												header.column.columnDef.header,
-												header.getContext()
+												cell.column.columnDef.cell,
+												cell.getContext()
 											)}
-											{{
-												asc: " 🔼",
-												desc: " 🔽",
-											}[
-												header.column.getIsSorted() as string
-											] ?? null}
-										</div>
-										<div>
-											{showSearch &&
-												header.column.getCanFilter() && (
-													<Filter
-														column={header.column}
-													/>
-												)}
-										</div>
-									</th>
-								))}
-							</tr>
-						))}
-					</thead>
-					<tbody>
-						{table.getRowModel().rows.map((row, index) => (
-							<tr
-								className={`hover:bg-base-300 h-20 dark:hover:bg-accent ${
-									index % 2
-										? "bg-gray-200 dark:bg-secondary"
-										: ""
-								}`}
-								key={row.id}
-								onClick={() => showEditStudent(row.original)}
-							>
-								{showDeleteStudents && (
-									<td
-										onClick={async (e) => {
-											e.stopPropagation();
-											try {
-												await deleteStudent({
-													studentId:
-														row.original["Id"],
-												});
-												setMessage(
-													"Student successfully deleted"
-												);
-											} catch {
-												setMessage(
-													"Student could not be deleted"
-												);
-											}
-										}}
-										className="w-5 md:w-12 lg:w-1/12 px-2 md:px-4"
-									>
-										<div className="flex justify-center">
-											<Image
-												src={trashcan}
-												alt="delete"
-												width={16}
-												height={16}
-												className="min-w-[16px]"
-											/>
-										</div>
-									</td>
-								)}
-								{row.getVisibleCells().map((cell) => (
-									<td
-										key={cell.id}
-										className={`
-                                            ${
-												showDeleteStudents
-													? "w-1/6"
-													: "w-1/5"
-											}
-                                            px-2 md:px-4
-                                        `}
-									>
-										{flexRender(
-											cell.column.columnDef.cell,
-											cell.getContext()
-										)}
-									</td>
-								))}
-							</tr>
-						))}
-					</tbody>
-				</table>
-			</div>
-			<div className="join justify-center mt-4">
-				<button
-					className="join-item btn"
-					onClick={() => table.previousPage()}
-					disabled={!table.getCanPreviousPage()}
-				>
-					«
-				</button>
-				<div className="join-item btn">
-					{table.getState().pagination.pageIndex + 1}
+										</td>
+									))}
+								</tr>
+							))}
+						</tbody>
+					</table>
 				</div>
-				<button
-					className="join-item btn"
-					onClick={() => table.nextPage()}
-					disabled={!table.getCanNextPage()}
-				>
-					»
-				</button>
+				<div className="join justify-center mt-4">
+					<button
+						className="join-item btn"
+						onClick={() => table.previousPage()}
+						disabled={!table.getCanPreviousPage()}
+					>
+						«
+					</button>
+					<div className="join-item btn">
+						{table.getState().pagination.pageIndex + 1}
+					</div>
+					<button
+						className="join-item btn"
+						onClick={() => table.nextPage()}
+						disabled={!table.getCanNextPage()}
+					>
+						»
+					</button>
+				</div>
 			</div>
-		</div>
+		</>
 	);
 }
 
