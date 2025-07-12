@@ -54,6 +54,8 @@ export default function Table({
 				)
 			);
 		} else if (view === "birthday") {
+			// change the setup for columns
+			// PFP, First Name, Last Name, Birthday
 		}
 	}, [data, view]);
 
