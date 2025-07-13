@@ -59,8 +59,35 @@ export default function Table({
 		}
 	}, [data, view]);
 
-	const columns = useMemo<ColumnDef<StudentGeneralInfo, any>[]>(
-		() => [
+	const columns = useMemo<ColumnDef<StudentGeneralInfo, any>[]>(() => {
+		if (view === "birthday") {
+			return [
+				{
+					accessorKey: "First Name",
+					header: "First Name",
+					meta: { filterVariant: "text" },
+				},
+				{
+					accessorKey: "Last Name",
+					header: "Last Name",
+					meta: { filterVariant: "text" },
+				},
+				{
+					accessorKey: "Birthday",
+					header: "Birthday",
+					cell: (info) => {
+						const value = info.getValue();
+						if (!value) return null;
+						const [year, month, day] = value.split("-");
+						return `${month}/${day}`; // optional formatting
+					},
+					meta: { filterVariant: "text" },
+				},
+			];
+		}
+
+		// Default (normal or newcomer view)
+		return [
 			{
 				accessorKey: "Headshot URL",
 				header: "",
@@ -80,34 +107,25 @@ export default function Table({
 			{
 				accessorKey: "First Name",
 				header: () => "First Name",
-				meta: {
-					filterVariant: "text",
-				},
+				meta: { filterVariant: "text" },
 			},
 			{
 				accessorKey: "Last Name",
 				header: () => "Last Name",
-				meta: {
-					filterVariant: "text",
-				},
+				meta: { filterVariant: "text" },
 			},
 			{
 				accessorKey: "Grade",
 				header: () => "Grade",
-				meta: {
-					filterVariant: "select",
-				},
+				meta: { filterVariant: "select" },
 			},
 			{
 				accessorKey: "Teacher",
 				header: () => "Teacher",
-				meta: {
-					filterVariant: "text",
-				},
+				meta: { filterVariant: "text" },
 			},
-		],
-		[]
-	);
+		];
+	}, [view]);
 
 	const table = useReactTable({
 		data: culledData,
