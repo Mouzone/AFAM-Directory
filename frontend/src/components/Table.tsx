@@ -17,6 +17,7 @@ import Image from "next/image";
 import { deleteStudent } from "@/utility/cloudFunctions";
 import { ToastContext } from "./Providers/ToastProvider";
 import verifyIsNewcomer from "@/utility/verifyIsNewcomer";
+import findCurrentWeekBirthdays from "@/utility/findCurrentWeekBirthdays";
 
 declare module "@tanstack/react-table" {
 	//allows us to define custom properties for our columns
@@ -54,8 +55,7 @@ export default function Table({
 				)
 			);
 		} else if (view === "birthday") {
-			// change the setup for columns
-			// PFP, First Name, Last Name, Birthday
+			setCulledData(findCurrentWeekBirthdays(data));
 		}
 	}, [data, view]);
 
